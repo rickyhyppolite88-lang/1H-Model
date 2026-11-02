@@ -1,7 +1,10 @@
 import { useEffect, useMemo, useState } from "react";
 import {
+  conferenceNames,
   type DailyArchive,
   dailyArchiveSchema,
+  filterPredictionGroups,
+  isTop25,
   type LineBasis,
   type PredictionFeed,
   predictionComparison,
@@ -32,6 +35,8 @@ export default function Predictions() {
   const [book, setBook] = useState("betmgm");
   const [basis, setBasis] = useState<LineBasis>("latest");
   const [coverage, setCoverage] = useState("all");
+  const [group, setGroup] = useState<"all" | "top25" | "conference">("all");
+  const [conference, setConference] = useState("all");
   const [page, setPage] = useState(0);
   useEffect(() => {
     const controller = new AbortController();
@@ -94,7 +99,11 @@ export default function Predictions() {
   }, []);
   const rows = useMemo(
     () =>
-      (feed?.predictions ?? []).filter((row) => {
+      filterPredictionGroups(
+        feed?.predictions ?? [],
+        conference,
+        group === "top25",
+      ).filter((row) => {
         const matches = `${row.awayTeam} ${row.homeTeam}`
           .toLowerCase()
           .includes(query.trim().toLowerCase());
@@ -107,7 +116,7 @@ export default function Predictions() {
             (coverage === "completed" && row.actualFirstHalfTotal !== null))
         );
       }),
-    [feed, query, coverage],
+    [feed, query, coverage, conference, group],
   );
   if (error)
     return (
@@ -132,16 +141,22 @@ export default function Predictions() {
   const selectedArchive =
     archive?.archives.find((row) => row.date === archiveDate) ??
     archive?.archives[0];
-  function exportAll() {
+  function exportCsv(filtered = false) {
     if (!feed) return;
     const url = URL.createObjectURL(
-      new Blob(["\uFEFF", predictionsToCsv(feed.predictions, book, basis)], {
-        type: "text/csv;charset=utf-8",
-      }),
+      new Blob(
+        [
+          "\uFEFF",
+          predictionsToCsv(filtered ? rows : feed.predictions, book, basis),
+        ],
+        {
+          type: "text/csv;charset=utf-8",
+        },
+      ),
     );
     const link = document.createElement("a");
     link.href = url;
-    link.download = `1h-predictions-${feed.through}-${book}-${basis}.csv`;
+    link.download = `1h-predictions-${feed.through}-${filtered ? `${group}-${conference.replace(/\W+/g, "-")}` : "all"}-${book}-${basis}.csv`;
     link.click();
     URL.revokeObjectURL(url);
   }
@@ -158,9 +173,27 @@ export default function Predictions() {
         </div>
       </div>
       <div className="prediction-actions">
-        <button className="secondary-button" type="button" onClick={exportAll}>
+        <button
+          className="secondary-button"
+          type="button"
+          onClick={() => exportCsv(false)}
+        >
           Download all {feed.counts.matchups} rows · CSV ↓
         </button>
+        <button
+          className="secondary-button"
+          type="button"
+          onClick={() => exportCsv(true)}
+        >
+          Download filtered {rows.length} rows · CSV ↓
+        </button>
+        <a
+          className="secondary-button"
+          href={`${import.meta.env.BASE_URL}data/predictions.xlsx`}
+          download="1h-predictions.xlsx"
+        >
+          Excel workbook ↓
+        </a>
         <a
           className="secondary-button"
           href={`${import.meta.env.BASE_URL}data/predictions.json`}
@@ -188,20 +221,24 @@ export default function Predictions() {
       </div>
       <div className="audit-metrics">
         <div>
-          <span>Matchups returned</span>
-          <strong>{feed.counts.matchups}</strong>
+          <span>Games in this view</span>
+          <strong>{rows.length}</strong>
         </div>
         <div>
           <span>Predicted first-half totals</span>
-          <strong>{feed.counts.predicted}</strong>
+          <strong>
+            {rows.filter((row) => row.projectedFirstHalfTotal !== null).length}
+          </strong>
         </div>
         <div>
           <span>Missing inputs / archive</span>
-          <strong>{feed.counts.unavailable}</strong>
+          <strong>
+            {rows.filter((row) => row.projectedFirstHalfTotal === null).length}
+          </strong>
         </div>
         <div>
-          <span>Snapshot date</span>
-          <strong className="prediction-date">{feed.through}</strong>
+          <span>Top 25 games in view</span>
+          <strong>{rows.filter(isTop25).length}</strong>
         </div>
       </div>
       <div className="daily-downloads">
@@ -241,11 +278,71 @@ export default function Predictions() {
             >
               Daily JSON ↓
             </a>
+            {selectedArchive.xlsxPath && (
+              <a
+                className="secondary-button"
+                href={`${import.meta.env.BASE_URL}${selectedArchive.xlsxPath}`}
+                download={`1h-predictions-${selectedArchive.date}.xlsx`}
+              >
+                Daily Excel ↓
+              </a>
+            )}
           </div>
         )}
         {archiveError && <p className="inline-note">{archiveError}</p>}
       </div>
+      <div
+        className="prediction-groups"
+        role="tablist"
+        aria-label="Game groups"
+      >
+        {[
+          ["all", "All games"],
+          ["top25", "Top 25"],
+          ["conference", "Conferences"],
+        ].map(([value, label]) => (
+          <button
+            type="button"
+            role="tab"
+            id={`prediction-group-${value}`}
+            aria-controls="prediction-results"
+            aria-selected={group === value}
+            key={value}
+            className={group === value ? "active" : ""}
+            onClick={() => {
+              setGroup(value as "all" | "top25" | "conference");
+              if (value === "all") setConference("all");
+              setPage(0);
+            }}
+          >
+            {label}
+          </button>
+        ))}
+      </div>
+      <p className="group-description">
+        Top 25 includes either team ranked 1–25 by ESPN at retrieval. Conference
+        filters include games involving either team. Select a conference while
+        on Top 25 to combine both filters.
+      </p>
       <div className="prediction-filters">
+        <label>
+          <span>Conference</span>
+          <select
+            value={conference}
+            onChange={(event) => {
+              setConference(event.target.value);
+              if (group === "all") setGroup("conference");
+              setPage(0);
+            }}
+          >
+            <option value="all">All conferences</option>
+            {conferenceNames(feed.predictions).map((name) => (
+              <option key={name} value={name}>
+                {name}
+              </option>
+            ))}
+          </select>
+        </label>
         <label>
           <span>Search matchups</span>
           <input
@@ -296,7 +393,12 @@ export default function Predictions() {
           </select>
         </label>
       </div>
-      <div className="table-wrap">
+      <div
+        className="table-wrap"
+        id="prediction-results"
+        role="tabpanel"
+        aria-labelledby={`prediction-group-${group}`}
+      >
         <table>
           <thead>
             <tr>
@@ -315,8 +417,23 @@ export default function Predictions() {
               return (
                 <tr key={row.gameId}>
                   <td>
-                    <strong>
-                      {row.awayTeam} / {row.homeTeam}
+                    <strong className="matchup-team">
+                      {row.awayRank !== null && (
+                        <span className="rank-badge">#{row.awayRank}</span>
+                      )}
+                      {row.awayTeam}
+                      <span className="team-conference">
+                        {row.awayConference ?? "Conference unavailable"}
+                      </span>
+                    </strong>
+                    <strong className="matchup-team">
+                      {row.homeRank !== null && (
+                        <span className="rank-badge">#{row.homeRank}</span>
+                      )}
+                      {row.homeTeam}
+                      <span className="team-conference">
+                        {row.homeConference ?? "Conference unavailable"}
+                      </span>
                     </strong>
                     <small>
                       {new Date(row.startsAt).toLocaleString("en-US", {
@@ -339,10 +456,14 @@ export default function Predictions() {
                       : `${comparison.signedEdge > 0 ? "+" : ""}${format(comparison.signedEdge)}`}
                   </td>
                   <td>
-                    {comparison.lean ??
-                      (row.projectedFirstHalfTotal !== null
-                        ? "Line unavailable"
-                        : "Unavailable")}
+                    <span
+                      className={`lean-badge lean-${comparison.lean?.toLowerCase() ?? "missing"}`}
+                    >
+                      {comparison.lean ??
+                        (row.projectedFirstHalfTotal !== null
+                          ? "Line unavailable"
+                          : "Unavailable")}
+                    </span>
                   </td>
                   <td>{row.actualFirstHalfTotal ?? "—"}</td>
                   <td className="availability-cell">
@@ -387,11 +508,14 @@ export default function Predictions() {
       </div>
       <div className="data-notes">
         <p>
-          The CSV includes every matchup, including rows with unavailable
+          The full CSV includes every matchup, including rows with unavailable
           projections. The selected sportsbook and line basis apply to the
           export. Model totals do not require an available sportsbook line.
           Positive model-minus-line means OVER; negative means UNDER. These are
-          regular-season research leans.
+          regular-season research leans. The filtered CSV includes every
+          matching row across all pages. Excel workbooks use BetMGM/latest, with
+          All Games, Top 25 and conference sheets. Cross-conference games appear
+          in both relevant sheets.
         </p>
         <p>
           Generated{" "}

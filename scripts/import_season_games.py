@@ -13,6 +13,27 @@ from urllib.request import Request, urlopen
 
 SBR = "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/"
 ESPN = "https://site.api.espn.com/apis/site/v2/sports/basketball/mens-college-basketball/scoreboard"
+CONFERENCES = "https://site.api.espn.com/apis/site/v2/leagues/dropdown?region=us&lang=en&sport=basketball&league=mens-college-basketball"
+
+
+def conference_directory(data: dict) -> dict[str, str]:
+    leagues = [league for league in data.get("leagues", []) if league.get("id") == "41"]
+    if len(leagues) != 1:
+        raise ValueError("Conference directory did not identify NCAA men's basketball")
+    groups = [group for group in leagues[0].get("groups", []) if group.get("id") == "50"]
+    if len(groups) != 1 or not groups[0].get("children"):
+        raise ValueError("Missing Division I conference directory")
+    return {str(group["id"]): group.get("midsizeName") or group["name"] for group in groups[0]["children"]}
+
+
+def team_classification(competitor: dict, conferences: dict[str, str]) -> dict:
+    conference_id = competitor["team"].get("conferenceId")
+    raw_rank = competitor.get("curatedRank", {}).get("current")
+    known = type(raw_rank) is int and raw_rank >= 1
+    return {"conferenceId": str(conference_id) if conference_id is not None else None,
+            "conference": conferences.get(str(conference_id)),
+            "rank": raw_rank if known and raw_rank <= 25 else None,
+            "rankKnown": known}
 
 
 def normalize(value: str) -> str:
@@ -119,6 +140,7 @@ def import_games(season: str, start: date, through: date, output: Path) -> dict:
     if existing and (existing["season"] != season or existing["through"] > through.isoformat()):
         raise ValueError("Cannot merge another season or future observations into this ledger")
     prior = json.loads(Path("public/data/prior-season.json").read_text(encoding="utf-8"))
+    conferences = conference_directory(json.loads(read_url(CONFERENCES)))
     now = datetime.now(timezone.utc).isoformat().replace("+00:00", "Z")
     events_by_id = {}
     boards = []
@@ -147,7 +169,7 @@ def import_games(season: str, start: date, through: date, output: Path) -> dict:
         teams = {}
         for competitor in competitors:
             team = competitor["team"]
-            teams[competitor["homeAway"]] = {"espnId": str(team["id"]), "modelId": model_id(team, prior["teams"]), "name": team["displayName"], "firstHalfPoints": first_half(competitor, complete)}
+            teams[competitor["homeAway"]] = {"espnId": str(team["id"]), "modelId": model_id(team, prior["teams"]), "name": team["displayName"], "firstHalfPoints": first_half(competitor, complete), **team_classification(competitor, conferences)}
         if set(teams) != {"home", "away"}:
             raise ValueError("Game does not identify exactly one home and away team")
         previous = games.get(event_id, {})
