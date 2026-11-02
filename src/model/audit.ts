@@ -45,6 +45,7 @@ export const ledgerSchema = z.object({
   games: z.array(
     z.object({
       id: z.string(),
+      oddsGameId: z.string().nullable().optional(),
       startsAt: z.iso.datetime(),
       status: z.string(),
       firstHalfComplete: z.boolean(),

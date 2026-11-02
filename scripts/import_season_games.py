@@ -150,16 +150,23 @@ def import_games(season: str, start: date, through: date, output: Path) -> dict:
         previous = games.get(event_id, {})
         starts_at = datetime.fromisoformat(event["date"].replace("Z", "+00:00")).isoformat(timespec="seconds").replace("+00:00", "Z")
         games[event_id] = {"id": event_id, "startsAt": starts_at, "status": event["status"]["type"]["description"], "firstHalfComplete": complete and all(t["firstHalfPoints"] is not None for t in teams.values()), **teams,
-            "quotes": previous.get("quotes", []), "featureSnapshot": previous.get("featureSnapshot"), "scoresSource": score_url,
+            "quotes": previous.get("quotes", []), "oddsGameId": previous.get("oddsGameId"), "featureSnapshot": previous.get("featureSnapshot"), "scoresSource": score_url,
             "boxScoreUrl": f"https://www.espn.com/mens-college-basketball/boxscore/_/gameId/{event_id}", "capturedAt": now}
     unmatched = []
+    archived_ids = {game["oddsGameId"]: game["id"] for game in games.values() if game.get("oddsGameId")}
     for row, source in boards:
-        event = match_event(row, [pair[0] for pair in events_by_id.values()])
-        if event is None:
+        odds_id = str(row["gameView"]["gameId"])
+        event_id = archived_ids.get(odds_id)
+        if not event_id:
+            event = match_event(row, [pair[0] for pair in events_by_id.values()])
+            event_id = event["id"] if event else None
+        if event_id is None:
             game = row["gameView"]
             unmatched.append({"oddsGameId": str(game["gameId"]), "away": game["awayTeam"]["name"], "home": game["homeTeam"]["name"], "source": source})
             continue
-        game = games[event["id"]]
+        game = games[event_id]
+        game["oddsGameId"] = odds_id
+        archived_ids[odds_id] = event_id
         by_book = {q["sportsbook"]: q for q in game["quotes"]}
         for view in row.get("oddsViews") or []:
             if not view:

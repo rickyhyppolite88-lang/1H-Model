@@ -1,5 +1,6 @@
 import importlib.util
 import json
+from datetime import date
 from pathlib import Path
 
 import pytest
@@ -54,3 +55,16 @@ def test_midnight_provider_date_boundary_matches_by_teams_and_time():
 
 def test_verified_upstate_provider_alias_is_consistent():
     assert markets.normalize("USC Upstate Spartans") == markets.normalize("South Carolina Upstate Spartans")
+
+
+def test_incremental_refresh_keeps_a_known_midnight_game_without_refetching_prior_day(monkeypatch, tmp_path):
+    output = tmp_path / "ledger.json"
+    output.write_text(json.dumps({"season": "2026-27", "seasonStart": "2026-11-01", "through": "2026-11-01", "games": [{
+        "id": "espn-1", "oddsGameId": "1", "startsAt": "2026-11-02T04:59:00Z", "quotes": [],
+        "away": {"espnId": "a"}, "home": {"espnId": "b"},
+    }]}), encoding="utf-8")
+    monkeypatch.setattr(markets, "read_url", lambda url: json.dumps({"events": []}) if "site.api.espn.com" in url else board())
+    monkeypatch.setattr(markets.time, "sleep", lambda seconds: None)
+    result = markets.import_games("2026-27", date(2026, 11, 2), date(2026, 11, 2), output)
+    assert result["unmatchedOdds"] == []
+    assert result["games"][0]["id"] == "espn-1"
