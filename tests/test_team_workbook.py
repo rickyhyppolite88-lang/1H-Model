@@ -1,5 +1,4 @@
 import importlib.util
-import json
 from pathlib import Path
 
 from openpyxl import load_workbook
@@ -11,9 +10,17 @@ spec.loader.exec_module(exporter)
 
 
 def test_team_report_preserves_missing_inputs_cohorts_and_projection_values(tmp_path):
-    data = json.loads((ROOT / "public/data/team-evaluation.json").read_text(encoding="utf-8"))
-    data["teams"] = data["teams"][:2]
-    data["games"] = data["games"][:2]
+    empty = {"sample": 0, "priorMae": None, "modelMae": None, "bias": None, "priorDefenseMae": None, "defenseMae": None}
+    graded = {"sample": 1, "priorMae": 2, "modelMae": 0, "bias": 0, "priorDefenseMae": 3, "defenseMae": 2}
+    # Keep this fixture independent of today's team records and changing results.
+    data = {"priorSeason": "2025-26", "currentSeason": "2026-27", "priorAsOf": "2026-04-07", "currentAsOf": "2026-11-02",
+            "source": {"prior": {}, "current": {}}, "summary": {"prospective": empty, "reconstructed": graded, "ungradedCompleted": 0},
+            "teams": [{"id": "a", "name": "Team A", "conference": "SEC", "rank": 1, "priorGames": 30, "currentGames": 0, "currentWeight": 0,
+                       "metrics": [{"key": key, "prior": value, "current": None, "change": None, "blended": None if key == "firstHalfAllowed" else value}
+                                   for key, value in [("firstHalfPoints", 30), ("firstHalfAllowed", 32), ("pace", 70), ("offensiveEfficiency", 1.05), ("defensiveEfficiency", 1.02)]],
+                       "prospective": empty, "reconstructed": {**graded, "modelMae": 2, "priorMae": 1}}],
+            "games": [{"gameId": "one", "startsAt": "2026-11-03T00:00:00Z", "awayTeam": "Team A", "homeTeam": "Team B", "kind": "reconstructed_season_debut",
+                       "awayProjected": 35, "homeProjected": 37, "awayActual": 33, "homeActual": 39, "priorTotal": 70, "modelTotal": 72, "shift": 2, "actualTotal": 72, "error": 0}]}
     target = tmp_path / "teams.xlsx"
     exporter.build_workbook(data, target)
     wb = load_workbook(target, data_only=True)
