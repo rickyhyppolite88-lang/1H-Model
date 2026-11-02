@@ -28,6 +28,28 @@ def build_workbook(data, output):
           "Signal scores are research rankings, not hit probabilities. Rates below are observed results of the official pregame forecasts.",
           ["Season", "Model", "Signal band", "Wins", "Losses", "Pushes", "Pending", "Observed win rate"],
           [15, 26, 25, 13, 13, 13, 13, 23], bands, {8: "0.0%"})
+    coverage = [[d[k] for k in ["date", "games", "projected", "unavailable", "counted", "unpriced", "historical", "noLean", "otherPregame", "withResults"]] for d in data.get("dailyCoverage", [])]
+    sheet(wb, "Daily Coverage", "Every game accounted for by Eastern date", context,
+          "Games with missing model inputs or without a recorded pregame line remain visible. Only counted pregame forecasts enter the win rate.",
+          ["Game date ET", "Games saved", "With projection", "Missing inputs", "Counted pregame", "No recorded line", "Historical estimate", "No model lean", "Other pregame", "1H results available"],
+          [18, 16, 19, 19, 22, 22, 24, 20, 20, 24], coverage)
+    daily = data.get("dailyGames", [])
+    daily_rows = []
+    ordered_daily = sorted(daily, key=lambda r: (-int(r["gameDate"].replace("-", "")), r["prediction"]["startsAt"]))
+    for r in ordered_daily:
+        p = r["prediction"]
+        daily_rows.append([r["gameDate"], local(p["startsAt"]), p["awayTeam"], p["homeTeam"], p["projectedFirstHalfTotal"], r["comparison"]["line"],
+                           r["comparison"]["lean"], r["actual"], r["grade"], r["coverageStatus"], local(r["recordedAt"]), r["id"], r["signal"]["score"]])
+    daily_ws = sheet(wb, "Daily Games", "All games and their saved predictions", context,
+                     "One row per game: the counted forecast when available, otherwise the best saved estimate. Filter Game date ET for today's complete slate.",
+                     ["Game date ET", "Tipoff ET", "Away team", "Home team", "Saved model 1H", "Recorded line", "Lean", "Actual 1H", "Result", "Coverage status", "Recorded ET", "Record ID", "Signal / 100"],
+                     [18, 25, 31, 31, 18, 18, 14, 16, 20, 28, 25, 37, 18], daily_rows,
+                     {2: 'm/d/yy h:mm AM/PM" ET"', 5: "0.0", 6: "0.0", 8: "0.0", 11: 'm/d/yy h:mm AM/PM" ET"'})
+    daily_ws.freeze_panes = "E7"
+    for row_number, r in enumerate(ordered_daily, 7):
+        fill = r["signal"]["fill"].lstrip("#") if r["signal"]["fill"] else "F3F4F0" if row_number % 2 == 0 else "FFFFFF"
+        for cell in daily_ws[row_number][:13]:
+            cell.fill = PatternFill("solid", fgColor=fill)
     rows = []
     for r in data["records"]:
         p = r["prediction"]
