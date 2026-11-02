@@ -15,6 +15,7 @@ import {
   type SeasonDataset,
 } from "./model/schema";
 import { assertSnapshots, blendTeam, defaultBlend } from "./model/seasons";
+import SeasonAudit from "./SeasonAudit";
 
 const savedSchema = z.object({
   id: z.string(),
@@ -32,6 +33,7 @@ const savedSchema = z.object({
   priorEquivalentGames: z.number(),
   leagueRegression: z.number(),
   actualTotal: z.number().min(0).nullable(),
+  purpose: z.enum(["research", "legacy"]).default("legacy"),
 });
 type SavedAnalysis = z.infer<typeof savedSchema>;
 const storageKey = "1h-model-analyses-v1";
@@ -70,6 +72,7 @@ function Field({
 }
 
 function grade(row: SavedAnalysis) {
+  if (row.purpose === "research") return "Research";
   if (row.pick === "NO BET") return "Not played";
   if (row.actualTotal === null) return "Pending";
   if (row.actualTotal === row.line) return "Push";
@@ -209,6 +212,7 @@ export default function App() {
       priorEquivalentGames: settings.priorEquivalentGames,
       leagueRegression: settings.leagueRegression,
       actualTotal: null,
+      purpose: phase === "regular" ? "research" : "legacy",
     };
     if (persist([row, ...saved].slice(0, 500)))
       setNotice("Analysis saved in this browser. Find it in the tracker.");
@@ -320,6 +324,7 @@ export default function App() {
         <nav className="tabs" aria-label="Model sections">
           {[
             ["matchup", "Matchup lab"],
+            ["audit", "Season lines & audit"],
             ["data", "Season data"],
             ["tracker", "Pick tracker"],
             ["method", "Method & rules"],
@@ -541,7 +546,11 @@ export default function App() {
                       </div>
                     </div>
                     <div className="decision">
-                      <span className="decision-label">RULE DECISION</span>
+                      <span className="decision-label">
+                        {result.mode === "research"
+                          ? "RESEARCH LEAN"
+                          : "SAVED TOURNAMENT RULE"}
+                      </span>
                       <div>
                         <strong>{result.pick}</strong>
                         <span className="small-badge">{result.tier}</span>
@@ -553,9 +562,14 @@ export default function App() {
                       ))}
                     </ul>
                     <div className="confidence-note">
-                      Historical rule label:{" "}
+                      {result.mode === "research"
+                        ? "Regular-season probability: "
+                        : "Historical rule label: "}
                       <strong>
-                        {result.confidenceLabel ?? "not recorded"}
+                        {result.confidenceLabel ??
+                          (result.mode === "research"
+                            ? "not calibrated"
+                            : "not recorded")}
                       </strong>
                       {!result.confidenceLabel &&
                         result.confidenceBoost > 0 && (
@@ -892,6 +906,8 @@ export default function App() {
             )}
           </section>
         )}
+
+        {tab === "audit" && <SeasonAudit />}
 
         {tab === "method" && (
           <section className="panel method-panel">

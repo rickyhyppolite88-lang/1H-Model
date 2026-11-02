@@ -102,6 +102,18 @@ const team = (id: string): BlendedTeam => ({
 });
 
 describe("projection reconstruction", () => {
+  it("does not apply tournament confidence or LOCK tiers to regular-season research", () => {
+    const a = { ...team("a"), firstHalfPoints: 30 };
+    const b = { ...team("b"), firstHalfPoints: 30 };
+    const projected = predict(a, b, 66.5, "regular", 0);
+    expect(projected).toMatchObject({
+      mode: "research",
+      tier: "RESEARCH ONLY",
+      confidenceLabel: null,
+      confidenceBoost: 0,
+    });
+    expect(projected.legacyRules).toBeDefined();
+  });
   it("applies the saved suppression only in tournament context", () => {
     const regular = predict(team("a"), team("b"), 70, "regular", 0);
     const tournament = predict(team("a"), team("b"), 70, "tournament", 0);

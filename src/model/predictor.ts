@@ -172,22 +172,40 @@ export function predict(
   const suppression = phase === "tournament" ? 4 : 0;
   const projectedTotal =
     simpleTotal * 0.6 + paceAdjustedTotal * 0.4 - suppression;
+  const legacyRules = applyRules({
+    projectedTotal,
+    line,
+    paceA: a.pace,
+    paceB: b.pace,
+    oeA: a.offensiveEfficiency,
+    oeB: b.offensiveEfficiency,
+    sosA: a.strengthOfSchedule,
+    sosB: b.strengthOfSchedule,
+    injuries,
+  });
+  const regularResearch: RuleResult = {
+    pick: legacyRules.modelLean === "PUSH" ? "NO BET" : legacyRules.modelLean,
+    modelLean: legacyRules.modelLean,
+    edge: legacyRules.edge,
+    tier: "RESEARCH ONLY",
+    confidenceLabel: null,
+    confidenceBoost: 0,
+    reasons: [
+      "Regular-season projections are research leans until current-season walk-forward validation is available.",
+      "Tournament LOCK, PACE OVER and confidence percentages are not applied to regular-season games.",
+    ],
+  };
   return {
     simpleTotal,
     expectedPace,
     paceAdjustedTotal,
     suppression,
     projectedTotal,
-    ...applyRules({
-      projectedTotal,
-      line,
-      paceA: a.pace,
-      paceB: b.pace,
-      oeA: a.offensiveEfficiency,
-      oeB: b.offensiveEfficiency,
-      sosA: a.strengthOfSchedule,
-      sosB: b.strengthOfSchedule,
-      injuries,
-    }),
+    legacyRules,
+    mode:
+      phase === "regular"
+        ? ("research" as const)
+        : ("legacy_tournament" as const),
+    ...(phase === "regular" ? regularResearch : legacyRules),
   };
 }

@@ -30,6 +30,7 @@ python -m pytest -q
 - A configurable prior/current blend that increases each team's current-season weight as it plays games.
 - The documented v6.1 rule filters and tiers, with separate regular-season and tournament contexts.
 - Visible projection components, source dates, data import/export, and a browser-local pick tracker.
+- A first-half lines/results audit with book-specific openers, explicit closing-line uncertainty, and frozen pregame features.
 - A GitHub Pages build/deploy workflow and daily in-season data refresh. No GCP services or credentials.
 
 ## The season bridge
@@ -60,7 +61,7 @@ Omit `--as-of` to use today's date. The importer reads five public dated tables,
 
 The full prior snapshot is frozen at April 7, 2026. The initial current snapshot is November 2, 2026; only two teams have completed-game observations in that snapshot. The app displays its actual dates and warns on stale data. A source change or failed request fails the refresh rather than publishing invented or partial observations.
 
-The workflow refreshes current data at 11:20 UTC during November–April. It validates before committing and deploying. A GitHub Actions bot commit does not trigger another workflow run; the same run deploys the refreshed data. New-season rollover is deliberate: update the season identifier and snapshot pair after the current season ends.
+The workflow refreshes team data and first-half markets/results at 11:20, 17:20, and 23:20 UTC during November–April. It validates before committing and deploying. A GitHub Actions bot commit does not trigger another workflow run; the same run deploys the refreshed data. New-season rollover is deliberate: update the season identifier and snapshot pair after the current season ends.
 
 Public statistics: [TeamRankings college basketball](https://www.teamrankings.com/ncaa-basketball/). Every JSON snapshot records exact dated source URLs and retrieval time. The stat values use points per possession, not points per 100 possessions. Display precision follows the public source.
 
@@ -73,3 +74,9 @@ Public statistics: [TeamRankings college basketball](https://www.teamrankings.co
 The expected repository Pages address is `https://rickyhyppolite88-lang.github.io/1H-Model/`, but it is not live until the first deployment succeeds. The workflow sets the repository base path; local development runs at `/`. [Vite's Pages instructions](https://vite.dev/guide/static-deploy.html#github-pages) and [GitHub's workflow guide](https://docs.github.com/en/pages/getting-started-with-github-pages/using-custom-workflows-with-github-pages) describe the deployment mechanism.
 
 All calculations run in the browser. The pick tracker uses local storage on that browser and does not sync between devices. Export records to retain a copy. Injuries and market lines are manual inputs; this version does not fetch live odds, injuries, or scheduled matchups.
+
+## Current-season first-half audit
+
+See [the opening-season audit](docs/opening-season-audit.md). Regular-season calculations are research leans; the old tournament confidence percentages and filters are no longer applied to them. BetMGM openers are the fixed default benchmark, with other books selectable. Latest displayed quotes are not verified closing lines.
+
+Run `npm run markets:refresh` to retrieve public first-half markets and period results, then `npm run audit:season` to replay the exact TypeScript model and freeze future pregame features. Missing quotes, unmatched games, and ineligible historical features are reported explicitly. The schedule now refreshes three times per day during the season. Lines and scores are snapshots, not a live feed.

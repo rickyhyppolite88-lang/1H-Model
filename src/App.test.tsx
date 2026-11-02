@@ -53,6 +53,8 @@ describe("calculator workflow", () => {
   it("loads the real datasets, analyzes, saves a frozen record, and restores it", async () => {
     const view = render(<App />);
     await fillMatchup();
+    expect(screen.getByText("RESEARCH ONLY")).toBeTruthy();
+    expect(screen.getByText("not calibrated")).toBeTruthy();
     fireEvent.click(screen.getByRole("button", { name: /Save analysis/ }));
     fireEvent.click(screen.getByRole("button", { name: /Pick tracker/ }));
     expect(screen.getByLabelText("Actual 1H total")).toBeTruthy();
@@ -64,6 +66,7 @@ describe("calculator workflow", () => {
       teamA: "Alabama",
       teamB: "Michigan",
       line: 70.5,
+      purpose: "research",
       currentAsOf: current.asOf,
       priorAsOf: prior.asOf,
     });

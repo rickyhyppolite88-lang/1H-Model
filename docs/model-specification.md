@@ -46,7 +46,7 @@ The division by two converts full-game pace into a first-half estimate. Arithmet
 
 Calculations retain full imported precision until display. Model edge is the absolute distance between the unrounded projection and the line. PACE OVER can oppose the model lean; the interface shows the raw lean, edge, and override separately.
 
-## Saved rule reconstruction and priority
+## Historical tournament rule reconstruction and priority
 
 1. Either blended OE below 0.96: NO BET, overriding all other tiers.
 2. PACE OVER: absolute pace gap at least 5, both OE at least 1.05, and both current SOS ratings positive. This selects OVER with the saved 75% label regardless of model direction or edge filters. Three or more combined reported injuries block it.
@@ -67,3 +67,9 @@ Rule precedence, thresholds, season weights, missing observations, units, comple
 Calibrating the new season needs historical pregame features and outcomes: dated per-team snapshots, first-half closing/available lines with timestamps, pre-tipoff injuries, actual first-half totals, season, competition phase, and roster/coaching continuity. Final-season statistics may inform the following season but must never be used to predict earlier games within that completed season.
 
 Use walk-forward evaluation by date and a held-out season to select prior strength, regression, formula coefficients, and regular/tournament intercepts. Report MAE, calibration where a probability is actually fitted, coverage, push handling, and results by early/mid/late season. The original March tracker and historical lines were not recovered; no backtest results are fabricated.
+
+## Regular-season policy update ? November 2, 2026
+
+The saved tournament eligibility rules and confidence labels now apply only in tournament context. Regular-season output shows the raw model direction as **RESEARCH ONLY**, without a numeric probability. The initial eight-game market audit showed the reconstructed baseline trailing the opener benchmark; see [the audit](opening-season-audit.md). Numeric scoring weights and season-blend defaults remain unchanged because this sample does not establish a reliable new fit.
+
+First-half results are imported from ESPN period 1 only after that period finishes. The selected book's opening first-half total is the fixed comparison market. Latest quotes have no verified close timestamp. Feature snapshots genuinely frozen before tipoff are separate from clearly labeled season-debut reconstructions; repeat-team games without valid pregame features are excluded. Thirty comparable observations is only a review threshold, never automatic model approval.

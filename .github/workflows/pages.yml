@@ -11,7 +11,7 @@ on:
         type: boolean
         default: false
   schedule:
-    - cron: "20 11 * 11,12,1,2,3,4 *"
+    - cron: "20 11,17,23 * 11,12,1,2,3,4 *"
 
 permissions:
   contents: read
@@ -41,6 +41,11 @@ jobs:
       - name: Refresh current season
         if: github.event_name == 'schedule' || (github.event_name == 'workflow_dispatch' && inputs.refresh_data)
         run: python scripts/import_teamrankings.py --season 2026-27 --output public/data/current-season.json
+      - name: Refresh first-half markets and results
+        if: github.event_name == 'schedule' || (github.event_name == 'workflow_dispatch' && inputs.refresh_data)
+        run: python scripts/import_season_games.py
+      - name: Freeze pregame features and replay completed halves
+        run: npm run audit:season
       - name: Check formatting and TypeScript rules
         run: npm run check
       - name: Test the model and public datasets
@@ -54,11 +59,11 @@ jobs:
       - name: Preserve a successfully validated data refresh
         if: github.event_name == 'schedule' || (github.event_name == 'workflow_dispatch' && inputs.refresh_data)
         run: |
-          if ! git diff --quiet -- public/data/current-season.json; then
+          if ! git diff --quiet -- public/data; then
             git config user.name "github-actions[bot]"
             git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-            git add public/data/current-season.json
-            git commit -m "data: refresh current-season team statistics"
+            git add public/data
+            git commit -m "data: refresh team stats, first-half markets and results"
             git push origin HEAD:main
           fi
       - name: Upload site
