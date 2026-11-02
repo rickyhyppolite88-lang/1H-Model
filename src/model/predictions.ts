@@ -1,6 +1,7 @@
 import { z } from "zod";
 import { type SeasonLedger, validFeatures } from "./audit";
 import { compareTotal, projectFirstHalf } from "./predictor";
+import { easternTipoff } from "./time";
 
 export type LineBasis = "opening" | "latest";
 const marketSchema = z.object({
@@ -90,12 +91,7 @@ export const dailyArchiveSchema = z.object({
 export type DailyArchive = z.infer<typeof dailyArchiveSchema>;
 
 export function newYorkDate(timestamp: string) {
-  return new Intl.DateTimeFormat("en-CA", {
-    timeZone: "America/New_York",
-    year: "numeric",
-    month: "2-digit",
-    day: "2-digit",
-  }).format(new Date(timestamp));
+  return easternTipoff(timestamp).date;
 }
 
 /** Archive only today's refreshed data, with games assigned to their New York date. */
@@ -306,6 +302,9 @@ export function predictionsToCsv(
   const headers = [
     "game_id",
     "tipoff_utc",
+    "tipoff_date_et",
+    "tipoff_time_et",
+    "tipoff_zone",
     "away_team",
     "home_team",
     "away_conference",
@@ -332,6 +331,7 @@ export function predictionsToCsv(
   return `${[
     headers.map(csvCell).join(","),
     ...rows.map((row) => {
+      const tipoff = easternTipoff(row.startsAt);
       const comparison = predictionComparison(row, sportsbook, basis);
       const market = row.markets.find(
         (quote) => quote.sportsbook === sportsbook,
@@ -339,6 +339,9 @@ export function predictionsToCsv(
       return [
         row.gameId,
         row.startsAt,
+        tipoff.date,
+        tipoff.time,
+        tipoff.zone,
         row.awayTeam,
         row.homeTeam,
         row.awayConference,

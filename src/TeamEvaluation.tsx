@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import GameTime from "./GameTime";
 import {
   type TeamEvaluation as Report,
   teamEvaluationSchema,
@@ -333,7 +334,8 @@ export default function TeamEvaluation() {
             <table aria-label="Team game checks">
               <thead>
                 <tr>
-                  <th>Opponent / tipoff ET</th>
+                  <th>Tipoff (ET)</th>
+                  <th className="matchup-cell">Opponent</th>
                   <th>Model for / allowed</th>
                   <th>Actual for / allowed</th>
                   <th>Prior total</th>
@@ -349,19 +351,13 @@ export default function TeamEvaluation() {
                   return (
                     <tr key={game.gameId}>
                       <td>
+                        <GameTime startsAt={game.startsAt} />
+                      </td>
+                      <td className="matchup-cell">
                         <strong>
                           {away ? "at" : "vs"}{" "}
                           {away ? game.homeTeam : game.awayTeam}
                         </strong>
-                        <small>
-                          {new Date(game.startsAt).toLocaleString("en-US", {
-                            timeZone: "America/New_York",
-                            month: "short",
-                            day: "numeric",
-                            hour: "numeric",
-                            minute: "2-digit",
-                          })}
-                        </small>
                       </td>
                       <td>
                         {number(away ? game.awayProjected : game.homeProjected)}{" "}

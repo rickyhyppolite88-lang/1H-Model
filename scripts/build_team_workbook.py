@@ -116,8 +116,8 @@ def build_workbook(data: dict, output: Path):
     sheet(wb, "Game Review", "Prior baseline versus frozen blended predictions", context,
           "Team estimates add to the combined total. Change = blended minus prior baseline. Error = blended minus actual. Unscored games stay blank.",
           ["Tipoff ET", "Away team", "Home team", "Away estimate", "Home estimate", "Away actual", "Home actual", "Prior total", "Blended total", "Change", "Actual total", "Total error", "Prediction origin", "Game ID"],
-          [19, 32, 32, 15, 15, 14, 14, 14, 15, 14, 14, 14, 29, 17], reviews,
-          {1: "m/d/yy h:mm AM/PM", **{i: "0.0" for i in range(4, 13)}})
+          [24, 32, 32, 15, 15, 14, 14, 14, 15, 14, 14, 14, 29, 17], reviews,
+          {1: 'm/d/yy h:mm AM/PM" ET"', **{i: "0.0" for i in range(4, 13)}})
     wb.properties.title = "1H Model team comparison"
     output.parent.mkdir(parents=True, exist_ok=True)
     wb.save(output)

@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
+import GameTime from "./GameTime";
 import {
   conferenceNames,
   type DailyArchive,
@@ -411,7 +412,8 @@ export default function Predictions() {
         <table>
           <thead>
             <tr>
-              <th>Matchup / tipoff ET</th>
+              <th>Tipoff (ET)</th>
+              <th className="matchup-cell">Matchup</th>
               <th>Predicted 1H total</th>
               <th>{basis === "latest" ? "Latest line" : "Opening line"}</th>
               <th>Model − line</th>
@@ -426,6 +428,9 @@ export default function Predictions() {
               return (
                 <tr key={row.gameId}>
                   <td>
+                    <GameTime startsAt={row.startsAt} />
+                  </td>
+                  <td className="matchup-cell">
                     <strong className="matchup-team">
                       {row.awayRank !== null && (
                         <span className="rank-badge">#{row.awayRank}</span>
@@ -444,16 +449,7 @@ export default function Predictions() {
                         {row.homeConference ?? "Conference unavailable"}
                       </span>
                     </strong>
-                    <small>
-                      {new Date(row.startsAt).toLocaleString("en-US", {
-                        timeZone: "America/New_York",
-                        month: "short",
-                        day: "numeric",
-                        hour: "numeric",
-                        minute: "2-digit",
-                      })}{" "}
-                      · {row.status}
-                    </small>
+                    <small>{row.status}</small>
                   </td>
                   <td className="prediction-total">
                     {format(row.projectedFirstHalfTotal)}

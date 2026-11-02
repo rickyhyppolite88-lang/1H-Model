@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
+import GameTime from "./GameTime";
 import { evaluateSeason, ledgerSchema, type SeasonLedger } from "./model/audit";
 import { predict } from "./model/predictor";
 
@@ -159,7 +160,8 @@ export default function SeasonAudit() {
         <table>
           <thead>
             <tr>
-              <th>Matchup / tipoff ET</th>
+              <th>Tipoff (ET)</th>
+              <th className="matchup-cell">Matchup</th>
               <th>1H opener</th>
               <th>Latest quote*</th>
               <th>Model</th>
@@ -196,19 +198,13 @@ export default function SeasonAudit() {
               return (
                 <tr key={game.id}>
                   <td>
+                    <GameTime startsAt={game.startsAt} />
+                  </td>
+                  <td className="matchup-cell">
                     <strong>
                       {game.away.name} / {game.home.name}
                     </strong>
-                    <small>
-                      {new Date(game.startsAt).toLocaleString("en-US", {
-                        timeZone: "America/New_York",
-                        month: "short",
-                        day: "numeric",
-                        hour: "numeric",
-                        minute: "2-digit",
-                      })}{" "}
-                      · {game.status}
-                    </small>
+                    <small>{game.status}</small>
                     <small>
                       {frozen?.kind === "reconstructed_season_debut"
                         ? "Reconstructed season debut"
