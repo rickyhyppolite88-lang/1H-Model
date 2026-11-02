@@ -3,10 +3,13 @@ import { describe, expect, it } from "vitest";
 import { ledgerSchema } from "./audit";
 import {
   dailyPredictions,
+  filterPredictionGroups,
   generatePredictions,
+  isTop25,
   predictionComparison,
   predictionsToCsv,
   updateDailyArchive,
+  workbookPayload,
 } from "./predictions";
 import { predict } from "./predictor";
 
@@ -16,6 +19,65 @@ const ledger = ledgerSchema.parse(
 const generatedAt = "2026-11-02T23:00:00Z";
 
 describe("all-matchup projection feed", () => {
+  it("groups either team's conference and combines Top 25 without duplicate games", () => {
+    const base = generatePredictions(ledger, generatedAt).predictions[0];
+    const rows = [
+      {
+        ...base,
+        gameId: "cross",
+        awayConference: "ACC",
+        homeConference: "SEC",
+        awayRank: 25,
+        homeRank: null,
+      },
+      {
+        ...base,
+        gameId: "same",
+        awayConference: "SEC",
+        homeConference: "SEC",
+        awayRank: null,
+        homeRank: null,
+      },
+      {
+        ...base,
+        gameId: "unknown",
+        awayConference: null,
+        homeConference: null,
+        awayRank: null,
+        homeRank: null,
+      },
+    ];
+    expect(
+      filterPredictionGroups(rows, "SEC").map((row) => row.gameId),
+    ).toEqual(["cross", "same"]);
+    expect(
+      filterPredictionGroups(rows, "SEC", true).map((row) => row.gameId),
+    ).toEqual(["cross"]);
+    expect(filterPredictionGroups(rows, "all", true)).toHaveLength(1);
+    expect(isTop25(rows[2])).toBe(false);
+    const feed = {
+      ...generatePredictions(ledger, generatedAt),
+      predictions: rows,
+    };
+    const workbook = workbookPayload(feed);
+    expect(workbook.predictions[0].comparison).toEqual(
+      predictionComparison(
+        rows[0],
+        feed.defaultSportsbook,
+        feed.defaultLineBasis,
+      ),
+    );
+    expect(workbook.predictions.map((row) => row.top25)).toEqual([
+      true,
+      false,
+      false,
+    ]);
+    const csv = predictionsToCsv(rows);
+    expect(csv).toContain(
+      "away_conference,home_conference,away_rank,home_rank,top_25_game",
+    );
+    expect(csv).toContain("ACC,SEC,25,,Yes");
+  });
   it("archives the New York game date rather than the UTC date", () => {
     const feed = generatePredictions(
       { ...ledger, through: "2026-11-02" },

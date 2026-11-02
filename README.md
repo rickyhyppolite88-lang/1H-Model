@@ -6,7 +6,7 @@ The original Python repository and 63-game results tracker were not recovered. T
 
 ## Run locally
 
-Requires Node 22.12+ (Node 24 recommended). Python 3.10+ is needed only for data imports and importer tests.
+Requires Node 22.12+ (Node 24 recommended). Python 3.10+ and `requirements-dev.txt` dependencies are needed for data imports, Excel generation, and Python tests.
 
 ```sh
 npm ci
@@ -73,7 +73,7 @@ Public statistics: [TeamRankings college basketball](https://www.teamrankings.co
 
 The expected repository Pages address is `https://rickyhyppolite88-lang.github.io/1H-Model/`, but it is not live until the first deployment succeeds. The workflow sets the repository base path; local development runs at `/`. [Vite's Pages instructions](https://vite.dev/guide/static-deploy.html#github-pages) and [GitHub's workflow guide](https://docs.github.com/en/pages/getting-started-with-github-pages/using-custom-workflows-with-github-pages) describe the deployment mechanism.
 
-All calculations run in the browser. The pick tracker uses local storage on that browser and does not sync between devices. Export records to retain a copy. Injuries and market lines are manual inputs; this version does not fetch live odds, injuries, or scheduled matchups.
+The matchup lab runs in the browser; the batch job uses the same TypeScript projection function. The pick tracker uses local storage on that browser and does not sync between devices. Export records to retain a copy. Lab injury/line inputs are manual. The prediction page reads refreshed public matchup and market snapshots; injuries are not fetched automatically.
 
 ## Current-season first-half audit
 
@@ -84,6 +84,10 @@ Run `npm run markets:refresh` to retrieve public first-half markets and period r
 ## All predictions, code references, and daily downloads
 
 The app opens on **All predictions**. Every ledger matchup has a row, including unavailable predictions with an explicit reason. The model total is computed independently of sportsbook-line availability. Choose a sportsbook and an opening/latest line for the comparison and full CSV export.
+
+Use the **All games**, **Top 25**, and **Conferences** tabs to browse games. A conference filter includes either team; selecting a conference in Top 25 combines both filters. Rank badges use ESPN's published 1–25 rank at retrieval; missing ranks remain unknown. The filtered CSV includes every matching row across all pages and follows the selected sportsbook/line basis.
+
+The Excel download contains **All Games**, **Top 25**, and one sheet per conference, with an **Unclassified** sheet when conference data is missing. Cross-conference games appear in both relevant conference sheets, once per sheet. Each sheet includes filters, frozen headers, Eastern tipoff times, model and book totals, the difference, research lean, team conferences/ranks, and actual first-half results. Missing numeric inputs remain blank. Excel uses BetMGM/latest and is regenerated with every successful daily refresh.
 
 Code entry points:
 
@@ -106,14 +110,15 @@ Downloadable feeds:
 
 - [All predictions CSV](https://rickyhyppolite88-lang.github.io/1H-Model/data/predictions.csv)
 - [All predictions JSON](https://rickyhyppolite88-lang.github.io/1H-Model/data/predictions.json)
+- [Excel workbook with tabs](https://rickyhyppolite88-lang.github.io/1H-Model/data/predictions.xlsx)
 - [Dated download index](https://rickyhyppolite88-lang.github.io/1H-Model/data/prediction-archive.json)
-- Daily files: `data/daily/YYYY-MM-DD/predictions.csv` and `predictions.json`.
+- Daily files: `data/daily/YYYY-MM-DD/predictions.csv`, `predictions.json`, and `predictions.xlsx`. Older archive entries without an Excel file retain their CSV/JSON downloads.
 
-The JSON's `predictions` array contains `projectedFirstHalfTotal`, team names, tipoff, status, source inputs, and each book's opening/latest totals. Unavailable amounts are `null`, never zero. CSV files are UTF-8, with spreadsheet-formula escaping for external text.
+The JSON's `predictions` array contains `projectedFirstHalfTotal`, team names, conferences, ranks, tipoff, status, source inputs, and each book's opening/latest totals. Unavailable amounts are `null`, never zero. CSV files include conference/rank columns and are UTF-8, with spreadsheet-formula escaping for external text.
 
 The daily archive includes only matchups on that **America/New_York** date. The regular full CSV contains all archived matchups. Dated files can update during their day; earlier dates remain available afterward. The static daily CSV uses BetMGM/latest, while the page's full CSV export follows its selected controls. All source code links in the generated feed identify the build revision.
 
-The GitHub workflow is scheduled at **11:20, 17:20, and 23:20 UTC every day**. Each successful refresh imports current data, regenerates all CSV/JSON files, runs checks, commits the data, and deploys Pages. The open prediction screen checks for successful updates every five minutes. A stale source snapshot is not relabeled as a fresh daily archive. The currently configured season is 2026?27; season rollover still requires updating the configured season/snapshot pair.
+The GitHub workflow is scheduled at **11:20, 17:20, and 23:20 UTC every day**. Each successful refresh imports current data, regenerates all CSV/JSON/Excel files, runs checks, commits the data, and deploys Pages. The open prediction screen checks for successful updates every five minutes. A stale source snapshot is not relabeled as a fresh daily archive. The currently configured season is 2026–27; season rollover still requires updating the configured season/snapshot pair.
 
 To pull every predicted total from PowerShell:
 

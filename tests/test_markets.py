@@ -57,6 +57,12 @@ def test_verified_upstate_provider_alias_is_consistent():
     assert markets.normalize("USC Upstate Spartans") == markets.normalize("South Carolina Upstate Spartans")
 
 
+@pytest.mark.parametrize("rank,expected,known", [(1, 1, True), (25, 25, True), (99, None, True), (None, None, False), (0, None, False)])
+def test_rank_and_conference_classification(rank, expected, known):
+    result = markets.team_classification({"team": {"conferenceId": "23"}, "curatedRank": {"current": rank}}, {"23": "SEC"})
+    assert result == {"conferenceId": "23", "conference": "SEC", "rank": expected, "rankKnown": known}
+
+
 @pytest.mark.parametrize("espn_id,target", [("2393", "middle-tennessee-st-blue-raiders"), ("82", "illinois-chicago-flames"), ("399", "albany-great-danes"), ("2546", "se-missouri-st-redhawks"), ("145", "mississippi-rebels"), ("2547", "seattle-redhawks")])
 def test_verified_team_alias_requires_an_existing_model_record(espn_id, target):
     team = {"id": espn_id, "displayName": "Provider alias"}
@@ -70,7 +76,7 @@ def test_incremental_refresh_keeps_a_known_midnight_game_without_refetching_prio
         "id": "espn-1", "oddsGameId": "1", "startsAt": "2026-11-02T04:59:00Z", "quotes": [],
         "away": {"espnId": "a"}, "home": {"espnId": "b"},
     }]}), encoding="utf-8")
-    monkeypatch.setattr(markets, "read_url", lambda url: json.dumps({"events": []}) if "site.api.espn.com" in url else board())
+    monkeypatch.setattr(markets, "read_url", lambda url: json.dumps({"leagues": [{"id": "41", "groups": [{"id": "50", "children": [{"id": "23", "name": "SEC"}]}]}]}) if "dropdown" in url else json.dumps({"events": []}) if "site.api.espn.com" in url else board())
     monkeypatch.setattr(markets.time, "sleep", lambda seconds: None)
     result = markets.import_games("2026-27", date(2026, 11, 2), date(2026, 11, 2), output)
     assert result["unmatchedOdds"] == []

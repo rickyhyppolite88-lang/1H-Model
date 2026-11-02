@@ -16,6 +16,11 @@ export const predictionSchema = z.object({
   startsAt: z.iso.datetime(),
   awayTeam: z.string(),
   homeTeam: z.string(),
+  awayConference: z.string().nullable().default(null),
+  homeConference: z.string().nullable().default(null),
+  awayRank: z.number().int().min(1).max(25).nullable().default(null),
+  homeRank: z.number().int().min(1).max(25).nullable().default(null),
+  rankingsKnown: z.boolean().default(false),
   status: z.string(),
   projectedFirstHalfTotal: z.number().min(0).nullable(),
   actualFirstHalfTotal: z.number().int().min(0).nullable(),
@@ -71,6 +76,10 @@ export const dailyArchiveSchema = z.object({
       jsonPath: z
         .string()
         .regex(/^data\/daily\/\d{4}-\d{2}-\d{2}\/predictions\.json$/),
+      xlsxPath: z
+        .string()
+        .regex(/^data\/daily\/\d{4}-\d{2}-\d{2}\/predictions\.xlsx$/)
+        .optional(),
     }),
   ),
 });
@@ -123,6 +132,7 @@ export function updateDailyArchive(
     predicted: daily.counts.predicted,
     csvPath: `data/daily/${date}/predictions.csv`,
     jsonPath: `data/daily/${date}/predictions.json`,
+    xlsxPath: `data/daily/${date}/predictions.xlsx`,
   };
   return dailyArchiveSchema.parse({
     schemaVersion: 1,
@@ -154,6 +164,11 @@ export function generatePredictions(
       startsAt: game.startsAt,
       awayTeam: game.away.name,
       homeTeam: game.home.name,
+      awayConference: game.away.conference,
+      homeConference: game.home.conference,
+      awayRank: game.away.rank,
+      homeRank: game.home.rank,
+      rankingsKnown: game.away.rankKnown && game.home.rankKnown,
       status: game.status,
       projectedFirstHalfTotal: projection?.projectedTotal ?? null,
       actualFirstHalfTotal:
@@ -228,6 +243,50 @@ export function predictionComparison(
   };
 }
 
+export function isTop25(row: PredictionRow) {
+  return row.awayRank !== null || row.homeRank !== null;
+}
+
+export function conferenceNames(rows: PredictionRow[]) {
+  return [
+    ...new Set(
+      rows
+        .flatMap((row) => [row.awayConference, row.homeConference])
+        .filter((name): name is string => name !== null),
+    ),
+  ].sort();
+}
+
+export function filterPredictionGroups(
+  rows: PredictionRow[],
+  conference = "all",
+  top25 = false,
+) {
+  return rows.filter(
+    (row) =>
+      (conference === "all" ||
+        row.awayConference === conference ||
+        row.homeConference === conference) &&
+      (!top25 || isTop25(row)),
+  );
+}
+
+/** Readable workbook rows use the same comparison function as the page and CSV. */
+export function workbookPayload(feed: PredictionFeed) {
+  return {
+    ...feed,
+    predictions: feed.predictions.map((row) => ({
+      ...row,
+      comparison: predictionComparison(
+        row,
+        feed.defaultSportsbook,
+        feed.defaultLineBasis,
+      ),
+      top25: isTop25(row),
+    })),
+  };
+}
+
 const csvCell = (value: string | number | null) => {
   let text = value === null ? "" : String(value);
   if (typeof value === "string" && /^[\s]*[=+@-]/.test(text)) text = `'${text}`;
@@ -244,6 +303,11 @@ export function predictionsToCsv(
     "tipoff_utc",
     "away_team",
     "home_team",
+    "away_conference",
+    "home_conference",
+    "away_rank",
+    "home_rank",
+    "top_25_game",
     "status",
     "predicted_1h_total",
     "sportsbook",
@@ -272,6 +336,11 @@ export function predictionsToCsv(
         row.startsAt,
         row.awayTeam,
         row.homeTeam,
+        row.awayConference,
+        row.homeConference,
+        row.awayRank,
+        row.homeRank,
+        isTop25(row) ? "Yes" : row.rankingsKnown ? "No" : "Unknown",
         row.status,
         round(row.projectedFirstHalfTotal),
         sportsbook,

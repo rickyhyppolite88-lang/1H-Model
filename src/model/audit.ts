@@ -33,6 +33,10 @@ const gameTeamSchema = z.object({
   espnId: z.string(),
   modelId: z.string().nullable(),
   name: z.string(),
+  conferenceId: z.string().nullable().default(null),
+  conference: z.string().nullable().default(null),
+  rank: z.number().int().min(1).max(25).nullable().default(null),
+  rankKnown: z.boolean().default(false),
   firstHalfPoints: z.number().int().min(0).nullable(),
 });
 export const ledgerSchema = z.object({
