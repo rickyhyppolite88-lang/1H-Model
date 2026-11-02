@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { ledgerSchema, type SeasonLedger, validFeatures } from "./audit";
+import { dailyCoverageSchema, dailyRecordCoverage } from "./dailyRecord";
 import {
   csvCell,
   type PredictionFeed,
@@ -9,6 +10,8 @@ import {
 } from "./predictions";
 import { predictionSignal, signalSchema } from "./signals";
 import { easternTipoff } from "./time";
+
+export { dailyRecordGames, dailyRecordStatus } from "./dailyRecord";
 
 const gameSchema = ledgerSchema.shape.games.element;
 export const forecastRecordSchema = z.object({
@@ -20,8 +23,14 @@ export const forecastRecordSchema = z.object({
   recordedAt: z.iso.datetime(),
   signalCalculatedAt: z.iso.datetime(),
   origin: z.enum(["batch_capture", "published_observation"]),
+  importedAt: z.iso.datetime().optional(),
   evidence: z
-    .object({ url: z.url(), sha256: z.string().regex(/^[a-f0-9]{64}$/) })
+    .object({
+      url: z.url(),
+      sha256: z.string().regex(/^[a-f0-9]{64}$/),
+      publishedAt: z.iso.datetime().optional(),
+      deploymentUrl: z.url().optional(),
+    })
     .nullable(),
   inputSnapshots: z
     .object({
@@ -105,6 +114,11 @@ export const recordIndexSchema = z.object({
       csvPath: z
         .string()
         .regex(/^data\/prediction-record\/\d{4}-\d{2}-\d{2}\.csv$/),
+      gamesCsvPath: z
+        .string()
+        .regex(/^data\/prediction-record\/\d{4}-\d{2}-\d{2}-games\.csv$/)
+        .optional(),
+      coverage: dailyCoverageSchema.optional(),
     }),
   ),
 });
@@ -159,7 +173,18 @@ export function updatePredictionRecord(
   const results = [...store.results];
   const games = new Map(ledger.games.map((g) => [g.id, g]));
   const latest = new Map<string, ForecastRecord>();
-  for (const r of records) latest.set(gameKey(r), r);
+  const versions = new Map<string, number>();
+  for (const r of records) {
+    const key = gameKey(r);
+    const previous = latest.get(key);
+    if (
+      !previous ||
+      Date.parse(r.recordedAt) > Date.parse(previous.recordedAt) ||
+      (r.recordedAt === previous.recordedAt && r.version > previous.version)
+    )
+      latest.set(key, r);
+    versions.set(key, Math.max(versions.get(key) ?? 0, r.version));
+  }
   for (const row of feed.predictions) {
     const game = games.get(row.gameId);
     if (!game) throw new Error(`Missing source game ${row.gameId}`);
@@ -189,7 +214,7 @@ export function updatePredictionRecord(
       )
         continue;
     }
-    const version = (previous?.version ?? 0) + 1;
+    const version = (versions.get(key) ?? 0) + 1;
     const quote = row.markets.find(
       (m) => m.sportsbook === feed.defaultSportsbook,
     );
@@ -247,6 +272,7 @@ export function updatePredictionRecord(
     });
     records.push(record);
     latest.set(key, record);
+    versions.set(key, version);
   }
   const lastResult = new Map<string, RecordStore["results"][number]>();
   for (const result of results) lastResult.set(gameKey(result), result);
@@ -287,6 +313,59 @@ export function updatePredictionRecord(
     records,
     results,
   });
+}
+
+/** Recover only missing pregame benchmarks from a verified published archive. */
+export function recoverPublishedPredictions(
+  store: RecordStore,
+  feed: PredictionFeed,
+  ledger: SeasonLedger,
+  publishedAt: string,
+  importedAt: string,
+  evidence: { url: string; sha256: string; deploymentUrl: string },
+  gameDate: string,
+): RecordStore {
+  if (!/^[a-f0-9]{40}$/.test(feed.source.revision))
+    throw new Error("Archive recovery requires an immutable source revision.");
+  if (
+    Date.parse(publishedAt) < Date.parse(feed.generatedAt) ||
+    Date.parse(publishedAt) > Date.parse(importedAt)
+  )
+    throw new Error("Invalid verified publication time.");
+  const candidates = updatePredictionRecord(
+    { schemaVersion: 1, updatedAt: publishedAt, records: [], results: [] },
+    feed,
+    ledger,
+    publishedAt,
+    {
+      origin: "published_observation",
+      evidence: { ...evidence, publishedAt },
+      signalAt: importedAt,
+    },
+  );
+  const existing = new Set(
+    canonicalRecords(store.records).map((r) => `${groupKey(r)}:${r.gameId}`),
+  );
+  const records = [...store.records];
+  for (const r of canonicalRecords(candidates.records)) {
+    const key = `${groupKey(r)}:${r.gameId}`;
+    if (r.gameDate !== gameDate || existing.has(key)) continue;
+    const version =
+      Math.max(
+        0,
+        ...records
+          .filter((p) => gameKey(p) === gameKey(r))
+          .map((p) => p.version),
+      ) + 1;
+    records.push({
+      ...r,
+      id: `${r.season}_${r.gameId}_v${version}`,
+      version,
+      importedAt,
+    });
+    existing.add(key);
+  }
+  return recordStoreSchema.parse({ ...store, updatedAt: importedAt, records });
 }
 
 export function recordGrade(
@@ -423,6 +502,11 @@ export function buildRecordIndex(store: RecordStore): RecordIndex {
         games: new Set(records.map(gameKey)).size,
         jsonPath: `data/prediction-record/${date}.json`,
         csvPath: `data/prediction-record/${date}.csv`,
+        gamesCsvPath: `data/prediction-record/${date}-games.csv`,
+        coverage: dailyRecordCoverage(
+          recordForDate(store, date),
+          canonical.map((r) => r.id),
+        ),
       };
     }),
   });

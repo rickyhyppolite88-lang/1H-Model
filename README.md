@@ -130,7 +130,7 @@ Open **Prediction record** for the shared running record, with wins/losses/pushe
 
 Forecast changes append a version; identical refreshes do not duplicate it. Earlier forecasts are never replaced. Changed prices or lines are recorded before tipoff. Changed numerical predictions after tipoff are retained as historical estimates. Completed first-half results and subsequent score corrections append separate events. Corrections update the displayed grade while retaining the earlier observations in JSON.
 
-- [Running record Excel](https://rickyhyppolite88-lang.github.io/1H-Model/data/prediction-record.xlsx): Record Summary, Signal Results, and Prediction Record sheets.
+- [Running record Excel](https://rickyhyppolite88-lang.github.io/1H-Model/data/prediction-record.xlsx): Record Summary, Signal Results, Daily Coverage, Daily Games, and Prediction Record sheets.
 - [All forecast versions CSV](https://rickyhyppolite88-lang.github.io/1H-Model/data/prediction-record.csv): frozen lines, projections, scores, inputs, grades, and the counted-once marker.
 - [Record index](https://rickyhyppolite88-lang.github.io/1H-Model/data/prediction-record-index.json): cumulative summaries, canonical record IDs, and dated JSON/CSV paths.
 - Full forecast inputs and captured quotes are stored in `data/prediction-record/YYYY-MM-DD.json`. Prior/current team-stat snapshots are preserved under content-hash filenames in `data/input-snapshots/`; new batch records link the run snapshots and indicate whether the current snapshot exactly matches their frozen feature retrieval time. Frozen features remain the authoritative inputs for replay.
@@ -140,6 +140,16 @@ The initial record includes the public predictions observed at **5:55 PM ET on N
 Successful main-branch builds and the existing three daily refreshes validate, commit, and publish the record. New files are staged before the change check so fresh archive dates are retained. Pull requests validate without changing the shared record. Records are partitioned by Eastern game date so the page loads one date's detailed history at a time; global summaries and the full CSV/Excel retain the running record across dates. Manual matchup-lab saves continue to use the browser-local pick tracker.
 
 Implementation: [signals.ts](src/model/signals.ts), [predictionRecord.ts](src/model/predictionRecord.ts), and [prediction-record.mjs](scripts/prediction-record.mjs).
+
+### Complete daily game coverage
+
+The running record defaults to **All games for selected day**, with one row per matchup in Eastern tipoff order. It selects the counted original forecast when available, then the best saved pregame/historical estimate. Every game remains visible, including missing model inputs, unpriced forecasts, and estimates first made after tipoff. Counts reconcile the daily slate separately from the eligible win/loss record. The first-half result count also includes games with unavailable predictions.
+
+The dated `YYYY-MM-DD-games.csv` download contains one row per game. The existing dated CSV retains all versions. Excel's **Daily Coverage** sheet reconciles game/projection/status counts by Eastern date, and **Daily Games** lists all matchups with their predictions, recorded lines, actuals, and coverage status. The other sheets retain the cumulative performance record and every forecast version.
+
+For November 2, 2026, the 182-game ESPN Division I schedule is fully represented: 119 saved projections and 63 games with missing model inputs. An earlier successful deployment proves the UAB–McNeese forecast was published at 5:01 PM ET, before its 5:30 PM tipoff. Its original BetMGM/latest line of 71.5 is recovered into the pregame record. This raises counted forecasts from 89 to 90; the seven remaining historical estimates stay outside the recorded hit rate. Twenty-two projected games lack a recorded benchmark line. The source snapshot, hashes, deployment URL, and publication/import timestamps are retained under `data/prediction-record/source/2026-11-02-pretracking-*`.
+
+Recovery only fills missing eligible pregame benchmarks from a verified immutable published archive. It does not replace existing counted forecasts, alter their lines, import old result observations over newer scores, or backdate signal calculations. Recovered records append a new unique version ID while preserving their actual publication time separately from import time.
 
 ## Game times in Eastern Time
 

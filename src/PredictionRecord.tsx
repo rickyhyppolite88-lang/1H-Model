@@ -1,12 +1,18 @@
 import { useEffect, useState } from "react";
 import GameTime from "./GameTime";
 import {
+  dailyRecordCoverage,
+  dailyRecordGames,
+  dailyRecordStatus,
+} from "./model/dailyRecord";
+import {
   type RecordIndex,
   type RecordStore,
   recordGrade,
   recordIndexSchema,
   recordStoreSchema,
 } from "./model/predictionRecord";
+import { easternTipoff } from "./model/time";
 import SignalBadge from "./SignalBadge";
 
 const point = (n: number | null) => (n === null ? "—" : n.toFixed(2));
@@ -19,7 +25,7 @@ export default function PredictionRecord() {
   const [error, setError] = useState("");
   const [date, setDate] = useState("");
   const [group, setGroup] = useState("");
-  const [view, setView] = useState("official");
+  const [view, setView] = useState("games");
   const [query, setQuery] = useState("");
   const [page, setPage] = useState(0);
   useEffect(() => {
@@ -52,7 +58,11 @@ export default function PredictionRecord() {
     };
   }, []);
   const archive =
-    index?.archives.find((a) => a.date === date) ?? index?.archives[0];
+    index?.archives.find((a) => a.date === date) ??
+    index?.archives.find(
+      (a) => a.date === easternTipoff(new Date().toISOString()).date,
+    ) ??
+    index?.archives[0];
   useEffect(() => {
     if (!archive) return;
     const controller = new AbortController();
@@ -94,18 +104,27 @@ export default function PredictionRecord() {
         `${s.season}:${s.modelVersion}:${s.sportsbook}:${s.basis}` === group,
     ) ?? index.summary[index.summary.length - 1];
   const ids = new Set(index.canonicalIds);
-  const rows = (store?.records ?? [])
+  const scoped = (store?.records ?? []).filter(
+    (r) =>
+      !summary ||
+      (r.season === summary.season &&
+        r.modelVersion === summary.modelVersion &&
+        r.sportsbook === summary.sportsbook &&
+        r.basis === summary.basis),
+  );
+  const coverage = store
+    ? dailyRecordCoverage({ ...store, records: scoped }, index.canonicalIds)
+    : null;
+  const selected =
+    view === "games" ? dailyRecordGames(scoped, index.canonicalIds) : scoped;
+  const rows = selected
     .filter(
       (r) =>
-        (!summary ||
-          (r.season === summary.season &&
-            r.modelVersion === summary.modelVersion &&
-            r.sportsbook === summary.sportsbook &&
-            r.basis === summary.basis)) &&
         `${r.prediction.awayTeam} ${r.prediction.homeTeam}`
           .toLowerCase()
           .includes(query.toLowerCase()) &&
-        (view === "all" ||
+        (view === "games" ||
+          view === "all" ||
           (view === "official" && ids.has(r.id)) ||
           (view === "settled" &&
             ids.has(r.id) &&
@@ -113,9 +132,10 @@ export default function PredictionRecord() {
               recordGrade(r, store?.results ?? []).grade,
             ))),
     )
-    .sort(
-      (a, b) =>
-        b.recordedAt.localeCompare(a.recordedAt) || b.version - a.version,
+    .sort((a, b) =>
+      view === "games"
+        ? a.prediction.startsAt.localeCompare(b.prediction.startsAt)
+        : b.recordedAt.localeCompare(a.recordedAt) || b.version - a.version,
     );
   const pages = Math.max(1, Math.ceil(rows.length / 25));
   const safePage = Math.min(page, pages - 1);
@@ -156,7 +176,58 @@ export default function PredictionRecord() {
             Full dated inputs JSON ↓
           </a>
         )}
+        {archive?.gamesCsvPath && (
+          <a
+            className="secondary-button"
+            href={`${import.meta.env.BASE_URL}${archive.gamesCsvPath}`}
+            download={`1h-all-games-${archive.date}.csv`}
+          >
+            Selected day: all games CSV ↓
+          </a>
+        )}
       </div>
+      {coverage && (
+        <section
+          className="daily-record-coverage"
+          aria-label="Daily game coverage"
+        >
+          <h3>{archive?.date} · All saved games</h3>
+          <p>
+            One row per matchup, including missing projections and games that
+            started before tracking. Counted pregame forecasts use their
+            original line; the remaining rows show the best saved estimate and
+            its status.
+          </p>
+          <div className="audit-metrics">
+            <div>
+              <span>Games saved for this day</span>
+              <strong>{coverage.games}</strong>
+            </div>
+            <div>
+              <span>Games with a projection</span>
+              <strong>{coverage.projected}</strong>
+            </div>
+            <div>
+              <span>Missing model inputs</span>
+              <strong>{coverage.unavailable}</strong>
+            </div>
+            <div>
+              <span>First-half results available</span>
+              <strong>{coverage.withResults}</strong>
+            </div>
+          </div>
+          <p className="inline-note">
+            {coverage.counted} counted pregame · {coverage.unpriced} without a
+            recorded line · {coverage.historical} historical estimates ·{" "}
+            {coverage.noLean} without a model lean
+            {coverage.otherPregame
+              ? ` · ${coverage.otherPregame} other pregame versions`
+              : ""}
+            . Missing inputs stay unavailable; historical estimates stay outside
+            the recorded win rate.
+          </p>
+        </section>
+      )}
       {summary && (
         <>
           <p className="group-description">
@@ -271,6 +342,7 @@ export default function PredictionRecord() {
               setPage(0);
             }}
           >
+            <option value="games">All games for selected day</option>
             <option value="official">Official pregame forecasts</option>
             <option value="all">All saved versions</option>
             <option value="settled">Official settled results</option>
@@ -302,6 +374,7 @@ export default function PredictionRecord() {
                 <th>Frozen signal</th>
                 <th>Actual 1H</th>
                 <th>Result</th>
+                <th>Coverage status</th>
                 <th>Record version</th>
               </tr>
             </thead>
@@ -338,6 +411,9 @@ export default function PredictionRecord() {
                         {grade.grade}
                       </span>
                     </td>
+                    <td title={r.prediction.unavailableReason ?? undefined}>
+                      {dailyRecordStatus(r, ids)}
+                    </td>
                     <td>
                       v{r.version}
                       <small>
@@ -347,6 +423,9 @@ export default function PredictionRecord() {
                             ? "Later / unpriced version"
                             : "Excluded from win rate"}
                       </small>
+                      {r.importedAt && r.evidence?.publishedAt && (
+                        <small>Recovered published forecast</small>
+                      )}
                     </td>
                   </tr>
                 );
@@ -361,7 +440,10 @@ export default function PredictionRecord() {
         </div>
       )}
       <div className="prediction-pagination">
-        <span>{rows.length} saved versions in this view</span>
+        <span>
+          {rows.length} {view === "games" ? "games" : "saved versions"} in this
+          view
+        </span>
         <div className="button-group">
           <button
             className="secondary-button"

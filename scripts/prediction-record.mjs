@@ -23,10 +23,13 @@ export async function savePredictionRecord(model,store) {
     await writeFile(`public/${entry.jsonPath}.tmp`,`${JSON.stringify(shard,null,2)}\n`);
     await rename(`public/${entry.jsonPath}.tmp`,`public/${entry.jsonPath}`);
     await writeFile(`public/${entry.csvPath}`,`\uFEFF${model.recordToCsv(shard,index.canonicalIds)}`);
+    const daily=model.dailyRecordGames(shard.records,index.canonicalIds);
+    await writeFile(`public/${entry.gamesCsvPath}`,`\uFEFF${model.recordToCsv({...shard,records:daily},index.canonicalIds)}`);
   }
   await writeFile("public/data/prediction-record.csv",`\uFEFF${model.recordToCsv(store,index.canonicalIds)}`);
   await writeFile("public/data/prediction-record-index.json.tmp",`${JSON.stringify(index,null,2)}\n`);
   await rename("public/data/prediction-record-index.json.tmp","public/data/prediction-record-index.json");
   const ids=new Set(index.canonicalIds);
-  return {index,payload:{...store,summary:index.summary,records:store.records.map((r) => ({...r,...model.recordGrade(r,store.results),counted:ids.has(r.id)}))}};
+  const decorate=(r)=>({...r,...model.recordGrade(r,store.results),counted:ids.has(r.id),coverageStatus:model.dailyRecordStatus(r,ids)});
+  return {index,payload:{...store,summary:index.summary,dailyCoverage:index.archives.map((a)=>({date:a.date,...a.coverage})),dailyGames:model.dailyRecordGames(store.records,index.canonicalIds).map(decorate),records:store.records.map(decorate)}};
 }

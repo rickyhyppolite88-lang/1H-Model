@@ -5,12 +5,133 @@ import {
   recordForDate,
   recordGrade,
   recordToCsv,
+  recoverPublishedPredictions,
   updatePredictionRecord,
 } from "./predictionRecord";
 import { generatePredictions } from "./predictions";
 import { recordFixture } from "./record.test-fixture";
 
 describe("permanent prediction record", () => {
+  it("recovers a proven pregame publication without rewriting an after-tipoff record or its results", () => {
+    const f = recordFixture();
+    const later = "2026-11-03T01:00:00Z";
+    const old = updatePredictionRecord(
+      f.store,
+      generatePredictions(f.ledger, later),
+      f.ledger,
+      later,
+    );
+    const feed = {
+      ...f.feed,
+      source: { ...f.feed.source, revision: "a".repeat(40) },
+    };
+    const evidence = {
+      url: "https://example.com/published.json",
+      sha256: "a".repeat(64),
+      deploymentUrl: "https://example.com/deployment",
+    };
+    const recovered = recoverPublishedPredictions(
+      old,
+      feed,
+      f.ledger,
+      "2026-11-02T22:05:00Z",
+      "2026-11-03T01:30:00Z",
+      evidence,
+      "2026-11-02",
+    );
+    expect(recovered.records).toHaveLength(2);
+    expect(recovered.records[0]).toEqual(old.records[0]);
+    expect(recovered.results).toEqual(old.results);
+    expect(recovered.records[1]).toMatchObject({
+      version: 2,
+      recordedAt: "2026-11-02T22:05:00Z",
+      importedAt: "2026-11-03T01:30:00Z",
+      origin: "published_observation",
+      state: "pregame",
+      signal: { score: null },
+    });
+    expect(buildRecordIndex(recovered).canonicalIds).toEqual([
+      recovered.records[1].id,
+    ]);
+    const at = "2026-11-03T02:00:00Z";
+    const changed = generatePredictions(f.ledger, at);
+    changed.predictions[0].projectedFirstHalfTotal = 80;
+    const next = updatePredictionRecord(recovered, changed, f.ledger, at);
+    expect(next.records[2].version).toBe(3);
+    expect(new Set(next.records.map((r) => r.id)).size).toBe(3);
+    expect(
+      recoverPublishedPredictions(
+        recovered,
+        feed,
+        f.ledger,
+        "2026-11-02T22:05:00Z",
+        "2026-11-03T02:30:00Z",
+        evidence,
+        "2026-11-02",
+      ).records,
+    ).toEqual(recovered.records);
+  });
+  it("does not replace an existing counted forecast with an older recovered line", () => {
+    const f = recordFixture();
+    const old = updatePredictionRecord(f.store, f.feed, f.ledger, f.at);
+    const feed = generatePredictions(f.ledger, "2026-11-02T21:30:00Z");
+    feed.source.revision = "a".repeat(40);
+    const result = recoverPublishedPredictions(
+      old,
+      feed,
+      f.ledger,
+      "2026-11-02T21:40:00Z",
+      "2026-11-03T02:00:00Z",
+      {
+        url: "https://example.com/data",
+        sha256: "a".repeat(64),
+        deploymentUrl: "https://example.com/deploy",
+      },
+      "2026-11-02",
+    );
+    expect(result.records).toEqual(old.records);
+  });
+  it("rejects invalid publication evidence and never promotes an archive published after tipoff", () => {
+    const f = recordFixture();
+    const evidence = {
+      url: "https://example.com/data",
+      sha256: "a".repeat(64),
+      deploymentUrl: "https://example.com/deploy",
+    };
+    expect(() =>
+      recoverPublishedPredictions(
+        f.store,
+        f.feed,
+        f.ledger,
+        f.at,
+        "2026-11-03T02:00:00Z",
+        evidence,
+        "2026-11-02",
+      ),
+    ).toThrow("immutable");
+    f.feed.source.revision = "a".repeat(40);
+    expect(() =>
+      recoverPublishedPredictions(
+        f.store,
+        f.feed,
+        f.ledger,
+        "2026-11-02T21:00:00Z",
+        "2026-11-03T02:00:00Z",
+        evidence,
+        "2026-11-02",
+      ),
+    ).toThrow("publication time");
+    const result = recoverPublishedPredictions(
+      f.store,
+      f.feed,
+      f.ledger,
+      "2026-11-03T01:00:00Z",
+      "2026-11-03T02:00:00Z",
+      evidence,
+      "2026-11-02",
+    );
+    expect(result.records).toEqual([]);
+  });
   it("saves a changed post-tipoff projection as historical without replacing the real forecast", () => {
     const f = recordFixture();
     const first = updatePredictionRecord(f.store, f.feed, f.ledger, f.at);

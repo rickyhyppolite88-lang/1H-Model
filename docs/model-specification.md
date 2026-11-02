@@ -70,6 +70,12 @@ The first eligible forecast per season, model version, benchmark book/basis, and
 
 Scores and outcomes remain independent: a loss does not retroactively change its recorded green score. Results by frozen score band provide evidence for later out-of-sample calibration. No numerical probability is automatically promoted from a small observed hit rate.
 
+### Daily coverage and verified archive recovery
+
+Daily coverage counts every saved matchup once, including unavailable projections and historical/unpriced estimates. The counted pregame forecast takes precedence in the one-row-per-game view. Without one, a saved pregame estimate takes precedence over an after-tipoff estimate; within the same category, the most recently recorded estimate is used. Daily game counts and status counts are separate from forecast-version and win/loss counts.
+
+A verified published archive can recover a missing eligible benchmark. Publication must follow source generation and precede import and tipoff; the source model revision must be an immutable commit. The recovery retains publication evidence and a separate import/signal-calculation time. It never replaces an existing counted forecast, uses actual outcomes to select imports, or overwrites current result events. Version numbers follow the maximum saved version, even when a recovered forecast has an earlier publication time.
+
 ## Offense/defense carryover report
 
 The team evaluation report adds dated first-half points allowed as an optional descriptive statistic. It is not part of `CompleteMetrics` and does not change the existing blend or projection weights. The TeamRankings importer now reads six tables; missing first-half defense does not disable otherwise complete core model inputs.
