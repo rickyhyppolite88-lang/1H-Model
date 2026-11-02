@@ -19,6 +19,23 @@ const ledger = ledgerSchema.parse(
 const generatedAt = "2026-11-02T23:00:00Z";
 
 describe("all-matchup projection feed", () => {
+  it.each([
+    ["2026-11-03T00:00:00Z", "2026-11-02,7:00 PM,EST"],
+    ["2026-07-03T00:00:00Z", "2026-07-02,8:00 PM,EDT"],
+  ])(
+    "exports human-readable Eastern tipoffs for %s while retaining UTC",
+    (startsAt, eastern) => {
+      const row = {
+        ...generatePredictions(ledger, generatedAt).predictions[0],
+        startsAt,
+      };
+      const csv = predictionsToCsv([row]);
+      expect(csv).toContain(
+        "tipoff_utc,tipoff_date_et,tipoff_time_et,tipoff_zone",
+      );
+      expect(csv).toContain(`${startsAt},${eastern}`);
+    },
+  );
   it("groups either team's conference and combines Top 25 without duplicate games", () => {
     const base = generatePredictions(ledger, generatedAt).predictions[0];
     const rows = [

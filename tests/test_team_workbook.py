@@ -1,4 +1,5 @@
 import importlib.util
+import pytest
 from pathlib import Path
 
 from openpyxl import load_workbook
@@ -9,7 +10,8 @@ exporter = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(exporter)
 
 
-def test_team_report_preserves_missing_inputs_cohorts_and_projection_values(tmp_path):
+@pytest.mark.parametrize("timestamp,hour", [("2026-11-03T00:00:00Z", 19), ("2026-07-03T00:00:00Z", 20)])
+def test_team_report_preserves_missing_inputs_cohorts_and_projection_values(tmp_path, timestamp, hour):
     empty = {"sample": 0, "priorMae": None, "modelMae": None, "bias": None, "priorDefenseMae": None, "defenseMae": None}
     graded = {"sample": 1, "priorMae": 2, "modelMae": 0, "bias": 0, "priorDefenseMae": 3, "defenseMae": 2}
     # Keep this fixture independent of today's team records and changing results.
@@ -22,6 +24,7 @@ def test_team_report_preserves_missing_inputs_cohorts_and_projection_values(tmp_
             "games": [{"gameId": "one", "startsAt": "2026-11-03T00:00:00Z", "awayTeam": "Team A", "homeTeam": "Team B", "kind": "reconstructed_season_debut",
                        "awayProjected": 35, "homeProjected": 37, "awayActual": 33, "homeActual": 39, "priorTotal": 70, "modelTotal": 72, "shift": 2, "actualTotal": 72, "error": 0}]}
     target = tmp_path / "teams.xlsx"
+    data["games"][0]["startsAt"] = timestamp
     exporter.build_workbook(data, target)
     wb = load_workbook(target, data_only=True)
     assert wb.sheetnames == ["Team Comparison", "Season Check", "Team Accuracy", "Game Review"]
@@ -37,6 +40,8 @@ def test_team_report_preserves_missing_inputs_cohorts_and_projection_values(tmp_
     assert check["C7"].value == data["summary"]["prospective"]["priorMae"]
     assert check["B8"].value == data["summary"]["reconstructed"]["sample"]
     games = wb["Game Review"]
+    assert games["A7"].value.hour == hour
+    assert '" ET"' in games["A7"].number_format
     for index, game in enumerate(data["games"], 7):
         assert games.cell(index, 14).value == game["gameId"]
         assert abs(games.cell(index, 9).value - game["modelTotal"]) < 1e-10

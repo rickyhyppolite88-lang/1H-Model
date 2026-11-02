@@ -63,6 +63,7 @@ it("combines Top 25 with a conference and exports matching rows beyond the first
   feed.predictions = Array.from({ length: 30 }, (_, index) => ({
     ...base,
     gameId: `ranked-${index}`,
+    startsAt: "2026-11-03T00:00:00Z",
     awayTeam: `Ranked team ${index}`,
     homeTeam: "Opponent",
     awayConference: "SEC",
@@ -117,6 +118,13 @@ it("combines Top 25 with a conference and exports matching rows beyond the first
   ).toBe("true");
   expect(screen.queryByText("Unranked team")).toBeNull();
   expect(screen.queryByText("Ranked team 29")).toBeNull();
+  expect(
+    screen.getByRole("columnheader", { name: "Tipoff (ET)" }),
+  ).toBeTruthy();
+  expect(screen.getAllByText("7:00 PM ET")).toHaveLength(25);
+  expect(
+    screen.getAllByTitle("Eastern Time (EST)")[0].getAttribute("datetime"),
+  ).toBe("2026-11-03T00:00:00Z");
   fireEvent.click(
     screen.getByRole("button", { name: /Download filtered 30 rows/ }),
   );

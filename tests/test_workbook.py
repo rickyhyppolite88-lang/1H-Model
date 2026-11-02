@@ -1,4 +1,5 @@
 import importlib.util
+import pytest
 from pathlib import Path
 
 from openpyxl import load_workbook
@@ -15,11 +16,13 @@ def row(game_id, away, home, rank=None):
             "top25": rank is not None, "comparison": {"line": 70.5, "signedEdge": 1.75, "lean": "OVER"}}
 
 
-def test_workbook_groups_match_unique_games_and_keep_typed_values(tmp_path):
+@pytest.mark.parametrize("timestamp,hour,day", [("2026-11-03T00:00:00Z", 19, 2), ("2026-07-03T00:00:00Z", 20, 2)])
+def test_workbook_groups_match_unique_games_and_keep_typed_values(tmp_path, timestamp, hour, day):
     data = {"generatedAt": "2026-11-02T23:00:00Z", "defaultSportsbook": "betmgm", "defaultLineBasis": "latest",
             "source": {"projectionCode": "https://example.com/model"},
             "predictions": [row("one", "SEC", "ACC", 1), row("two", "SEC", "SEC"), row("three", None, "Big Ten", 25)]}
     output = tmp_path / "predictions.xlsx"
+    data["predictions"][0]["startsAt"] = timestamp
     exporter.build_workbook(data, output)
     workbook = load_workbook(output)
     ids = lambda sheet: [workbook[sheet].cell(r, 12).value for r in range(7, workbook[sheet].max_row + 1) if workbook[sheet].cell(r, 12).value]
@@ -32,7 +35,8 @@ def test_workbook_groups_match_unique_games_and_keep_typed_values(tmp_path):
     sheet = workbook["All Games"]
     assert sheet["D7"].value == 72.25 and sheet["D7"].data_type == "n"
     assert sheet["F7"].value == 1.75 and sheet["J7"].value is None
-    assert sheet["A7"].value.hour == 19  # UTC midnight is the previous evening in New York.
+    assert sheet["A7"].value.hour == hour and sheet["A7"].value.day == day
+    assert '" ET"' in sheet["A7"].number_format
     assert sheet.freeze_panes == "D7" and len(sheet.tables) == 1
     assert not sheet.sheet_view.showGridLines
 

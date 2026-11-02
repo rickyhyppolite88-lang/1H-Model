@@ -120,6 +120,12 @@ The daily archive includes only matchups on that **America/New_York** date. The 
 
 The GitHub workflow is scheduled at **11:20, 17:20, and 23:20 UTC every day**. Each successful refresh imports current data, regenerates all CSV/JSON/Excel files, runs checks, commits the data, and deploys Pages. The open prediction screen checks for successful updates every five minutes. A stale source snapshot is not relabeled as a fresh daily archive. The currently configured season is 2026–27; season rollover still requires updating the configured season/snapshot pair.
 
+## Game times in Eastern Time
+
+All predictions, season audit, and team game checks have a dedicated **Tipoff (ET)** column with the Eastern date and AM/PM time. Conversion uses `America/New_York`, including daylight-saving changes, regardless of the viewer's local time zone. Hovering a time identifies EST or EDT.
+
+Current prediction CSV downloads include `tipoff_date_et`, `tipoff_time_et`, and `tipoff_zone` alongside `tipoff_utc`. Both Excel reports retain sortable date/time cells and display an explicit ET suffix. UTC timestamps remain the canonical JSON source, and daily archive dates continue to use Eastern Time.
+
 ## Team offense, defense, and carryover checks
 
 Open **Team comparison** to inspect 2025–26 final and 2026–27 observed first-half scoring, first-half points allowed, possessions, offensive efficiency, and defensive efficiency. Each row shows the season change and the blended model input. Conference and Top 25 filters narrow the team selector. Efficiency is stored as points per possession and displayed as points per 100 possessions; pace is full-game possessions. Missing current observations remain unavailable.

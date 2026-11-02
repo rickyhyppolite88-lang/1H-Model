@@ -16,7 +16,7 @@ from openpyxl.formatting.rule import CellIsRule
 from openpyxl.utils import get_column_letter
 
 HEADERS = ["Tipoff ET", "Away team (rank)", "Home team (rank)", "Model 1H", "Book 1H", "Difference", "Research lean", "Away conference", "Home conference", "Actual 1H", "Availability", "Game ID", "Away rank", "Home rank", "Top 25 game"]
-WIDTHS = [19, 30, 30, 13, 12, 12, 15, 17, 17, 12, 39, 15, 11, 11, 14]
+WIDTHS = [24, 30, 30, 13, 12, 12, 15, 17, 17, 12, 39, 15, 11, 11, 14]
 GREEN = "203C33"
 MUTED = "71816A"
 
@@ -94,7 +94,7 @@ def build_workbook(data: dict, output: Path) -> None:
                 cell.alignment = Alignment(vertical="center", horizontal="right" if column in [4, 5, 6, 10, 13, 14] else "left", indent=1 if column in [2, 3, 7, 8, 9, 11] else 0, wrap_text=column in [2, 3, 8, 9, 11])
                 if row_number % 2 == 0:
                     cell.fill = PatternFill("solid", fgColor="F3F6ED")
-            ws.cell(row_number, 1).number_format = "m/d/yy h:mm AM/PM"
+            ws.cell(row_number, 1).number_format = 'm/d/yy h:mm AM/PM" ET"'
             for column in [4, 5, 10]:
                 ws.cell(row_number, column).number_format = "0.0"
             ws.cell(row_number, 6).number_format = '+0.0;-0.0;"—"'
