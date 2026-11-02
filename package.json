@@ -12,7 +12,9 @@
     "format": "biome check --write .",
     "data:refresh": "python scripts/import_teamrankings.py --season 2026-27 --output public/data/current-season.json",
     "markets:refresh": "python scripts/import_season_games.py && node scripts/evaluate-season.mjs",
-    "audit:season": "node scripts/evaluate-season.mjs"
+    "audit:season": "node scripts/evaluate-season.mjs",
+    "predictions:all": "node scripts/evaluate-season.mjs",
+    "predictions:refresh": "npm run data:refresh && npm run markets:refresh"
   },
   "dependencies": {
     "react": "^19.2.0",

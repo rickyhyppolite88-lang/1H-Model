@@ -80,3 +80,44 @@ All calculations run in the browser. The pick tracker uses local storage on that
 See [the opening-season audit](docs/opening-season-audit.md). Regular-season calculations are research leans; the old tournament confidence percentages and filters are no longer applied to them. BetMGM openers are the fixed default benchmark, with other books selectable. Latest displayed quotes are not verified closing lines.
 
 Run `npm run markets:refresh` to retrieve public first-half markets and period results, then `npm run audit:season` to replay the exact TypeScript model and freeze future pregame features. Missing quotes, unmatched games, and ineligible historical features are reported explicitly. The schedule now refreshes three times per day during the season. Lines and scores are snapshots, not a live feed.
+
+## All predictions, code references, and daily downloads
+
+The app opens on **All predictions**. Every ledger matchup has a row, including unavailable predictions with an explicit reason. The model total is computed independently of sportsbook-line availability. Choose a sportsbook and an opening/latest line for the comparison and full CSV export.
+
+Code entry points:
+
+| Function | Source | Purpose |
+| --- | --- | --- |
+| `projectFirstHalf(a, b, phase)` | [predictor.ts](src/model/predictor.ts) | Shared numeric projection used by the lab and batch output |
+| `generatePredictions(ledger, generatedAt, revision)` | [predictions.ts](src/model/predictions.ts) | One structured output record per matchup |
+| `predictionsToCsv(rows, sportsbook, basis)` | [predictions.ts](src/model/predictions.ts) | CSV using the selected book and line basis |
+| Batch runner | [evaluate-season.mjs](scripts/evaluate-season.mjs) | Generate current feeds and today's dated files |
+
+```sh
+# Recompute every prediction from the cached public snapshots
+npm run predictions:all
+
+# Pull current team stats and markets/results, then recompute all predictions
+npm run predictions:refresh
+```
+
+Downloadable feeds:
+
+- [All predictions CSV](https://rickyhyppolite88-lang.github.io/1H-Model/data/predictions.csv)
+- [All predictions JSON](https://rickyhyppolite88-lang.github.io/1H-Model/data/predictions.json)
+- [Dated download index](https://rickyhyppolite88-lang.github.io/1H-Model/data/prediction-archive.json)
+- Daily files: `data/daily/YYYY-MM-DD/predictions.csv` and `predictions.json`.
+
+The JSON's `predictions` array contains `projectedFirstHalfTotal`, team names, tipoff, status, source inputs, and each book's opening/latest totals. Unavailable amounts are `null`, never zero. CSV files are UTF-8, with spreadsheet-formula escaping for external text.
+
+The daily archive includes only matchups on that **America/New_York** date. The regular full CSV contains all archived matchups. Dated files can update during their day; earlier dates remain available afterward. The static daily CSV uses BetMGM/latest, while the page's full CSV export follows its selected controls. All source code links in the generated feed identify the build revision.
+
+The GitHub workflow is scheduled at **11:20, 17:20, and 23:20 UTC every day**. Each successful refresh imports current data, regenerates all CSV/JSON files, runs checks, commits the data, and deploys Pages. The open prediction screen checks for successful updates every five minutes. A stale source snapshot is not relabeled as a fresh daily archive. The currently configured season is 2026?27; season rollover still requires updating the configured season/snapshot pair.
+
+To pull every predicted total from PowerShell:
+
+```powershell
+$feed = Invoke-RestMethod 'https://rickyhyppolite88-lang.github.io/1H-Model/data/predictions.json'
+$feed.predictions | Select-Object awayTeam, homeTeam, projectedFirstHalfTotal
+```

@@ -57,6 +57,13 @@ def test_verified_upstate_provider_alias_is_consistent():
     assert markets.normalize("USC Upstate Spartans") == markets.normalize("South Carolina Upstate Spartans")
 
 
+@pytest.mark.parametrize("espn_id,target", [("2393", "middle-tennessee-st-blue-raiders"), ("82", "illinois-chicago-flames"), ("399", "albany-great-danes"), ("2546", "se-missouri-st-redhawks"), ("145", "mississippi-rebels"), ("2547", "seattle-redhawks")])
+def test_verified_team_alias_requires_an_existing_model_record(espn_id, target):
+    team = {"id": espn_id, "displayName": "Provider alias"}
+    assert markets.model_id(team, [{"id": target, "name": "Model team"}]) == target
+    assert markets.model_id(team, []) is None
+
+
 def test_incremental_refresh_keeps_a_known_midnight_game_without_refetching_prior_day(monkeypatch, tmp_path):
     output = tmp_path / "ledger.json"
     output.write_text(json.dumps({"season": "2026-27", "seasonStart": "2026-11-01", "through": "2026-11-01", "games": [{
