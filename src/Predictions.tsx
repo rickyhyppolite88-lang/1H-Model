@@ -12,6 +12,8 @@ import {
   predictionFeedSchema,
   predictionsToCsv,
 } from "./model/predictions";
+import { predictionSignal } from "./model/signals";
+import SignalBadge from "./SignalBadge";
 
 const books: Record<string, string> = {
   betmgm: "BetMGM",
@@ -39,6 +41,12 @@ export default function Predictions() {
   const [group, setGroup] = useState<"all" | "top25" | "conference">("all");
   const [conference, setConference] = useState("all");
   const [page, setPage] = useState(0);
+  const [sort, setSort] = useState("signal");
+  const [clock, setClock] = useState(() => Date.now());
+  useEffect(() => {
+    const timer = window.setInterval(() => setClock(Date.now()), 60 * 1000);
+    return () => window.clearInterval(timer);
+  }, []);
   useEffect(() => {
     const controller = new AbortController();
     const loadFeed = () =>
@@ -104,20 +112,31 @@ export default function Predictions() {
         feed?.predictions ?? [],
         conference,
         group === "top25",
-      ).filter((row) => {
-        const matches = `${row.awayTeam} ${row.homeTeam}`
-          .toLowerCase()
-          .includes(query.trim().toLowerCase());
-        const available = row.projectedFirstHalfTotal !== null;
-        return (
-          matches &&
-          (coverage === "all" ||
-            (coverage === "available" && available) ||
-            (coverage === "unavailable" && !available) ||
-            (coverage === "completed" && row.actualFirstHalfTotal !== null))
-        );
-      }),
-    [feed, query, coverage, conference, group],
+      )
+        .filter((row) => {
+          const matches = `${row.awayTeam} ${row.homeTeam}`
+            .toLowerCase()
+            .includes(query.trim().toLowerCase());
+          const available = row.projectedFirstHalfTotal !== null;
+          return (
+            matches &&
+            (coverage === "all" ||
+              (coverage === "available" && available) ||
+              (coverage === "unavailable" && !available) ||
+              (coverage === "completed" && row.actualFirstHalfTotal !== null))
+          );
+        })
+        .sort((a, b) => {
+          if (sort === "signal") {
+            const at = new Date(clock).toISOString();
+            const diff =
+              (predictionSignal(b, book, basis, at).score ?? -1) -
+              (predictionSignal(a, book, basis, at).score ?? -1);
+            if (diff) return diff;
+          }
+          return Date.parse(a.startsAt) - Date.parse(b.startsAt);
+        }),
+    [feed, query, coverage, conference, group, sort, clock, book, basis],
   );
   if (error)
     return (
@@ -148,7 +167,12 @@ export default function Predictions() {
       new Blob(
         [
           "\uFEFF",
-          predictionsToCsv(filtered ? rows : feed.predictions, book, basis),
+          predictionsToCsv(
+            filtered ? rows : feed.predictions,
+            book,
+            basis,
+            new Date(clock).toISOString(),
+          ),
         ],
         {
           type: "text/csv;charset=utf-8",
@@ -241,6 +265,17 @@ export default function Predictions() {
           <span>Top 25 games in view</span>
           <strong>{rows.filter(isTop25).length}</strong>
         </div>
+      </div>
+      <div className="signal-legend">
+        <strong>Stronger model signal</strong>
+        <span className="signal-gradient" />
+        <span>Fainter = weaker signal</span>
+        <p>
+          Green is a research ranking, not a hit percentage. Scoring/pace
+          agreement strengthens the score; 8+ point gaps are held for outlier
+          review. Started games and unavailable predictions stay neutral. The
+          Prediction record tab tracks the results of each frozen score.
+        </p>
       </div>
       <div className="daily-downloads">
         <div>
@@ -336,6 +371,19 @@ export default function Predictions() {
       </p>
       <div className="prediction-filters">
         <label>
+          <span>Sort games</span>
+          <select
+            value={sort}
+            onChange={(event) => {
+              setSort(event.target.value);
+              setPage(0);
+            }}
+          >
+            <option value="signal">Strongest model signal first</option>
+            <option value="time">Tipoff (ET)</option>
+          </select>
+        </label>
+        <label>
           <span>Conference</span>
           <select
             value={conference}
@@ -418,6 +466,7 @@ export default function Predictions() {
               <th>{basis === "latest" ? "Latest line" : "Opening line"}</th>
               <th>Model − line</th>
               <th>Research lean</th>
+              <th>Model signal</th>
               <th>Actual 1H</th>
               <th>Input origin / availability</th>
             </tr>
@@ -425,8 +474,17 @@ export default function Predictions() {
           <tbody>
             {visible.map((row) => {
               const comparison = predictionComparison(row, book, basis);
+              const signal = predictionSignal(
+                row,
+                book,
+                basis,
+                new Date(clock).toISOString(),
+              );
               return (
-                <tr key={row.gameId}>
+                <tr
+                  key={row.gameId}
+                  style={{ backgroundColor: signal.fill ?? undefined }}
+                >
                   <td>
                     <GameTime startsAt={row.startsAt} />
                   </td>
@@ -469,6 +527,9 @@ export default function Predictions() {
                           ? "Line unavailable"
                           : "Unavailable")}
                     </span>
+                  </td>
+                  <td>
+                    <SignalBadge signal={signal} />
                   </td>
                   <td>{row.actualFirstHalfTotal ?? "—"}</td>
                   <td className="availability-cell">

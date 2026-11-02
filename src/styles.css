@@ -1298,6 +1298,78 @@ footer {
   min-width: 8.5rem;
   white-space: nowrap;
 }
+.signal-legend {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.7rem;
+  margin: 1.5rem 0;
+  font-size: 0.85rem;
+}
+.signal-legend p {
+  flex-basis: 100%;
+  margin: 0;
+  color: #64735d;
+  line-height: 1.7;
+}
+.signal-gradient {
+  width: 10rem;
+  height: 1rem;
+  border-radius: 0.2rem;
+  background: linear-gradient(to right, #acd496, #f5faf0);
+}
+.signal-badge {
+  display: grid;
+  gap: 0.35rem;
+  color: #203c33;
+  min-width: 6rem;
+}
+.signal-badge strong {
+  font-size: 1rem;
+}
+.signal-badge small {
+  font-size: 0.75rem;
+}
+.signal-neutral {
+  color: #6c7564;
+}
+.record-filters {
+  display: grid;
+  grid-template-columns: 1.5fr 1fr 1fr 1fr;
+  gap: 1rem;
+  margin: 1.5rem 0;
+}
+.record-filters label {
+  display: grid;
+  gap: 0.5rem;
+  font-size: 0.8rem;
+}
+.prediction-record-panel h3 {
+  margin-top: 1.5rem;
+}
+.prediction-record-panel td small {
+  display: block;
+  margin-top: 0.5rem;
+}
+.record-grade {
+  display: inline-block;
+  padding: 0.4rem 0.7rem;
+  border-radius: 0.3rem;
+  background: #f1f3ed;
+  color: #53604c;
+}
+.grade-win {
+  background: #d8ebd3;
+  color: #245d30;
+}
+.grade-loss {
+  background: #f5ddda;
+  color: #8a332b;
+}
+.grade-push {
+  background: #eee8d8;
+  color: #73612b;
+}
 td.matchup-cell,
 th.matchup-cell {
   text-align: left;
@@ -1332,6 +1404,9 @@ th.matchup-cell {
   height: 1rem;
 }
 @media (max-width: 780px) {
+  .record-filters {
+    grid-template-columns: 1fr 1fr;
+  }
   .evaluation-filters {
     grid-template-columns: 1fr 1fr;
   }
@@ -1340,6 +1415,9 @@ th.matchup-cell {
   }
 }
 @media (max-width: 410px) {
+  .record-filters {
+    grid-template-columns: 1fr;
+  }
   .evaluation-filters {
     grid-template-columns: 1fr;
   }

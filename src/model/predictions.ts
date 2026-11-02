@@ -1,6 +1,7 @@
 import { z } from "zod";
 import { type SeasonLedger, validFeatures } from "./audit";
 import { compareTotal, projectFirstHalf } from "./predictor";
+import { predictionSignal, signalSchema } from "./signals";
 import { easternTipoff } from "./time";
 
 export type LineBasis = "opening" | "latest";
@@ -33,6 +34,7 @@ export const predictionSchema = z.object({
   featureCapturedAt: z.iso.datetime().nullable(),
   unavailableReason: z.string().nullable(),
   markets: z.array(marketSchema),
+  signal: signalSchema.optional(),
 });
 export const predictionFeedSchema = z.object({
   schemaVersion: z.literal(1),
@@ -221,7 +223,10 @@ export function generatePredictions(
       predicted,
       unavailable: predictions.length - predicted,
     },
-    predictions,
+    predictions: predictions.map((row) => ({
+      ...row,
+      signal: predictionSignal(row, "betmgm", "latest", generatedAt),
+    })),
   });
 }
 
@@ -284,6 +289,12 @@ export function workbookPayload(feed: PredictionFeed) {
         feed.defaultLineBasis,
       ),
       top25: isTop25(row),
+      signal: predictionSignal(
+        row,
+        feed.defaultSportsbook,
+        feed.defaultLineBasis,
+        feed.generatedAt,
+      ),
     })),
   };
 }
@@ -298,6 +309,7 @@ export function predictionsToCsv(
   rows: PredictionRow[],
   sportsbook = "betmgm",
   basis: LineBasis = "latest",
+  at = new Date().toISOString(),
 ) {
   const headers = [
     "game_id",
@@ -325,6 +337,9 @@ export function predictionsToCsv(
     "feature_origin",
     "feature_captured_at",
     "unavailable_reason",
+    "model_signal_score",
+    "model_signal_status",
+    "model_signal_method",
   ];
   const round = (value: number | null) =>
     value === null ? null : Number(value.toFixed(4));
@@ -332,6 +347,7 @@ export function predictionsToCsv(
     headers.map(csvCell).join(","),
     ...rows.map((row) => {
       const tipoff = easternTipoff(row.startsAt);
+      const signal = predictionSignal(row, sportsbook, basis, at);
       const comparison = predictionComparison(row, sportsbook, basis);
       const market = row.markets.find(
         (quote) => quote.sportsbook === sportsbook,
@@ -362,6 +378,9 @@ export function predictionsToCsv(
         row.featureKind,
         row.featureCapturedAt,
         row.unavailableReason,
+        signal.score,
+        signal.label,
+        signal.method,
       ]
         .map(csvCell)
         .join(",");

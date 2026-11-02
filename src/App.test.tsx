@@ -9,6 +9,11 @@ import {
 } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import App from "./App";
+import {
+  buildRecordIndex,
+  updatePredictionRecord,
+} from "./model/predictionRecord";
+import { recordFixture } from "./model/record.test-fixture";
 
 const prior = JSON.parse(readFileSync("public/data/prior-season.json", "utf8"));
 const current = JSON.parse(
@@ -20,6 +25,14 @@ const predictions = JSON.parse(
 const teamEvaluation = JSON.parse(
   readFileSync("public/data/team-evaluation.json", "utf8"),
 );
+const fixture = recordFixture();
+const record = updatePredictionRecord(
+  fixture.store,
+  fixture.feed,
+  fixture.ledger,
+  fixture.at,
+);
+const recordIndex = buildRecordIndex(record);
 
 beforeEach(() => {
   localStorage.clear();
@@ -28,13 +41,17 @@ beforeEach(() => {
     vi.fn(async (url: string) => ({
       ok: true,
       json: async () =>
-        url.includes("team-evaluation.json")
-          ? structuredClone(teamEvaluation)
-          : url.includes("predictions.json")
-            ? structuredClone(predictions)
-            : url.includes("prior-season")
-              ? structuredClone(prior)
-              : structuredClone(current),
+        url.includes("prediction-record-index")
+          ? structuredClone(recordIndex)
+          : url.includes("prediction-record/")
+            ? structuredClone(record)
+            : url.includes("team-evaluation.json")
+              ? structuredClone(teamEvaluation)
+              : url.includes("predictions.json")
+                ? structuredClone(predictions)
+                : url.includes("prior-season")
+                  ? structuredClone(prior)
+                  : structuredClone(current),
     })),
   );
 });
@@ -61,6 +78,16 @@ async function fillMatchup() {
 }
 
 describe("calculator workflow", () => {
+  it("opens the permanent prediction record from the main navigation", async () => {
+    render(<App />);
+    fireEvent.click(screen.getByRole("button", { name: "Prediction record" }));
+    expect(
+      await screen.findByRole("heading", { name: "Running prediction record" }),
+    ).toBeTruthy();
+    expect(
+      await screen.findByRole("table", { name: "Recorded predictions" }),
+    ).toBeTruthy();
+  });
   it("opens the offense and defense comparison from the model navigation", async () => {
     render(<App />);
     fireEvent.click(screen.getByRole("button", { name: "Team comparison" }));

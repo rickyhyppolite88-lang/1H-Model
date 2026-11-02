@@ -15,8 +15,8 @@ from openpyxl.worksheet.table import Table, TableStyleInfo
 from openpyxl.formatting.rule import CellIsRule
 from openpyxl.utils import get_column_letter
 
-HEADERS = ["Tipoff ET", "Away team (rank)", "Home team (rank)", "Model 1H", "Book 1H", "Difference", "Research lean", "Away conference", "Home conference", "Actual 1H", "Availability", "Game ID", "Away rank", "Home rank", "Top 25 game"]
-WIDTHS = [24, 30, 30, 13, 12, 12, 15, 17, 17, 12, 39, 15, 11, 11, 14]
+HEADERS = ["Tipoff ET", "Away team (rank)", "Home team (rank)", "Model 1H", "Book 1H", "Difference", "Research lean", "Away conference", "Home conference", "Actual 1H", "Availability", "Game ID", "Away rank", "Home rank", "Top 25 game", "Model signal / 100", "Signal status"]
+WIDTHS = [24, 30, 30, 13, 12, 12, 15, 17, 17, 12, 39, 15, 11, 11, 14, 18, 24]
 GREEN = "203C33"
 MUTED = "71816A"
 
@@ -56,6 +56,7 @@ def build_workbook(data: dict, output: Path) -> None:
     used: set[str] = set()
     generated = datetime.fromisoformat(data["generatedAt"].replace("Z", "+00:00")).astimezone(ZoneInfo("America/New_York"))
     for index, (name, games) in enumerate(groups):
+        games = sorted(games, key=lambda row: -(row.get("signal", {}).get("score") if row.get("signal", {}).get("score") is not None else -1))
         ws = wb.create_sheet(sheet_name(name, used))
         ws.sheet_view.showGridLines = False
         ws.sheet_properties.pageSetUpPr.fitToPage = True
@@ -70,7 +71,7 @@ def build_workbook(data: dict, output: Path) -> None:
         ws["A3"] = f"Updated {generated:%b %d, %Y %I:%M %p} ET. {data['defaultSportsbook']} {data['defaultLineBasis']} lines. Values are points."
         ws["A3"].font = Font(name="Arial", size=10, color=MUTED)
         predicted = sum(row["projectedFirstHalfTotal"] is not None for row in games)
-        ws["A4"] = f"{len(games)} games. {predicted} projected. {len(games) - predicted} with missing inputs."
+        ws["A4"] = f"{len(games)} games. {predicted} projected. Green = stronger research signal, not a hit probability."
         ws["A4"].font = Font(name="Arial", size=11, color=GREEN)
         for column, (header, width) in enumerate(zip(HEADERS, WIDTHS), 1):
             cell = ws.cell(6, column, header)
@@ -87,42 +88,46 @@ def build_workbook(data: dict, output: Path) -> None:
                       comparison["line"], comparison["signedEdge"], comparison["lean"] or "Unavailable",
                       row.get("awayConference") or "Unknown", row.get("homeConference") or "Unknown",
                       row["actualFirstHalfTotal"], row.get("unavailableReason") or ("Line unavailable" if comparison["line"] is None else "Available"),
-                      row["gameId"], row.get("awayRank"), row.get("homeRank"), "Yes" if row["top25"] else "No" if row["rankingsKnown"] else "Unknown"]
+                      row["gameId"], row.get("awayRank"), row.get("homeRank"), "Yes" if row["top25"] else "No" if row["rankingsKnown"] else "Unknown", row.get("signal", {}).get("score"), row.get("signal", {}).get("label", "Unavailable")]
             for column, value in enumerate(values, 1):
                 cell = ws.cell(row_number, column, safe_text(value))
                 cell.font = Font(name="Arial", size=11, color=GREEN if column in [4, 6] else "354332", bold=column == 4)
-                cell.alignment = Alignment(vertical="center", horizontal="right" if column in [4, 5, 6, 10, 13, 14] else "left", indent=1 if column in [2, 3, 7, 8, 9, 11] else 0, wrap_text=column in [2, 3, 8, 9, 11])
-                if row_number % 2 == 0:
-                    cell.fill = PatternFill("solid", fgColor="F3F6ED")
+                cell.alignment = Alignment(vertical="center", horizontal="right" if column in [4, 5, 6, 10, 13, 14, 16] else "left", indent=1 if column in [2, 3, 7, 8, 9, 11] else 0, wrap_text=column in [2, 3, 8, 9, 11])
+                if row.get("signal", {}).get("fill"):
+                    cell.fill = PatternFill("solid", fgColor=row["signal"]["fill"].lstrip("#"))
+                elif row_number % 2 == 0:
+                    cell.fill = PatternFill("solid", fgColor="F3F4F0")
+                else:
+                    cell.fill = PatternFill("solid", fgColor="FFFFFF")
             ws.cell(row_number, 1).number_format = 'm/d/yy h:mm AM/PM" ET"'
             for column in [4, 5, 10]:
                 ws.cell(row_number, column).number_format = "0.0"
             ws.cell(row_number, 6).number_format = '+0.0;-0.0;"—"'
             ws.row_dimensions[row_number].height = 36 if row["unavailableReason"] is None else 46
         if games:
-            ref = f"A6:O{6 + len(games)}"
+            ref = f"A6:Q{6 + len(games)}"
             table = Table(displayName=f"Predictions{index + 1}", ref=ref)
-            table.tableStyleInfo = TableStyleInfo(name="TableStyleMedium4", showRowStripes=True, showColumnStripes=False)
+            table.tableStyleInfo = TableStyleInfo(name="TableStyleMedium4", showRowStripes=False, showColumnStripes=False)
             ws.add_table(table)
             ws.conditional_formatting.add(f"F7:F{6 + len(games)}", CellIsRule(operator="greaterThan", formula=["0"], fill=PatternFill("solid", fgColor="DFECDC")))
             ws.conditional_formatting.add(f"F7:F{6 + len(games)}", CellIsRule(operator="lessThan", formula=["0"], fill=PatternFill("solid", fgColor="E4EDF6")))
         else:
             ws["A7"] = "No games in this group."
-        ws["Q2"] = "Source and definitions"
-        ws["Q3"] = "Top 25 includes either team ranked 1–25 on ESPN at retrieval."
-        ws["Q4"] = "Conference games include either team; a game may appear on two conference sheets."
-        ws["Q5"] = "Missing inputs remain blank. Research lean is not a calibrated probability."
+        ws["S2"] = "Source and definitions"
+        ws["S3"] = "Top 25 includes either team ranked 1–25 on ESPN at retrieval."
+        ws["S4"] = "Conference games include either team; a game may appear on two conference sheets."
+        ws["S5"] = "Signal = gap / 8 x 100, halved when components disagree. Gaps of 8+ are neutral for review."
         for row_number, url in enumerate(["https://www.espn.com/mens-college-basketball/scoreboard", "https://www.espn.com/mens-college-basketball/rankings", "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/", data["source"]["projectionCode"]], 7):
-            ws.cell(row_number, 17, url).hyperlink = url
-            ws.cell(row_number, 17).font = Font(name="Arial", size=10, color="647A59", underline="single")
-        ws.column_dimensions["Q"].width = 100
+            ws.cell(row_number, 19, url).hyperlink = url
+            ws.cell(row_number, 19).font = Font(name="Arial", size=10, color="647A59", underline="single")
+        ws.column_dimensions["S"].width = 110
         ws.print_options.horizontalCentered = False
         ws.page_setup.orientation = "landscape"
         ws.page_setup.paperSize = ws.PAPERSIZE_A3
         ws.page_setup.fitToWidth = 1
         ws.page_setup.fitToHeight = 0
         ws.print_title_rows = "1:6"
-        ws.print_area = f"A1:O{max(7, 6 + len(games))}"
+        ws.print_area = f"A1:Q{max(7, 6 + len(games))}"
     output.parent.mkdir(parents=True, exist_ok=True)
     wb.save(output)
     print(f"Workbook: {output}, {len(wb.sheetnames)} sheets, {len(rows)} unique games")

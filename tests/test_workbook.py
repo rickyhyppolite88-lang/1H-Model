@@ -48,3 +48,19 @@ def test_sheet_names_are_safe_unique_and_excel_length_bounded():
     assert len(exporter.sheet_name("Very long conference name " * 5, used)) <= 31
     assert exporter.safe_text("=HYPERLINK(\"bad\")").startswith("'")
     assert exporter.safe_text(-1.5) == -1.5
+
+
+def test_signal_strength_sorts_and_fades_without_coloring_unavailable_rows(tmp_path):
+    weak = row("weak", "SEC", "ACC")
+    weak["signal"] = {"score": 10, "fill": "#edf6e7", "label": "Mixed"}
+    strong = row("strong", "SEC", "SEC")
+    strong["signal"] = {"score": 90, "fill": "#b3d89f", "label": "Aligned"}
+    missing = row("missing", None, "ACC")
+    data = {"generatedAt": "2026-11-02T23:00:00Z", "defaultSportsbook": "betmgm", "defaultLineBasis": "latest", "source": {"projectionCode": "https://example.com/model"}, "predictions": [weak, strong, missing]}
+    output = tmp_path / "signals.xlsx"
+    exporter.build_workbook(data, output)
+    ws = load_workbook(output)["All Games"]
+    assert [ws.cell(r, 12).value for r in range(7, 10)] == ["strong", "weak", "missing"]
+    assert ws["P7"].value == 90 and ws["P8"].value == 10 and ws["P9"].value is None
+    assert ws["D7"].fill.fgColor.rgb.upper().endswith("B3D89F")
+    assert ws["D9"].fill.fgColor.rgb.upper().endswith("FFFFFF")

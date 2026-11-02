@@ -120,6 +120,27 @@ The daily archive includes only matchups on that **America/New_York** date. The 
 
 The GitHub workflow is scheduled at **11:20, 17:20, and 23:20 UTC every day**. Each successful refresh imports current data, regenerates all CSV/JSON/Excel files, runs checks, commits the data, and deploys Pages. The open prediction screen checks for successful updates every five minutes. A stale source snapshot is not relabeled as a fresh daily archive. The currently configured season is 2026–27; season rollover still requires updating the configured season/snapshot pair.
 
+## Green model signals and the permanent prediction record
+
+The prediction table defaults to **Strongest model signal first**. Darker green fades toward white as the research score falls; a Tipoff (ET) sort remains available. The selected sportsbook and opening/latest basis control the signal. Excel uses the feed's BetMGM/latest benchmark and the same frozen signal function. CSV and JSON include the score, status, and `model-signal-v1` method version.
+
+The score is `100 × abs(model − line) / 8`, halved unless the scoring-only and pace-only components both agree with the combined model's direction. A gap of eight or more points is neutral **Outlier review**, rather than automatically becoming the strongest green. Missing inputs/quotes, equal model/line totals, reconstructed estimates, and started games are neutral. Quotes/inputs captured after the ranking time cannot be used. **This is a model-support ranking, not a fitted hit probability.** Numerical scoring weights remain unchanged.
+
+Open **Prediction record** for the shared running record, with wins/losses/pushes, pending forecasts, observed win rate, and results by frozen signal-score band. Each season/model/benchmark counts the first eligible pregame forecast for a game once. Later versions are retained and do not inflate performance counts. Grades use the original recorded line and direction; pushes are excluded from win rate. Missing data and historical estimates remain visible in All saved versions and are excluded from headline results. Changed schedules stay pending review.
+
+Forecast changes append a version; identical refreshes do not duplicate it. Earlier forecasts are never replaced. Changed prices or lines are recorded before tipoff. Changed numerical predictions after tipoff are retained as historical estimates. Completed first-half results and subsequent score corrections append separate events. Corrections update the displayed grade while retaining the earlier observations in JSON.
+
+- [Running record Excel](https://rickyhyppolite88-lang.github.io/1H-Model/data/prediction-record.xlsx): Record Summary, Signal Results, and Prediction Record sheets.
+- [All forecast versions CSV](https://rickyhyppolite88-lang.github.io/1H-Model/data/prediction-record.csv): frozen lines, projections, scores, inputs, grades, and the counted-once marker.
+- [Record index](https://rickyhyppolite88-lang.github.io/1H-Model/data/prediction-record-index.json): cumulative summaries, canonical record IDs, and dated JSON/CSV paths.
+- Full forecast inputs and captured quotes are stored in `data/prediction-record/YYYY-MM-DD.json`. Prior/current team-stat snapshots are preserved under content-hash filenames in `data/input-snapshots/`; new batch records link the run snapshots and indicate whether the current snapshot exactly matches their frozen feature retrieval time. Frozen features remain the authoritative inputs for replay.
+
+The initial record includes the public predictions observed at **5:55 PM ET on November 2, 2026**, with an immutable copy and SHA-256 receipt under `data/prediction-record/source/`. Newly calculated signal scores have their own timestamp; scores are not backdated to the observation time. The initial import preserves 184 matchups, with 89 eligible pregame forecasts. Older reconstructed results are not promoted into recorded wins.
+
+Successful main-branch builds and the existing three daily refreshes validate, commit, and publish the record. New files are staged before the change check so fresh archive dates are retained. Pull requests validate without changing the shared record. Records are partitioned by Eastern game date so the page loads one date's detailed history at a time; global summaries and the full CSV/Excel retain the running record across dates. Manual matchup-lab saves continue to use the browser-local pick tracker.
+
+Implementation: [signals.ts](src/model/signals.ts), [predictionRecord.ts](src/model/predictionRecord.ts), and [prediction-record.mjs](scripts/prediction-record.mjs).
+
 ## Game times in Eastern Time
 
 All predictions, season audit, and team game checks have a dedicated **Tipoff (ET)** column with the Eastern date and AM/PM time. Conversion uses `America/New_York`, including daylight-saving changes, regardless of the viewer's local time zone. Hovering a time identifies EST or EDT.
