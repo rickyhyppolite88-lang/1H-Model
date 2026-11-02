@@ -10,6 +10,7 @@ import {
   screen,
 } from "@testing-library/react";
 import { afterEach, expect, it, vi } from "vitest";
+import { recordFixture } from "./model/record.test-fixture";
 import Predictions from "./Predictions";
 
 afterEach(() => {
@@ -17,6 +18,52 @@ afterEach(() => {
   vi.unstubAllGlobals();
   vi.useRealTimers();
   vi.restoreAllMocks();
+});
+
+it("orders stronger research signals first and fades the row color without showing a hit probability", async () => {
+  vi.useFakeTimers({ toFake: ["Date"] });
+  vi.setSystemTime(new Date("2026-11-02T22:00:00Z"));
+  const { feed } = recordFixture();
+  const base = feed.predictions[0];
+  feed.predictions = [
+    {
+      ...base,
+      gameId: "weak",
+      awayTeam: "Weak signal",
+      projectedFirstHalfTotal: 72,
+      simpleTotal: 72,
+      paceAdjustedTotal: 72,
+    },
+    {
+      ...base,
+      gameId: "strong",
+      awayTeam: "Strong signal",
+      projectedFirstHalfTotal: 76,
+      simpleTotal: 76,
+      paceAdjustedTotal: 76,
+    },
+  ];
+  feed.counts = { matchups: 2, predicted: 2, unavailable: 0 };
+  vi.stubGlobal(
+    "fetch",
+    vi.fn(async (url: string) => ({
+      ok: true,
+      json: async () =>
+        url.includes("archive")
+          ? { schemaVersion: 1, archives: [] }
+          : structuredClone(feed),
+    })),
+  );
+  render(<Predictions />);
+  await screen.findByRole("heading", {
+    name: "Every matchup. Every model total.",
+  });
+  const rows = screen.getAllByRole("row");
+  expect(rows[1].textContent).toContain("Strong signal");
+  expect(rows[2].textContent).toContain("Weak signal");
+  expect(rows[1].style.backgroundColor).not.toBe(rows[2].style.backgroundColor);
+  expect(screen.getByText(/Green is a research ranking/)).toBeTruthy();
+  expect(screen.getByText("75/100")).toBeTruthy();
 });
 
 it("provides dated downloads and automatically checks for updated predictions", async () => {

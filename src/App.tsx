@@ -15,6 +15,7 @@ import {
   type SeasonDataset,
 } from "./model/schema";
 import { assertSnapshots, blendTeam, defaultBlend } from "./model/seasons";
+import PredictionRecord from "./PredictionRecord";
 import Predictions from "./Predictions";
 import SeasonAudit from "./SeasonAudit";
 import TeamEvaluation from "./TeamEvaluation";
@@ -326,6 +327,7 @@ export default function App() {
         <nav className="tabs" aria-label="Model sections">
           {[
             ["predictions", "All predictions"],
+            ["record", "Prediction record"],
             ["matchup", "Matchup lab"],
             ["audit", "Season lines & audit"],
             ["evaluation", "Team comparison"],
@@ -370,6 +372,7 @@ export default function App() {
         )}
 
         {tab === "predictions" && <Predictions />}
+        {tab === "record" && <PredictionRecord />}
         {tab === "evaluation" && <TeamEvaluation />}
         {datasets && tab === "matchup" && (
           <>

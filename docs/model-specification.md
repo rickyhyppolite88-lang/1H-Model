@@ -60,6 +60,16 @@ The old sub-104 defensive filter remains removed. Current DE informs the reconst
 
 The notes did not explicitly define combined-versus-per-team injuries, whether both SOS ratings must be positive, range endpoints, or sub-1.5 handling under PACE OVER. This implementation uses combined injuries, both-positive SOS, inclusive named ranges, and PACE OVER before edge filters. Those are explicit interpretation choices. Test files make the resulting behavior reviewable.
 
+## Research signal ranking and forecast preservation
+
+`model-signal-v1` is a research ranking chosen while a calibrated hit model is unavailable. A pregame signal needs a valid captured projection, both components, and a line retrieved no later than the ranking time. Its score is `100 * abs(projection - line) / 8`, multiplied by 0.5 unless both components lean the same way as the combined total. Gaps of eight or more points are unranked for review. Missing/reconstructed/started games and pushes receive no green rank. This ranking does not change projection coefficients, apply the saved tournament tiers to regular games, or claim a per-game hit probability.
+
+Forecast records preserve the prediction, frozen blended inputs, original book/basis/line, all captured quotes/prices, signal method/score/calculation time, recording time, and source revision. Updates append distinct versions when prediction inputs or pregame quotes change. Post-tipoff quote changes do not revise the pregame record. A changed post-tipoff numerical estimate is saved as historical. Result corrections are separate append-only events. Raw team datasets are archived by SHA-256; a run's latest raw data is never falsely labeled as an older game's frozen input snapshot.
+
+The first eligible forecast per season, model version, benchmark book/basis, and game is canonical for performance. It must have been recorded before tipoff, use valid pregame features and an available retrieved quote, and have a non-push direction. Only completed period-one results can settle it. Later versions, missing predictions/lines, reconstructed estimates, and after-tipoff captures remain auditable but do not enter headline counts. Changed schedules await review. Pushes are excluded from the wins-plus-losses denominator; an empty denominator gives no win percentage.
+
+Scores and outcomes remain independent: a loss does not retroactively change its recorded green score. Results by frozen score band provide evidence for later out-of-sample calibration. No numerical probability is automatically promoted from a small observed hit rate.
+
 ## Offense/defense carryover report
 
 The team evaluation report adds dated first-half points allowed as an optional descriptive statistic. It is not part of `CompleteMetrics` and does not change the existing blend or projection weights. The TeamRankings importer now reads six tables; missing first-half defense does not disable otherwise complete core model inputs.
