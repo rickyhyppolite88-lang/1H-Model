@@ -9,6 +9,7 @@ export const teamSchema = z.object({
   name: z.string().min(1),
   gamesPlayed: z.number().int().min(0).max(60),
   firstHalfPoints: nullableStat(0, 100),
+  firstHalfAllowed: nullableStat(0, 100).optional(),
   pace: nullableStat(30, 120),
   offensiveEfficiency: nullableStat(0.3, 2),
   defensiveEfficiency: nullableStat(0.3, 2),

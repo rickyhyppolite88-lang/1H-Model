@@ -57,7 +57,7 @@ python scripts/import_teamrankings.py --season 2025-26 --as-of 2026-04-07 --outp
 python scripts/import_teamrankings.py --season 2026-27 --as-of 2026-11-02 --output public/data/current-season.json
 ```
 
-Omit `--as-of` to use today's date. The importer reads five public dated tables, checks the selected date and season-column header, joins stable team links, and rejects partial or mismatched tables. It uses visible ratings rather than `data-sort` values, which can include a sorting offset. No paid/private data or keys are required.
+Omit `--as-of` to use today's date. The importer reads six public dated tables, checks the selected date and season-column header, joins stable team links, and rejects partial or mismatched tables. It uses visible ratings rather than `data-sort` values, which can include a sorting offset. No paid/private data or keys are required.
 
 The full prior snapshot is frozen at April 7, 2026. The initial current snapshot is November 2, 2026; only two teams have completed-game observations in that snapshot. The app displays its actual dates and warns on stale data. A source change or failed request fails the refresh rather than publishing invented or partial observations.
 
@@ -119,6 +119,22 @@ The JSON's `predictions` array contains `projectedFirstHalfTotal`, team names, c
 The daily archive includes only matchups on that **America/New_York** date. The regular full CSV contains all archived matchups. Dated files can update during their day; earlier dates remain available afterward. The static daily CSV uses BetMGM/latest, while the page's full CSV export follows its selected controls. All source code links in the generated feed identify the build revision.
 
 The GitHub workflow is scheduled at **11:20, 17:20, and 23:20 UTC every day**. Each successful refresh imports current data, regenerates all CSV/JSON/Excel files, runs checks, commits the data, and deploys Pages. The open prediction screen checks for successful updates every five minutes. A stale source snapshot is not relabeled as a fresh daily archive. The currently configured season is 2026–27; season rollover still requires updating the configured season/snapshot pair.
+
+## Team offense, defense, and carryover checks
+
+Open **Team comparison** to inspect 2025–26 final and 2026–27 observed first-half scoring, first-half points allowed, possessions, offensive efficiency, and defensive efficiency. Each row shows the season change and the blended model input. Conference and Top 25 filters narrow the team selector. Efficiency is stored as points per possession and displayed as points per 100 possessions; pace is full-game possessions. Missing current observations remain unavailable.
+
+First-half points allowed is imported from the dated TeamRankings opponent first-half scoring table and is currently context only. The scoring formula already adjusts offense against the opponent's defensive efficiency. No new fitted coefficient or weight was introduced. Home advantage, roster continuity, transfers, injuries, and travel are not automatically modeled.
+
+The comparison evaluates a prior-only baseline (the final prior season plus the existing league regression) against each game's frozen blended projection. Both use the same eligible completed games. The shared projection function also exposes additive team scoring estimates, so team offense error compares its estimate with actual first-half scoring, while defense error compares the opponent estimate with points conceded. Mean absolute error (MAE) and signed bias are in points. Lower MAE is better; positive bias means overestimated scoring. Market-line availability does not control scoring evaluation.
+
+Forecasts recorded before tipoff and reconstructed season-debut estimates have separate counts and errors. Zero graded games produce blank errors. Season-end observations are descriptive and never substituted for frozen pregame features. Historical prior-season prediction archives were not recovered: these checks evaluate how the prior carries into the new season, not a backtest of predictions made during the prior season.
+
+- [Team comparison Excel](https://rickyhyppolite88-lang.github.io/1H-Model/data/team-comparison.xlsx): Team Comparison, Season Check, Team Accuracy, and Game Review sheets.
+- [Team inputs CSV](https://rickyhyppolite88-lang.github.io/1H-Model/data/team-comparison.csv): all teams, raw points-per-possession efficiency units, and separate cohort counts/errors.
+- [Team evaluation JSON](https://rickyhyppolite88-lang.github.io/1H-Model/data/team-evaluation.json): source dates/URLs, prior/current/blended inputs, per-team results, and frozen game checks.
+
+These regenerate with `npm run predictions:all` and with every successful scheduled refresh. Dated copies are kept beside the daily predictions, and the prediction archive exposes `teamXlsxPath` when that report exists. The Team comparison page checks for updates every five minutes. Source: [teamEvaluation.ts](src/model/teamEvaluation.ts); portable workbook renderer: [build_team_workbook.py](scripts/build_team_workbook.py).
 
 To pull every predicted total from PowerShell:
 

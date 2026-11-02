@@ -197,6 +197,14 @@ export function projectFirstHalf(a: BlendedTeam, b: BlendedTeam, phase: Phase) {
   const suppression = phase === "tournament" ? 4 : 0;
   const projectedTotal =
     simpleTotal * 0.6 + paceAdjustedTotal * 0.4 - suppression;
+  const teamAFirstHalf =
+    a.firstHalfPoints * 0.6 +
+    ((expectedPace * offenseA) / 2) * 0.4 -
+    suppression / 2;
+  const teamBFirstHalf =
+    b.firstHalfPoints * 0.6 +
+    ((expectedPace * offenseB) / 2) * 0.4 -
+    suppression / 2;
   if (projectedTotal < 0)
     throw new Error("The projected total cannot be negative.");
   return {
@@ -205,6 +213,8 @@ export function projectFirstHalf(a: BlendedTeam, b: BlendedTeam, phase: Phase) {
     paceAdjustedTotal,
     suppression,
     projectedTotal,
+    teamAFirstHalf,
+    teamBFirstHalf,
   };
 }
 

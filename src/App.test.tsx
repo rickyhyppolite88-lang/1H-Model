@@ -17,6 +17,9 @@ const current = JSON.parse(
 const predictions = JSON.parse(
   readFileSync("public/data/predictions.json", "utf8"),
 );
+const teamEvaluation = JSON.parse(
+  readFileSync("public/data/team-evaluation.json", "utf8"),
+);
 
 beforeEach(() => {
   localStorage.clear();
@@ -25,11 +28,13 @@ beforeEach(() => {
     vi.fn(async (url: string) => ({
       ok: true,
       json: async () =>
-        url.includes("predictions.json")
-          ? structuredClone(predictions)
-          : url.includes("prior-season")
-            ? structuredClone(prior)
-            : structuredClone(current),
+        url.includes("team-evaluation.json")
+          ? structuredClone(teamEvaluation)
+          : url.includes("predictions.json")
+            ? structuredClone(predictions)
+            : url.includes("prior-season")
+              ? structuredClone(prior)
+              : structuredClone(current),
     })),
   );
 });
@@ -56,6 +61,18 @@ async function fillMatchup() {
 }
 
 describe("calculator workflow", () => {
+  it("opens the offense and defense comparison from the model navigation", async () => {
+    render(<App />);
+    fireEvent.click(screen.getByRole("button", { name: "Team comparison" }));
+    expect(
+      await screen.findByRole("table", {
+        name: "Team offense and defense comparison",
+      }),
+    ).toBeTruthy();
+    expect(
+      screen.getByRole("table", { name: "Season total accuracy" }),
+    ).toBeTruthy();
+  });
   it("loads the real datasets, analyzes, saves a frozen record, and restores it", async () => {
     const view = render(<App />);
     await fillMatchup();

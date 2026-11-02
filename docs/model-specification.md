@@ -60,6 +60,16 @@ The old sub-104 defensive filter remains removed. Current DE informs the reconst
 
 The notes did not explicitly define combined-versus-per-team injuries, whether both SOS ratings must be positive, range endpoints, or sub-1.5 handling under PACE OVER. This implementation uses combined injuries, both-positive SOS, inclusive named ranges, and PACE OVER before edge filters. Those are explicit interpretation choices. Test files make the resulting behavior reviewable.
 
+## Offense/defense carryover report
+
+The team evaluation report adds dated first-half points allowed as an optional descriptive statistic. It is not part of `CompleteMetrics` and does not change the existing blend or projection weights. The TeamRankings importer now reads six tables; missing first-half defense does not disable otherwise complete core model inputs.
+
+For the scoring breakdown, each team's estimate is `0.6 * its blended 1H scoring + 0.4 * expected_pace / 2 * expected_PPP`. In tournament context half the total suppression is allocated to each team. Their sum equals the existing combined projection. These team estimates are a decomposition of the reconstructed formula, not independently fitted forecasts.
+
+The prior baseline uses zero current weight and the existing prior regression. Game comparisons use the frozen matchup features and never recompute completed-game predictions with the latest observed season statistics. Baseline/model MAE uses identical eligible games, with pregame and reconstructed cohorts kept separate. Team defense MAE grades the opponent scoring estimate against points conceded; it is distinct from the full-season defensive-efficiency statistic. Invalid features, incomplete halves, and missing scores are excluded, not assigned zero error. No betting line is required.
+
+This is a carryover evaluation into the configured current season. A prior-season accuracy backtest would require archived pregame inputs/outcomes and is not represented by applying final-season statistics to earlier games.
+
 ## Validation status and next data needed
 
 Rule precedence, thresholds, season weights, missing observations, units, complete source joins, and future-date protection have automated tests. This does not establish betting profitability or predictive accuracy.

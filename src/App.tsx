@@ -17,6 +17,7 @@ import {
 import { assertSnapshots, blendTeam, defaultBlend } from "./model/seasons";
 import Predictions from "./Predictions";
 import SeasonAudit from "./SeasonAudit";
+import TeamEvaluation from "./TeamEvaluation";
 
 const savedSchema = z.object({
   id: z.string(),
@@ -327,6 +328,7 @@ export default function App() {
             ["predictions", "All predictions"],
             ["matchup", "Matchup lab"],
             ["audit", "Season lines & audit"],
+            ["evaluation", "Team comparison"],
             ["data", "Season data"],
             ["tracker", "Pick tracker"],
             ["method", "Method & rules"],
@@ -368,6 +370,7 @@ export default function App() {
         )}
 
         {tab === "predictions" && <Predictions />}
+        {tab === "evaluation" && <TeamEvaluation />}
         {datasets && tab === "matchup" && (
           <>
             {staleDays > 2 && (
