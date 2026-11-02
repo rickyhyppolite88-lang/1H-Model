@@ -287,6 +287,15 @@ export default function Predictions() {
                 Daily Excel ↓
               </a>
             )}
+            {selectedArchive.teamXlsxPath && (
+              <a
+                className="secondary-button"
+                href={`${import.meta.env.BASE_URL}${selectedArchive.teamXlsxPath}`}
+                download={`1h-team-comparison-${selectedArchive.date}.xlsx`}
+              >
+                Daily team review Excel ↓
+              </a>
+            )}
           </div>
         )}
         {archiveError && <p className="inline-note">{archiveError}</p>}

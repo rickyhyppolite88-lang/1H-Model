@@ -80,6 +80,10 @@ export const dailyArchiveSchema = z.object({
         .string()
         .regex(/^data\/daily\/\d{4}-\d{2}-\d{2}\/predictions\.xlsx$/)
         .optional(),
+      teamXlsxPath: z
+        .string()
+        .regex(/^data\/daily\/\d{4}-\d{2}-\d{2}\/team-comparison\.xlsx$/)
+        .optional(),
     }),
   ),
 });
@@ -133,6 +137,7 @@ export function updateDailyArchive(
     csvPath: `data/daily/${date}/predictions.csv`,
     jsonPath: `data/daily/${date}/predictions.json`,
     xlsxPath: `data/daily/${date}/predictions.xlsx`,
+    teamXlsxPath: `data/daily/${date}/team-comparison.xlsx`,
   };
   return dailyArchiveSchema.parse({
     schemaVersion: 1,
@@ -287,7 +292,7 @@ export function workbookPayload(feed: PredictionFeed) {
   };
 }
 
-const csvCell = (value: string | number | null) => {
+export const csvCell = (value: string | number | null) => {
   let text = value === null ? "" : String(value);
   if (typeof value === "string" && /^[\s]*[=+@-]/.test(text)) text = `'${text}`;
   return /[",\r\n]/.test(text) ? `"${text.replaceAll('"', '""')}"` : text;

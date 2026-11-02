@@ -16,6 +16,7 @@ from urllib.request import Request, urlopen
 BASE = "https://www.teamrankings.com/ncaa-basketball"
 METRICS = {
     "firstHalfPoints": "stat/1st-half-points-per-game",
+    "firstHalfAllowed": "stat/opponent-1st-half-points-per-game",
     "pace": "stat/possessions-per-game",
     "offensiveEfficiency": "stat/offensive-efficiency",
     "defensiveEfficiency": "stat/defensive-efficiency",
@@ -104,7 +105,7 @@ def parse_table(html: str, metric: str, season: str, as_of: str) -> dict[str, di
             raise ValueError(f"{metric}: non-finite statistic")
         if number is not None:
             bounds = {
-                "firstHalfPoints": (0, 100), "pace": (30, 120),
+                "firstHalfPoints": (0, 100), "firstHalfAllowed": (0, 100), "pace": (30, 120),
                 "offensiveEfficiency": (0.3, 2), "defensiveEfficiency": (0.3, 2),
                 "strengthOfSchedule": (-100, 100),
             }[metric]
@@ -158,7 +159,7 @@ def import_season(season: str, as_of: str) -> dict:
             # Preseason ratings and missing-stat sort values are not completed-game observations.
             for metric in METRICS:
                 team[metric] = None
-        elif any(team[key] is None for key in METRICS if key != "strengthOfSchedule"):
+        elif any(team[key] is None for key in ["firstHalfPoints", "pace", "offensiveEfficiency", "defensiveEfficiency"]):
             print(f"Warning: incomplete completed-game statistics for {team['name']}")
         teams.append(team)
     return {

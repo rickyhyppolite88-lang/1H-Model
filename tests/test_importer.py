@@ -28,6 +28,13 @@ def test_missing_stats_are_null_instead_of_sort_value_zero():
     assert rows["team-0"]["value"] is None
 
 
+def test_first_half_defense_uses_dated_observations_and_rejects_invalid_units():
+    rows = importer.parse_table(html(value="31.2"), "firstHalfAllowed", "2025-26", "2026-04-07")
+    assert rows["team-0"]["value"] == 31.2
+    with pytest.raises(ValueError, match="invalid units"):
+        importer.parse_table(html(value="312"), "firstHalfAllowed", "2025-26", "2026-04-07")
+
+
 @pytest.mark.parametrize("source", [html(header="2024"), html(selected="2025-04-07"), html(count=1), html(value="NaN")], ids=["wrong-season", "wrong-date", "partial", "nonfinite"])
 def test_rejects_wrong_season_wrong_date_partial_or_invalid_source(source):
     with pytest.raises(ValueError):

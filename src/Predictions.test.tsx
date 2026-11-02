@@ -43,6 +43,11 @@ it("provides dated downloads and automatically checks for updated predictions", 
     screen.getByRole("link", { name: "Daily JSON ↓" }).getAttribute("href"),
   ).toContain(latest.jsonPath);
   expect(
+    screen
+      .getByRole("link", { name: "Daily team review Excel ↓" })
+      .getAttribute("href"),
+  ).toContain(latest.teamXlsxPath);
+  expect(
     screen.getByRole("link", { name: "Daily Excel ↓" }).getAttribute("href"),
   ).toContain(latest.xlsxPath);
   expect(fetcher).toHaveBeenCalledTimes(2);

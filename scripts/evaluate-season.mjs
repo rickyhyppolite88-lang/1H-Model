@@ -6,6 +6,7 @@ const server = await createServer({ configFile: false, server: { middlewareMode:
 try {
   const { captureFeatures, evaluateSeason, ledgerSchema } = await server.ssrLoadModule("/src/model/audit.ts");
   const { datasetSchema } = await server.ssrLoadModule("/src/model/schema.ts");
+  const { generateTeamEvaluation, teamEvaluationToCsv } = await server.ssrLoadModule("/src/model/teamEvaluation.ts");
   const { generatePredictions, predictionsToCsv, dailyPredictions, dailyArchiveSchema, updateDailyArchive, workbookPayload } = await server.ssrLoadModule("/src/model/predictions.ts");
   const read = async (path) => JSON.parse(await readFile(path, "utf8"));
   const ledger = ledgerSchema.parse(await read("public/data/season-games.json"));
@@ -20,12 +21,16 @@ try {
   await writeFile("public/data/predictions.json", `${JSON.stringify(predictions, null, 2)}\n`);
   await writeFile("public/data/predictions.csv", `\uFEFF${predictionsToCsv(predictions.predictions)}`);
   await mkdir(".cache/workbooks", { recursive: true });
-  const workbook = async (feed, name, destination) => {
+  const workbook = async (feed, name, destination, builder = "scripts/build_prediction_workbook.py") => {
     const input = `.cache/workbooks/${name}.json`;
-    await writeFile(input, JSON.stringify(workbookPayload(feed)));
-    execFileSync(process.env.PYTHON ?? (process.platform === "win32" ? "python" : "python3"), ["scripts/build_prediction_workbook.py", "--input", input, "--output", destination], { stdio: "inherit" });
+    await writeFile(input, JSON.stringify(builder === "scripts/build_prediction_workbook.py" ? workbookPayload(feed) : feed));
+    execFileSync(process.env.PYTHON ?? (process.platform === "win32" ? "python" : "python3"), [builder, "--input", input, "--output", destination], { stdio: "inherit" });
   };
   await workbook(predictions, "all", "public/data/predictions.xlsx");
+  const teamReport = generateTeamEvaluation(prior, current, enriched, predictions.generatedAt);
+  await writeFile("public/data/team-evaluation.json", `${JSON.stringify(teamReport, null, 2)}\n`);
+  await writeFile("public/data/team-comparison.csv", `\uFEFF${teamEvaluationToCsv(teamReport)}`);
+  await workbook(teamReport, "teams", "public/data/team-comparison.xlsx", "scripts/build_team_workbook.py");
   let archive = { schemaVersion: 1, archives: [] };
   try { archive = dailyArchiveSchema.parse(await read("public/data/prediction-archive.json")); }
   catch (error) { if (error.code !== "ENOENT") throw error; }
@@ -36,6 +41,9 @@ try {
     await writeFile(`${directory}/predictions.json`, `${JSON.stringify(daily, null, 2)}\n`);
     await writeFile(`${directory}/predictions.csv`, `\uFEFF${predictionsToCsv(daily.predictions)}`);
     await workbook(daily, "daily", `${directory}/predictions.xlsx`);
+    await writeFile(`${directory}/team-evaluation.json`, `${JSON.stringify(teamReport, null, 2)}\n`);
+    await writeFile(`${directory}/team-comparison.csv`, `\uFEFF${teamEvaluationToCsv(teamReport)}`);
+    await workbook(teamReport, "daily-teams", `${directory}/team-comparison.xlsx`, "scripts/build_team_workbook.py");
     archive = updateDailyArchive(archive, daily);
     console.log("Daily download:", daily.gameDate, JSON.stringify(daily.counts));
   } else console.log("Daily archive skipped: market data has not been refreshed for today's New York date.");
