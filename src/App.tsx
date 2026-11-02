@@ -15,6 +15,7 @@ import {
   type SeasonDataset,
 } from "./model/schema";
 import { assertSnapshots, blendTeam, defaultBlend } from "./model/seasons";
+import Predictions from "./Predictions";
 import SeasonAudit from "./SeasonAudit";
 
 const savedSchema = z.object({
@@ -96,7 +97,7 @@ export default function App() {
     current: SeasonDataset;
   } | null>(null);
   const [loadingError, setLoadingError] = useState("");
-  const [tab, setTab] = useState("matchup");
+  const [tab, setTab] = useState("predictions");
   const [teamA, setTeamA] = useState("");
   const [teamB, setTeamB] = useState("");
   const [line, setLine] = useState("");
@@ -323,6 +324,7 @@ export default function App() {
 
         <nav className="tabs" aria-label="Model sections">
           {[
+            ["predictions", "All predictions"],
             ["matchup", "Matchup lab"],
             ["audit", "Season lines & audit"],
             ["data", "Season data"],
@@ -365,6 +367,7 @@ export default function App() {
           <div className="empty-state">Loading dated season statistics…</div>
         )}
 
+        {tab === "predictions" && <Predictions />}
         {datasets && tab === "matchup" && (
           <>
             {staleDays > 2 && (

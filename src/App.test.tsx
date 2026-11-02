@@ -14,6 +14,9 @@ const prior = JSON.parse(readFileSync("public/data/prior-season.json", "utf8"));
 const current = JSON.parse(
   readFileSync("public/data/current-season.json", "utf8"),
 );
+const predictions = JSON.parse(
+  readFileSync("public/data/predictions.json", "utf8"),
+);
 
 beforeEach(() => {
   localStorage.clear();
@@ -22,9 +25,11 @@ beforeEach(() => {
     vi.fn(async (url: string) => ({
       ok: true,
       json: async () =>
-        url.includes("prior-season")
-          ? structuredClone(prior)
-          : structuredClone(current),
+        url.includes("predictions.json")
+          ? structuredClone(predictions)
+          : url.includes("prior-season")
+            ? structuredClone(prior)
+            : structuredClone(current),
     })),
   );
 });
@@ -35,6 +40,7 @@ afterEach(() => {
 
 async function fillMatchup() {
   await screen.findByText("365 teams");
+  fireEvent.click(screen.getByRole("button", { name: "Matchup lab" }));
   fireEvent.change(screen.getByLabelText("Team A"), {
     target: { value: "Alabama" },
   });

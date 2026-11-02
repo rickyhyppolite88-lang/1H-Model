@@ -168,7 +168,7 @@ export interface AuditRow {
   featureKind: string;
 }
 
-function validFeatures(game: SeasonGame): boolean {
+export function validFeatures(game: SeasonGame): boolean {
   const features = game.featureSnapshot;
   if (
     !features ||

@@ -23,6 +23,22 @@ export interface RuleResult {
   reasons: string[];
 }
 
+export function compareTotal(projectedTotal: number, line: number) {
+  if (!Number.isFinite(projectedTotal) || !Number.isFinite(line) || line <= 0) {
+    throw new Error(
+      "A comparison needs a finite projection and a positive market line.",
+    );
+  }
+  const signedEdge = projectedTotal - line;
+  const modelLean =
+    Math.abs(signedEdge) < 1e-9
+      ? ("PUSH" as const)
+      : signedEdge > 0
+        ? ("OVER" as const)
+        : ("UNDER" as const);
+  return { signedEdge, edge: Math.abs(signedEdge), modelLean };
+}
+
 export function applyRules(input: RuleInput): RuleResult {
   const { projectedTotal, line, paceA, paceB, oeA, oeB, sosA, sosB, injuries } =
     input;
@@ -56,10 +72,7 @@ export function applyRules(input: RuleInput): RuleResult {
     if (sos !== null && !Number.isFinite(sos))
       throw new Error("Schedule strength must be finite or unknown.");
   }
-  const signed = projectedTotal - line;
-  const edge = Math.abs(signed);
-  const modelLean =
-    Math.abs(signed) < 1e-9 ? "PUSH" : signed > 0 ? "OVER" : "UNDER";
+  const { edge, modelLean } = compareTotal(projectedTotal, line);
   const paceDiff = Math.abs(paceA - paceB);
   const result: RuleResult = {
     pick: "NO BET",
@@ -155,14 +168,26 @@ export function applyRules(input: RuleInput): RuleResult {
   return result;
 }
 
-export function predict(
-  a: BlendedTeam,
-  b: BlendedTeam,
-  line: number,
-  phase: Phase,
-  injuries: number,
-) {
+export function projectFirstHalf(a: BlendedTeam, b: BlendedTeam, phase: Phase) {
   if (a.id === b.id) throw new Error("Choose two different teams.");
+  for (const team of [a, b]) {
+    const metrics = [
+      team.firstHalfPoints,
+      team.pace,
+      team.offensiveEfficiency,
+      team.defensiveEfficiency,
+    ];
+    if (
+      metrics.some((value) => !Number.isFinite(value) || value < 0) ||
+      team.pace === 0 ||
+      team.offensiveEfficiency === 0 ||
+      team.defensiveEfficiency === 0
+    ) {
+      throw new Error(
+        "A projection needs complete, finite team statistics in valid units.",
+      );
+    }
+  }
   const simpleTotal = a.firstHalfPoints + b.firstHalfPoints;
   const expectedPace = (a.pace + b.pace) / 2;
   const offenseA = (a.offensiveEfficiency + b.defensiveEfficiency) / 2;
@@ -172,6 +197,26 @@ export function predict(
   const suppression = phase === "tournament" ? 4 : 0;
   const projectedTotal =
     simpleTotal * 0.6 + paceAdjustedTotal * 0.4 - suppression;
+  if (projectedTotal < 0)
+    throw new Error("The projected total cannot be negative.");
+  return {
+    simpleTotal,
+    expectedPace,
+    paceAdjustedTotal,
+    suppression,
+    projectedTotal,
+  };
+}
+
+export function predict(
+  a: BlendedTeam,
+  b: BlendedTeam,
+  line: number,
+  phase: Phase,
+  injuries: number,
+) {
+  const projection = projectFirstHalf(a, b, phase);
+  const { projectedTotal } = projection;
   const legacyRules = applyRules({
     projectedTotal,
     line,
@@ -196,11 +241,7 @@ export function predict(
     ],
   };
   return {
-    simpleTotal,
-    expectedPace,
-    paceAdjustedTotal,
-    suppression,
-    projectedTotal,
+    ...projection,
     legacyRules,
     mode:
       phase === "regular"

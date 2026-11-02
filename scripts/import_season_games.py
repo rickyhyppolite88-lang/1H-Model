@@ -68,10 +68,13 @@ def first_half(competitor: dict, is_complete: bool) -> int | None:
 
 
 def model_id(team: dict, teams: list[dict]) -> str | None:
-    # Explicit verified exception: the providers omit "of Charlotte" from Queens' name.
-    aliases = {"2511": "queens-university-of-charlotte-royals"}
+    # Verified ESPN team IDs for provider display-name differences; never fuzzy-match teams.
+    aliases = {"2511": "queens-university-of-charlotte-royals", "2393": "middle-tennessee-st-blue-raiders",
+               "82": "illinois-chicago-flames", "399": "albany-great-danes", "2546": "se-missouri-st-redhawks",
+               "145": "mississippi-rebels", "2547": "seattle-redhawks"}
     if str(team["id"]) in aliases:
-        return aliases[str(team["id"])]
+        target = aliases[str(team["id"])]
+        return target if any(row["id"] == target for row in teams) else None
     wanted = identifiers(team, espn=True)
     matches = [row["id"] for row in teams if wanted & {normalize(row["name"]), normalize(row["id"].replace("-", " "))}]
     return matches[0] if len(matches) == 1 else None

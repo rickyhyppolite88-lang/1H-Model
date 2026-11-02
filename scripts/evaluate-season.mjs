@@ -1,10 +1,11 @@
-import { readFile, writeFile, rename } from "node:fs/promises";
+import { readFile, writeFile, rename, mkdir } from "node:fs/promises";
 import { createServer } from "vite";
 
 const server = await createServer({ configFile: false, server: { middlewareMode: true }, optimizeDeps: { noDiscovery: true, include: [] }, appType: "custom" });
 try {
   const { captureFeatures, evaluateSeason, ledgerSchema } = await server.ssrLoadModule("/src/model/audit.ts");
   const { datasetSchema } = await server.ssrLoadModule("/src/model/schema.ts");
+  const { generatePredictions, predictionsToCsv, dailyPredictions, dailyArchiveSchema, updateDailyArchive } = await server.ssrLoadModule("/src/model/predictions.ts");
   const read = async (path) => JSON.parse(await readFile(path, "utf8"));
   const ledger = ledgerSchema.parse(await read("public/data/season-games.json"));
   const prior = datasetSchema.parse(await read("public/data/prior-season.json"));
@@ -14,6 +15,23 @@ try {
   await writeFile("public/data/season-games.tmp", `${JSON.stringify(enriched, null, 2)}\n`);
   await rename("public/data/season-games.tmp", "public/data/season-games.json");
   await writeFile("public/data/season-audit.json", `${JSON.stringify(result, null, 2)}\n`);
+  const predictions = generatePredictions(enriched, new Date().toISOString(), process.env.GITHUB_SHA ?? "main");
+  await writeFile("public/data/predictions.json", `${JSON.stringify(predictions, null, 2)}\n`);
+  await writeFile("public/data/predictions.csv", `\uFEFF${predictionsToCsv(predictions.predictions)}`);
+  let archive = { schemaVersion: 1, archives: [] };
+  try { archive = dailyArchiveSchema.parse(await read("public/data/prediction-archive.json")); }
+  catch (error) { if (error.code !== "ENOENT") throw error; }
+  const daily = dailyPredictions(predictions);
+  if (daily) {
+    const directory = `public/data/daily/${daily.gameDate}`;
+    await mkdir(directory, { recursive: true });
+    await writeFile(`${directory}/predictions.json`, `${JSON.stringify(daily, null, 2)}\n`);
+    await writeFile(`${directory}/predictions.csv`, `\uFEFF${predictionsToCsv(daily.predictions)}`);
+    archive = updateDailyArchive(archive, daily);
+    console.log("Daily download:", daily.gameDate, JSON.stringify(daily.counts));
+  } else console.log("Daily archive skipped: market data has not been refreshed for today's New York date.");
+  await writeFile("public/data/prediction-archive.json", `${JSON.stringify(archive, null, 2)}\n`);
+  console.log("Batch projections:", JSON.stringify(predictions.counts));
   console.log(JSON.stringify({ sample: result.sample, completedHalves: result.completedHalves,
     modelMae: result.modelMae, marketMae: result.marketMae, modelBias: result.modelBias,
     legacyWins: result.legacyWins, legacyLosses: result.legacyLosses, prospective: result.prospective,
