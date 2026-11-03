@@ -83,7 +83,11 @@ Run `npm run markets:refresh` to retrieve public first-half markets and period r
 
 ## All predictions, code references, and daily downloads
 
-The app opens on **All predictions**. Every ledger matchup has a row, including unavailable predictions with an explicit reason. The model total is computed independently of sportsbook-line availability. Choose a sportsbook and an opening/latest line for the comparison and full CSV export.
+The app opens on **Today’s lines**, showing only the current Eastern calendar date. The prominent **Game date (ET)** control changes both the table and dated downloads; **Today** returns to the current day. Earlier dates are shown only when selected, and a missing current-day refresh never substitutes yesterday’s games. The Today selection follows the Eastern date across midnight.
+
+Use **All games**, **Not tipped off**, and **Tipped off** to filter the selected date. Counts follow the conference, Top 25, search, and coverage filters. Tipoff status updates every minute using the scheduled start time and latest reported game status; delayed games remain upcoming, while postponed/canceled games appear only under All games. Lines and reported game status still come from the scheduled public-data refresh, rather than a live sportsbook feed. Missing quotes display **Not posted**, meaning absent from the selected sportsbook’s latest retrieved snapshot.
+
+Every ledger matchup remains available on its game date, including unavailable predictions with an explicit reason. The model total is computed independently of sportsbook-line availability. Choose a sportsbook and an opening/latest line for the comparison. The main CSV and Excel downloads follow the selected date; **Download filtered** also follows the tipoff/group filters across all pages. The explicitly labeled **All dates CSV** retains the full export.
 
 Use the **All games**, **Top 25**, and **Conferences** tabs to browse games. A conference filter includes either team; selecting a conference in Top 25 combines both filters. Rank badges use ESPN's published 1–25 rank at retrieval; missing ranks remain unknown. The filtered CSV includes every matching row across all pages and follows the selected sportsbook/line basis.
 

@@ -5,7 +5,6 @@ import {
   type DailyArchive,
   dailyArchiveSchema,
   filterPredictionGroups,
-  isTop25,
   type LineBasis,
   type PredictionFeed,
   predictionComparison,
@@ -13,6 +12,7 @@ import {
   predictionsToCsv,
 } from "./model/predictions";
 import { predictionSignal } from "./model/signals";
+import { easternTipoff, tipoffState } from "./model/time";
 import SignalBadge from "./SignalBadge";
 
 const books: Record<string, string> = {
@@ -27,12 +27,21 @@ const books: Record<string, string> = {
 };
 const format = (value: number | null) =>
   value === null ? "—" : value.toFixed(2);
+const dateLabel = (date: string) =>
+  new Intl.DateTimeFormat("en-US", {
+    timeZone: "America/New_York",
+    weekday: "short",
+    month: "short",
+    day: "numeric",
+    year: "numeric",
+  }).format(new Date(`${date}T12:00:00Z`));
 
 export default function Predictions() {
   const [feed, setFeed] = useState<PredictionFeed | null>(null);
   const [archive, setArchive] = useState<DailyArchive | null>(null);
   const [archiveError, setArchiveError] = useState("");
-  const [archiveDate, setArchiveDate] = useState("");
+  const [dateChoice, setDateChoice] = useState("today");
+  const [timing, setTiming] = useState("all");
   const [error, setError] = useState("");
   const [query, setQuery] = useState("");
   const [book, setBook] = useState("betmgm");
@@ -43,6 +52,8 @@ export default function Predictions() {
   const [page, setPage] = useState(0);
   const [sort, setSort] = useState("signal");
   const [clock, setClock] = useState(() => Date.now());
+  const today = easternTipoff(new Date(clock).toISOString()).date;
+  const selectedDate = dateChoice === "today" ? today : dateChoice;
   useEffect(() => {
     const timer = window.setInterval(() => setClock(Date.now()), 60 * 1000);
     return () => window.clearInterval(timer);
@@ -106,13 +117,16 @@ export default function Predictions() {
       window.clearInterval(interval);
     };
   }, []);
-  const rows = useMemo(
+  const dateRows = useMemo(
     () =>
-      filterPredictionGroups(
-        feed?.predictions ?? [],
-        conference,
-        group === "top25",
-      )
+      (feed?.predictions ?? []).filter(
+        (row) => easternTipoff(row.startsAt).date === selectedDate,
+      ),
+    [feed, selectedDate],
+  );
+  const matchingRows = useMemo(
+    () =>
+      filterPredictionGroups(dateRows, conference, group === "top25")
         .filter((row) => {
           const matches = `${row.awayTeam} ${row.homeTeam}`
             .toLowerCase()
@@ -136,7 +150,10 @@ export default function Predictions() {
           }
           return Date.parse(a.startsAt) - Date.parse(b.startsAt);
         }),
-    [feed, query, coverage, conference, group, sort, clock, book, basis],
+    [dateRows, query, coverage, conference, group, sort, clock, book, basis],
+  );
+  const rows = matchingRows.filter(
+    (row) => timing === "all" || tipoffState(row, clock) === timing,
   );
   if (error)
     return (
@@ -158,17 +175,34 @@ export default function Predictions() {
   const pages = Math.max(1, Math.ceil(rows.length / pageSize));
   const safePage = Math.min(page, pages - 1);
   const visible = rows.slice(safePage * pageSize, (safePage + 1) * pageSize);
-  const selectedArchive =
-    archive?.archives.find((row) => row.date === archiveDate) ??
-    archive?.archives[0];
-  function exportCsv(filtered = false) {
+  const selectedArchive = archive?.archives.find(
+    (row) => row.date === selectedDate,
+  );
+  const dates = [
+    ...new Set([
+      today,
+      ...feed.predictions.map((row) => easternTipoff(row.startsAt).date),
+      ...(archive?.archives.map((row) => row.date) ?? []),
+    ]),
+  ]
+    .sort()
+    .reverse();
+  function selectDate(value: string) {
+    setDateChoice(value);
+    setPage(0);
+  }
+  function exportCsv(scope: "date" | "filtered" | "all" = "date") {
     if (!feed) return;
     const url = URL.createObjectURL(
       new Blob(
         [
           "\uFEFF",
           predictionsToCsv(
-            filtered ? rows : feed.predictions,
+            scope === "filtered"
+              ? rows
+              : scope === "all"
+                ? feed.predictions
+                : dateRows,
             book,
             basis,
             new Date(clock).toISOString(),
@@ -181,52 +215,134 @@ export default function Predictions() {
     );
     const link = document.createElement("a");
     link.href = url;
-    link.download = `1h-predictions-${feed.through}-${filtered ? `${group}-${conference.replace(/\W+/g, "-")}` : "all"}-${book}-${basis}.csv`;
+    link.download = `1h-predictions-${scope === "all" ? "all-dates" : selectedDate}-${scope === "filtered" ? `${timing}-${group}-${conference.replace(/\W+/g, "-")}` : "all"}-${book}-${basis}.csv`;
     link.click();
     URL.revokeObjectURL(url);
   }
   return (
     <section className="panel predictions-panel">
       <div className="section-heading">
-        <span className="step">ALL</span>
+        <span className="step">1H</span>
         <div>
-          <h2>Every matchup. Every model total.</h2>
+          <h2>First-half lines & predictions</h2>
           <p>
             Automatically generated from the same projection function as the
             matchup lab.
           </p>
         </div>
       </div>
+      <div className="game-day-panel">
+        <div>
+          <span className="game-day-eyebrow">Game date · Eastern Time</span>
+          <h3>
+            {selectedDate === today ? "Today’s 1H lines" : "Archived 1H lines"}
+          </h3>
+          <p>
+            {dateLabel(selectedDate)} · {dateRows.length} games
+          </p>
+        </div>
+        <div className="game-date-controls">
+          <button
+            type="button"
+            className="secondary-button"
+            onClick={() => selectDate("today")}
+          >
+            Today
+          </button>
+          <label>
+            Game date (ET)
+            <select
+              value={dateChoice}
+              onChange={(event) => selectDate(event.target.value)}
+            >
+              <option value="today">Today · {dateLabel(today)}</option>
+              {dates
+                .filter((date) => date !== today)
+                .map((date) => (
+                  <option key={date} value={date}>
+                    {dateLabel(date)}
+                  </option>
+                ))}
+            </select>
+          </label>
+        </div>
+      </div>
+      <fieldset className="tipoff-filters" aria-label="Tipoff filter">
+        {[
+          ["all", "All games"],
+          ["upcoming", "Not tipped off"],
+          ["started", "Tipped off"],
+        ].map(([value, label]) => (
+          <button
+            type="button"
+            key={value}
+            aria-pressed={timing === value}
+            onClick={() => {
+              setTiming(value);
+              setPage(0);
+            }}
+          >
+            {label}{" "}
+            <span>
+              {
+                matchingRows.filter(
+                  (row) => value === "all" || tipoffState(row, clock) === value,
+                ).length
+              }
+            </span>
+          </button>
+        ))}
+      </fieldset>
+      <p className="tipoff-explanation">
+        Tipoff filters use the scheduled start and latest reported status, and
+        update every minute. Delayed games stay under Not tipped off; postponed
+        and canceled games appear under All games.
+      </p>
+      {selectedDate === today && feed.through < today && (
+        <output className="notice">
+          Today’s schedule has not been published yet. The last data refresh
+          covers {feed.through}; earlier dates are available in Game date (ET).
+        </output>
+      )}
       <div className="prediction-actions">
         <button
           className="secondary-button"
           type="button"
-          onClick={() => exportCsv(false)}
+          onClick={() => exportCsv()}
         >
-          Download all {feed.counts.matchups} rows · CSV ↓
+          Download {dateRows.length} games for {selectedDate} · CSV ↓
         </button>
         <button
           className="secondary-button"
           type="button"
-          onClick={() => exportCsv(true)}
+          onClick={() => exportCsv("filtered")}
         >
           Download filtered {rows.length} rows · CSV ↓
         </button>
-        <a
-          className="secondary-button"
-          href={`${import.meta.env.BASE_URL}data/predictions.xlsx`}
-          download="1h-predictions.xlsx"
-        >
-          Excel workbook ↓
-        </a>
+        {selectedArchive?.xlsxPath && (
+          <a
+            className="secondary-button"
+            href={`${import.meta.env.BASE_URL}${selectedArchive.xlsxPath}`}
+            download={`1h-predictions-${selectedDate}.xlsx`}
+          >
+            Excel workbook ↓
+          </a>
+        )}
         <a
           className="secondary-button"
           href={`${import.meta.env.BASE_URL}data/predictions.json`}
           target="_blank"
           rel="noreferrer"
         >
-          JSON feed ↗
+          All dates JSON feed ↗
         </a>
+        <button
+          className="text-button"
+          type="button"
+          onClick={() => exportCsv("all")}
+        >
+          All dates CSV ↓
+        </button>
         <a
           className="text-button"
           href={feed.source.projectionCode}
@@ -262,8 +378,15 @@ export default function Predictions() {
           </strong>
         </div>
         <div>
-          <span>Top 25 games in view</span>
-          <strong>{rows.filter(isTop25).length}</strong>
+          <span>Posted {books[book] ?? book} 1H lines</span>
+          <strong>
+            {
+              rows.filter(
+                (row) => predictionComparison(row, book, basis).line !== null,
+              ).length
+            }{" "}
+            / {rows.length}
+          </strong>
         </div>
       </div>
       <div className="signal-legend">
@@ -279,27 +402,16 @@ export default function Predictions() {
       </div>
       <div className="daily-downloads">
         <div>
-          <h3>Daily downloads</h3>
+          <h3>Downloads for {dateLabel(selectedDate)}</h3>
           <p>
             Refreshes automatically three times every day. Dated copies remain
-            available after the day ends.
+            available after the day ends. These files include all games on the
+            selected date. Use the filtered CSV to download the current tipoff
+            and conference filters.
           </p>
         </div>
         {selectedArchive && (
           <div className="button-group">
-            <label>
-              Prediction date
-              <select
-                value={selectedArchive.date}
-                onChange={(event) => setArchiveDate(event.target.value)}
-              >
-                {archive?.archives.map((row) => (
-                  <option key={row.date} value={row.date}>
-                    {row.date} · {row.predicted}/{row.matchups} projected
-                  </option>
-                ))}
-              </select>
-            </label>
             <a
               className="secondary-button"
               href={`${import.meta.env.BASE_URL}${selectedArchive.csvPath}`}
@@ -333,6 +445,9 @@ export default function Predictions() {
               </a>
             )}
           </div>
+        )}
+        {!selectedArchive && (
+          <p>No dated downloads are available for {selectedDate} yet.</p>
         )}
         {archiveError && <p className="inline-note">{archiveError}</p>}
       </div>
@@ -394,7 +509,7 @@ export default function Predictions() {
             }}
           >
             <option value="all">All conferences</option>
-            {conferenceNames(feed.predictions).map((name) => (
+            {conferenceNames(dateRows).map((name) => (
               <option key={name} value={name}>
                 {name}
               </option>
@@ -463,7 +578,10 @@ export default function Predictions() {
               <th>Tipoff (ET)</th>
               <th className="matchup-cell">Matchup</th>
               <th>Predicted 1H total</th>
-              <th>{basis === "latest" ? "Latest line" : "Opening line"}</th>
+              <th>
+                {basis === "latest" ? "Latest 1H line" : "Opening 1H line"}{" "}
+                <small>{books[book] ?? book}</small>
+              </th>
               <th>Model − line</th>
               <th>Research lean</th>
               <th>Model signal</th>
@@ -487,6 +605,15 @@ export default function Predictions() {
                 >
                   <td>
                     <GameTime startsAt={row.startsAt} />
+                    <span
+                      className={`tipoff-badge tipoff-${tipoffState(row, clock)}`}
+                    >
+                      {tipoffState(row, clock) === "started"
+                        ? "Tipped off"
+                        : tipoffState(row, clock) === "upcoming"
+                          ? "Not tipped off"
+                          : row.status}
+                    </span>
                   </td>
                   <td className="matchup-cell">
                     <strong className="matchup-team">
@@ -512,7 +639,13 @@ export default function Predictions() {
                   <td className="prediction-total">
                     {format(row.projectedFirstHalfTotal)}
                   </td>
-                  <td>{format(comparison.line)}</td>
+                  <td className="sportsbook-line">
+                    {comparison.line === null ? (
+                      <span className="line-missing">Not posted</span>
+                    ) : (
+                      format(comparison.line)
+                    )}
+                  </td>
                   <td>
                     {comparison.signedEdge === null
                       ? "—"
@@ -544,7 +677,11 @@ export default function Predictions() {
           </tbody>
         </table>
         {!visible.length && (
-          <div className="empty-state">No matchups match these filters.</div>
+          <div className="empty-state">
+            {dateRows.length
+              ? `No ${timing === "started" ? "tipped-off" : timing === "upcoming" ? "not-yet-tipped" : "matching"} games match these filters for ${dateLabel(selectedDate)}. Try another tipoff filter.`
+              : `No games are available for ${dateLabel(selectedDate)}. Earlier dates are available in Game date (ET).`}
+          </div>
         )}
       </div>
       <div className="prediction-pagination">
@@ -574,14 +711,14 @@ export default function Predictions() {
       </div>
       <div className="data-notes">
         <p>
-          The full CSV includes every matchup, including rows with unavailable
-          projections. The selected sportsbook and line basis apply to the
-          export. Model totals do not require an available sportsbook line.
-          Positive model-minus-line means OVER; negative means UNDER. These are
-          regular-season research leans. The filtered CSV includes every
-          matching row across all pages. Excel workbooks use BetMGM/latest, with
-          All Games, Top 25 and conference sheets. Cross-conference games appear
-          in both relevant sheets.
+          The date CSV includes every matchup on the selected Eastern date,
+          including rows with unavailable projections. The selected sportsbook
+          and line basis apply to the export. Model totals do not require an
+          available sportsbook line. Positive model-minus-line means OVER;
+          negative means UNDER. These are regular-season research leans. The
+          filtered CSV includes every matching row across all pages. Excel
+          workbooks use BetMGM/latest, with All Games, Top 25 and conference
+          sheets. Cross-conference games appear in both relevant sheets.
         </p>
         <p>
           Generated{" "}
