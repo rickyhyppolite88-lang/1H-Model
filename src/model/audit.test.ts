@@ -1,4 +1,3 @@
-import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 import {
   captureFeatures,
@@ -88,32 +87,62 @@ function fixture(): SeasonLedger {
 }
 
 describe("first-half market audit", () => {
-  it("uses the actual freeze time rather than an older source timestamp for pregame provenance", () => {
-    const prior = datasetSchema.parse(
-      JSON.parse(readFileSync("public/data/prior-season.json", "utf8")),
-    );
-    const current = datasetSchema.parse(
-      JSON.parse(readFileSync("public/data/current-season.json", "utf8")),
-    );
-    current.retrievedAt = "2026-11-02T10:00:00Z";
-    const data = fixture();
-    data.capturedAt = "2026-11-02T11:00:00Z";
-    data.games[0].startsAt = "2026-11-02T14:30:00Z";
-    data.games[0].seasonDebut = false;
-    data.games[0].featureSnapshot = null;
-    data.games[0].away.modelId = prior.teams[0].id;
-    data.games[0].home.modelId = prior.teams[1].id;
-    expect(
-      captureFeatures(data, prior, current, "2026-11-02T18:00:00Z").games[0]
-        .featureSnapshot,
-    ).toBeNull();
-    const before = captureFeatures(data, prior, current, "2026-11-02T12:00:00Z")
-      .games[0].featureSnapshot;
-    expect(before).toMatchObject({
-      kind: "captured_pregame",
-      capturedAt: "2026-11-02T12:00:00Z",
-    });
-  });
+  it.each(["2026-11-02", "2026-11-03"])(
+    "uses the actual freeze time on %s rather than an older source timestamp for pregame provenance",
+    (gameDate) => {
+      const prior = datasetSchema.parse({
+        schemaVersion: 1,
+        season: "2025-26",
+        asOf: "2026-04-07",
+        retrievedAt: "2026-11-01T10:00:00Z",
+        source: { name: "Test", urls: {} },
+        teams: ["a", "b"].map((id) => ({
+          id,
+          name: id,
+          gamesPlayed: 30,
+          firstHalfPoints: 35,
+          pace: 70,
+          offensiveEfficiency: 1.1,
+          defensiveEfficiency: 1,
+          strengthOfSchedule: null,
+        })),
+      });
+      const current = datasetSchema.parse({
+        ...prior,
+        season: "2026-27",
+        asOf: gameDate,
+        retrievedAt: `${gameDate}T10:00:00Z`,
+        teams: prior.teams.map((team) => ({ ...team, gamesPlayed: 1 })),
+      });
+      const data = fixture();
+      data.capturedAt = `${gameDate}T11:00:00Z`;
+      data.games[0].startsAt = `${gameDate}T14:30:00Z`;
+      data.games[0].seasonDebut = false;
+      data.games[0].featureSnapshot = null;
+      data.games[0].away.modelId = prior.teams[0].id;
+      data.games[0].home.modelId = prior.teams[1].id;
+      expect(
+        captureFeatures(data, prior, current, `${gameDate}T18:00:00Z`).games[0]
+          .featureSnapshot,
+      ).toBeNull();
+      const before = captureFeatures(
+        data,
+        prior,
+        current,
+        `${gameDate}T12:00:00Z`,
+      ).games[0].featureSnapshot;
+      expect(before).toMatchObject({
+        kind: "captured_pregame",
+        capturedAt: `${gameDate}T12:00:00Z`,
+      });
+      expect(before?.currentAsOf).toBe(gameDate);
+      current.asOf = "2026-11-04";
+      expect(
+        captureFeatures(data, prior, current, `${gameDate}T12:00:00Z`).games[0]
+          .featureSnapshot,
+      ).toBeNull();
+    },
+  );
   it("benchmarks the fixed book's opener, not its latest or a more favorable line", () => {
     const result = evaluateSeason(ledgerSchema.parse(fixture()));
     expect(result.rows[0]).toMatchObject({
