@@ -326,7 +326,7 @@ export default function App() {
 
         <nav className="tabs" aria-label="Model sections">
           {[
-            ["predictions", "All predictions"],
+            ["predictions", "Today’s lines"],
             ["record", "Prediction record"],
             ["matchup", "Matchup lab"],
             ["audit", "Season lines & audit"],

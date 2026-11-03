@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { easternTipoff } from "./time";
+import { easternTipoff, tipoffState } from "./time";
 
 describe("Eastern game times", () => {
   it.each([
@@ -18,4 +18,26 @@ describe("Eastern game times", () => {
   it("rejects invalid source times", () => {
     expect(() => easternTipoff("invalid")).toThrow("Invalid game timestamp");
   });
+});
+
+describe("tipoff status", () => {
+  const now = Date.parse("2026-11-03T23:00:00Z");
+  it.each([
+    ["2026-11-03T23:01:00Z", "Scheduled", null, "upcoming"],
+    ["2026-11-03T23:00:00Z", "Scheduled", null, "started"],
+    ["2026-11-03T22:59:00Z", "Scheduled", null, "started"],
+    ["2026-11-04T00:00:00Z", "In Progress", null, "started"],
+    ["2026-11-04T00:00:00Z", "Scheduled", 0, "started"],
+    ["2026-11-04T00:00:00Z", "Final", 70, "started"],
+    ["2026-11-03T22:00:00Z", "Delayed", null, "upcoming"],
+    ["2026-11-03T22:00:00Z", "Postponed", null, "inactive"],
+    ["2026-11-04T00:00:00Z", "Canceled", null, "inactive"],
+  ] as const)(
+    "classifies %s / %s correctly",
+    (startsAt, status, actualFirstHalfTotal, expected) => {
+      expect(tipoffState({ startsAt, status, actualFirstHalfTotal }, now)).toBe(
+        expected,
+      );
+    },
+  );
 });

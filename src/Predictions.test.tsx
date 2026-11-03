@@ -1,7 +1,6 @@
 // @vitest-environment jsdom
 
 import { Blob as NodeBlob } from "node:buffer";
-import { readFileSync } from "node:fs";
 import {
   act,
   cleanup,
@@ -9,9 +8,57 @@ import {
   render,
   screen,
 } from "@testing-library/react";
-import { afterEach, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, expect, it, vi } from "vitest";
 import { recordFixture } from "./model/record.test-fixture";
 import Predictions from "./Predictions";
+
+beforeEach(() => {
+  vi.useFakeTimers({ toFake: ["Date"] });
+  vi.setSystemTime(new Date("2026-11-03T15:00:00Z"));
+});
+
+function todayFixture() {
+  const { feed } = recordFixture();
+  const base = feed.predictions[0];
+  feed.through = "2026-11-03";
+  feed.generatedAt = "2026-11-03T14:00:00Z";
+  feed.marketCapturedAt = feed.generatedAt;
+  feed.predictions = [
+    {
+      ...base,
+      gameId: "today-early",
+      awayTeam: "Early team",
+      startsAt: "2026-11-03T23:00:00Z",
+    },
+    {
+      ...base,
+      gameId: "today-late",
+      awayTeam: "Late team",
+      startsAt: "2026-11-04T00:00:00Z",
+      projectedFirstHalfTotal: null,
+      markets: [],
+    },
+  ];
+  feed.counts = { matchups: 2, predicted: 1, unavailable: 1 };
+  return feed;
+}
+
+function archiveFixture() {
+  return {
+    schemaVersion: 1,
+    archives: ["2026-11-03", "2026-11-02"].map((date) => ({
+      date,
+      generatedAt: `${date}T14:00:00Z`,
+      marketCapturedAt: `${date}T14:00:00Z`,
+      matchups: 2,
+      predicted: 1,
+      csvPath: `data/daily/${date}/predictions.csv`,
+      jsonPath: `data/daily/${date}/predictions.json`,
+      xlsxPath: `data/daily/${date}/predictions.xlsx`,
+      teamXlsxPath: `data/daily/${date}/team-comparison.xlsx`,
+    })),
+  };
+}
 
 afterEach(() => {
   cleanup();
@@ -56,7 +103,7 @@ it("orders stronger research signals first and fades the row color without showi
   );
   render(<Predictions />);
   await screen.findByRole("heading", {
-    name: "Every matchup. Every model total.",
+    name: "First-half lines & predictions",
   });
   const rows = screen.getAllByRole("row");
   expect(rows[1].textContent).toContain("Strong signal");
@@ -67,11 +114,10 @@ it("orders stronger research signals first and fades the row color without showi
 });
 
 it("provides dated downloads and automatically checks for updated predictions", async () => {
-  vi.useFakeTimers({ toFake: ["setInterval", "clearInterval"] });
-  const feed = JSON.parse(readFileSync("public/data/predictions.json", "utf8"));
-  const archive = JSON.parse(
-    readFileSync("public/data/prediction-archive.json", "utf8"),
-  );
+  vi.useFakeTimers({ toFake: ["Date", "setInterval", "clearInterval"] });
+  vi.setSystemTime(new Date("2026-11-03T15:00:00Z"));
+  const feed = todayFixture();
+  const archive = archiveFixture();
   const fetcher = vi.fn(async (url: string) => ({
     ok: true,
     json: async () =>
@@ -80,7 +126,7 @@ it("provides dated downloads and automatically checks for updated predictions", 
   vi.stubGlobal("fetch", fetcher);
   render(<Predictions />);
   await screen.findByRole("heading", {
-    name: "Every matchup. Every model total.",
+    name: "First-half lines & predictions",
   });
   const latest = archive.archives[0];
   expect(
@@ -105,12 +151,12 @@ it("provides dated downloads and automatically checks for updated predictions", 
 });
 
 it("combines Top 25 with a conference and exports matching rows beyond the first page", async () => {
-  const feed = JSON.parse(readFileSync("public/data/predictions.json", "utf8"));
+  const feed = todayFixture();
   const base = feed.predictions[0];
   feed.predictions = Array.from({ length: 30 }, (_, index) => ({
     ...base,
     gameId: `ranked-${index}`,
-    startsAt: "2026-11-03T00:00:00Z",
+    startsAt: "2026-11-04T00:00:00Z",
     awayTeam: `Ranked team ${index}`,
     homeTeam: "Opponent",
     awayConference: "SEC",
@@ -134,7 +180,7 @@ it("combines Top 25 with a conference and exports matching rows beyond the first
       ok: true,
       json: async () =>
         url.includes("prediction-archive")
-          ? { schemaVersion: 1, archives: [] }
+          ? archiveFixture()
           : structuredClone(feed),
     })),
   );
@@ -154,7 +200,7 @@ it("combines Top 25 with a conference and exports matching rows beyond the first
   vi.spyOn(HTMLAnchorElement.prototype, "click").mockImplementation(() => {});
   render(<Predictions />);
   await screen.findByRole("heading", {
-    name: "Every matchup. Every model total.",
+    name: "First-half lines & predictions",
   });
   fireEvent.change(screen.getByLabelText("Conference"), {
     target: { value: "SEC" },
@@ -171,7 +217,7 @@ it("combines Top 25 with a conference and exports matching rows beyond the first
   expect(screen.getAllByText("7:00 PM ET")).toHaveLength(25);
   expect(
     screen.getAllByTitle("Eastern Time (EST)")[0].getAttribute("datetime"),
-  ).toBe("2026-11-03T00:00:00Z");
+  ).toBe("2026-11-04T00:00:00Z");
   fireEvent.click(
     screen.getByRole("button", { name: /Download filtered 30 rows/ }),
   );
@@ -182,18 +228,22 @@ it("combines Top 25 with a conference and exports matching rows beyond the first
   expect(revoke).toHaveBeenCalledWith("blob:test");
   expect(
     screen.getByRole("link", { name: "Excel workbook ↓" }).getAttribute("href"),
-  ).toContain("data/predictions.xlsx");
+  ).toContain("data/daily/2026-11-03/predictions.xlsx");
 });
 
 it("lists projections, provides code/feed links, and keeps the complete CSV available while filtering", async () => {
-  const feed = JSON.parse(readFileSync("public/data/predictions.json", "utf8"));
+  const feed = todayFixture();
   vi.stubGlobal(
     "fetch",
-    vi.fn(async () => ({ ok: true, json: async () => structuredClone(feed) })),
+    vi.fn(async (url: string) => ({
+      ok: true,
+      json: async () =>
+        structuredClone(url.includes("archive") ? archiveFixture() : feed),
+    })),
   );
   render(<Predictions />);
   await screen.findByRole("heading", {
-    name: "Every matchup. Every model total.",
+    name: "First-half lines & predictions",
   });
   expect(
     screen
@@ -208,7 +258,7 @@ it("lists projections, provides code/feed links, and keeps the complete CSV avai
   });
   expect(
     screen.getByRole("button", {
-      name: `Download all ${feed.counts.matchups} rows · CSV ↓`,
+      name: `Download ${feed.counts.matchups} games for 2026-11-03 · CSV ↓`,
     }),
   ).toBeTruthy();
   expect(
@@ -218,6 +268,179 @@ it("lists projections, provides code/feed links, and keeps the complete CSV avai
     target: { value: "opening" },
   });
   expect(
-    screen.getByRole("columnheader", { name: "Opening line" }),
+    screen.getByRole("columnheader", { name: "Opening 1H line BetMGM" }),
+  ).toBeTruthy();
+});
+
+it("defaults to today's Eastern slate and changes the table and downloads together", async () => {
+  const feed = todayFixture();
+  const base = feed.predictions[0];
+  feed.predictions.push(
+    {
+      ...base,
+      gameId: "yesterday",
+      startsAt: "2026-11-03T00:00:00Z",
+      awayTeam: "Yesterday team",
+    },
+    {
+      ...base,
+      gameId: "tomorrow",
+      startsAt: "2026-11-04T05:00:00Z",
+      awayTeam: "Tomorrow team",
+    },
+  );
+  vi.stubGlobal(
+    "fetch",
+    vi.fn(async (url: string) => ({
+      ok: true,
+      json: async () =>
+        structuredClone(url.includes("archive") ? archiveFixture() : feed),
+    })),
+  );
+  render(<Predictions />);
+  await screen.findByRole("heading", { name: "Today’s 1H lines" });
+  expect(screen.getByText("Early team")).toBeTruthy();
+  expect(screen.getByText("Late team")).toBeTruthy();
+  expect(screen.queryByText("Yesterday team")).toBeNull();
+  expect(screen.queryByText("Tomorrow team")).toBeNull();
+  expect(
+    (screen.getByLabelText("Game date (ET)") as HTMLSelectElement).value,
+  ).toBe("today");
+  expect(
+    screen.getByRole("link", { name: "Daily Excel ↓" }).getAttribute("href"),
+  ).toContain("/2026-11-03/");
+  fireEvent.change(screen.getByLabelText("Game date (ET)"), {
+    target: { value: "2026-11-02" },
+  });
+  expect(
+    screen.getByRole("heading", { name: "Archived 1H lines" }),
+  ).toBeTruthy();
+  expect(screen.getByText("Yesterday team")).toBeTruthy();
+  expect(screen.queryByText("Early team")).toBeNull();
+  expect(
+    screen.getByRole("link", { name: "Daily Excel ↓" }).getAttribute("href"),
+  ).toContain("/2026-11-02/");
+  expect(
+    screen.getByRole("link", { name: "Excel workbook ↓" }).getAttribute("href"),
+  ).toContain("/2026-11-02/");
+  fireEvent.click(screen.getByRole("button", { name: "Today" }));
+  expect(screen.getByText("Early team")).toBeTruthy();
+  expect(screen.queryByText("Yesterday team")).toBeNull();
+});
+
+it("toggles tipoff groups and exports only the selected date and group", async () => {
+  vi.setSystemTime(new Date("2026-11-03T23:30:00Z"));
+  const feed = todayFixture();
+  feed.predictions.push({
+    ...feed.predictions[0],
+    gameId: "postponed",
+    awayTeam: "Postponed team",
+    status: "Postponed",
+  });
+  vi.stubGlobal(
+    "fetch",
+    vi.fn(async (url: string) => ({
+      ok: true,
+      json: async () =>
+        structuredClone(url.includes("archive") ? archiveFixture() : feed),
+    })),
+  );
+  let exported: NodeBlob | undefined;
+  vi.stubGlobal("Blob", NodeBlob);
+  vi.stubGlobal(
+    "URL",
+    class extends URL {
+      static createObjectURL(blob: Blob | MediaSource) {
+        exported = blob as unknown as NodeBlob;
+        return "blob:test";
+      }
+      static revokeObjectURL() {}
+    },
+  );
+  let filename: string | undefined;
+  vi.spyOn(HTMLAnchorElement.prototype, "click").mockImplementation(function (
+    this: HTMLAnchorElement,
+  ) {
+    filename = this.download;
+  });
+  render(<Predictions />);
+  await screen.findByRole("heading", { name: "Today’s 1H lines" });
+  expect(screen.getByRole("button", { name: "All games 3" })).toBeTruthy();
+  expect(screen.getByRole("button", { name: "Not tipped off 1" })).toBeTruthy();
+  expect(screen.getByRole("button", { name: "Tipped off 1" })).toBeTruthy();
+  fireEvent.click(screen.getByRole("button", { name: "Not tipped off 1" }));
+  expect(screen.getByText("Late team")).toBeTruthy();
+  expect(screen.getByText("Not posted")).toBeTruthy();
+  expect(screen.queryByText("Early team")).toBeNull();
+  expect(screen.queryByText("Postponed team")).toBeNull();
+  fireEvent.click(
+    screen.getByRole("button", { name: /Download filtered 1 rows/ }),
+  );
+  const csv = await exported?.text();
+  expect(csv).toContain("today-late");
+  expect(csv).not.toContain("today-early");
+  expect(filename).toContain("2026-11-03-upcoming");
+  fireEvent.click(screen.getByRole("button", { name: "Tipped off 1" }));
+  expect(screen.getByText("Early team")).toBeTruthy();
+  expect(screen.queryByText("Late team")).toBeNull();
+  fireEvent.click(screen.getByRole("button", { name: "All games 3" }));
+  expect(screen.getByText("Postponed team")).toBeTruthy();
+});
+
+it("moves games between tipoff filters without reloading the page", async () => {
+  vi.useFakeTimers({ toFake: ["Date", "setInterval", "clearInterval"] });
+  vi.setSystemTime(new Date("2026-11-03T23:59:30Z"));
+  const feed = todayFixture();
+  vi.stubGlobal(
+    "fetch",
+    vi.fn(async (url: string) => ({
+      ok: true,
+      json: async () =>
+        structuredClone(url.includes("archive") ? archiveFixture() : feed),
+    })),
+  );
+  render(<Predictions />);
+  await screen.findByRole("heading", { name: "Today’s 1H lines" });
+  fireEvent.click(screen.getByRole("button", { name: "Not tipped off 1" }));
+  expect(screen.getByText("Late team")).toBeTruthy();
+  await act(async () => {
+    vi.advanceTimersByTime(60 * 1000);
+  });
+  expect(screen.queryByText("Late team")).toBeNull();
+  expect(screen.getByRole("button", { name: "Tipped off 2" })).toBeTruthy();
+  fireEvent.click(screen.getByRole("button", { name: "Tipped off 2" }));
+  expect(screen.getByText("Late team")).toBeTruthy();
+});
+
+it("follows Eastern midnight and never falls back to an earlier day's games or files", async () => {
+  vi.useFakeTimers({ toFake: ["Date", "setInterval", "clearInterval"] });
+  vi.setSystemTime(new Date("2026-11-04T04:59:30Z"));
+  const feed = todayFixture();
+  vi.stubGlobal(
+    "fetch",
+    vi.fn(async (url: string) => ({
+      ok: true,
+      json: async () =>
+        structuredClone(url.includes("archive") ? archiveFixture() : feed),
+    })),
+  );
+  render(<Predictions />);
+  await screen.findByRole("heading", { name: "Today’s 1H lines" });
+  expect(screen.getByText("Early team")).toBeTruthy();
+  await act(async () => {
+    vi.advanceTimersByTime(60 * 1000);
+  });
+  expect(screen.queryByText("Early team")).toBeNull();
+  expect(screen.queryByRole("link", { name: "Daily Excel ↓" })).toBeNull();
+  expect(
+    screen.getByText(/No dated downloads are available for 2026-11-04/),
+  ).toBeTruthy();
+  expect(screen.getByRole("status").textContent).toContain(
+    "Today’s schedule has not been published yet",
+  );
+  expect(
+    screen.getByRole("button", {
+      name: "Download 0 games for 2026-11-04 · CSV ↓",
+    }),
   ).toBeTruthy();
 });
