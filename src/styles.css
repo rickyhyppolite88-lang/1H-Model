@@ -1222,6 +1222,80 @@ footer {
   font-weight: 400;
   color: #687560;
 }
+.line-display {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  white-space: nowrap;
+}
+.line-move {
+  border: 1px solid #d7dfcb;
+  border-radius: 4px;
+  padding: 4px 6px;
+  background: #f5f6f1;
+  color: #65705e;
+  font-size: 11px;
+  font-weight: 650;
+  cursor: help;
+}
+.line-move-up,
+.movement-up-text {
+  color: #216c3f;
+}
+.line-move-up {
+  background: #eaf5eb;
+  border-color: #bcd9bf;
+}
+.line-move-down,
+.movement-down-text {
+  color: #a63832;
+}
+.line-move-down {
+  background: #fbeeed;
+  border-color: #e9c5c2;
+}
+.line-move:focus-visible {
+  outline: 2px solid #345c3e;
+  outline-offset: 3px;
+}
+.line-movement-legend {
+  color: #61705a;
+  font-size: 11px;
+  line-height: 1.7;
+}
+.line-movement-legend span {
+  font-weight: 650;
+}
+.line-move-tooltip {
+  position: fixed;
+  z-index: 1000;
+  width: min(350px, calc(100vw - 24px));
+  max-height: calc(100vh - 24px);
+  overflow-y: auto;
+  box-sizing: border-box;
+  border: 1px solid #bacab0;
+  border-radius: 6px;
+  padding: 14px;
+  background: #fffef9;
+  box-shadow: 0 6px 24px #203c332b;
+  color: #294337;
+  font-size: 12px;
+  line-height: 1.6;
+  white-space: normal;
+}
+.line-move-tooltip > strong {
+  display: block;
+  margin-bottom: 8px;
+}
+.line-move-tooltip p {
+  margin: 0 0 9px;
+}
+.line-move-tooltip small {
+  display: block;
+  margin-top: 8px;
+  font-size: 10px;
+  color: #61705a;
+}
 .predictions-panel th small {
   display: block;
   margin-top: 5px;
@@ -1569,6 +1643,15 @@ th.matchup-cell {
 .game-time strong {
   color: #203c33;
   font-size: 1rem;
+}
+.line-move-tooltip .game-time {
+  display: inline-flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+.line-move-tooltip .game-time strong {
+  font-size: 11px;
 }
 .evaluation-filters {
   display: grid;
