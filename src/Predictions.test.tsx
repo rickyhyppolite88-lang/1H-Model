@@ -7,8 +7,15 @@ import {
   fireEvent,
   render,
   screen,
+  within,
 } from "@testing-library/react";
 import { afterEach, beforeEach, expect, it, vi } from "vitest";
+import {
+  buildRecordIndex,
+  recordForDate,
+  updatePredictionRecord,
+} from "./model/predictionRecord";
+import type { DailyArchive, PredictionFeed } from "./model/predictions";
 import { recordFixture } from "./model/record.test-fixture";
 import Predictions from "./Predictions";
 
@@ -43,7 +50,7 @@ function todayFixture() {
   return feed;
 }
 
-function archiveFixture() {
+function archiveFixture(): DailyArchive {
   return {
     schemaVersion: 1,
     archives: ["2026-11-03", "2026-11-02"].map((date) => ({
@@ -58,6 +65,26 @@ function archiveFixture() {
       teamXlsxPath: `data/daily/${date}/team-comparison.xlsx`,
     })),
   };
+}
+
+function responseFor(
+  url: string,
+  feed: PredictionFeed,
+  archive: DailyArchive = archiveFixture(),
+) {
+  return structuredClone(
+    url.includes("prediction-record-index")
+      ? {
+          schemaVersion: 1,
+          updatedAt: feed.generatedAt,
+          canonicalIds: [],
+          summary: [],
+          archives: [],
+        }
+      : url.includes("prediction-archive")
+        ? archive
+        : feed,
+  );
 }
 
 afterEach(() => {
@@ -96,9 +123,7 @@ it("orders stronger research signals first and fades the row color without showi
     vi.fn(async (url: string) => ({
       ok: true,
       json: async () =>
-        url.includes("archive")
-          ? { schemaVersion: 1, archives: [] }
-          : structuredClone(feed),
+        responseFor(url, feed, { schemaVersion: 1, archives: [] }),
     })),
   );
   render(<Predictions />);
@@ -120,8 +145,7 @@ it("provides dated downloads and automatically checks for updated predictions", 
   const archive = archiveFixture();
   const fetcher = vi.fn(async (url: string) => ({
     ok: true,
-    json: async () =>
-      structuredClone(url.includes("prediction-archive") ? archive : feed),
+    json: async () => responseFor(url, feed, archive),
   }));
   vi.stubGlobal("fetch", fetcher);
   render(<Predictions />);
@@ -143,11 +167,11 @@ it("provides dated downloads and automatically checks for updated predictions", 
   expect(
     screen.getByRole("link", { name: "Daily Excel ↓" }).getAttribute("href"),
   ).toContain(latest.xlsxPath);
-  expect(fetcher).toHaveBeenCalledTimes(2);
+  expect(fetcher).toHaveBeenCalledTimes(3);
   await act(async () => {
     vi.advanceTimersByTime(5 * 60 * 1000);
   });
-  expect(fetcher).toHaveBeenCalledTimes(4);
+  expect(fetcher).toHaveBeenCalledTimes(6);
 });
 
 it("combines Top 25 with a conference and exports matching rows beyond the first page", async () => {
@@ -178,10 +202,7 @@ it("combines Top 25 with a conference and exports matching rows beyond the first
     "fetch",
     vi.fn(async (url: string) => ({
       ok: true,
-      json: async () =>
-        url.includes("prediction-archive")
-          ? archiveFixture()
-          : structuredClone(feed),
+      json: async () => responseFor(url, feed),
     })),
   );
   let exported: NodeBlob | undefined;
@@ -237,8 +258,7 @@ it("lists projections, provides code/feed links, and keeps the complete CSV avai
     "fetch",
     vi.fn(async (url: string) => ({
       ok: true,
-      json: async () =>
-        structuredClone(url.includes("archive") ? archiveFixture() : feed),
+      json: async () => responseFor(url, feed),
     })),
   );
   render(<Predictions />);
@@ -293,8 +313,7 @@ it("defaults to today's Eastern slate and changes the table and downloads togeth
     "fetch",
     vi.fn(async (url: string) => ({
       ok: true,
-      json: async () =>
-        structuredClone(url.includes("archive") ? archiveFixture() : feed),
+      json: async () => responseFor(url, feed),
     })),
   );
   render(<Predictions />);
@@ -341,8 +360,7 @@ it("toggles tipoff groups and exports only the selected date and group", async (
     "fetch",
     vi.fn(async (url: string) => ({
       ok: true,
-      json: async () =>
-        structuredClone(url.includes("archive") ? archiveFixture() : feed),
+      json: async () => responseFor(url, feed),
     })),
   );
   let exported: NodeBlob | undefined;
@@ -395,8 +413,7 @@ it("moves games between tipoff filters without reloading the page", async () => 
     "fetch",
     vi.fn(async (url: string) => ({
       ok: true,
-      json: async () =>
-        structuredClone(url.includes("archive") ? archiveFixture() : feed),
+      json: async () => responseFor(url, feed),
     })),
   );
   render(<Predictions />);
@@ -420,8 +437,7 @@ it("follows Eastern midnight and never falls back to an earlier day's games or f
     "fetch",
     vi.fn(async (url: string) => ({
       ok: true,
-      json: async () =>
-        structuredClone(url.includes("archive") ? archiveFixture() : feed),
+      json: async () => responseFor(url, feed),
     })),
   );
   render(<Predictions />);
@@ -443,4 +459,93 @@ it("follows Eastern midnight and never falls back to an earlier day's games or f
       name: "Download 0 games for 2026-11-04 · CSV ↓",
     }),
   ).toBeTruthy();
+});
+
+it("changes the displayed record with the game date and explains data gaps", async () => {
+  const feed = todayFixture();
+  const f = recordFixture();
+  const store = updatePredictionRecord(f.store, f.feed, f.ledger, f.at);
+  const original = store.records[0];
+  store.records.push({
+    ...original,
+    id: "next-day",
+    gameId: "today-early",
+    gameDate: "2026-11-03",
+    recordedAt: "2026-11-03T22:00:00Z",
+    prediction: { ...feed.predictions[0] },
+  });
+  store.results = [
+    {
+      id: "old-win",
+      season: original.season,
+      gameId: original.gameId,
+      observedAt: "2026-11-03T03:00:00Z",
+      sourceCapturedAt: "2026-11-03T03:00:00Z",
+      awayPoints: 36,
+      homePoints: 36,
+      source: "https://example.com/results",
+    },
+    {
+      id: "new-loss",
+      season: original.season,
+      gameId: "today-early",
+      observedAt: "2026-11-04T03:00:00Z",
+      sourceCapturedAt: "2026-11-04T03:00:00Z",
+      awayPoints: 33,
+      homePoints: 33,
+      source: "https://example.com/results",
+    },
+  ];
+  const index = buildRecordIndex(store);
+  vi.stubGlobal(
+    "fetch",
+    vi.fn(async (url: string) => ({
+      ok: true,
+      json: async () =>
+        url.includes("prediction-record-index")
+          ? structuredClone(index)
+          : url.includes("prediction-record/")
+            ? structuredClone(
+                recordForDate(
+                  store,
+                  url.includes("2026-11-02") ? "2026-11-02" : "2026-11-03",
+                ),
+              )
+            : responseFor(url, feed),
+    })),
+  );
+  render(<Predictions />);
+  await screen.findByText("0 / 1 / 0");
+  expect(
+    within(
+      screen.getByRole("region", { name: "Record for 2026-11-03" }),
+    ).getByText("0.0%"),
+  ).toBeTruthy();
+  fireEvent.change(screen.getByLabelText("Game date (ET)"), {
+    target: { value: "2026-11-02" },
+  });
+  await screen.findByText("1 / 0 / 0");
+  expect(
+    within(
+      screen.getByRole("region", { name: "Record for 2026-11-02" }),
+    ).getByText("100.0%"),
+  ).toBeTruthy();
+  expect(screen.queryByText("0 / 1 / 0")).toBeNull();
+  fireEvent.click(screen.getByRole("button", { name: "Today" }));
+  await screen.findByText("0 / 1 / 0");
+  const help = screen.getByRole("complementary", {
+    name: "Understanding unavailable games",
+  });
+  expect(
+    within(help).getByText("Missing inputs mean a data gap."),
+  ).toBeTruthy();
+  fireEvent.click(
+    within(help).getByText("What is missing, and what can the model tell me?"),
+  );
+  expect(
+    within(help).getByText(
+      /No model total or qualified model pick is available/,
+    ),
+  ).toBeTruthy();
+  expect(screen.getByText("Unrated · data gap")).toBeTruthy();
 });

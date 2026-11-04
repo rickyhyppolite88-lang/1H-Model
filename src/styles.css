@@ -1468,6 +1468,73 @@ footer {
   color: #61705a;
   line-height: 1.7;
 }
+.daily-results {
+  margin: 1.25rem 0;
+  padding: 1.25rem;
+  border: 1px solid #b7c8ab;
+  border-radius: 0.5rem;
+  background: #f7faf2;
+}
+.daily-results h3 {
+  margin: 0 0 0.6rem;
+  color: #294d38;
+  font-size: 1.1rem;
+}
+.daily-results p {
+  color: #61705a;
+  font-size: 0.8rem;
+  line-height: 1.7;
+}
+.daily-results .audit-metrics {
+  margin: 1rem 0;
+}
+.daily-record-footer {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  font-size: 0.75rem;
+  color: #61705a;
+}
+.daily-record-footer .game-time {
+  display: inline-flex;
+  flex-wrap: wrap;
+  flex-direction: row;
+  gap: 0.5rem;
+}
+.daily-record-footer .game-time strong {
+  font-size: 0.8rem;
+}
+.availability-help {
+  margin: 1.25rem 0;
+  padding: 1rem 1.25rem;
+  border: 1px solid #d8e2cd;
+  border-radius: 0.5rem;
+  background: #fcfcf8;
+  font-size: 0.8rem;
+  color: #53604c;
+  line-height: 1.7;
+}
+.availability-help p {
+  margin: 0 0 0.6rem;
+}
+.availability-help summary {
+  cursor: pointer;
+  font-weight: 600;
+}
+.availability-help dt {
+  margin-top: 0.75rem;
+  font-weight: 650;
+}
+.availability-help dd {
+  margin: 0.25rem 0 0;
+}
+.predictions-panel .availability-cell strong {
+  display: block;
+  margin-bottom: 0.3rem;
+  color: #53604c;
+}
 .prediction-record-panel td small {
   display: block;
   margin-top: 0.5rem;
@@ -1536,6 +1603,12 @@ th.matchup-cell {
   }
 }
 @media (max-width: 410px) {
+  .daily-results .audit-metrics > div:first-child {
+    grid-column: 1 / -1;
+  }
+  .daily-results .audit-metrics > div:first-child strong {
+    white-space: nowrap;
+  }
   .record-filters {
     grid-template-columns: 1fr;
   }

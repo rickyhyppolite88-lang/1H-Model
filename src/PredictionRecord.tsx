@@ -1,4 +1,6 @@
 import { useEffect, useState } from "react";
+import AvailabilityHelp from "./AvailabilityHelp";
+import { DailyRecordSummary } from "./DailyRecord";
 import GameTime from "./GameTime";
 import {
   dailyRecordCoverage,
@@ -228,8 +230,20 @@ export default function PredictionRecord() {
           </p>
         </section>
       )}
+      {store && archive && (
+        <DailyRecordSummary
+          date={archive.date}
+          store={{ ...store, records: scoped }}
+          canonicalIds={index.canonicalIds}
+          sportsbook={summary?.sportsbook ?? "betmgm"}
+          basis={summary?.basis ?? "latest"}
+          gamesCsvPath={archive.gamesCsvPath}
+        />
+      )}
+      <AvailabilityHelp />
       {summary && (
         <>
+          <h3>Season record · all dates</h3>
           <p className="group-description">
             Season record: {summary.season} · {summary.modelVersion} ·{" "}
             {summary.sportsbook}/{summary.basis} at recording. Each game's first
