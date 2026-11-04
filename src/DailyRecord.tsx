@@ -8,6 +8,13 @@ import {
   recordStoreSchema,
 } from "./model/predictionRecord";
 
+export type DailyRecordEvidence = {
+  date: string;
+  store: RecordStore | null;
+  canonicalIds: string[];
+  status: "ready" | "missing" | "error";
+};
+
 type Benchmark = {
   season: string;
   modelVersion: string;
@@ -101,7 +108,11 @@ export default function DailyRecord({
   modelVersion,
   sportsbook,
   basis,
-}: Benchmark & { date: string }) {
+  onEvidence,
+}: Benchmark & {
+  date: string;
+  onEvidence?: (evidence: DailyRecordEvidence) => void;
+}) {
   const [loaded, setLoaded] = useState<LoadedRecord | null>(null);
   const [error, setError] = useState<{ date: string; message: string } | null>(
     null,
@@ -148,13 +159,26 @@ export default function DailyRecord({
           gamesCsvPath: archive?.gamesCsvPath,
         });
         setError(null);
+        onEvidence?.({
+          date,
+          store,
+          canonicalIds: index.canonicalIds,
+          status: store ? "ready" : "missing",
+        });
       } catch {
-        if (!controller.signal.aborted)
+        if (!controller.signal.aborted) {
           setError({
             date,
             message:
               "The daily record could not be loaded. Try refreshing the page.",
           });
+          onEvidence?.({
+            date,
+            store: null,
+            canonicalIds: [],
+            status: "error",
+          });
+        }
       }
     };
     void load();
@@ -163,7 +187,7 @@ export default function DailyRecord({
       controller.abort();
       window.clearInterval(timer);
     };
-  }, [date, season, modelVersion, sportsbook, basis]);
+  }, [date, season, modelVersion, sportsbook, basis, onEvidence]);
   if (error?.date === date)
     return (
       <section className="daily-results" aria-label={`Record for ${date}`}>

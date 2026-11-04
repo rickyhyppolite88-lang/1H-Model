@@ -284,11 +284,9 @@ it("lists projections, provides code/feed links, and keeps the complete CSV avai
   expect(
     screen.getByText(new RegExp(`of ${feed.counts.unavailable} matches`)),
   ).toBeTruthy();
-  fireEvent.change(screen.getByLabelText("Compare with"), {
-    target: { value: "opening" },
-  });
+  expect(screen.queryByLabelText("Compare with")).toBeNull();
   expect(
-    screen.getByRole("columnheader", { name: "Opening 1H line BetMGM" }),
+    screen.getByRole("columnheader", { name: "Current 1H line BetMGM" }),
   ).toBeTruthy();
 });
 
@@ -548,4 +546,84 @@ it("changes the displayed record with the game date and explains data gaps", asy
     ),
   ).toBeTruthy();
   expect(screen.getByText("Unrated · data gap")).toBeTruthy();
+});
+
+it("shows current-line movement against the actual recorded pick and never borrows another book's pick", async () => {
+  vi.setSystemTime(new Date("2026-11-04T15:00:00Z"));
+  const feed = todayFixture();
+  feed.predictions[0].markets[0].openingLine = 70;
+  feed.predictions[0].markets[0].latestLine = 72;
+  feed.predictions[0].markets.push({
+    ...feed.predictions[0].markets[0],
+    sportsbook: "fanduel",
+    openingLine: 70,
+    latestLine: 69,
+  });
+  const f = recordFixture();
+  const store = updatePredictionRecord(f.store, f.feed, f.ledger, f.at);
+  const original = store.records[0];
+  original.id = "saved-today-early";
+  original.gameId = "today-early";
+  original.gameDate = "2026-11-03";
+  original.recordedAt = "2026-11-03T22:00:00Z";
+  original.prediction = { ...feed.predictions[0] };
+  store.results = [
+    {
+      id: "saved-win",
+      season: original.season,
+      gameId: original.gameId,
+      observedAt: "2026-11-04T03:00:00Z",
+      sourceCapturedAt: "2026-11-04T03:00:00Z",
+      awayPoints: 35,
+      homePoints: 36,
+      source: "https://example.com/results",
+    },
+  ];
+  const index = buildRecordIndex(store);
+  vi.stubGlobal(
+    "fetch",
+    vi.fn(async (url: string) => ({
+      ok: true,
+      json: async () =>
+        url.includes("prediction-record-index")
+          ? structuredClone(index)
+          : url.includes("prediction-record/")
+            ? structuredClone(store)
+            : responseFor(url, feed),
+    })),
+  );
+  render(<Predictions />);
+  await screen.findByRole("heading", { name: "Today’s 1H lines" });
+  fireEvent.change(screen.getByLabelText("Game date (ET)"), {
+    target: { value: "2026-11-03" },
+  });
+  await screen.findByText("1 / 0 / 0");
+  fireEvent.click(
+    screen.getByRole("button", {
+      name: /Line movement for Early team.*up 2.0 points/,
+    }),
+  );
+  expect(screen.getByRole("tooltip").textContent).toContain(
+    "Recorded OVER 70.0: Win",
+  );
+  expect(screen.getByRole("tooltip").textContent).toContain(
+    "current 72.0 would be Loss",
+  );
+  expect(screen.getByRole("tooltip").textContent).toContain(
+    "Official result remains Win",
+  );
+  fireEvent.keyDown(document, { key: "Escape" });
+  fireEvent.change(screen.getByLabelText("Sportsbook"), {
+    target: { value: "fanduel" },
+  });
+  fireEvent.click(
+    screen.getByRole("button", {
+      name: /Line movement for Early team.*down 1.0 points/,
+    }),
+  );
+  expect(screen.getByRole("tooltip").textContent).toContain(
+    "No counted pregame pick is saved for this sportsbook",
+  );
+  expect(store.records[0].comparison.line).toBe(70);
+  expect(screen.getByText("1 / 0 / 0")).toBeTruthy();
 });

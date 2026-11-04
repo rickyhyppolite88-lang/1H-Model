@@ -1,13 +1,15 @@
 import { useEffect, useMemo, useState } from "react";
 import AvailabilityHelp from "./AvailabilityHelp";
-import DailyRecord from "./DailyRecord";
+import DailyRecord, { type DailyRecordEvidence } from "./DailyRecord";
 import GameTime from "./GameTime";
+import LineMovement from "./LineMovement";
+import type { RecordedLinePick } from "./model/lineMovement";
+import { recordGrade } from "./model/predictionRecord";
 import {
   conferenceNames,
   type DailyArchive,
   dailyArchiveSchema,
   filterPredictionGroups,
-  type LineBasis,
   type PredictionFeed,
   predictionComparison,
   predictionFeedSchema,
@@ -29,6 +31,7 @@ const books: Record<string, string> = {
 };
 const format = (value: number | null) =>
   value === null ? "—" : value.toFixed(2);
+const basis = "latest";
 const dateLabel = (date: string) =>
   new Intl.DateTimeFormat("en-US", {
     timeZone: "America/New_York",
@@ -47,7 +50,8 @@ export default function Predictions() {
   const [error, setError] = useState("");
   const [query, setQuery] = useState("");
   const [book, setBook] = useState("betmgm");
-  const [basis, setBasis] = useState<LineBasis>("latest");
+  const [recordEvidence, setRecordEvidence] =
+    useState<DailyRecordEvidence | null>(null);
   const [coverage, setCoverage] = useState("all");
   const [group, setGroup] = useState<"all" | "top25" | "conference">("all");
   const [conference, setConference] = useState("all");
@@ -152,7 +156,7 @@ export default function Predictions() {
           }
           return Date.parse(a.startsAt) - Date.parse(b.startsAt);
         }),
-    [dateRows, query, coverage, conference, group, sort, clock, book, basis],
+    [dateRows, query, coverage, conference, group, sort, clock, book],
   );
   const rows = matchingRows.filter(
     (row) => timing === "all" || tipoffState(row, clock) === timing,
@@ -177,6 +181,33 @@ export default function Predictions() {
   const pages = Math.max(1, Math.ceil(rows.length / pageSize));
   const safePage = Math.min(page, pages - 1);
   const visible = rows.slice(safePage * pageSize, (safePage + 1) * pageSize);
+  const evidence =
+    recordEvidence?.date === selectedDate ? recordEvidence : null;
+  const recordedPicks = new Map<string, RecordedLinePick>();
+  if (evidence?.store) {
+    const ids = new Set(evidence.canonicalIds);
+    for (const record of evidence.store.records) {
+      const side = record.comparison.lean;
+      if (
+        !ids.has(record.id) ||
+        record.gameDate !== selectedDate ||
+        record.season !== feed.season ||
+        record.modelVersion !== feed.modelVersion ||
+        record.sportsbook !== book ||
+        record.basis !== basis ||
+        record.comparison.line === null ||
+        (side !== "OVER" && side !== "UNDER")
+      )
+        continue;
+      const result = recordGrade(record, evidence.store.results);
+      recordedPicks.set(record.gameId, {
+        line: record.comparison.line,
+        side,
+        actual: result.actual,
+        grade: result.grade,
+      });
+    }
+  }
   const selectedArchive = archive?.archives.find(
     (row) => row.date === selectedDate,
   );
@@ -312,6 +343,7 @@ export default function Predictions() {
         modelVersion={feed.modelVersion}
         sportsbook={feed.defaultSportsbook}
         basis={feed.defaultLineBasis}
+        onEvidence={setRecordEvidence}
       />
       <div className="prediction-actions">
         <button
@@ -551,16 +583,6 @@ export default function Predictions() {
           </select>
         </label>
         <label>
-          <span>Compare with</span>
-          <select
-            value={basis}
-            onChange={(event) => setBasis(event.target.value as LineBasis)}
-          >
-            <option value="latest">Latest displayed line</option>
-            <option value="opening">Opening line</option>
-          </select>
-        </label>
-        <label>
           <span>Projection coverage</span>
           <select
             value={coverage}
@@ -576,6 +598,13 @@ export default function Predictions() {
           </select>
         </label>
       </div>
+      <p className="line-movement-legend">
+        Current lines are shown.{" "}
+        <span className="movement-up-text">Green +</span> means the total rose
+        from the opener; <span className="movement-down-text">red −</span> means
+        it fell. Hover, focus, or tap the small movement badge for the model and
+        recorded-pick impact.
+      </p>
       <div
         className="table-wrap"
         id="prediction-results"
@@ -589,8 +618,7 @@ export default function Predictions() {
               <th className="matchup-cell">Matchup</th>
               <th>Predicted 1H total</th>
               <th>
-                {basis === "latest" ? "Latest 1H line" : "Opening 1H line"}{" "}
-                <small>{books[book] ?? book}</small>
+                Current 1H line <small>{books[book] ?? book}</small>
               </th>
               <th>Model − line</th>
               <th>Research lean</th>
@@ -650,11 +678,13 @@ export default function Predictions() {
                     {format(row.projectedFirstHalfTotal)}
                   </td>
                   <td className="sportsbook-line">
-                    {comparison.line === null ? (
-                      <span className="line-missing">Not posted</span>
-                    ) : (
-                      format(comparison.line)
-                    )}
+                    <LineMovement
+                      row={row}
+                      sportsbook={book}
+                      recorded={recordedPicks.get(row.gameId)}
+                      recordAvailability={evidence?.status ?? "loading"}
+                      at={clock}
+                    />
                   </td>
                   <td>
                     {comparison.signedEdge === null
@@ -732,12 +762,13 @@ export default function Predictions() {
         <p>
           The date CSV includes every matchup on the selected Eastern date,
           including rows with unavailable projections. The selected sportsbook
-          and line basis apply to the export. Model totals do not require an
-          available sportsbook line. Positive model-minus-line means OVER;
-          negative means UNDER. These are regular-season research leans. The
-          filtered CSV includes every matching row across all pages. Excel
-          workbooks use BetMGM/latest, with All Games, Top 25 and conference
-          sheets. Cross-conference games appear in both relevant sheets.
+          and current line apply to the export. Opening and current lines remain
+          in the CSV. Model totals do not require an available sportsbook line.
+          Positive model-minus-line means OVER; negative means UNDER. These are
+          regular-season research leans. The filtered CSV includes every
+          matching row across all pages. Excel workbooks use BetMGM/latest, with
+          All Games, Top 25 and conference sheets. Cross-conference games appear
+          in both relevant sheets.
         </p>
         <p>
           Generated{" "}
