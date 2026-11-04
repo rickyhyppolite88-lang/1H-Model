@@ -4,18 +4,16 @@ import {
   type ReactElement,
   useEffect,
   useId,
-  useMemo,
   useState,
 } from "react";
 import { z } from "zod";
 import MobileNavigation from "./MobileNavigation";
-import { type Phase, predict } from "./model/predictor";
 import {
   completeMetrics,
   datasetSchema,
   type SeasonDataset,
 } from "./model/schema";
-import { assertSnapshots, blendTeam, defaultBlend } from "./model/seasons";
+import { assertSnapshots, defaultBlend } from "./model/seasons";
 import PredictionRecord from "./PredictionRecord";
 import Predictions from "./Predictions";
 import SeasonAudit from "./SeasonAudit";
@@ -47,22 +45,12 @@ const percent = (value: number) => `${Math.round(value * 100)}%`;
 const sections = [
   ["predictions", "Today’s lines"],
   ["record", "Prediction record"],
-  ["matchup", "Matchup lab"],
   ["audit", "Season lines & audit"],
   ["evaluation", "Team comparison"],
   ["data", "Season data"],
   ["tracker", "Pick tracker"],
   ["method", "Method & rules"],
 ];
-
-function today() {
-  return new Intl.DateTimeFormat("en-CA", {
-    timeZone: "America/New_York",
-    year: "numeric",
-    month: "2-digit",
-    day: "2-digit",
-  }).format(new Date());
-}
 
 function Field({
   label,
@@ -112,13 +100,7 @@ export default function App() {
   } | null>(null);
   const [loadingError, setLoadingError] = useState("");
   const [tab, setTab] = useState("predictions");
-  const [teamA, setTeamA] = useState("");
-  const [teamB, setTeamB] = useState("");
-  const [line, setLine] = useState("");
-  const [date, setDate] = useState(today);
-  const [phase, setPhase] = useState<Phase>("regular");
-  const [injuries, setInjuries] = useState(0);
-  const [settings, setSettings] = useState(defaultBlend);
+  const settings = defaultBlend;
   const [search, setSearch] = useState("");
   const [saved, setSaved] = useState<SavedAnalysis[]>([]);
   const [notice, setNotice] = useState("");
@@ -157,45 +139,6 @@ export default function App() {
   }, []);
 
   const teams = datasets?.current.teams ?? [];
-  const aId = teams.find(
-    (team) => team.name.toLowerCase() === teamA.trim().toLowerCase(),
-  )?.id;
-  const bId = teams.find(
-    (team) => team.name.toLowerCase() === teamB.trim().toLowerCase(),
-  )?.id;
-  const analysis = useMemo(() => {
-    if (!datasets || !aId || !bId || line === "" || !date) return null;
-    try {
-      const a = blendTeam(
-        aId,
-        datasets.prior,
-        datasets.current,
-        settings,
-        date,
-      );
-      const b = blendTeam(
-        bId,
-        datasets.prior,
-        datasets.current,
-        settings,
-        date,
-      );
-      return {
-        a,
-        b,
-        result: predict(a, b, Number(line), phase, injuries),
-        error: "",
-      };
-    } catch (error) {
-      return {
-        a: null,
-        b: null,
-        result: null,
-        error: error instanceof Error ? error.message : "Check model inputs.",
-      };
-    }
-  }, [datasets, aId, bId, line, date, settings, phase, injuries]);
-
   function persist(rows: SavedAnalysis[]) {
     try {
       localStorage.setItem(storageKey, JSON.stringify(rows));
@@ -207,30 +150,6 @@ export default function App() {
       );
       return false;
     }
-  }
-
-  function saveAnalysis() {
-    if (!analysis?.result || !analysis.a || !analysis.b || !datasets) return;
-    const row: SavedAnalysis = {
-      id: crypto.randomUUID(),
-      savedAt: new Date().toISOString(),
-      teamA: analysis.a.name,
-      teamB: analysis.b.name,
-      date,
-      line: Number(line),
-      projection: analysis.result.projectedTotal,
-      pick: analysis.result.pick,
-      tier: analysis.result.tier,
-      priorAsOf: datasets.prior.asOf,
-      currentAsOf: datasets.current.asOf,
-      phase,
-      priorEquivalentGames: settings.priorEquivalentGames,
-      leagueRegression: settings.leagueRegression,
-      actualTotal: null,
-      purpose: phase === "regular" ? "research" : "legacy",
-    };
-    if (persist([row, ...saved].slice(0, 500)))
-      setNotice("Analysis saved in this browser. Find it in the tracker.");
   }
 
   async function importSnapshot(
@@ -247,9 +166,6 @@ export default function App() {
       const next = { ...datasets, [kind]: imported };
       assertSnapshots(next.prior, next.current, next.current.asOf);
       setDatasets(next);
-      setTeamA("");
-      setTeamB("");
-      if (date < next.current.asOf) setDate(next.current.asOf);
       setNotice(
         `${imported.season} snapshot loaded for this session. Use the import script to update the published data.`,
       );
@@ -268,15 +184,6 @@ export default function App() {
   const filtered = teams.filter((team) =>
     team.name.toLowerCase().includes(search.toLowerCase()),
   );
-  const result = analysis?.result;
-  const staleDays = datasets
-    ? Math.floor(
-        (Date.parse(`${date}T12:00:00Z`) -
-          Date.parse(`${datasets.current.asOf}T12:00:00Z`)) /
-          86_400_000,
-      )
-    : 0;
-
   return (
     <div className="app-shell">
       <header className="topbar">
@@ -393,338 +300,6 @@ export default function App() {
         {tab === "predictions" && <Predictions />}
         {tab === "record" && <PredictionRecord />}
         {tab === "evaluation" && <TeamEvaluation />}
-        {datasets && tab === "matchup" && (
-          <>
-            {staleDays > 2 && (
-              <div className="notice">
-                The current snapshot is {staleDays} days older than this
-                matchup. Refresh the data before using the projection.
-              </div>
-            )}
-            <div className="lab-grid">
-              <section className="panel matchup-panel">
-                <div className="section-heading">
-                  <span className="step">01</span>
-                  <div>
-                    <h2>Set the matchup</h2>
-                    <p>Use the first-half line, not the full-game total.</p>
-                  </div>
-                </div>
-                <datalist id="teams">
-                  {teams.map((team) => (
-                    <option key={team.id} value={team.name} />
-                  ))}
-                </datalist>
-                <div className="team-fields">
-                  <Field label="Team A">
-                    <input
-                      list="teams"
-                      placeholder="Search a team"
-                      value={teamA}
-                      onChange={(event) => setTeamA(event.target.value)}
-                    />
-                  </Field>
-                  <span className="versus">vs</span>
-                  <Field label="Team B">
-                    <input
-                      list="teams"
-                      placeholder="Search a team"
-                      value={teamB}
-                      onChange={(event) => setTeamB(event.target.value)}
-                    />
-                  </Field>
-                </div>
-                {((teamA && !aId) || (teamB && !bId)) && (
-                  <p className="inline-note">
-                    Choose an exact team name from the list.
-                  </p>
-                )}
-                <div className="form-grid">
-                  <Field label="First-half O/U line">
-                    <input
-                      type="number"
-                      min="1"
-                      max="150"
-                      step="0.5"
-                      placeholder="e.g. 68.5"
-                      value={line}
-                      onChange={(event) => setLine(event.target.value)}
-                    />
-                  </Field>
-                  <Field label="Matchup date">
-                    <input
-                      type="date"
-                      value={date}
-                      onChange={(event) => setDate(event.target.value)}
-                    />
-                  </Field>
-                  <Field label="Game context">
-                    <select
-                      value={phase}
-                      onChange={(event) =>
-                        setPhase(event.target.value as Phase)
-                      }
-                    >
-                      <option value="regular">Regular season</option>
-                      <option value="tournament">NCAA tournament</option>
-                    </select>
-                  </Field>
-                  <Field
-                    label="Combined reported injuries"
-                    hint="Manual input; injuries are not fetched."
-                  >
-                    <input
-                      type="number"
-                      min="0"
-                      max="40"
-                      step="1"
-                      value={injuries}
-                      onChange={(event) =>
-                        setInjuries(Number(event.target.value))
-                      }
-                    />
-                  </Field>
-                </div>
-                <details className="blend-controls">
-                  <summary>
-                    Season weighting <span>Adjust the prior</span>
-                  </summary>
-                  <div className="form-grid">
-                    <Field
-                      label="Prior strength (equivalent games)"
-                      hint="8 games = equal weights after 8 new games."
-                    >
-                      <input
-                        type="number"
-                        min="1"
-                        max="40"
-                        value={settings.priorEquivalentGames}
-                        onChange={(event) =>
-                          setSettings({
-                            ...settings,
-                            priorEquivalentGames: Number(event.target.value),
-                          })
-                        }
-                      />
-                    </Field>
-                    <Field
-                      label="Regression to prior league average"
-                      hint="Limits dependence on last year's roster."
-                    >
-                      <select
-                        value={settings.leagueRegression}
-                        onChange={(event) =>
-                          setSettings({
-                            ...settings,
-                            leagueRegression: Number(event.target.value),
-                          })
-                        }
-                      >
-                        {[0, 0.2, 0.35, 0.5, 0.75, 1].map((value) => (
-                          <option key={value} value={value}>
-                            {percent(value)}
-                          </option>
-                        ))}
-                      </select>
-                    </Field>
-                  </div>
-                  <p className="inline-note">
-                    These are transparent starting settings, not fitted
-                    parameters. Returning players and transfers are not yet
-                    measured.
-                  </p>
-                </details>
-                <div className="panel-footnote">
-                  <span>↳</span> Both teams use their own completed-game count.
-                  Current schedule strength is never copied from last season.
-                </div>
-              </section>
-
-              <section
-                className={`projection-panel ${result?.pick === "NO BET" ? "filtered-result" : ""}`}
-                aria-live="polite"
-              >
-                <div className="projection-top">
-                  <span className="eyebrow">FIRST-HALF PROJECTION</span>
-                  <span className="small-badge">v6.1 rebuild</span>
-                </div>
-                {analysis?.error ? (
-                  <div className="result-placeholder">
-                    <span>Check the inputs</span>
-                    <p role="alert">{analysis.error}</p>
-                  </div>
-                ) : result ? (
-                  <>
-                    <div className="projected-number">
-                      {number(result.projectedTotal)}
-                      <span>points</span>
-                    </div>
-                    <div className="projection-comparison">
-                      <div>
-                        <span>Market line</span>
-                        <strong>{number(Number(line))}</strong>
-                      </div>
-                      <div>
-                        <span>Model lean</span>
-                        <strong>{result.modelLean}</strong>
-                      </div>
-                      <div>
-                        <span>Model edge</span>
-                        <strong>{number(result.edge, 2)}</strong>
-                      </div>
-                    </div>
-                    <div className="decision">
-                      <span className="decision-label">
-                        {result.mode === "research"
-                          ? "RESEARCH LEAN"
-                          : "SAVED TOURNAMENT RULE"}
-                      </span>
-                      <div>
-                        <strong>{result.pick}</strong>
-                        <span className="small-badge">{result.tier}</span>
-                      </div>
-                    </div>
-                    <ul className="reason-list">
-                      {result.reasons.map((reason) => (
-                        <li key={reason}>{reason}</li>
-                      ))}
-                    </ul>
-                    <div className="confidence-note">
-                      {result.mode === "research"
-                        ? "Regular-season probability: "
-                        : "Historical rule label: "}
-                      <strong>
-                        {result.confidenceLabel ??
-                          (result.mode === "research"
-                            ? "not calibrated"
-                            : "not recorded")}
-                      </strong>
-                      {!result.confidenceLabel &&
-                        result.confidenceBoost > 0 && (
-                          <span>
-                            {" "}
-                            · recorded boost +{result.confidenceBoost}
-                          </span>
-                        )}
-                      <small>
-                        A saved heuristic label, not a calibrated win
-                        probability. Regular-season accuracy has not been
-                        established.
-                      </small>
-                    </div>
-                    <button
-                      className="save-button"
-                      type="button"
-                      onClick={saveAnalysis}
-                    >
-                      Save analysis <span>↗</span>
-                    </button>
-                  </>
-                ) : (
-                  <div className="result-placeholder">
-                    <div className="court-symbol">
-                      <span />
-                    </div>
-                    <h2>Every number has a story.</h2>
-                    <p>
-                      Choose two teams and enter a first-half line to see the
-                      projection and its rule checks.
-                    </p>
-                  </div>
-                )}
-                <div className="projection-bottom">
-                  0.6 × scoring baseline + 0.4 × pace estimate
-                  {phase === "tournament"
-                    ? " − 4 tournament points"
-                    : " · no tournament suppression"}
-                </div>
-              </section>
-            </div>
-            {analysis?.a && analysis.b && result && (
-              <section className="panel blend-panel">
-                <div className="section-heading">
-                  <span className="step">02</span>
-                  <div>
-                    <h2>What went into the number</h2>
-                    <p>
-                      Blended team stats, with the season weights left visible.
-                    </p>
-                  </div>
-                </div>
-                <div className="team-breakdowns">
-                  {[analysis.a, analysis.b].map((team) => (
-                    <div key={team.id} className="team-breakdown">
-                      <div className="team-breakdown-title">
-                        <h3>{team.name}</h3>
-                        <span>{team.currentGames} new-season games</span>
-                      </div>
-                      <div className="weight-bar">
-                        <span
-                          style={{ width: percent(1 - team.currentWeight) }}
-                        />
-                        <span style={{ width: percent(team.currentWeight) }} />
-                      </div>
-                      <div className="weight-legend">
-                        <span>Prior {percent(1 - team.currentWeight)}</span>
-                        <span>Current {percent(team.currentWeight)}</span>
-                      </div>
-                      <div className="metric-row">
-                        <div>
-                          <span>1H points</span>
-                          <strong>{number(team.firstHalfPoints)}</strong>
-                        </div>
-                        <div>
-                          <span>Pace</span>
-                          <strong>{number(team.pace)}</strong>
-                        </div>
-                        <div>
-                          <span>Offense / poss.</span>
-                          <strong>{number(team.offensiveEfficiency, 3)}</strong>
-                        </div>
-                        <div>
-                          <span>Defense / poss.</span>
-                          <strong>{number(team.defensiveEfficiency, 3)}</strong>
-                        </div>
-                      </div>
-                      {team.notes.map((note) => (
-                        <p className="inline-note" key={note}>
-                          {note}
-                        </p>
-                      ))}
-                    </div>
-                  ))}
-                </div>
-                <div className="calculation-strip">
-                  <span>
-                    Scoring sum <strong>{number(result.simpleTotal)}</strong>
-                  </span>
-                  <span>
-                    Pace component{" "}
-                    <strong>{number(result.paceAdjustedTotal)}</strong>
-                  </span>
-                  <span>
-                    Tournament adjustment <strong>−{result.suppression}</strong>
-                  </span>
-                  <span>
-                    Projection <strong>{number(result.projectedTotal)}</strong>
-                  </span>
-                </div>
-              </section>
-            )}
-            <div className="method-callout">
-              <span className="eyebrow">TRANSPARENT BY DESIGN</span>
-              <p>
-                The original source was unavailable. This rebuild preserves the
-                documented v6.1 filters and adds an explicit season blend and a
-                reconstructed pace formula.
-              </p>
-              <button type="button" onClick={() => setTab("method")}>
-                Read the method ↗
-              </button>
-            </div>
-          </>
-        )}
-
         {datasets && tab === "data" && (
           <section className="panel data-panel">
             <div className="section-heading">
@@ -860,14 +435,15 @@ export default function App() {
               <div className="empty-state">
                 <h3>No analyses saved yet.</h3>
                 <p>
-                  Build a matchup in the lab, then save its projection here.
+                  Previously saved manual analyses appear here. Open Prediction
+                  record for the shared automatic results.
                 </p>
                 <button
                   className="secondary-button"
                   type="button"
-                  onClick={() => setTab("matchup")}
+                  onClick={() => setTab("record")}
                 >
-                  Go to matchup lab
+                  Open prediction record
                 </button>
               </div>
             ) : (

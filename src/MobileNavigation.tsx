@@ -6,7 +6,7 @@ const shortcuts = [
     "Lines",
     "M4 4h6v6H4V4Zm10 0h6v6h-6V4ZM4 14h6v6H4v-6Zm10 0h6v6h-6v-6Z",
   ],
-  ["record", "Record", "M5 3h14v18l-3-2-4 2-4-2-3 2V3Zm4 5h6m-6 4h6"],
+  ["record", "Full record", "M5 3h14v18l-3-2-4 2-4-2-3 2V3Zm4 5h6m-6 4h6"],
   [
     "evaluation",
     "Teams",

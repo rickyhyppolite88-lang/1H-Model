@@ -8,7 +8,7 @@ const originalShow = Object.getOwnPropertyDescriptor(prototype, "showModal");
 const originalClose = Object.getOwnPropertyDescriptor(prototype, "close");
 const sections = [
   ["predictions", "Today’s lines"],
-  ["matchup", "Matchup lab"],
+  ["audit", "Season lines & audit"],
 ];
 
 beforeEach(() => {
@@ -48,19 +48,19 @@ it("opens the record from the quick navigation", () => {
   expect(
     screen.getByRole("button", { name: "Lines" }).getAttribute("aria-current"),
   ).toBe("page");
-  fireEvent.click(screen.getByRole("button", { name: "Record" }));
+  fireEvent.click(screen.getByRole("button", { name: "Full record" }));
   expect(select).toHaveBeenCalledWith("record");
 });
 
 it("opens all model sections in a modal and closes it after navigation", () => {
   const select = vi.fn();
   render(
-    <MobileNavigation active="matchup" sections={sections} onSelect={select} />,
+    <MobileNavigation active="audit" sections={sections} onSelect={select} />,
   );
   fireEvent.click(screen.getByRole("button", { name: "More" }));
   expect(screen.getByRole("dialog", { name: "Model sections" })).toBeTruthy();
-  fireEvent.click(screen.getByRole("button", { name: "Matchup lab" }));
-  expect(select).toHaveBeenCalledWith("matchup");
+  fireEvent.click(screen.getByRole("button", { name: "Season lines & audit" }));
+  expect(select).toHaveBeenCalledWith("audit");
   expect(screen.queryByRole("dialog")).toBeNull();
   expect(
     screen.getByRole("button", { name: "More" }).getAttribute("aria-expanded"),

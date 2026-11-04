@@ -264,8 +264,8 @@ export default function Predictions() {
         <div>
           <h2>First-half lines & predictions</h2>
           <p>
-            Automatically generated from the same projection function as the
-            matchup lab.
+            Daily first-half projections, current sportsbook totals, and
+            research leans.
           </p>
         </div>
       </div>
