@@ -2,6 +2,11 @@ import { useEffect, useMemo, useState } from "react";
 import GameTime from "./GameTime";
 import { evaluateSeason, ledgerSchema, type SeasonLedger } from "./model/audit";
 import { predict } from "./model/predictor";
+import {
+  preferenceFlag,
+  preferenceSportsbook,
+  usePreference,
+} from "./usePreference";
 
 const format = (value: number | null, digits = 2) =>
   value === null ? "—" : value.toFixed(digits);
@@ -19,8 +24,16 @@ const books: Record<string, string> = {
 export default function SeasonAudit() {
   const [ledger, setLedger] = useState<SeasonLedger | null>(null);
   const [error, setError] = useState("");
-  const [book, setBook] = useState("betmgm");
-  const [showAll, setShowAll] = useState(false);
+  const [book, setBook] = usePreference(
+    "sportsbook",
+    preferenceSportsbook,
+    "betmgm",
+  );
+  const [showAll, setShowAll] = usePreference(
+    "audit.showAll",
+    preferenceFlag,
+    false,
+  );
   useEffect(() => {
     const controller = new AbortController();
     fetch(`${import.meta.env.BASE_URL}data/season-games.json`, {
@@ -59,9 +72,10 @@ export default function SeasonAudit() {
       <div className="empty-state">Loading first-half lines and results…</div>
     );
   const availableBooks = [
-    ...new Set(
-      ledger.games.flatMap((game) => game.quotes.map((q) => q.sportsbook)),
-    ),
+    ...new Set([
+      book,
+      ...ledger.games.flatMap((game) => game.quotes.map((q) => q.sportsbook)),
+    ]),
   ].sort();
   const games = ledger.games.filter(
     (game) =>

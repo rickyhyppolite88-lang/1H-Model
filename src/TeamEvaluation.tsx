@@ -4,6 +4,7 @@ import {
   type TeamEvaluation as Report,
   teamEvaluationSchema,
 } from "./model/teamEvaluation";
+import { preferenceFlag, preferenceText, usePreference } from "./usePreference";
 
 const metrics = {
   firstHalfPoints: ["1H points scored / game", 1],
@@ -20,10 +21,18 @@ const signed = (value: number | null, factor = 1) =>
 export default function TeamEvaluation() {
   const [report, setReport] = useState<Report | null>(null);
   const [error, setError] = useState("");
-  const [selected, setSelected] = useState("");
-  const [query, setQuery] = useState("");
-  const [conference, setConference] = useState("all");
-  const [top25, setTop25] = useState(false);
+  const [selected, setSelected] = usePreference(
+    "teams.selected",
+    preferenceText,
+    "",
+  );
+  const [query, setQuery] = usePreference("teams.search", preferenceText, "");
+  const [conference, setConference] = usePreference(
+    "teams.conference",
+    preferenceText,
+    "all",
+  );
+  const [top25, setTop25] = usePreference("teams.top25", preferenceFlag, false);
   useEffect(() => {
     const controller = new AbortController();
     const load = () =>
@@ -203,6 +212,11 @@ export default function TeamEvaluation() {
             onChange={(event) => setConference(event.target.value)}
           >
             <option value="all">All conferences</option>
+            {conference !== "all" && !conferences.includes(conference) && (
+              <option value={conference}>
+                {conference} · unavailable in this snapshot
+              </option>
+            )}
             {conferences.map((name) => (
               <option key={name}>{name}</option>
             ))}
