@@ -42,6 +42,16 @@ type SavedAnalysis = z.infer<typeof savedSchema>;
 const storageKey = "1h-model-analyses-v1";
 const number = (value: number, digits = 1) => value.toFixed(digits);
 const percent = (value: number) => `${Math.round(value * 100)}%`;
+const sections = [
+  ["predictions", "Today’s lines"],
+  ["record", "Prediction record"],
+  ["matchup", "Matchup lab"],
+  ["audit", "Season lines & audit"],
+  ["evaluation", "Team comparison"],
+  ["data", "Season data"],
+  ["tracker", "Pick tracker"],
+  ["method", "Method & rules"],
+];
 
 function today() {
   return new Intl.DateTimeFormat("en-CA", {
@@ -325,16 +335,23 @@ export default function App() {
         </div>
 
         <nav className="tabs" aria-label="Model sections">
-          {[
-            ["predictions", "Today’s lines"],
-            ["record", "Prediction record"],
-            ["matchup", "Matchup lab"],
-            ["audit", "Season lines & audit"],
-            ["evaluation", "Team comparison"],
-            ["data", "Season data"],
-            ["tracker", "Pick tracker"],
-            ["method", "Method & rules"],
-          ].map(([value, label]) => (
+          <label className="mobile-section-select">
+            View
+            <select
+              value={tab}
+              onChange={(event) => setTab(event.target.value)}
+            >
+              {sections.map(([value, label]) => (
+                <option key={value} value={value}>
+                  {label}
+                  {value === "tracker" && saved.length > 0
+                    ? ` (${saved.length})`
+                    : ""}
+                </option>
+              ))}
+            </select>
+          </label>
+          {sections.map(([value, label]) => (
             <button
               key={value}
               type="button"

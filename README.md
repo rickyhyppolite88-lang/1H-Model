@@ -4,6 +4,12 @@ College basketball first-half totals, rebuilt from the saved MADNESS v6.1 notes,
 
 The original Python repository and 63-game results tracker were not recovered. This is a documented reconstruction, not the original source or a claim to reproduce its historical performance.
 
+## Open on your phone
+
+Open [the live 1H Model app](https://rickyhyppolite88-lang.github.io/1H-Model/) in your phone's browser. The `github.com` repository link opens the source code; the `github.io` address opens the app. Bookmark the app or use your browser's **Add to Home Screen** action for quick access.
+
+On phones, use **View** to switch sections. Matchup predictions and saved records appear as cards, with the model total, sportsbook line, lean, and result labeled. Tap the movement badge beside a current line for its timing and effect on the recorded pick. **Daily record**, **Downloads, coverage & signal guide**, and **Filters & search** expand when tapped. Daily Excel and CSV downloads use the same saved files as desktop. The automatic prediction record is shared across devices; manually saved Pick tracker entries remain local to each browser.
+
 ## Run locally
 
 Requires Node 22.12+ (Node 24 recommended). Python 3.10+ and `requirements-dev.txt` dependencies are needed for data imports, Excel generation, and Python tests.

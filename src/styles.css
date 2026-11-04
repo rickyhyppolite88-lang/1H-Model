@@ -1835,6 +1835,18 @@ th.matchup-cell {
 .line-move-tooltip .game-time strong {
   font-size: 11px;
 }
+.mobile-section-select {
+  display: none;
+}
+.responsive-details > summary {
+  display: none;
+}
+.results-count {
+  color: #536c48;
+  font-size: 12px;
+  font-weight: 600;
+  margin: 20px 0 12px;
+}
 .evaluation-filters {
   display: grid;
   grid-template-columns: 1fr 1fr 1.5fr auto;
@@ -1882,5 +1894,397 @@ th.matchup-cell {
   }
   .prediction-filters {
     grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 780px) {
+  .app-shell {
+    padding-inline: 16px;
+  }
+  .topbar {
+    height: 68px;
+  }
+  .brand-mark {
+    width: 38px;
+    height: 38px;
+    font-size: 20px;
+  }
+  .wordmark {
+    font-size: 17px;
+    gap: 9px;
+  }
+  .topbar-right {
+    font-size: 0;
+  }
+  .topbar-right a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    font-size: 12px;
+  }
+  .intro {
+    display: block;
+    padding: 20px 0 16px;
+  }
+  .intro .eyebrow {
+    font-size: 9px;
+  }
+  .intro h1 {
+    font-size: 30px;
+    line-height: 1.15;
+    margin: 10px 0 0;
+  }
+  .intro h1 br {
+    display: none;
+  }
+  .intro h1 em::before {
+    content: " ";
+  }
+  .intro p,
+  .intro .season-summary {
+    display: none;
+  }
+  .tabs {
+    overflow: visible;
+    margin-bottom: 16px;
+    padding-bottom: 16px;
+  }
+  .tabs > button {
+    display: none;
+  }
+  .mobile-section-select {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+    color: #536c48;
+    font-size: 12px;
+    font-weight: 600;
+  }
+  .mobile-section-select select {
+    flex: 1;
+  }
+  input,
+  select {
+    font-size: 16px;
+    min-height: 44px;
+    max-width: 100%;
+  }
+  .panel,
+  .method-panel {
+    padding: 16px;
+    min-width: 0;
+  }
+  .panel-footnote {
+    margin: 24px -16px -16px;
+    padding: 16px;
+  }
+  .section-heading {
+    gap: 10px;
+    margin-bottom: 16px;
+  }
+  .section-heading h2 {
+    font-size: 17px;
+  }
+  .section-heading p {
+    font-size: 12px;
+  }
+  .game-day-panel {
+    padding: 16px;
+    gap: 16px;
+    margin-top: 16px;
+  }
+  .game-day-panel h3 {
+    font-size: 23px;
+  }
+  .game-day-panel p {
+    font-size: 13px;
+  }
+  .game-date-controls {
+    width: 100%;
+    flex-wrap: nowrap;
+    gap: 10px;
+  }
+  .game-date-controls label {
+    flex: 1;
+    min-width: 0;
+  }
+  .game-date-controls .secondary-button {
+    flex-shrink: 0;
+  }
+  .secondary-button {
+    min-height: 44px;
+    font-size: 12px;
+    line-height: 1.5;
+    text-align: center;
+    overflow-wrap: anywhere;
+  }
+  .text-button {
+    min-height: 44px;
+    font-size: 12px;
+    display: inline-flex;
+    align-items: center;
+    text-align: left;
+  }
+  .tipoff-filters {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    margin-top: 12px;
+  }
+  .tipoff-filters button {
+    padding: 10px;
+    min-height: 44px;
+    justify-content: space-between;
+    font-size: 11px;
+    gap: 4px;
+  }
+  .tipoff-filters button:first-child {
+    grid-column: 1 / -1;
+  }
+  .tipoff-explanation {
+    font-size: 11px;
+    margin-bottom: 16px;
+  }
+  .responsive-details {
+    border: 1px solid #d0dcc5;
+    border-radius: 5px;
+    margin: 10px 0;
+    min-width: 0;
+  }
+  .responsive-details > summary {
+    display: list-item;
+    padding: 14px 12px;
+    min-height: 48px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    color: #345c3e;
+  }
+  .responsive-details-content {
+    padding: 0 12px 12px;
+  }
+  .responsive-details .daily-results,
+  .responsive-details .daily-downloads {
+    padding: 12px;
+    margin: 0 0 12px;
+  }
+  .prediction-actions {
+    gap: 10px;
+    margin-top: 0;
+  }
+  .prediction-actions > .secondary-button {
+    flex: 1 1 100%;
+  }
+  .daily-downloads .button-group {
+    width: 100%;
+    gap: 8px;
+  }
+  .daily-downloads .secondary-button {
+    flex: 1 1 100%;
+  }
+  .audit-metrics {
+    gap: 8px;
+  }
+  .audit-metrics > div {
+    padding: 12px;
+    min-width: 0;
+  }
+  .audit-metrics strong {
+    font-size: 24px;
+  }
+  .record-overview .audit-metrics > div:first-child,
+  .daily-results .audit-metrics > div:first-child {
+    grid-column: 1 / -1;
+  }
+  .record-overview {
+    padding: 14px;
+  }
+  .record-day-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .record-scope-switch {
+    display: flex;
+  }
+  .record-scope-switch button {
+    flex: 1;
+    padding-inline: 12px;
+    min-height: 44px;
+  }
+  .record-history-filters,
+  .record-filters,
+  .evaluation-filters,
+  .prediction-filters {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 14px;
+  }
+  .prediction-filters {
+    margin: 16px 0 0;
+  }
+  .prediction-groups {
+    justify-content: space-between;
+    gap: 10px;
+    margin-top: 18px;
+  }
+  .prediction-groups button {
+    min-height: 48px;
+    font-size: 12px;
+  }
+  .group-description {
+    font-size: 12px;
+  }
+  .line-movement-legend {
+    font-size: 12px;
+  }
+  .card-table-wrap {
+    max-height: none;
+    overflow: visible;
+  }
+  .card-table {
+    display: block;
+    white-space: normal;
+  }
+  .card-table thead {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+  .card-table tbody {
+    display: grid;
+    gap: 16px;
+  }
+  .card-table tbody tr {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    padding: 4px 12px 8px;
+    border: 1px solid #c6d5bb;
+    border-radius: 7px;
+    background: #fffef9;
+    min-width: 0;
+  }
+  .card-table td {
+    display: block;
+    padding: 10px 4px;
+    text-align: left;
+    border: 0;
+    min-width: 0;
+    font-size: 14px;
+    overflow-wrap: anywhere;
+  }
+  .card-table td::before {
+    content: attr(data-label);
+    display: block;
+    margin-bottom: 7px;
+    color: #61705a;
+    font-size: 11px;
+    font-weight: 500;
+    line-height: 1.4;
+  }
+  .card-table td.card-time,
+  .card-table td.card-matchup,
+  .card-table td.card-wide {
+    grid-column: 1 / -1;
+    min-width: 0;
+    max-width: none;
+  }
+  .card-table td.card-time {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    border-bottom: 1px solid #c6d5bb;
+  }
+  .card-table .card-time::before,
+  .card-table .card-matchup::before {
+    display: none;
+  }
+  .card-table .card-time .game-time {
+    min-width: 0;
+    gap: 4px;
+  }
+  .card-table .card-time .game-time strong {
+    font-size: 15px;
+  }
+  .card-table .card-time .game-time span {
+    font-size: 11px;
+  }
+  .card-table .tipoff-badge,
+  .card-table .record-day-link {
+    margin-top: 0;
+    flex-shrink: 0;
+  }
+  .card-table .card-matchup {
+    padding-block: 14px;
+    border-bottom: 1px solid #d4dec9;
+    font-size: 15px;
+    line-height: 1.6;
+  }
+  .card-table .matchup-team {
+    font-size: 14px;
+    line-height: 1.5;
+  }
+  .card-table .team-conference {
+    font-size: 11px;
+  }
+  .card-table td.card-primary {
+    font-size: 24px;
+    font-weight: 650;
+  }
+  .card-table .line-display {
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+  .card-table .line-move {
+    min-width: 44px;
+    min-height: 44px;
+    font-size: 12px;
+    cursor: pointer;
+  }
+  .card-table .signal-badge {
+    min-width: 0;
+  }
+  .card-table td small,
+  .card-table .signal-badge small,
+  .card-table .availability-cell {
+    font-size: 11px;
+    line-height: 1.6;
+  }
+  .prediction-pagination {
+    gap: 12px;
+  }
+  .prediction-pagination .button-group {
+    width: 100%;
+  }
+  .prediction-pagination .button-group button {
+    flex: 1;
+  }
+  .audit-book {
+    flex-wrap: wrap;
+  }
+  .audit-book select {
+    min-width: 0;
+    width: 100%;
+  }
+  .table-wrap:not(.card-table-wrap) {
+    -webkit-overflow-scrolling: touch;
+  }
+  .table-wrap:not(.card-table-wrap) th:first-child,
+  .table-wrap:not(.card-table-wrap) td:first-child {
+    position: sticky;
+    left: 0;
+    z-index: 1;
+    background: #f1f5e8;
+    max-width: 160px;
+    white-space: normal;
+  }
+  .table-wrap:not(.card-table-wrap) thead th:first-child {
+    z-index: 2;
+  }
+  .table-wrap:not(.card-table-wrap) tbody th[scope="row"] {
+    top: auto;
   }
 }
