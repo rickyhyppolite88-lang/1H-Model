@@ -31,7 +31,7 @@ try {
   await writeFile("public/data/season-games.tmp", `${JSON.stringify(enriched, null, 2)}\n`);
   await rename("public/data/season-games.tmp", "public/data/season-games.json");
   await writeFile("public/data/season-audit.json", `${JSON.stringify(result, null, 2)}\n`);
-  const revision=process.env.GITHUB_SHA??execFileSync("git",["rev-parse","HEAD"],{encoding:"utf8"}).trim();
+  const revision=execFileSync("git",["rev-parse","HEAD"],{encoding:"utf8"}).trim();
   const predictions = generatePredictions(enriched, new Date().toISOString(), revision);
   await writeFile("public/data/predictions.json", `${JSON.stringify(predictions, null, 2)}\n`);
   await writeFile("public/data/predictions.csv", `\uFEFF${predictionsToCsv(predictions.predictions,predictions.defaultSportsbook,predictions.defaultLineBasis,predictions.generatedAt)}`);

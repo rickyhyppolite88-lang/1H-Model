@@ -10,6 +10,7 @@ it("shows the current line and signed movement, with a tooltip available by hove
   const row = recordFixture().feed.predictions[0];
   row.markets[0].openingLine = 70;
   row.markets[0].latestLine = 72;
+  row.markets[0].capturedAt = "2026-11-02T23:00:00Z";
   render(
     <LineMovement
       row={row}
@@ -30,6 +31,9 @@ it("shows the current line and signed movement, with a tooltip available by hove
   expect(tooltip.textContent).toContain("Opening 70.0 → current 72.0");
   expect(tooltip.textContent).toContain("would be Loss");
   expect(tooltip.textContent).toContain("Official result remains Win");
+  expect(tooltip.textContent).toContain(
+    "Quote timing: 60 min before scheduled tipoff",
+  );
   expect(button.getAttribute("aria-describedby")).toBe(tooltip.id);
   fireEvent.keyDown(document, { key: "Escape" });
   expect(screen.queryByRole("tooltip")).toBeNull();

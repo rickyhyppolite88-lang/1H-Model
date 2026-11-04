@@ -118,5 +118,10 @@ export function describeLineMovement(
     recordedImpact,
     hypotheticalGrade,
     capturedAt: market?.capturedAt ?? null,
+    capturedMinutesBeforeTipoff: market
+      ? Math.round(
+          (Date.parse(row.startsAt) - Date.parse(market.capturedAt)) / 60_000,
+        )
+      : null,
   };
 }

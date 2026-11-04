@@ -446,10 +446,11 @@ export default function Predictions() {
         <div>
           <h3>Downloads for {dateLabel(selectedDate)}</h3>
           <p>
-            Refreshes automatically three times every day. Dated copies remain
-            available after the day ends. These files include all games on the
-            selected date. Use the filtered CSV to download the current tipoff
-            and conference filters.
+            Line checks target about one hour before tipoff, with follow-up
+            checks closer to the game. The movement tooltip shows the actual
+            quote time. Dated copies update after successful checks and remain
+            available afterward. Use the filtered CSV for the current tipoff and
+            conference filters.
           </p>
         </div>
         {selectedArchive && (

@@ -10,26 +10,57 @@ on:
         description: Refresh current-season public statistics before deployment
         type: boolean
         default: false
+      refresh_lines:
+        description: Refresh first-half lines and results without reimporting team statistics
+        type: boolean
+        default: false
   schedule:
-    - cron: "20 11,17,23 * * *"
+    - cron: "20 6,12,18 * * *"
+      timezone: America/New_York
+    - cron: "7,17,27,37,47,57 * * * *"
 
 permissions:
   contents: read
 
 concurrency:
   group: pages-${{ github.ref }}
-  cancel-in-progress: true
+  cancel-in-progress: false
+  queue: max
 
 env:
   TZ: America/New_York
 
 jobs:
+  plan:
+    runs-on: ubuntu-latest
+    outputs:
+      mode: ${{ steps.policy.outputs.mode }}
+      date: ${{ steps.policy.outputs.date }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          ref: ${{ github.ref == format('refs/heads/{0}', github.event.repository.default_branch) && github.event.repository.default_branch || github.ref }}
+          sparse-checkout: |
+            scripts/plan_refresh.py
+            public/data/season-games.json
+          sparse-checkout-cone-mode: false
+      - name: Decide whether a line check is due
+        id: policy
+        env:
+          REFRESH_SCHEDULE: ${{ github.event.schedule }}
+          REFRESH_DATA: ${{ inputs.refresh_data }}
+          REFRESH_LINES: ${{ inputs.refresh_lines }}
+        run: python scripts/plan_refresh.py
   build:
+    needs: plan
+    if: needs.plan.outputs.mode != 'skip'
     runs-on: ubuntu-latest
     permissions:
       contents: write
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          ref: ${{ github.ref == format('refs/heads/{0}', github.event.repository.default_branch) && github.event.repository.default_branch || github.ref }}
       - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7
         with:
           node-version: "24"
@@ -39,11 +70,19 @@ jobs:
       - name: Install importer and Excel dependencies
         run: python -m pip install -r requirements-dev.txt
       - name: Refresh current season
-        if: github.event_name == 'schedule' || (github.event_name == 'workflow_dispatch' && inputs.refresh_data)
+        if: needs.plan.outputs.mode == 'full'
         run: python scripts/import_teamrankings.py --season 2026-27 --output public/data/current-season.json
       - name: Refresh first-half markets and results
-        if: github.event_name == 'schedule' || (github.event_name == 'workflow_dispatch' && inputs.refresh_data)
-        run: python scripts/import_season_games.py
+        if: needs.plan.outputs.mode == 'full' || needs.plan.outputs.mode == 'markets'
+        env:
+          REFRESH_MODE: ${{ needs.plan.outputs.mode }}
+          REFRESH_DATE: ${{ needs.plan.outputs.date }}
+        run: |
+          if [ "$REFRESH_MODE" = "markets" ]; then
+            python scripts/import_season_games.py --start "$REFRESH_DATE" --through "$REFRESH_DATE"
+          else
+            python scripts/import_season_games.py
+          fi
       - name: Freeze pregame features and replay completed halves
         run: npm run audit:season
       - name: Check formatting and TypeScript rules
@@ -57,7 +96,7 @@ jobs:
           BASE_PATH: /${{ github.event.repository.name }}/
         run: npm run build
       - name: Preserve validated predictions and the permanent record
-        if: github.event_name != 'pull_request'
+        if: github.event_name != 'pull_request' && github.ref == format('refs/heads/{0}', github.event.repository.default_branch)
         run: |
           git add public/data
           if ! git diff --cached --quiet -- public/data; then
@@ -67,12 +106,12 @@ jobs:
             git push origin HEAD:main
           fi
       - name: Upload site
-        if: github.event_name != 'pull_request'
+        if: github.event_name != 'pull_request' && github.ref == format('refs/heads/{0}', github.event.repository.default_branch)
         uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5
         with:
           path: dist
   deploy:
-    if: github.event_name != 'pull_request'
+    if: github.event_name != 'pull_request' && github.ref == format('refs/heads/{0}', github.event.repository.default_branch)
     needs: build
     runs-on: ubuntu-latest
     permissions:

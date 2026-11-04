@@ -158,6 +158,17 @@ export default function LineMovement({
                 Last retrieved <GameTime startsAt={details.capturedAt} />
               </small>
             )}
+            {details.capturedMinutesBeforeTipoff !== null && (
+              <small>
+                Quote timing:{" "}
+                {details.capturedMinutesBeforeTipoff > 0
+                  ? `${details.capturedMinutesBeforeTipoff} min before scheduled tipoff`
+                  : details.capturedMinutesBeforeTipoff < 0
+                    ? `${Math.abs(details.capturedMinutesBeforeTipoff)} min after scheduled tipoff`
+                    : "at scheduled tipoff"}
+                .
+              </small>
+            )}
           </div>,
           document.body,
         )}
