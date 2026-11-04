@@ -7,6 +7,7 @@ import {
   fireEvent,
   render,
   screen,
+  waitFor,
   within,
 } from "@testing-library/react";
 import { afterEach, beforeEach, expect, it, vi } from "vitest";
@@ -167,11 +168,11 @@ it("provides dated downloads and automatically checks for updated predictions", 
   expect(
     screen.getByRole("link", { name: "Daily Excel ↓" }).getAttribute("href"),
   ).toContain(latest.xlsxPath);
-  expect(fetcher).toHaveBeenCalledTimes(3);
+  await waitFor(() => expect(fetcher).toHaveBeenCalledTimes(3));
   await act(async () => {
     vi.advanceTimersByTime(5 * 60 * 1000);
   });
-  expect(fetcher).toHaveBeenCalledTimes(6);
+  await waitFor(() => expect(fetcher).toHaveBeenCalledTimes(6));
 });
 
 it("combines Top 25 with a conference and exports matching rows beyond the first page", async () => {
