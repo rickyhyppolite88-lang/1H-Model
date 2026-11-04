@@ -1523,8 +1523,8 @@ footer {
   color: var(--positive);
 }
 .lean-under {
-  background: var(--info-soft);
-  color: var(--info);
+  background: var(--negative-soft);
+  color: var(--negative);
 }
 .lean-missing,
 .lean-push {
@@ -1633,6 +1633,34 @@ footer {
 .record-overview h3 {
   margin: 0 0 8px;
   color: var(--text-primary);
+}
+
+.record-overview-top {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.record-overview-top > div {
+  min-width: 0;
+}
+
+.record-date-control {
+  display: grid;
+  gap: 8px;
+  min-width: 220px;
+  max-width: 100%;
+  color: var(--text-secondary);
+  font-size: 12px;
+}
+
+@media (max-width: 780px) {
+  .record-date-control {
+    width: 100%;
+    min-width: 0;
+  }
 }
 .record-overview p,
 .record-day-breakdown > p {
@@ -2687,6 +2715,12 @@ h1 em {
 .game-card:not(.is-expanded) .lean-missing,
 .game-card:not(.is-expanded) .lean-push {
   color: var(--text-secondary);
+}
+.game-card:not(.is-expanded) .lean-over {
+  color: var(--positive);
+}
+.game-card:not(.is-expanded) .lean-under {
+  color: var(--negative);
 }
 .game-card:not(.is-expanded) .line-display {
   display: inline-flex;

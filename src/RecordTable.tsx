@@ -19,12 +19,14 @@ export default function RecordTable({
   canonicalIds,
   showVersions,
   onOpenDay,
+  emptyMessage,
 }: {
   records: ForecastRecord[];
   results: RecordStore["results"];
   canonicalIds: string[];
   showVersions: boolean;
   onOpenDay?: (date: string) => void;
+  emptyMessage?: string;
 }) {
   const ids = new Set(canonicalIds);
   return (
@@ -133,7 +135,11 @@ export default function RecordTable({
                   {point(record.comparison.line)}
                 </td>
                 <td role="cell" className="card-lean" data-label="Lean">
-                  {record.comparison.lean ?? "—"}
+                  <span
+                    className={`lean-badge lean-${record.comparison.lean?.toLowerCase() ?? "missing"}`}
+                  >
+                    {record.comparison.lean ?? "—"}
+                  </span>
                 </td>
                 <td
                   role="cell"
@@ -149,7 +155,9 @@ export default function RecordTable({
                   <span
                     className={`record-grade grade-${grade.grade.toLowerCase().replaceAll(" ", "-")}`}
                   >
-                    {grade.grade}
+                    {grade.grade === "Pending" && grade.actual !== null
+                      ? "Review needed"
+                      : grade.grade}
                   </span>
                 </td>
                 <td
@@ -184,7 +192,7 @@ export default function RecordTable({
       </table>
       {!records.length && (
         <div className="empty-state">
-          No recorded forecasts match these filters.
+          {emptyMessage ?? "No recorded forecasts match these filters."}
         </div>
       )}
     </div>

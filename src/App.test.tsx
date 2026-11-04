@@ -1,13 +1,7 @@
 // @vitest-environment jsdom
 import { readFileSync } from "node:fs";
-import {
-  cleanup,
-  fireEvent,
-  render,
-  screen,
-  waitFor,
-} from "@testing-library/react";
-import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { cleanup, fireEvent, render, screen } from "@testing-library/react";
+import { afterEach, beforeEach, expect, it, vi } from "vitest";
 import App from "./App";
 import {
   buildRecordIndex,
@@ -15,16 +9,12 @@ import {
 } from "./model/predictionRecord";
 import { recordFixture } from "./model/record.test-fixture";
 
-const prior = JSON.parse(readFileSync("public/data/prior-season.json", "utf8"));
-const current = JSON.parse(
-  readFileSync("public/data/current-season.json", "utf8"),
-);
-const predictions = JSON.parse(
-  readFileSync("public/data/predictions.json", "utf8"),
-);
-const teamEvaluation = JSON.parse(
-  readFileSync("public/data/team-evaluation.json", "utf8"),
-);
+const load = (name: string) =>
+  JSON.parse(readFileSync(`public/data/${name}.json`, "utf8"));
+const prior = load("prior-season");
+const current = load("current-season");
+const predictions = load("predictions");
+const teamEvaluation = load("team-evaluation");
 const fixture = recordFixture();
 const record = updatePredictionRecord(
   fixture.store,
@@ -32,144 +22,134 @@ const record = updatePredictionRecord(
   fixture.ledger,
   fixture.at,
 );
+record.results = [
+  {
+    id: "finished",
+    season: record.records[0].season,
+    gameId: record.records[0].gameId,
+    observedAt: "2026-11-03T02:00:00Z",
+    sourceCapturedAt: "2026-11-03T02:00:00Z",
+    awayPoints: 36,
+    homePoints: 36,
+    source: "https://example.com/results",
+  },
+];
 const recordIndex = buildRecordIndex(record);
+const dialogClose = Object.getOwnPropertyDescriptor(
+  HTMLDialogElement.prototype,
+  "close",
+);
 
 beforeEach(() => {
+  Object.defineProperty(HTMLDialogElement.prototype, "close", {
+    configurable: true,
+    value: vi.fn(),
+  });
   localStorage.clear();
   vi.stubGlobal(
     "fetch",
     vi.fn(async (url: string) => ({
       ok: true,
       json: async () =>
-        url.includes("prediction-record-index")
-          ? structuredClone(recordIndex)
-          : url.includes("prediction-record/")
-            ? structuredClone(record)
-            : url.includes("team-evaluation.json")
-              ? structuredClone(teamEvaluation)
-              : url.includes("predictions.json")
-                ? structuredClone(predictions)
-                : url.includes("prior-season")
-                  ? structuredClone(prior)
-                  : structuredClone(current),
+        structuredClone(
+          url.includes("prediction-record-index")
+            ? recordIndex
+            : url.includes("prediction-record/")
+              ? record
+              : url.includes("team-evaluation.json")
+                ? teamEvaluation
+                : url.includes("predictions.json")
+                  ? predictions
+                  : url.includes("prior-season")
+                    ? prior
+                    : current,
+        ),
     })),
   );
 });
 afterEach(() => {
   cleanup();
   vi.unstubAllGlobals();
+  if (dialogClose)
+    Object.defineProperty(HTMLDialogElement.prototype, "close", dialogClose);
+  else Reflect.deleteProperty(HTMLDialogElement.prototype, "close");
 });
 
-async function fillMatchup() {
+it("opens the full record and date dropdown from the phone shortcut", async () => {
+  render(<App />);
+  fireEvent.click(screen.getByRole("button", { name: "Full record" }));
+  expect(
+    await screen.findByRole("heading", { name: "Running prediction record" }),
+  ).toBeTruthy();
+  expect(
+    screen.getByRole("heading", { name: "Full prediction record" }),
+  ).toBeTruthy();
+  expect(screen.getByLabelText("Daily breakdown (ET)")).toBeTruthy();
+  expect(
+    await screen.findByRole("table", { name: "Recorded predictions" }),
+  ).toBeTruthy();
+});
+
+it("removes Matchup Lab while retaining the other section controls", async () => {
+  render(<App />);
   await screen.findByText("365 teams");
-  fireEvent.click(screen.getByRole("button", { name: "Matchup lab" }));
-  fireEvent.change(screen.getByLabelText("Team A"), {
-    target: { value: "Alabama" },
+  expect(screen.queryByRole("button", { name: /Matchup lab/i })).toBeNull();
+  expect(screen.queryByRole("option", { name: /Matchup lab/i })).toBeNull();
+  fireEvent.change(screen.getByRole("combobox", { name: "View" }), {
+    target: { value: "record" },
   });
-  fireEvent.change(screen.getByLabelText("Team B"), {
-    target: { value: "Michigan" },
-  });
-  fireEvent.change(screen.getByLabelText("Matchup date"), {
-    target: { value: current.asOf },
-  });
-  fireEvent.change(screen.getByLabelText("First-half O/U line"), {
-    target: { value: "70.5" },
-  });
-}
+  expect(
+    await screen.findByRole("heading", { name: "Running prediction record" }),
+  ).toBeTruthy();
+});
 
-describe("calculator workflow", () => {
-  it("opens sections from the mobile section selector", async () => {
-    render(<App />);
-    fireEvent.change(screen.getByRole("combobox", { name: "View" }), {
-      target: { value: "record" },
-    });
-    expect(
-      await screen.findByRole("heading", { name: "Running prediction record" }),
-    ).toBeTruthy();
-    fireEvent.change(screen.getByRole("combobox", { name: "View" }), {
-      target: { value: "matchup" },
-    });
-    expect(await screen.findByLabelText("Team A")).toBeTruthy();
-  });
-  it("opens the permanent prediction record from the main navigation", async () => {
-    render(<App />);
-    fireEvent.click(screen.getByRole("button", { name: "Prediction record" }));
-    expect(
-      await screen.findByRole("heading", { name: "Running prediction record" }),
-    ).toBeTruthy();
-    expect(
-      await screen.findByRole("table", { name: "Recorded predictions" }),
-    ).toBeTruthy();
-  });
-  it("opens the offense and defense comparison from the model navigation", async () => {
-    render(<App />);
-    fireEvent.click(screen.getByRole("button", { name: "Team comparison" }));
-    expect(
-      await screen.findByRole("table", {
-        name: "Team offense and defense comparison",
-      }),
-    ).toBeTruthy();
-    expect(
-      screen.getByRole("table", { name: "Season total accuracy" }),
-    ).toBeTruthy();
-  });
-  it("loads the real datasets, analyzes, saves a frozen record, and restores it", async () => {
-    const view = render(<App />);
-    await fillMatchup();
-    expect(screen.getByText("RESEARCH ONLY")).toBeTruthy();
-    expect(screen.getByText("not calibrated")).toBeTruthy();
-    fireEvent.click(screen.getByRole("button", { name: /Save analysis/ }));
-    fireEvent.click(screen.getByRole("button", { name: /Pick tracker/ }));
-    expect(screen.getByLabelText("Actual 1H total")).toBeTruthy();
-    const stored = JSON.parse(
-      localStorage.getItem("1h-model-analyses-v1") ?? "[]",
-    );
-    expect(stored).toHaveLength(1);
-    expect(stored[0]).toMatchObject({
-      teamA: "Alabama",
-      teamB: "Michigan",
-      line: 70.5,
-      purpose: "research",
-      currentAsOf: current.asOf,
-      priorAsOf: prior.asOf,
-    });
-    expect(Number.isFinite(stored[0].projection)).toBe(true);
-    fireEvent.change(screen.getByLabelText("Actual 1H total"), {
-      target: { value: "69" },
-    });
-    expect(
-      JSON.parse(localStorage.getItem("1h-model-analyses-v1") ?? "[]")[0]
-        .actualTotal,
-    ).toBe(69);
-    view.unmount();
-    render(<App />);
-    await screen.findByText("365 teams");
-    fireEvent.click(screen.getByRole("button", { name: /Pick tracker/ }));
-    expect(
-      (screen.getByLabelText("Actual 1H total") as HTMLInputElement).value,
-    ).toBe("69");
-  });
+it("retains the offense and defense comparison", async () => {
+  render(<App />);
+  fireEvent.click(screen.getByRole("button", { name: "Team comparison" }));
+  expect(
+    await screen.findByRole("table", {
+      name: "Team offense and defense comparison",
+    }),
+  ).toBeTruthy();
+  expect(
+    screen.getByRole("table", { name: "Season total accuracy" }),
+  ).toBeTruthy();
+});
 
-  it("blocks earlier dates instead of showing a prediction from future snapshots", async () => {
-    render(<App />);
-    await fillMatchup();
-    fireEvent.change(screen.getByLabelText("Matchup date"), {
-      target: { value: "2026-11-01" },
-    });
-    await waitFor(() =>
-      expect(screen.getByRole("alert").textContent).toContain("newer than"),
-    );
-    expect(screen.queryByRole("button", { name: /Save analysis/ })).toBeNull();
+it("preserves existing browser-local tracker entries and result edits", async () => {
+  const saved = {
+    id: "legacy",
+    savedAt: "2026-11-02T20:00:00Z",
+    teamA: "Alabama",
+    teamB: "Michigan",
+    date: "2026-11-02",
+    line: 70.5,
+    projection: 74,
+    pick: "OVER",
+    tier: "Research",
+    priorAsOf: prior.asOf,
+    currentAsOf: current.asOf,
+    phase: "regular",
+    priorEquivalentGames: 8,
+    leagueRegression: 0.35,
+    actualTotal: null,
+    purpose: "research",
+  };
+  localStorage.setItem("1h-model-analyses-v1", JSON.stringify([saved]));
+  const view = render(<App />);
+  await screen.findByText("365 teams");
+  fireEvent.click(screen.getByRole("button", { name: /Pick tracker/ }));
+  fireEvent.change(screen.getByLabelText("Actual 1H total"), {
+    target: { value: "69" },
   });
-
-  it("rejects same-team matchups", async () => {
-    render(<App />);
-    await fillMatchup();
-    fireEvent.change(screen.getByLabelText("Team B"), {
-      target: { value: "Alabama" },
-    });
-    expect(screen.getByRole("alert").textContent).toContain(
-      "two different teams",
-    );
-  });
+  expect(
+    JSON.parse(localStorage.getItem("1h-model-analyses-v1") ?? "[]"),
+  ).toEqual([{ ...saved, actualTotal: 69 }]);
+  view.unmount();
+  render(<App />);
+  await screen.findByText("365 teams");
+  fireEvent.click(screen.getByRole("button", { name: /Pick tracker/ }));
+  expect(
+    (screen.getByLabelText("Actual 1H total") as HTMLInputElement).value,
+  ).toBe("69");
 });
