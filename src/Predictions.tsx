@@ -495,7 +495,8 @@ export default function Predictions() {
             <span className="signal-gradient" />
             <span>Fainter = weaker signal</span>
             <p>
-              Color intensity is a research ranking, not a hit percentage.
+              Stronger green means a stronger model signal; fainter green means
+              a weaker signal. This is a research ranking, not a hit percentage.
               Scoring/pace agreement strengthens the score; 8+ point gaps are
               held for outlier review. Started games and unavailable predictions
               stay neutral. The Prediction record tab tracks the results of each

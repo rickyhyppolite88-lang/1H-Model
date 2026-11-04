@@ -13,11 +13,11 @@
   --border: #363636;
   --text-primary: #f4f4f4;
   --text-secondary: #b6b6b6;
-  --accent: #d92b39;
-  --accent-hover: #c62531;
-  --accent-muted: #5b3438;
-  --accent-ink: #ff7a82;
-  --on-accent: #ffffff;
+  --accent: #53d82f;
+  --accent-hover: #70e64f;
+  --accent-muted: #405a38;
+  --accent-ink: #72e450;
+  --on-accent: #0b1708;
   --positive: #77e67f;
   --positive-soft: #1b3621;
   --positive-border: #355c3b;
@@ -28,13 +28,13 @@
   --warning-soft: #36301e;
   --info: #a4cbff;
   --info-soft: #202f43;
-  --focus: #ff8188;
+  --focus: #8bea72;
   --shadow: #00000066;
-  --projection-bg: #26171a;
+  --projection-bg: #17221a;
   --projection-text: #f4faf3;
   --projection-muted: #becbb9;
   --projection-border: #3e5340;
-  --projection-accent: #ff9198;
+  --projection-accent: #80e85b;
 }
 :root[data-theme="light"] {
   color-scheme: light;
@@ -45,10 +45,10 @@
   --border: #d7dce2;
   --text-primary: #191e24;
   --text-secondary: #57636e;
-  --accent: #d92b39;
-  --accent-hover: #c62531;
-  --accent-muted: #e4b5ba;
-  --accent-ink: #b21e2a;
+  --accent: #53d82f;
+  --accent-hover: #70e64f;
+  --accent-muted: #b9d8ae;
+  --accent-ink: #237812;
   --positive: #216c32;
   --positive-soft: #e7f3e6;
   --positive-border: #b4d4b6;
@@ -59,7 +59,7 @@
   --warning-soft: #fff1cf;
   --info: #315f95;
   --info-soft: #e7effa;
-  --focus: #b21e2a;
+  --focus: #237812;
   --shadow: #18232822;
 }
 
@@ -2522,6 +2522,24 @@ h1 em {
 .team-name {
   min-width: 0;
 }
+.team-mark.team-jersey-mark {
+  width: 32px;
+  height: 42px;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+}
+.team-jersey {
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+.jersey-outline {
+  stroke: var(--text-secondary);
+  stroke-opacity: 0.55;
+}
 .matchup-team + .matchup-team {
   margin-top: 12px;
 }
@@ -3148,5 +3166,18 @@ h1 em {
     padding: 18px;
     border: 1px solid var(--border);
     border-radius: 10px;
+  }
+}
+
+@media (max-width: 780px) {
+  .game-card:not(.is-expanded) .team-mark.team-jersey-mark {
+    width: 24px;
+    height: 32px;
+  }
+}
+@media (min-width: 781px) {
+  .game-card:not(.is-expanded) .team-mark.team-jersey-mark {
+    width: 30px;
+    height: 40px;
   }
 }
