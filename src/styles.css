@@ -3413,53 +3413,100 @@ h1 em {
     font-size: 32px;
   }
   .card-table tbody .game-card:not(.is-expanded) {
-    gap: 5px;
-    padding: 12px 4px 6px;
+    grid-template-columns: repeat(16, minmax(0, 1fr));
+    gap: 4px;
+    padding: 10px 4px 4px;
   }
   .card-table .game-card:not(.is-expanded) td.card-matchup {
-    grid-column: 1 / -1;
-    grid-row: 1;
-    padding: 2px 2px 10px;
+    grid-column: 1 / 9;
+    grid-row: 1 / 3;
+    align-self: center;
+    padding: 2px 6px 2px 0;
+  }
+  .card-table .game-card:not(.is-expanded) .matchup-team {
+    font-size: 12px;
+    line-height: 1.35;
+  }
+  .game-card:not(.is-expanded) .team-mark.team-jersey-mark {
+    width: 22px;
+    height: 28px;
   }
   .game-card:not(.is-expanded) .matchup-team + .matchup-team {
-    margin-top: 4px;
+    margin-top: 6px;
   }
   .card-table .game-card:not(.is-expanded) td.card-primary,
   .card-table .game-card:not(.is-expanded) td.card-lean,
   .card-table .game-card:not(.is-expanded) td.card-confidence {
-    grid-row: 2;
+    padding: 5px 2px;
+    border-radius: 6px;
   }
   .card-table .game-card:not(.is-expanded) td.card-primary {
-    grid-column: 1 / 4;
-    font-size: 18px;
+    grid-column: 9 / 13;
+    grid-row: 1;
+    font-size: 15px;
   }
   .card-table .game-card:not(.is-expanded) td.sportsbook-line,
   .card-table
     .game-card-record:not(.is-expanded)
     td.card-primary
     + td.card-primary {
-    grid-column: 4 / 7;
+    grid-column: 13 / -1;
   }
   .card-table .game-card:not(.is-expanded) td.card-lean {
-    grid-column: 7 / 10;
+    grid-column: 9 / 13;
+    grid-row: 2;
   }
   .card-table .game-card:not(.is-expanded) td.card-confidence {
-    grid-column: 10 / -1;
+    grid-column: 13 / -1;
+    grid-row: 2;
   }
   .game-card:not(.is-expanded) .card-primary::before,
   .game-card:not(.is-expanded) .card-lean::before,
   .game-card:not(.is-expanded) .signal-badge .confidence-label {
-    min-height: 28px;
-    font-size: 10px;
+    min-height: 22px;
+    margin-bottom: 4px;
+    font-size: 9px;
   }
   .game-card:not(.is-expanded) .signal-badge strong {
-    font-size: 18px;
+    font-size: 15px;
+  }
+  .game-card:not(.is-expanded)
+    .line-display[data-direction="unchanged"]::after {
+    display: none;
   }
   .card-table .game-card:not(.is-expanded) td.card-time,
   .card-table .game-card:not(.is-expanded) td.card-actual,
   .card-table .game-card:not(.is-expanded) td.card-result,
   .card-table .game-card:not(.is-expanded) td.card-toggle-cell {
     grid-row: 3;
+  }
+  .card-table .game-card:not(.is-expanded) td.card-time {
+    grid-column: 1 / 14;
+  }
+  .card-table
+    .game-card-prediction:not(.is-expanded):has(.card-actual)
+    td.card-time {
+    grid-column: 1 / 11;
+  }
+  .card-table .game-card:not(.is-expanded) td.card-toggle-cell {
+    grid-column: 14 / -1;
+  }
+  .card-table .game-card-prediction:not(.is-expanded) td.card-actual {
+    grid-column: 11 / 14;
+  }
+  .card-table .game-card-record:not(.is-expanded) td.card-time {
+    grid-column: 1 / 7;
+  }
+  .card-table .game-card-record:not(.is-expanded) td.card-actual {
+    grid-column: 7 / 10;
+  }
+  .card-table .game-card-record:not(.is-expanded) td.card-result {
+    grid-column: 10 / 14;
+  }
+  .game-card:not(.is-expanded) .record-grade {
+    max-width: 100%;
+    white-space: normal;
+    text-align: center;
   }
 }
 @media (max-width: 359px) {
