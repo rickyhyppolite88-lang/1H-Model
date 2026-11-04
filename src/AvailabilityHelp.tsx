@@ -27,7 +27,7 @@ export default function AvailabilityHelp() {
           </dd>
           <dt>Signal unavailable</dt>
           <dd>
-            The green ranking needs a valid pregame projection, its scoring and
+            The signal ranking needs a valid pregame projection, its scoring and
             pace components, and the selected sportsbook line. If any is
             missing, the signal stays neutral.
           </dd>

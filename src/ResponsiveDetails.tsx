@@ -5,20 +5,22 @@ const compactQuery = "(max-width: 780px)";
 export default function ResponsiveDetails({
   summary,
   children,
+  initiallyCollapsed = false,
 }: {
   summary: string;
   children: ReactNode;
+  initiallyCollapsed?: boolean;
 }) {
   const [open, setOpen] = useState(
-    () => !window.matchMedia?.(compactQuery).matches,
+    () => !initiallyCollapsed && !window.matchMedia?.(compactQuery).matches,
   );
   useEffect(() => {
     const media = window.matchMedia?.(compactQuery);
     if (!media) return;
-    const resize = () => setOpen(!media.matches);
+    const resize = () => setOpen(!initiallyCollapsed && !media.matches);
     media.addEventListener("change", resize);
     return () => media.removeEventListener("change", resize);
-  }, []);
+  }, [initiallyCollapsed]);
   return (
     <details
       className="responsive-details"

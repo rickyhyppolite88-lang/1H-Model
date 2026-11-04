@@ -134,8 +134,12 @@ it("orders stronger research signals first and fades the row color without showi
   const rows = screen.getAllByRole("row");
   expect(rows[1].textContent).toContain("Strong signal");
   expect(rows[2].textContent).toContain("Weak signal");
-  expect(rows[1].style.backgroundColor).not.toBe(rows[2].style.backgroundColor);
-  expect(screen.getByText(/Green is a research ranking/)).toBeTruthy();
+  expect(rows[1].style.getPropertyValue("--signal-tint")).not.toBe(
+    rows[2].style.getPropertyValue("--signal-tint"),
+  );
+  expect(
+    screen.getByText(/Color intensity is a research ranking/),
+  ).toBeTruthy();
   expect(screen.getByText("75/100")).toBeTruthy();
 });
 
