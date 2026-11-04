@@ -25,7 +25,7 @@ export default function GameCardRow({
       style={
         {
           "--signal-fill": fill ?? "transparent",
-          "--signal-tint": `${(signalScore ?? 0) * 0.18}%`,
+          "--signal-tint": `${(signalScore ?? 0) * 0.32}%`,
           "--signal-border": `${signalScore ?? 0}%`,
         } as CSSProperties
       }

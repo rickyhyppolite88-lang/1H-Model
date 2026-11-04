@@ -1,3 +1,5 @@
+import TeamJersey from "./TeamJersey";
+
 export default function TeamIdentity({
   name,
   rank,
@@ -9,13 +11,7 @@ export default function TeamIdentity({
 }) {
   return (
     <strong className="matchup-team">
-      <span className="team-mark" aria-hidden="true">
-        {name
-          .split(/\s+/)
-          .slice(0, 2)
-          .map((word) => word[0])
-          .join("")}
-      </span>
+      <TeamJersey name={name} />
       <span className="team-name">
         {rank !== null && <span className="rank-badge">#{rank}</span>}
         {name}

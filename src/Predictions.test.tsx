@@ -138,7 +138,7 @@ it("orders stronger research signals first and fades the row color without showi
     rows[2].style.getPropertyValue("--signal-tint"),
   );
   expect(
-    screen.getByText(/Color intensity is a research ranking/),
+    screen.getByText(/Stronger green means a stronger model signal/),
   ).toBeTruthy();
   expect(screen.getByText("75/100")).toBeTruthy();
 });
