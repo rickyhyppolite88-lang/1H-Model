@@ -8,7 +8,7 @@ The original Python repository and 63-game results tracker were not recovered. T
 
 Open [the live 1H Model app](https://rickyhyppolite88-lang.github.io/1H-Model/) in your phone's browser. The `github.com` repository link opens the source code; the `github.io` address opens the app. Bookmark the app or use your browser's **Add to Home Screen** action for quick access.
 
-On phones, use **View** to switch sections. Matchup predictions and saved records appear as cards, with the model total, sportsbook line, lean, and result labeled. Tap the movement badge beside a current line for its timing and effect on the recorded pick. **Daily record**, **Downloads, coverage & signal guide**, and **Filters & search** expand when tapped. Daily Excel and CSV downloads use the same saved files as desktop. The automatic prediction record is shared across devices; manually saved Pick tracker entries remain local to each browser.
+On phones, use **View** to switch sections. Matchup predictions and saved records start as compact cards showing tipoff, teams, model total, line, lean, and any recorded result. Tap anywhere on a compact card or use **Full details** to expand all its information; **Less detail** collapses it again. Expanded cards include the signal, input availability, actual total, and saved-version details where applicable. Tap the expanded card's movement badge for quote timing and its effect on the recorded pick. **Daily record**, **Downloads, coverage & signal guide**, and **Filters & search** expand when tapped. Daily Excel and CSV downloads use the same saved files as desktop. The automatic prediction record is shared across devices; manually saved Pick tracker entries remain local to each browser.
 
 ## Run locally
 

@@ -1,5 +1,6 @@
 /** biome-ignore-all lint/a11y/useSemanticElements: These native table elements need explicit roles because mobile CSS changes their display. */
 /** biome-ignore-all lint/a11y/noRedundantRoles: Explicit roles preserve table semantics when mobile CSS displays rows as cards. */
+import GameCardRow from "./GameCardRow";
 import GameTime from "./GameTime";
 import { dailyRecordStatus } from "./model/dailyRecord";
 import {
@@ -66,22 +67,26 @@ export default function RecordTable({
                 Record version
               </th>
             )}
+            <th role="columnheader" scope="col" className="card-toggle-cell">
+              Details
+            </th>
           </tr>
         </thead>
         <tbody role="rowgroup">
           {records.map((record) => {
             const grade = recordGrade(record, results);
             return (
-              <tr
-                role="row"
+              <GameCardRow
                 key={record.id}
-                style={{ backgroundColor: record.signal.fill ?? undefined }}
+                kind="record"
+                label={`${record.prediction.awayTeam} at ${record.prediction.homeTeam}`}
+                fill={record.signal.fill}
               >
                 <td role="cell" className="card-time" data-label="Tipoff (ET)">
                   <GameTime startsAt={record.prediction.startsAt} />
                   {onOpenDay && (
                     <button
-                      className="text-button record-day-link"
+                      className="text-button record-day-link card-detail"
                       type="button"
                       onClick={() => onOpenDay(record.gameDate)}
                       aria-label={`View day ${record.gameDate} for ${record.prediction.awayTeam} at ${record.prediction.homeTeam}`}
@@ -99,7 +104,7 @@ export default function RecordTable({
                     {record.prediction.awayTeam} / {record.prediction.homeTeam}
                   </strong>
                   {showVersions && (
-                    <small>
+                    <small className="card-detail">
                       Recorded <GameTime startsAt={record.recordedAt} />
                     </small>
                   )}
@@ -118,16 +123,20 @@ export default function RecordTable({
                 >
                   {point(record.comparison.line)}
                 </td>
-                <td role="cell" data-label="Lean">
+                <td role="cell" className="card-lean" data-label="Lean">
                   {record.comparison.lean ?? "—"}
                 </td>
-                <td role="cell" data-label="Saved signal">
+                <td
+                  role="cell"
+                  className="card-detail"
+                  data-label="Saved signal"
+                >
                   <SignalBadge signal={record.signal} />
                 </td>
-                <td role="cell" data-label="Actual 1H">
+                <td role="cell" className="card-detail" data-label="Actual 1H">
                   {grade.actual ?? "—"}
                 </td>
-                <td role="cell" data-label="Result">
+                <td role="cell" className="card-result" data-label="Result">
                   <span
                     className={`record-grade grade-${grade.grade.toLowerCase().replaceAll(" ", "-")}`}
                   >
@@ -136,7 +145,7 @@ export default function RecordTable({
                 </td>
                 <td
                   role="cell"
-                  className="card-wide"
+                  className="card-wide card-detail"
                   data-label="Coverage status"
                   title={record.prediction.unavailableReason ?? undefined}
                 >
@@ -145,7 +154,7 @@ export default function RecordTable({
                 {showVersions && (
                   <td
                     role="cell"
-                    className="card-wide"
+                    className="card-wide card-detail"
                     data-label="Record version"
                   >
                     v{record.version}
@@ -159,7 +168,7 @@ export default function RecordTable({
                     )}
                   </td>
                 )}
-              </tr>
+              </GameCardRow>
             );
           })}
         </tbody>

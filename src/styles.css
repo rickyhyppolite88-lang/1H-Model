@@ -1838,6 +1838,10 @@ th.matchup-cell {
 .mobile-section-select {
   display: none;
 }
+.card-toggle-cell,
+.card-expand-hint {
+  display: none;
+}
 .responsive-details > summary {
   display: none;
 }
@@ -2165,6 +2169,7 @@ th.matchup-cell {
     border-radius: 7px;
     background: #fffef9;
     min-width: 0;
+    position: relative;
   }
   .card-table td {
     display: block;
@@ -2252,6 +2257,149 @@ th.matchup-cell {
   .card-table .availability-cell {
     font-size: 11px;
     line-height: 1.6;
+  }
+  .card-expand-hint {
+    display: block;
+    margin-top: 6px;
+    font-weight: 400;
+  }
+  .card-table td.card-toggle-cell {
+    display: block;
+    grid-column: 1 / -1;
+    padding: 0;
+  }
+  .card-toggle-button {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    min-height: 44px;
+    border: 0;
+    border-top: 1px solid #c6d5bb;
+    padding: 8px 4px;
+    background: transparent;
+    color: #345c3e;
+    font-size: 12px;
+    font-weight: 600;
+  }
+  .card-toggle-cell::before {
+    display: none;
+  }
+  .game-card:has(.card-toggle-button:focus-visible) {
+    outline: 3px solid #c16c3b;
+    outline-offset: 3px;
+  }
+  .card-table tbody .game-card:not(.is-expanded) {
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+    padding: 0 10px;
+  }
+  .card-table .game-card:not(.is-expanded) td {
+    padding: 6px 3px;
+    font-size: 12px;
+  }
+  .card-table .game-card:not(.is-expanded) td::before {
+    margin-bottom: 4px;
+    font-size: 10px;
+  }
+  .card-table .game-card:not(.is-expanded) .card-detail,
+  .card-table .game-card:not(.is-expanded) .team-conference,
+  .card-table .game-card:not(.is-expanded) .line-move {
+    display: none;
+  }
+  .card-table .game-card:not(.is-expanded) .card-time .game-time {
+    display: inline-flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 4px 7px;
+  }
+  .card-table .game-card:not(.is-expanded) .game-time strong {
+    font-size: 12px;
+  }
+  .card-table .game-card:not(.is-expanded) .game-time span {
+    font-size: 10px;
+  }
+  .card-table .game-card:not(.is-expanded) .tipoff-badge {
+    font-size: 9px;
+    padding: 3px 5px;
+  }
+  .card-table .game-card:not(.is-expanded) .card-matchup {
+    padding-block: 8px;
+    border-bottom: 0;
+    font-size: 13px;
+    line-height: 1.4;
+  }
+  .card-table .game-card:not(.is-expanded) .matchup-team {
+    font-size: 13px;
+    line-height: 1.4;
+  }
+  .game-card:not(.is-expanded) .matchup-team + .matchup-team {
+    margin-top: 3px;
+  }
+  .card-table .game-card:not(.is-expanded) td.card-primary,
+  .card-table .game-card:not(.is-expanded) td.card-lean {
+    grid-column: span 2;
+    padding-bottom: 9px;
+  }
+  .card-table .game-card:not(.is-expanded) td.card-primary {
+    font-size: 18px;
+  }
+  .game-card:not(.is-expanded) .card-primary::before,
+  .game-card:not(.is-expanded) .card-lean::before {
+    min-height: 28px;
+  }
+  .game-card:not(.is-expanded) .lean-badge {
+    padding: 3px 5px;
+    font-size: 10px;
+  }
+  .game-card:not(.is-expanded) .line-display {
+    gap: 3px;
+  }
+  .game-card:not(.is-expanded) .line-display::after {
+    content: attr(data-movement);
+    color: #65705e;
+    font-size: 10px;
+    font-weight: 650;
+  }
+  .game-card:not(.is-expanded) .line-display[data-direction="up"]::after {
+    color: #216c3f;
+  }
+  .game-card:not(.is-expanded) .line-display[data-direction="down"]::after {
+    color: #a63832;
+  }
+  .card-table .game-card:not(.is-expanded) td.card-toggle-cell {
+    padding: 0;
+  }
+  .game-card:not(.is-expanded) .card-toggle-button {
+    min-height: 30px;
+    padding-block: 5px;
+    font-size: 11px;
+  }
+  .game-card:not(.is-expanded) .card-toggle-button::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    cursor: pointer;
+  }
+  .card-table .game-card-record:not(.is-expanded) td.card-time {
+    grid-column: 1 / 5;
+    grid-row: 1;
+  }
+  .card-table .game-card-record:not(.is-expanded) td.card-result {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    grid-column: 5 / -1;
+    grid-row: 1;
+    border-bottom: 1px solid #c6d5bb;
+  }
+  .game-card-record:not(.is-expanded) .card-result::before {
+    display: none;
+  }
+  .game-card-record:not(.is-expanded) .record-grade {
+    padding: 3px 6px;
+    font-size: 10px;
+    line-height: 1.4;
   }
   .prediction-pagination {
     gap: 12px;

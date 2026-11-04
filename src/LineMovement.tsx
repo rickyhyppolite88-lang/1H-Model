@@ -102,7 +102,11 @@ export default function LineMovement({
       : `${details.delta > 0 ? "+" : details.delta < 0 ? "−" : ""}${linePoints(Math.abs(details.delta))}`;
   const started = tipoffState(row, at) === "started";
   return (
-    <span className="line-display">
+    <span
+      className="line-display"
+      data-movement={label}
+      data-direction={details.direction}
+    >
       {details.current === null ? (
         <span className="line-missing">Not posted</span>
       ) : (

@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 import AvailabilityHelp from "./AvailabilityHelp";
 import DailyRecord, { type DailyRecordEvidence } from "./DailyRecord";
+import GameCardRow from "./GameCardRow";
 import GameTime from "./GameTime";
 import LineMovement from "./LineMovement";
 import type { RecordedLinePick } from "./model/lineMovement";
@@ -624,6 +625,7 @@ export default function Predictions() {
       <p className="results-count" aria-live="polite">
         {rows.length} matchups · {dateLabel(selectedDate)} ·{" "}
         {books[book] ?? book}
+        <span className="card-expand-hint">Tap a card for full details.</span>
       </p>
       <div
         className="table-wrap card-table-wrap"
@@ -665,6 +667,9 @@ export default function Predictions() {
               <th role="columnheader" scope="col">
                 Input origin / availability
               </th>
+              <th role="columnheader" scope="col" className="card-toggle-cell">
+                Details
+              </th>
             </tr>
           </thead>
           <tbody role="rowgroup">
@@ -677,10 +682,10 @@ export default function Predictions() {
                 new Date(clock).toISOString(),
               );
               return (
-                <tr
-                  role="row"
+                <GameCardRow
                   key={row.gameId}
-                  style={{ backgroundColor: signal.fill ?? undefined }}
+                  label={`${row.awayTeam} at ${row.homeTeam}`}
+                  fill={signal.fill}
                 >
                   <td
                     role="cell"
@@ -721,7 +726,7 @@ export default function Predictions() {
                         {row.homeConference ?? "Conference unavailable"}
                       </span>
                     </strong>
-                    <small>{row.status}</small>
+                    <small className="card-detail">{row.status}</small>
                   </td>
                   <td
                     role="cell"
@@ -743,12 +748,20 @@ export default function Predictions() {
                       at={clock}
                     />
                   </td>
-                  <td role="cell" data-label="Model − line">
+                  <td
+                    role="cell"
+                    className="card-detail"
+                    data-label="Model − line"
+                  >
                     {comparison.signedEdge === null
                       ? "—"
                       : `${comparison.signedEdge > 0 ? "+" : ""}${format(comparison.signedEdge)}`}
                   </td>
-                  <td role="cell" data-label="Research lean">
+                  <td
+                    role="cell"
+                    className="card-lean"
+                    data-label="Research lean"
+                  >
                     <span
                       className={`lean-badge lean-${comparison.lean?.toLowerCase() ?? "missing"}`}
                     >
@@ -758,15 +771,23 @@ export default function Predictions() {
                           : "Unrated · data gap")}
                     </span>
                   </td>
-                  <td role="cell" data-label="Model signal">
+                  <td
+                    role="cell"
+                    className="card-detail"
+                    data-label="Model signal"
+                  >
                     <SignalBadge signal={signal} />
                   </td>
-                  <td role="cell" data-label="Actual 1H">
+                  <td
+                    role="cell"
+                    className="card-detail"
+                    data-label="Actual 1H"
+                  >
                     {row.actualFirstHalfTotal ?? "—"}
                   </td>
                   <td
                     role="cell"
-                    className="availability-cell card-wide"
+                    className="availability-cell card-wide card-detail"
                     data-label="Input availability"
                   >
                     {row.projectedFirstHalfTotal === null ? (
@@ -783,7 +804,7 @@ export default function Predictions() {
                       "Historical estimate · reconstructed season debut"
                     )}
                   </td>
-                </tr>
+                </GameCardRow>
               );
             })}
           </tbody>
