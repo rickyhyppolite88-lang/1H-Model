@@ -1531,6 +1531,188 @@ footer {
 .prediction-record-panel h3 {
   margin-top: 1.5rem;
 }
+.record-scope-switch {
+  display: inline-flex;
+  gap: 4px;
+  padding: 4px;
+  margin-top: 20px;
+  border: 1px solid #becdb3;
+  border-radius: 7px;
+  background: #eef3e7;
+}
+.record-scope-switch button {
+  padding: 12px 24px;
+  border: 0;
+  border-radius: 4px;
+  background: transparent;
+  color: #536c48;
+  font-size: 13px;
+  font-weight: 600;
+}
+.record-scope-switch button[aria-selected="true"] {
+  background: #345c3e;
+  color: #fff;
+}
+.record-benchmark {
+  font-size: 11px;
+  color: #61705a;
+  margin: 12px 0 20px;
+}
+.record-model-control {
+  display: grid;
+  gap: 8px;
+  max-width: 440px;
+  margin-bottom: 20px;
+  font-size: 12px;
+}
+.record-overview {
+  padding: 20px;
+  border: 1px solid #becdb3;
+  border-radius: 6px;
+  background: #f7faf2;
+}
+.record-overview h3 {
+  margin: 0 0 8px;
+  color: #294d38;
+}
+.record-overview p,
+.record-day-breakdown > p {
+  color: #61705a;
+  font-size: 12px;
+  line-height: 1.7;
+}
+.record-overview .audit-metrics {
+  margin: 18px 0;
+}
+.record-day-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 12px;
+  margin: 16px 0 28px;
+}
+.record-day-card {
+  display: grid;
+  gap: 10px;
+  padding: 18px;
+  border: 1px solid #d0dcc5;
+  border-radius: 6px;
+  background: #fffef9;
+  color: #294d38;
+  text-align: left;
+  font-size: 11px;
+}
+.record-day-card:hover,
+.record-day-card:focus-visible {
+  border-color: #345c3e;
+  background: #f0f6e9;
+}
+.record-day-card strong {
+  font-size: 19px;
+  font-weight: 600;
+}
+.record-day-card-date {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  font-size: 12px;
+  font-weight: 650;
+}
+.record-day-card-date span {
+  font-size: 10px;
+  font-weight: 500;
+}
+.record-day-card small {
+  font-size: 10px;
+  color: #61705a;
+}
+.record-day-controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 16px 0;
+}
+.record-day-controls label {
+  display: grid;
+  gap: 8px;
+  min-width: 230px;
+  font-size: 12px;
+}
+.record-history-heading {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px;
+  margin-top: 28px;
+}
+.record-history-heading h3 {
+  margin: 0;
+}
+.record-history-heading span {
+  color: #61705a;
+  font-size: 11px;
+}
+.record-history-filters {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+  margin: 18px 0;
+}
+.record-history-filters label {
+  display: grid;
+  gap: 8px;
+  font-size: 12px;
+}
+.record-day-link {
+  display: block;
+  margin-top: 10px;
+  font-size: 10px;
+}
+.record-extras {
+  margin-top: 28px;
+  border-top: 1px solid #d8e2cd;
+}
+.record-extras > details {
+  padding: 16px 0;
+  border-bottom: 1px solid #d8e2cd;
+  font-size: 12px;
+  color: #61705a;
+  line-height: 1.7;
+}
+.record-extras > details > summary {
+  cursor: pointer;
+  color: #345c3e;
+  font-weight: 600;
+}
+.record-updated {
+  margin-top: 20px;
+  color: #61705a;
+  font-size: 11px;
+}
+.record-updated .game-time {
+  display: inline-flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+@media (max-width: 520px) {
+  .record-history-filters {
+    grid-template-columns: 1fr;
+  }
+  .record-day-controls label {
+    min-width: 0;
+    width: 100%;
+  }
+  .record-overview .audit-metrics > div:first-child {
+    grid-column: 1 / -1;
+  }
+  .record-overview .audit-metrics > div:first-child strong {
+    white-space: nowrap;
+  }
+}
 .daily-record-coverage {
   margin: 1.5rem 0;
   padding: 1.25rem;
