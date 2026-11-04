@@ -15,6 +15,13 @@ import {
   mergeRecordStores,
 } from "./model/recordViews";
 import RecordTable from "./RecordTable";
+import {
+  preferencePage,
+  preferenceRecordDate,
+  preferenceRecordView,
+  preferenceText,
+  usePreference,
+} from "./usePreference";
 
 const rate = (n: number | null) =>
   n === null ? "—" : `${(n * 100).toFixed(1)}%`;
@@ -24,11 +31,19 @@ const summaryKey = (s: RecordIndex["summary"][number]) =>
 export default function PredictionRecord() {
   const [index, setIndex] = useState<RecordIndex | null>(null);
   const [indexError, setIndexError] = useState("");
-  const [date, setDate] = useState("all");
-  const [group, setGroup] = useState("");
-  const [view, setView] = useState("games");
-  const [query, setQuery] = useState("");
-  const [page, setPage] = useState(0);
+  const [date, setDate] = usePreference(
+    "record.date",
+    preferenceRecordDate,
+    "all",
+  );
+  const [group, setGroup] = usePreference("record.group", preferenceText, "");
+  const [view, setView] = usePreference(
+    "record.view",
+    preferenceRecordView,
+    "games",
+  );
+  const [query, setQuery] = usePreference("record.search", preferenceText, "");
+  const [page, setPage] = usePreference("record.page", preferencePage, 0);
   const [retry, setRetry] = useState(0);
   const [loaded, setLoaded] = useState<{
     key: string;

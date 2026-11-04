@@ -51,7 +51,10 @@ export default function RecordTable({
               Saved line
             </th>
             <th role="columnheader" scope="col">
-              Lean / saved confidence
+              Lean
+            </th>
+            <th role="columnheader" scope="col">
+              Saved confidence
             </th>
             <th role="columnheader" scope="col">
               Actual 1H
@@ -135,7 +138,16 @@ export default function RecordTable({
                   >
                     {record.comparison.lean ?? "—"}
                   </span>
-                  <SignalBadge signal={record.signal} />
+                </td>
+                <td
+                  role="cell"
+                  className="card-confidence"
+                  data-label="Saved confidence"
+                >
+                  <SignalBadge
+                    signal={record.signal}
+                    label="Saved confidence"
+                  />
                 </td>
                 <td role="cell" className="card-actual" data-label="Actual 1H">
                   {grade.actual ?? "—"}

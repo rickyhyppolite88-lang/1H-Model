@@ -23,6 +23,17 @@ import { easternTipoff, tipoffState } from "./model/time";
 import ResponsiveDetails from "./ResponsiveDetails";
 import SignalBadge from "./SignalBadge";
 import TeamIdentity from "./TeamIdentity";
+import {
+  preferenceCoverage,
+  preferenceGroup,
+  preferenceLineDate,
+  preferencePage,
+  preferenceSort,
+  preferenceSportsbook,
+  preferenceText,
+  preferenceTiming,
+  usePreference,
+} from "./usePreference";
 
 const books: Record<string, string> = {
   betmgm: "BetMGM",
@@ -50,18 +61,42 @@ export default function Predictions() {
   const [feed, setFeed] = useState<PredictionFeed | null>(null);
   const [archive, setArchive] = useState<DailyArchive | null>(null);
   const [archiveError, setArchiveError] = useState("");
-  const [dateChoice, setDateChoice] = useState("today");
-  const [timing, setTiming] = useState("all");
+  const [dateChoice, setDateChoice] = usePreference(
+    "lines.date",
+    preferenceLineDate,
+    "today",
+  );
+  const [timing, setTiming] = usePreference(
+    "lines.timing",
+    preferenceTiming,
+    "all",
+  );
   const [error, setError] = useState("");
-  const [query, setQuery] = useState("");
-  const [book, setBook] = useState("betmgm");
+  const [query, setQuery] = usePreference("lines.search", preferenceText, "");
+  const [book, setBook] = usePreference(
+    "sportsbook",
+    preferenceSportsbook,
+    "betmgm",
+  );
   const [recordEvidence, setRecordEvidence] =
     useState<DailyRecordEvidence | null>(null);
-  const [coverage, setCoverage] = useState("all");
-  const [group, setGroup] = useState<"all" | "top25" | "conference">("all");
-  const [conference, setConference] = useState("all");
-  const [page, setPage] = useState(0);
-  const [sort, setSort] = useState("signal");
+  const [coverage, setCoverage] = usePreference(
+    "lines.coverage",
+    preferenceCoverage,
+    "all",
+  );
+  const [group, setGroup] = usePreference(
+    "lines.group",
+    preferenceGroup,
+    "all",
+  );
+  const [conference, setConference] = usePreference(
+    "lines.conference",
+    preferenceText,
+    "all",
+  );
+  const [page, setPage] = usePreference("lines.page", preferencePage, 0);
+  const [sort, setSort] = usePreference("lines.sort", preferenceSort, "signal");
   const [clock, setClock] = useState(() => Date.now());
   const today = easternTipoff(new Date(clock).toISOString()).date;
   const selectedDate = dateChoice === "today" ? today : dateChoice;
@@ -176,6 +211,7 @@ export default function Predictions() {
     return <div className="empty-state">Loading all matchup projections…</div>;
   const availableBooks = [
     ...new Set([
+      book,
       feed.defaultSportsbook,
       ...feed.predictions.flatMap((row) =>
         row.markets.map((market) => market.sportsbook),
@@ -219,6 +255,7 @@ export default function Predictions() {
   const dates = [
     ...new Set([
       today,
+      selectedDate,
       ...feed.predictions.map((row) => easternTipoff(row.startsAt).date),
       ...(archive?.archives.map((row) => row.date) ?? []),
     ]),
@@ -585,6 +622,12 @@ export default function Predictions() {
               }}
             >
               <option value="all">All conferences</option>
+              {conference !== "all" &&
+                !conferenceNames(dateRows).includes(conference) && (
+                  <option value={conference}>
+                    {conference} · no games on this date
+                  </option>
+                )}
               {conferenceNames(dateRows).map((name) => (
                 <option key={name} value={name}>
                   {name}
@@ -671,7 +714,10 @@ export default function Predictions() {
                 Model − line
               </th>
               <th role="columnheader" scope="col">
-                Research lean / confidence
+                Research lean
+              </th>
+              <th role="columnheader" scope="col">
+                Confidence score
               </th>
               <th role="columnheader" scope="col">
                 Actual 1H
@@ -773,6 +819,12 @@ export default function Predictions() {
                           ? "No line to compare"
                           : "Unrated · data gap")}
                     </span>
+                  </td>
+                  <td
+                    role="cell"
+                    className="card-confidence"
+                    data-label="Confidence score"
+                  >
                     <SignalBadge signal={signal} />
                   </td>
                   <td

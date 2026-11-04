@@ -1,8 +1,10 @@
 // @vitest-environment jsdom
 import { readFileSync } from "node:fs";
 import { cleanup, fireEvent, render, screen } from "@testing-library/react";
-import { afterEach, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, expect, it, vi } from "vitest";
 import SeasonAudit from "./SeasonAudit";
+
+beforeEach(() => localStorage.clear());
 
 afterEach(() => {
   cleanup();

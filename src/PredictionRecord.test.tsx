@@ -7,7 +7,7 @@ import {
   screen,
   within,
 } from "@testing-library/react";
-import { afterEach, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, expect, it, vi } from "vitest";
 import {
   buildRecordIndex,
   recordForDate,
@@ -15,6 +15,8 @@ import {
 } from "./model/predictionRecord";
 import { recordFixture } from "./model/record.test-fixture";
 import PredictionRecord from "./PredictionRecord";
+
+beforeEach(() => localStorage.clear());
 
 afterEach(() => {
   cleanup();

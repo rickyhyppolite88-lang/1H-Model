@@ -7,6 +7,7 @@ import {
   useState,
 } from "react";
 import { z } from "zod";
+import { useAppLock } from "./AccessGate";
 import MobileNavigation from "./MobileNavigation";
 import {
   completeMetrics,
@@ -19,6 +20,12 @@ import Predictions from "./Predictions";
 import SeasonAudit from "./SeasonAudit";
 import TeamEvaluation from "./TeamEvaluation";
 import ThemeToggle from "./ThemeToggle";
+import {
+  preferenceSection,
+  preferenceText,
+  resetViewPreferences,
+  usePreference,
+} from "./usePreference";
 
 const savedSchema = z.object({
   id: z.string(),
@@ -50,6 +57,7 @@ const sections = [
   ["data", "Season data"],
   ["tracker", "Pick tracker"],
   ["method", "Method & rules"],
+  ["settings", "Settings & session"],
 ];
 
 function Field({
@@ -94,14 +102,19 @@ function download(name: string, data: unknown) {
 }
 
 export default function App() {
+  const lockApp = useAppLock();
   const [datasets, setDatasets] = useState<{
     prior: SeasonDataset;
     current: SeasonDataset;
   } | null>(null);
   const [loadingError, setLoadingError] = useState("");
-  const [tab, setTab] = useState("predictions");
+  const [tab, setTab] = usePreference(
+    "section",
+    preferenceSection,
+    "predictions",
+  );
   const settings = defaultBlend;
-  const [search, setSearch] = useState("");
+  const [search, setSearch] = usePreference("data.search", preferenceText, "");
   const [saved, setSaved] = useState<SavedAnalysis[]>([]);
   const [notice, setNotice] = useState("");
 
@@ -196,7 +209,26 @@ export default function App() {
         <div className="topbar-right">
           <span className="league-badge">CBB · 1H</span>
           <ThemeToggle />
+          <button
+            className="lock-button"
+            type="button"
+            onClick={lockApp}
+            aria-label="Lock app"
+          >
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.8"
+              aria-hidden="true"
+            >
+              <path d="M7 10V7a5 5 0 0 1 10 0v3M5 10h14v11H5V10Zm7 4v3" />
+            </svg>
+            <span>Lock</span>
+          </button>
           <a
+            className="source-link"
+            aria-label="View source code"
             href="https://github.com/rickyhyppolite88-lang/1H-Model"
             target="_blank"
             rel="noreferrer"
@@ -300,6 +332,40 @@ export default function App() {
         {tab === "predictions" && <Predictions />}
         {tab === "record" && <PredictionRecord />}
         {tab === "evaluation" && <TeamEvaluation />}
+        {tab === "settings" && (
+          <section className="panel settings-panel">
+            <div className="section-heading">
+              <span className="step">VIEW</span>
+              <div>
+                <h2>Settings & session</h2>
+                <p>Your choices stay on this device.</p>
+              </div>
+            </div>
+            <h3>Remember my view</h3>
+            <p>
+              The app locks after 30 minutes of inactivity. Refreshing an active
+              session keeps you signed in; locking keeps your saved view ready
+              for next time.
+            </p>
+            <p>
+              Sportsbook, filters, dates, and record views survive refreshes and
+              section changes. Saved views expire after seven days without
+              reopening that view.
+            </p>
+            <button
+              className="secondary-button"
+              type="button"
+              onClick={() => {
+                resetViewPreferences();
+                setNotice(
+                  "Saved views reset. Your recorded predictions and saved analyses are preserved.",
+                );
+              }}
+            >
+              Reset saved views
+            </button>
+          </section>
+        )}
         {datasets && tab === "data" && (
           <section className="panel data-panel">
             <div className="section-heading">

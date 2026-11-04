@@ -7,8 +7,10 @@ import {
   render,
   screen,
 } from "@testing-library/react";
-import { afterEach, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, expect, it, vi } from "vitest";
 import ResponsiveDetails from "./ResponsiveDetails";
+
+beforeEach(() => localStorage.clear());
 
 afterEach(() => {
   cleanup();
@@ -83,19 +85,25 @@ it("collapses mobile controls and preserves their state when opened and closed",
   expect(input.value).toBe("UConn");
 });
 
-it("restores expanded desktop controls on resize and unsubscribes on unmount", () => {
+it("remembers the disclosure choice through resizing and remounting", () => {
   const viewport = compactViewport(true);
   const { container, unmount } = render(
     <ResponsiveDetails summary="Downloads">Download links</ResponsiveDetails>,
   );
   expect(container.querySelector("details")?.open).toBe(false);
+  const details = container.querySelector("details");
+  if (!details) throw new Error("Missing disclosure");
+  act(() => {
+    details.open = true;
+    fireEvent(details, new Event("toggle"));
+  });
   viewport.resize(false);
   expect(container.querySelector("details")?.open).toBe(true);
   viewport.resize(true);
-  expect(container.querySelector("details")?.open).toBe(false);
+  expect(container.querySelector("details")?.open).toBe(true);
   unmount();
-  expect(viewport.media.removeEventListener).toHaveBeenCalledWith(
-    "change",
-    expect.any(Function),
+  const restored = render(
+    <ResponsiveDetails summary="Downloads">Download links</ResponsiveDetails>,
   );
+  expect(restored.container.querySelector("details")?.open).toBe(true);
 });

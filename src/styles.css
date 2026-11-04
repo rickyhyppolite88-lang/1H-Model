@@ -2642,7 +2642,7 @@ h1 em {
   display: none;
 }
 .card-table .game-card:not(.is-expanded) td.card-matchup {
-  grid-column: 1 / 7;
+  grid-column: 1 / 5;
   grid-row: 1;
   padding: 2px 5px 2px 0;
   border: 0;
@@ -2662,7 +2662,8 @@ h1 em {
   margin-top: 16px;
 }
 .card-table .game-card:not(.is-expanded) td.card-primary,
-.card-table .game-card:not(.is-expanded) td.card-lean {
+.card-table .game-card:not(.is-expanded) td.card-lean,
+.card-table .game-card:not(.is-expanded) td.card-confidence {
   grid-row: 1;
   align-self: stretch;
   padding: 9px 2px;
@@ -2671,7 +2672,7 @@ h1 em {
   text-align: center;
 }
 .card-table .game-card:not(.is-expanded) td.card-primary {
-  grid-column: 7 / 9;
+  grid-column: 5 / 7;
   font-size: 16px;
   font-weight: 700;
 }
@@ -2680,10 +2681,10 @@ h1 em {
   .game-card-record:not(.is-expanded)
   td.card-primary
   + td.card-primary {
-  grid-column: 9 / 11;
+  grid-column: 7 / 9;
 }
 .card-table .game-card:not(.is-expanded) td.card-lean {
-  grid-column: 11 / -1;
+  grid-column: 9 / 11;
   font-size: 11px;
 }
 .game-card:not(.is-expanded) .card-primary::before,
@@ -2711,15 +2712,23 @@ h1 em {
 .game-card:not(.is-expanded) .lean-under {
   color: var(--negative);
 }
-.card-lean .signal-badge {
-  margin-top: 10px;
+.card-table .card-confidence::before {
+  display: none;
+}
+.card-table .game-card:not(.is-expanded) td.card-confidence {
+  grid-column: 11 / -1;
 }
 .game-card:not(.is-expanded) .signal-badge {
-  gap: 2px;
-  margin-top: 8px;
+  gap: 0;
+  margin: 0;
 }
 .game-card:not(.is-expanded) .signal-badge .confidence-label {
-  font-size: 8px;
+  min-height: 30px;
+  margin-bottom: 8px;
+  color: var(--text-secondary);
+  font-size: 9px;
+  font-weight: 500;
+  line-height: 1.4;
 }
 .game-card:not(.is-expanded) .signal-badge strong {
   font-size: 16px;
@@ -3162,11 +3171,11 @@ h1 em {
     max-width: 100%;
   }
   .card-table .game-card:not(.is-expanded) td.card-matchup {
-    grid-column: 1 / 6;
+    grid-column: 1 / 5;
     padding: 6px 16px;
   }
   .card-table .game-card:not(.is-expanded) td.card-primary {
-    grid-column: 6 / 8;
+    grid-column: 5 / 7;
     font-size: 22px;
     padding: 18px 8px;
   }
@@ -3175,10 +3184,10 @@ h1 em {
     .game-card-record:not(.is-expanded)
     td.card-primary
     + td.card-primary {
-    grid-column: 8 / 10;
+    grid-column: 7 / 9;
   }
   .card-table .game-card:not(.is-expanded) td.card-lean {
-    grid-column: 10 / -1;
+    grid-column: 9 / 11;
     font-size: 16px;
     padding: 18px 8px;
   }
@@ -3203,7 +3212,11 @@ h1 em {
     font-size: 14px;
   }
   .game-card:not(.is-expanded) .signal-badge .confidence-label {
-    font-size: 10px;
+    min-height: 28px;
+    font-size: 11px;
+  }
+  .card-table .game-card:not(.is-expanded) td.card-confidence {
+    padding: 18px 8px;
   }
   .game-card:not(.is-expanded) .signal-badge strong {
     font-size: 20px;
@@ -3258,5 +3271,212 @@ h1 em {
   .game-card:not(.is-expanded) .team-mark.team-jersey-mark {
     width: 30px;
     height: 40px;
+  }
+}
+
+.access-page {
+  min-height: 100dvh;
+  display: grid;
+  place-items: center;
+  padding: 90px 24px 40px;
+}
+.access-theme {
+  position: absolute;
+  top: 24px;
+  right: 24px;
+}
+.access-card {
+  width: min(100%, 440px);
+  padding: 36px;
+  border: 1px solid var(--border);
+  border-radius: 22px;
+  background: var(--surface);
+  box-shadow: 0 20px 70px var(--shadow);
+}
+.access-card .brand-mark {
+  margin-bottom: 32px;
+}
+.access-card .eyebrow {
+  display: block;
+  margin-bottom: 12px;
+  color: var(--accent-ink);
+}
+.access-card h1 {
+  margin: 0 0 12px;
+  font-size: 36px;
+}
+.access-card p {
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+.access-card form {
+  display: grid;
+  gap: 12px;
+  margin-top: 28px;
+}
+.access-card label {
+  font-size: 13px;
+  font-weight: 600;
+}
+.access-card input {
+  width: 100%;
+  min-height: 52px;
+  padding: 12px 14px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--page);
+  color: var(--text-primary);
+}
+.access-card input[aria-invalid="true"] {
+  border-color: var(--negative);
+}
+.access-card .primary-button {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  min-height: 52px;
+  margin-top: 6px;
+  padding: 12px 16px;
+  border: 0;
+  border-radius: 10px;
+  background: var(--accent);
+  color: var(--on-accent);
+  font-weight: 750;
+}
+.access-card .access-error {
+  margin: 0;
+  color: var(--negative);
+  font-size: 13px;
+}
+.access-card .access-message {
+  display: block;
+  margin-top: 20px;
+  padding: 12px;
+  border-radius: 8px;
+  background: var(--surface-raised);
+  color: var(--text-secondary);
+  font-size: 13px;
+}
+.access-card .access-footnote {
+  margin: 24px 0 0;
+  font-size: 12px;
+}
+.lock-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  min-width: 44px;
+  min-height: 44px;
+  padding: 8px;
+  border: 1px solid var(--border);
+  border-radius: 9px;
+  background: var(--surface-raised);
+  color: var(--text-primary);
+  font-size: 12px;
+}
+.lock-button svg {
+  width: 18px;
+  height: 18px;
+}
+.settings-panel {
+  max-width: 800px;
+}
+.settings-panel > p {
+  color: var(--text-secondary);
+  line-height: 1.7;
+}
+
+@media (max-width: 780px) {
+  .topbar-right {
+    gap: 6px;
+  }
+  .lock-button span {
+    display: none;
+  }
+  .source-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 36px;
+    min-height: 44px;
+    font-size: 0;
+  }
+  .source-link::after {
+    content: "↗";
+    font-size: 20px;
+  }
+  .access-card {
+    padding: 26px;
+  }
+  .access-card h1 {
+    font-size: 32px;
+  }
+  .card-table tbody .game-card:not(.is-expanded) {
+    gap: 5px;
+    padding: 12px 4px 6px;
+  }
+  .card-table .game-card:not(.is-expanded) td.card-matchup {
+    grid-column: 1 / -1;
+    grid-row: 1;
+    padding: 2px 2px 10px;
+  }
+  .game-card:not(.is-expanded) .matchup-team + .matchup-team {
+    margin-top: 4px;
+  }
+  .card-table .game-card:not(.is-expanded) td.card-primary,
+  .card-table .game-card:not(.is-expanded) td.card-lean,
+  .card-table .game-card:not(.is-expanded) td.card-confidence {
+    grid-row: 2;
+  }
+  .card-table .game-card:not(.is-expanded) td.card-primary {
+    grid-column: 1 / 4;
+    font-size: 18px;
+  }
+  .card-table .game-card:not(.is-expanded) td.sportsbook-line,
+  .card-table
+    .game-card-record:not(.is-expanded)
+    td.card-primary
+    + td.card-primary {
+    grid-column: 4 / 7;
+  }
+  .card-table .game-card:not(.is-expanded) td.card-lean {
+    grid-column: 7 / 10;
+  }
+  .card-table .game-card:not(.is-expanded) td.card-confidence {
+    grid-column: 10 / -1;
+  }
+  .game-card:not(.is-expanded) .card-primary::before,
+  .game-card:not(.is-expanded) .card-lean::before,
+  .game-card:not(.is-expanded) .signal-badge .confidence-label {
+    min-height: 28px;
+    font-size: 10px;
+  }
+  .game-card:not(.is-expanded) .signal-badge strong {
+    font-size: 18px;
+  }
+  .card-table .game-card:not(.is-expanded) td.card-time,
+  .card-table .game-card:not(.is-expanded) td.card-actual,
+  .card-table .game-card:not(.is-expanded) td.card-result,
+  .card-table .game-card:not(.is-expanded) td.card-toggle-cell {
+    grid-row: 3;
+  }
+}
+@media (max-width: 359px) {
+  .topbar .wordmark {
+    gap: 8px;
+    font-size: 16px;
+  }
+  .topbar .brand-mark {
+    width: 36px;
+    height: 36px;
+    font-size: 20px;
+  }
+  .topbar .theme-toggle {
+    min-width: 44px;
+    padding: 8px;
+  }
+  .topbar .theme-toggle span {
+    display: none;
   }
 }

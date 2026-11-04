@@ -21,6 +21,7 @@ import { recordFixture } from "./model/record.test-fixture";
 import Predictions from "./Predictions";
 
 beforeEach(() => {
+  localStorage.clear();
   vi.useFakeTimers({ toFake: ["Date"] });
   vi.setSystemTime(new Date("2026-11-03T15:00:00Z"));
 });
