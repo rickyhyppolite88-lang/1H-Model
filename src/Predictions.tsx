@@ -383,7 +383,7 @@ export default function Predictions() {
             onEvidence={setRecordEvidence}
           />
         </ResponsiveDetails>
-        <ResponsiveDetails summary="Downloads, coverage & signal guide">
+        <ResponsiveDetails summary="Downloads, coverage & confidence guide">
           <div className="prediction-actions">
             <button
               className="secondary-button"
@@ -491,16 +491,13 @@ export default function Predictions() {
             recorded-pick impact.
           </p>
           <div className="signal-legend">
-            <strong>Stronger model signal</strong>
-            <span className="signal-gradient" />
-            <span>Fainter = weaker signal</span>
+            <strong>Confidence score (%)</strong>
             <p>
-              Stronger green means a stronger model signal; fainter green means
-              a weaker signal. This is a research ranking, not a hit percentage.
-              Scoring/pace agreement strengthens the score; 8+ point gaps are
-              held for outlier review. Started games and unavailable predictions
-              stay neutral. The Prediction record tab tracks the results of each
-              frozen score.
+              Confidence expresses the existing 0–100 model-strength score as a
+              percentage. It is not a win probability. Scoring/pace agreement
+              strengthens the score; 8+ point gaps are held for outlier review.
+              Missing or closed signals show — rather than an invented
+              percentage. The Prediction record keeps each original saved score.
             </p>
           </div>
           <div className="daily-downloads">
@@ -573,7 +570,7 @@ export default function Predictions() {
                 setPage(0);
               }}
             >
-              <option value="signal">Strongest model signal first</option>
+              <option value="signal">Highest confidence score first</option>
               <option value="time">Tipoff (ET)</option>
             </select>
           </label>
@@ -641,7 +638,8 @@ export default function Predictions() {
         {rows.length} matchups · {dateLabel(selectedDate)} ·{" "}
         {books[book] ?? book}
         <span className="card-expand-hint">
-          Select a matchup for full details.
+          Confidence % is a model score, not a win probability. Select a matchup
+          for full details.
         </span>
       </p>
       <div
@@ -673,10 +671,7 @@ export default function Predictions() {
                 Model − line
               </th>
               <th role="columnheader" scope="col">
-                Research lean
-              </th>
-              <th role="columnheader" scope="col">
-                Model signal
+                Research lean / confidence
               </th>
               <th role="columnheader" scope="col">
                 Actual 1H
@@ -702,8 +697,6 @@ export default function Predictions() {
                 <GameCardRow
                   key={row.gameId}
                   label={`${row.awayTeam} at ${row.homeTeam}`}
-                  fill={signal.fill}
-                  signalScore={signal.score}
                 >
                   <td
                     role="cell"
@@ -780,17 +773,15 @@ export default function Predictions() {
                           ? "No line to compare"
                           : "Unrated · data gap")}
                     </span>
-                  </td>
-                  <td
-                    role="cell"
-                    className="card-detail"
-                    data-label="Model signal"
-                  >
                     <SignalBadge signal={signal} />
                   </td>
                   <td
                     role="cell"
-                    className="card-detail"
+                    className={
+                      row.actualFirstHalfTotal === null
+                        ? "card-detail"
+                        : "card-actual"
+                    }
                     data-label="Actual 1H"
                   >
                     {row.actualFirstHalfTotal ?? "—"}

@@ -1,17 +1,13 @@
 /** biome-ignore-all lint/a11y/useSemanticElements: Explicit roles preserve this native row when mobile CSS changes its display. */
 /** biome-ignore-all lint/a11y/noRedundantRoles: Mobile cards retain native table semantics. */
-import { type CSSProperties, type ReactNode, useId, useState } from "react";
+import { type ReactNode, useId, useState } from "react";
 
 export default function GameCardRow({
   label,
-  fill,
-  signalScore,
   kind = "prediction",
   children,
 }: {
   label: string;
-  fill: string | null;
-  signalScore?: number | null;
   kind?: "prediction" | "record";
   children: ReactNode;
 }) {
@@ -22,13 +18,6 @@ export default function GameCardRow({
       role="row"
       id={id}
       className={`game-card game-card-${kind}${expanded ? " is-expanded" : ""}`}
-      style={
-        {
-          "--signal-fill": fill ?? "transparent",
-          "--signal-tint": `${(signalScore ?? 0) * 0.32}%`,
-          "--signal-border": `${signalScore ?? 0}%`,
-        } as CSSProperties
-      }
     >
       {children}
       <td role="cell" className="card-toggle-cell">

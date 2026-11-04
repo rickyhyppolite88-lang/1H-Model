@@ -1555,12 +1555,6 @@ footer {
   color: var(--text-secondary);
   line-height: 1.7;
 }
-.signal-gradient {
-  width: 10rem;
-  height: 1rem;
-  border-radius: 0.2rem;
-  background: linear-gradient(to right, var(--accent), var(--surface));
-}
 .signal-badge {
   display: grid;
   gap: 0.35rem;
@@ -2522,11 +2516,7 @@ h1 em {
   color: var(--text-primary);
 }
 .card-table tbody tr.game-card {
-  background: color-mix(
-    in srgb,
-    var(--surface),
-    var(--accent) var(--signal-tint, 0%)
-  );
+  background: var(--surface);
 }
 .team-mark {
   display: inline-grid;
@@ -2633,8 +2623,7 @@ h1 em {
   border-radius: 0;
   border: 0;
   border-bottom: 1px solid var(--border);
-  border-left: 2px solid
-    color-mix(in srgb, var(--border), var(--accent) var(--signal-border, 0%));
+  border-left: 2px solid var(--border);
 }
 .card-table tbody .game-card:not(.is-expanded) {
   grid-template-columns: repeat(12, minmax(0, 1fr));
@@ -2722,6 +2711,23 @@ h1 em {
 .game-card:not(.is-expanded) .lean-under {
   color: var(--negative);
 }
+.card-lean .signal-badge {
+  margin-top: 10px;
+}
+.game-card:not(.is-expanded) .signal-badge {
+  gap: 2px;
+  margin-top: 8px;
+}
+.game-card:not(.is-expanded) .signal-badge .confidence-label {
+  font-size: 8px;
+}
+.game-card:not(.is-expanded) .signal-badge strong {
+  font-size: 16px;
+  font-variant-numeric: tabular-nums;
+}
+.game-card:not(.is-expanded) .signal-status {
+  display: none;
+}
 .game-card:not(.is-expanded) .line-display {
   display: inline-flex;
   flex-direction: column;
@@ -2793,6 +2799,27 @@ h1 em {
   z-index: 1;
   cursor: pointer;
 }
+.card-table .game-card:not(.is-expanded) td.card-actual {
+  grid-column: 8 / 11;
+  grid-row: 2;
+  align-self: center;
+  padding: 0;
+  text-align: center;
+  font-size: 18px;
+  font-weight: 700;
+}
+.game-card:not(.is-expanded) .card-actual::before {
+  margin-bottom: 2px;
+  font-size: 9px;
+}
+.card-table .game-card-record:not(.is-expanded) td.card-actual {
+  grid-column: 5 / 8;
+}
+.card-table
+  .game-card-prediction:not(.is-expanded):has(.card-actual)
+  td.card-time {
+  grid-column: 1 / 8;
+}
 .card-table .game-card-record:not(.is-expanded) td.card-result {
   grid-column: 8 / 11;
   grid-row: 2;
@@ -2804,7 +2831,7 @@ h1 em {
   display: none;
 }
 .card-table .game-card-record:not(.is-expanded) td.card-time {
-  grid-column: 1 / 8;
+  grid-column: 1 / 5;
 }
 .game-card-record:not(.is-expanded) .record-grade {
   font-size: 10px;
@@ -3005,6 +3032,7 @@ h1 em {
     margin-top: 6px;
   }
   .card-table .game-card:not(.is-expanded) td.card-time,
+  .card-table .game-card:not(.is-expanded) td.card-actual,
   .card-table .game-card:not(.is-expanded) td.card-result,
   .card-table .game-card:not(.is-expanded) td.card-toggle-cell {
     grid-row: 3;
@@ -3174,6 +3202,12 @@ h1 em {
   .game-card:not(.is-expanded) .lean-badge {
     font-size: 14px;
   }
+  .game-card:not(.is-expanded) .signal-badge .confidence-label {
+    font-size: 10px;
+  }
+  .game-card:not(.is-expanded) .signal-badge strong {
+    font-size: 20px;
+  }
   .game-card:not(.is-expanded) .card-time .game-time strong {
     font-size: 13px;
   }
@@ -3192,8 +3226,19 @@ h1 em {
   .card-table .game-card-record:not(.is-expanded) td.card-result {
     grid-column: 7 / 9;
   }
-  .card-table .game-card-record:not(.is-expanded) td.card-time {
+  .card-table .game-card:not(.is-expanded) td.card-actual {
+    grid-column: 7 / 9;
+  }
+  .card-table
+    .game-card-prediction:not(.is-expanded):has(.card-actual)
+    td.card-time {
     grid-column: 1 / 7;
+  }
+  .card-table .game-card-record:not(.is-expanded) td.card-actual {
+    grid-column: 6 / 7;
+  }
+  .card-table .game-card-record:not(.is-expanded) td.card-time {
+    grid-column: 1 / 6;
   }
   .card-table .game-card.is-expanded {
     grid-template-columns: repeat(4, minmax(0, 1fr));

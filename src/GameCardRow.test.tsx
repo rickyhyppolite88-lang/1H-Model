@@ -6,11 +6,11 @@ import GameCardRow from "./GameCardRow";
 
 afterEach(cleanup);
 
-it("expands and collapses a card without changing its values or saved signal fill", () => {
+it("expands and collapses a card without changing its values", () => {
   render(
     <table>
       <tbody>
-        <GameCardRow label="Duke at Kansas" fill="#d8ebd3">
+        <GameCardRow label="Duke at Kansas">
           <td>Predicted 74.25</td>
           <td>Saved line 72.50</td>
           <td className="card-detail">Recorded OVER, actual 75, Win</td>
@@ -34,7 +34,6 @@ it("expands and collapses a card without changing its values or saved signal fil
   expect(button.getAttribute("aria-expanded")).toBe("false");
   expect(screen.getByText("Predicted 74.25")).toBeTruthy();
   expect(screen.getByText("Saved line 72.50")).toBeTruthy();
-  expect(row?.style.getPropertyValue("--signal-fill")).toBe("#d8ebd3");
 });
 
 it("keeps each game's expansion independent and retains actions inside the full card", () => {
@@ -42,7 +41,7 @@ it("keeps each game's expansion independent and retains actions inside the full 
   render(
     <table>
       <tbody>
-        <GameCardRow label="First game" fill={null} kind="record">
+        <GameCardRow label="First game" kind="record">
           <td>
             <button
               type="button"
@@ -54,7 +53,7 @@ it("keeps each game's expansion independent and retains actions inside the full 
             </button>
           </td>
         </GameCardRow>
-        <GameCardRow label="Second game" fill={null}>
+        <GameCardRow label="Second game">
           <td>Another matchup</td>
         </GameCardRow>
       </tbody>

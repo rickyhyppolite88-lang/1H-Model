@@ -190,7 +190,8 @@ export default function PredictionRecord() {
           <h2>Running prediction record</h2>
           <p>
             Finished first-half results. Choose all dates or one day to update
-            the record below.
+            the record below. Saved confidence % is the original model score,
+            not a win probability.
           </p>
         </div>
       </div>
@@ -395,17 +396,17 @@ export default function PredictionRecord() {
       <div className="record-extras">
         {summary && (
           <details>
-            <summary>Results by frozen model signal</summary>
+            <summary>Results by saved confidence score</summary>
             <p>
               Official finished results for{" "}
-              {date === "all" ? "all dates" : date}; these scores are research
-              rankings.
+              {date === "all" ? "all dates" : date}; confidence scores are
+              research rankings, not win probabilities.
             </p>
             <div className="table-wrap">
               <table aria-label="Signal results">
                 <thead>
                   <tr>
-                    <th>Signal score band</th>
+                    <th>Confidence score band (%)</th>
                     <th>Wins</th>
                     <th>Losses</th>
                     <th>Pushes</th>
