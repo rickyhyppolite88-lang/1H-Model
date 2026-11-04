@@ -78,6 +78,19 @@ async function fillMatchup() {
 }
 
 describe("calculator workflow", () => {
+  it("opens sections from the mobile section selector", async () => {
+    render(<App />);
+    fireEvent.change(screen.getByRole("combobox", { name: "View" }), {
+      target: { value: "record" },
+    });
+    expect(
+      await screen.findByRole("heading", { name: "Running prediction record" }),
+    ).toBeTruthy();
+    fireEvent.change(screen.getByRole("combobox", { name: "View" }), {
+      target: { value: "matchup" },
+    });
+    expect(await screen.findByLabelText("Team A")).toBeTruthy();
+  });
   it("opens the permanent prediction record from the main navigation", async () => {
     render(<App />);
     fireEvent.click(screen.getByRole("button", { name: "Prediction record" }));

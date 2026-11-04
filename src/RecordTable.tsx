@@ -1,3 +1,5 @@
+/** biome-ignore-all lint/a11y/useSemanticElements: These native table elements need explicit roles because mobile CSS changes their display. */
+/** biome-ignore-all lint/a11y/noRedundantRoles: Explicit roles preserve table semantics when mobile CSS displays rows as cards. */
 import GameTime from "./GameTime";
 import { dailyRecordStatus } from "./model/dailyRecord";
 import {
@@ -24,31 +26,58 @@ export default function RecordTable({
 }) {
   const ids = new Set(canonicalIds);
   return (
-    <div className="table-wrap">
-      <table aria-label="Recorded predictions">
-        <thead>
-          <tr>
-            <th>Tipoff (ET)</th>
-            <th className="matchup-cell">Matchup</th>
-            <th>Saved model</th>
-            <th>Saved line</th>
-            <th>Lean</th>
-            <th>Saved signal</th>
-            <th>Actual 1H</th>
-            <th>Result</th>
-            <th>Coverage status</th>
-            {showVersions && <th>Record version</th>}
+    <div className="table-wrap card-table-wrap">
+      <table
+        role="table"
+        className="card-table"
+        aria-label="Recorded predictions"
+      >
+        <thead role="rowgroup">
+          <tr role="row">
+            <th role="columnheader" scope="col">
+              Tipoff (ET)
+            </th>
+            <th role="columnheader" scope="col" className="matchup-cell">
+              Matchup
+            </th>
+            <th role="columnheader" scope="col">
+              Saved model
+            </th>
+            <th role="columnheader" scope="col">
+              Saved line
+            </th>
+            <th role="columnheader" scope="col">
+              Lean
+            </th>
+            <th role="columnheader" scope="col">
+              Saved signal
+            </th>
+            <th role="columnheader" scope="col">
+              Actual 1H
+            </th>
+            <th role="columnheader" scope="col">
+              Result
+            </th>
+            <th role="columnheader" scope="col">
+              Coverage status
+            </th>
+            {showVersions && (
+              <th role="columnheader" scope="col">
+                Record version
+              </th>
+            )}
           </tr>
         </thead>
-        <tbody>
+        <tbody role="rowgroup">
           {records.map((record) => {
             const grade = recordGrade(record, results);
             return (
               <tr
+                role="row"
                 key={record.id}
                 style={{ backgroundColor: record.signal.fill ?? undefined }}
               >
-                <td>
+                <td role="cell" className="card-time" data-label="Tipoff (ET)">
                   <GameTime startsAt={record.prediction.startsAt} />
                   {onOpenDay && (
                     <button
@@ -61,7 +90,11 @@ export default function RecordTable({
                     </button>
                   )}
                 </td>
-                <td className="matchup-cell">
+                <td
+                  role="cell"
+                  className="matchup-cell card-matchup"
+                  data-label="Matchup"
+                >
                   <strong>
                     {record.prediction.awayTeam} / {record.prediction.homeTeam}
                   </strong>
@@ -71,25 +104,50 @@ export default function RecordTable({
                     </small>
                   )}
                 </td>
-                <td>{point(record.prediction.projectedFirstHalfTotal)}</td>
-                <td>{point(record.comparison.line)}</td>
-                <td>{record.comparison.lean ?? "—"}</td>
-                <td>
+                <td
+                  role="cell"
+                  className="card-primary"
+                  data-label="Saved model"
+                >
+                  {point(record.prediction.projectedFirstHalfTotal)}
+                </td>
+                <td
+                  role="cell"
+                  className="card-primary"
+                  data-label="Saved line"
+                >
+                  {point(record.comparison.line)}
+                </td>
+                <td role="cell" data-label="Lean">
+                  {record.comparison.lean ?? "—"}
+                </td>
+                <td role="cell" data-label="Saved signal">
                   <SignalBadge signal={record.signal} />
                 </td>
-                <td>{grade.actual ?? "—"}</td>
-                <td>
+                <td role="cell" data-label="Actual 1H">
+                  {grade.actual ?? "—"}
+                </td>
+                <td role="cell" data-label="Result">
                   <span
                     className={`record-grade grade-${grade.grade.toLowerCase().replaceAll(" ", "-")}`}
                   >
                     {grade.grade}
                   </span>
                 </td>
-                <td title={record.prediction.unavailableReason ?? undefined}>
+                <td
+                  role="cell"
+                  className="card-wide"
+                  data-label="Coverage status"
+                  title={record.prediction.unavailableReason ?? undefined}
+                >
                   {dailyRecordStatus(record, ids)}
                 </td>
                 {showVersions && (
-                  <td>
+                  <td
+                    role="cell"
+                    className="card-wide"
+                    data-label="Record version"
+                  >
                     v{record.version}
                     <small>
                       {ids.has(record.id)

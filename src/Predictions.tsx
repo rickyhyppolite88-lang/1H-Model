@@ -1,3 +1,5 @@
+/** biome-ignore-all lint/a11y/useSemanticElements: These native table elements need explicit roles because mobile CSS changes their display. */
+/** biome-ignore-all lint/a11y/noRedundantRoles: Explicit roles preserve table semantics when mobile CSS displays rows as cards. */
 import { useEffect, useMemo, useState } from "react";
 import AvailabilityHelp from "./AvailabilityHelp";
 import DailyRecord, { type DailyRecordEvidence } from "./DailyRecord";
@@ -17,6 +19,7 @@ import {
 } from "./model/predictions";
 import { predictionSignal } from "./model/signals";
 import { easternTipoff, tipoffState } from "./model/time";
+import ResponsiveDetails from "./ResponsiveDetails";
 import SignalBadge from "./SignalBadge";
 
 const books: Record<string, string> = {
@@ -288,12 +291,12 @@ export default function Predictions() {
               value={dateChoice}
               onChange={(event) => selectDate(event.target.value)}
             >
-              <option value="today">Today · {dateLabel(today)}</option>
+              <option value="today">{today}</option>
               {dates
                 .filter((date) => date !== today)
                 .map((date) => (
                   <option key={date} value={date}>
-                    {dateLabel(date)}
+                    {date}
                   </option>
                 ))}
             </select>
@@ -337,163 +340,173 @@ export default function Predictions() {
           covers {feed.through}; earlier dates are available in Game date (ET).
         </output>
       )}
-      <DailyRecord
-        date={selectedDate}
-        season={feed.season}
-        modelVersion={feed.modelVersion}
-        sportsbook={feed.defaultSportsbook}
-        basis={feed.defaultLineBasis}
-        onEvidence={setRecordEvidence}
-      />
-      <div className="prediction-actions">
-        <button
-          className="secondary-button"
-          type="button"
-          onClick={() => exportCsv()}
-        >
-          Download {dateRows.length} games for {selectedDate} · CSV ↓
-        </button>
-        <button
-          className="secondary-button"
-          type="button"
-          onClick={() => exportCsv("filtered")}
-        >
-          Download filtered {rows.length} rows · CSV ↓
-        </button>
-        {selectedArchive?.xlsxPath && (
+      <ResponsiveDetails summary="Daily record">
+        <DailyRecord
+          date={selectedDate}
+          season={feed.season}
+          modelVersion={feed.modelVersion}
+          sportsbook={feed.defaultSportsbook}
+          basis={feed.defaultLineBasis}
+          onEvidence={setRecordEvidence}
+        />
+      </ResponsiveDetails>
+      <ResponsiveDetails summary="Downloads, coverage & signal guide">
+        <div className="prediction-actions">
+          <button
+            className="secondary-button"
+            type="button"
+            onClick={() => exportCsv()}
+          >
+            Download {dateRows.length} games for {selectedDate} · CSV ↓
+          </button>
+          <button
+            className="secondary-button"
+            type="button"
+            onClick={() => exportCsv("filtered")}
+          >
+            Download filtered {rows.length} rows · CSV ↓
+          </button>
+          {selectedArchive?.xlsxPath && (
+            <a
+              className="secondary-button"
+              href={`${import.meta.env.BASE_URL}${selectedArchive.xlsxPath}`}
+              download={`1h-predictions-${selectedDate}.xlsx`}
+            >
+              Excel workbook ↓
+            </a>
+          )}
           <a
             className="secondary-button"
-            href={`${import.meta.env.BASE_URL}${selectedArchive.xlsxPath}`}
-            download={`1h-predictions-${selectedDate}.xlsx`}
+            href={`${import.meta.env.BASE_URL}data/predictions.json`}
+            target="_blank"
+            rel="noreferrer"
           >
-            Excel workbook ↓
+            All dates JSON feed ↗
           </a>
-        )}
-        <a
-          className="secondary-button"
-          href={`${import.meta.env.BASE_URL}data/predictions.json`}
-          target="_blank"
-          rel="noreferrer"
-        >
-          All dates JSON feed ↗
-        </a>
-        <button
-          className="text-button"
-          type="button"
-          onClick={() => exportCsv("all")}
-        >
-          All dates CSV ↓
-        </button>
-        <a
-          className="text-button"
-          href={feed.source.projectionCode}
-          target="_blank"
-          rel="noreferrer"
-        >
-          Projection formula ↗
-        </a>
-        <a
-          className="text-button"
-          href={feed.source.batchCode}
-          target="_blank"
-          rel="noreferrer"
-        >
-          Batch code ↗
-        </a>
-      </div>
-      <div className="audit-metrics">
-        <div>
-          <span>Games in this view</span>
-          <strong>{rows.length}</strong>
+          <button
+            className="text-button"
+            type="button"
+            onClick={() => exportCsv("all")}
+          >
+            All dates CSV ↓
+          </button>
+          <a
+            className="text-button"
+            href={feed.source.projectionCode}
+            target="_blank"
+            rel="noreferrer"
+          >
+            Projection formula ↗
+          </a>
+          <a
+            className="text-button"
+            href={feed.source.batchCode}
+            target="_blank"
+            rel="noreferrer"
+          >
+            Batch code ↗
+          </a>
         </div>
-        <div>
-          <span>Predicted first-half totals</span>
-          <strong>
-            {rows.filter((row) => row.projectedFirstHalfTotal !== null).length}
-          </strong>
+        <div className="audit-metrics">
+          <div>
+            <span>Games in this view</span>
+            <strong>{rows.length}</strong>
+          </div>
+          <div>
+            <span>Predicted first-half totals</span>
+            <strong>
+              {
+                rows.filter((row) => row.projectedFirstHalfTotal !== null)
+                  .length
+              }
+            </strong>
+          </div>
+          <div>
+            <span>Projection data gaps</span>
+            <strong>
+              {
+                rows.filter((row) => row.projectedFirstHalfTotal === null)
+                  .length
+              }
+            </strong>
+          </div>
+          <div>
+            <span>Posted {books[book] ?? book} 1H lines</span>
+            <strong>
+              {
+                rows.filter(
+                  (row) => predictionComparison(row, book, basis).line !== null,
+                ).length
+              }{" "}
+              / {rows.length}
+            </strong>
+          </div>
         </div>
-        <div>
-          <span>Projection data gaps</span>
-          <strong>
-            {rows.filter((row) => row.projectedFirstHalfTotal === null).length}
-          </strong>
-        </div>
-        <div>
-          <span>Posted {books[book] ?? book} 1H lines</span>
-          <strong>
-            {
-              rows.filter(
-                (row) => predictionComparison(row, book, basis).line !== null,
-              ).length
-            }{" "}
-            / {rows.length}
-          </strong>
-        </div>
-      </div>
-      <AvailabilityHelp />
-      <div className="signal-legend">
-        <strong>Stronger model signal</strong>
-        <span className="signal-gradient" />
-        <span>Fainter = weaker signal</span>
-        <p>
-          Green is a research ranking, not a hit percentage. Scoring/pace
-          agreement strengthens the score; 8+ point gaps are held for outlier
-          review. Started games and unavailable predictions stay neutral. The
-          Prediction record tab tracks the results of each frozen score.
-        </p>
-      </div>
-      <div className="daily-downloads">
-        <div>
-          <h3>Downloads for {dateLabel(selectedDate)}</h3>
+        <AvailabilityHelp />
+        <div className="signal-legend">
+          <strong>Stronger model signal</strong>
+          <span className="signal-gradient" />
+          <span>Fainter = weaker signal</span>
           <p>
-            Line checks target about one hour before tipoff, with follow-up
-            checks closer to the game. The movement tooltip shows the actual
-            quote time. Dated copies update after successful checks and remain
-            available afterward. Use the filtered CSV for the current tipoff and
-            conference filters.
+            Green is a research ranking, not a hit percentage. Scoring/pace
+            agreement strengthens the score; 8+ point gaps are held for outlier
+            review. Started games and unavailable predictions stay neutral. The
+            Prediction record tab tracks the results of each frozen score.
           </p>
         </div>
-        {selectedArchive && (
-          <div className="button-group">
-            <a
-              className="secondary-button"
-              href={`${import.meta.env.BASE_URL}${selectedArchive.csvPath}`}
-              download={`1h-predictions-${selectedArchive.date}.csv`}
-            >
-              Daily CSV ↓
-            </a>
-            <a
-              className="secondary-button"
-              href={`${import.meta.env.BASE_URL}${selectedArchive.jsonPath}`}
-              download={`1h-predictions-${selectedArchive.date}.json`}
-            >
-              Daily JSON ↓
-            </a>
-            {selectedArchive.xlsxPath && (
-              <a
-                className="secondary-button"
-                href={`${import.meta.env.BASE_URL}${selectedArchive.xlsxPath}`}
-                download={`1h-predictions-${selectedArchive.date}.xlsx`}
-              >
-                Daily Excel ↓
-              </a>
-            )}
-            {selectedArchive.teamXlsxPath && (
-              <a
-                className="secondary-button"
-                href={`${import.meta.env.BASE_URL}${selectedArchive.teamXlsxPath}`}
-                download={`1h-team-comparison-${selectedArchive.date}.xlsx`}
-              >
-                Daily team review Excel ↓
-              </a>
-            )}
+        <div className="daily-downloads">
+          <div>
+            <h3>Downloads for {dateLabel(selectedDate)}</h3>
+            <p>
+              Line checks target about one hour before tipoff, with follow-up
+              checks closer to the game. The movement tooltip shows the actual
+              quote time. Dated copies update after successful checks and remain
+              available afterward. Use the filtered CSV for the current tipoff
+              and conference filters.
+            </p>
           </div>
-        )}
-        {!selectedArchive && (
-          <p>No dated downloads are available for {selectedDate} yet.</p>
-        )}
-        {archiveError && <p className="inline-note">{archiveError}</p>}
-      </div>
+          {selectedArchive && (
+            <div className="button-group">
+              <a
+                className="secondary-button"
+                href={`${import.meta.env.BASE_URL}${selectedArchive.csvPath}`}
+                download={`1h-predictions-${selectedArchive.date}.csv`}
+              >
+                Daily CSV ↓
+              </a>
+              <a
+                className="secondary-button"
+                href={`${import.meta.env.BASE_URL}${selectedArchive.jsonPath}`}
+                download={`1h-predictions-${selectedArchive.date}.json`}
+              >
+                Daily JSON ↓
+              </a>
+              {selectedArchive.xlsxPath && (
+                <a
+                  className="secondary-button"
+                  href={`${import.meta.env.BASE_URL}${selectedArchive.xlsxPath}`}
+                  download={`1h-predictions-${selectedArchive.date}.xlsx`}
+                >
+                  Daily Excel ↓
+                </a>
+              )}
+              {selectedArchive.teamXlsxPath && (
+                <a
+                  className="secondary-button"
+                  href={`${import.meta.env.BASE_URL}${selectedArchive.teamXlsxPath}`}
+                  download={`1h-team-comparison-${selectedArchive.date}.xlsx`}
+                >
+                  Daily team review Excel ↓
+                </a>
+              )}
+            </div>
+          )}
+          {!selectedArchive && (
+            <p>No dated downloads are available for {selectedDate} yet.</p>
+          )}
+          {archiveError && <p className="inline-note">{archiveError}</p>}
+        </div>
+      </ResponsiveDetails>
       <div
         className="prediction-groups"
         role="tablist"
@@ -522,83 +535,85 @@ export default function Predictions() {
           </button>
         ))}
       </div>
-      <p className="group-description">
-        Top 25 includes either team ranked 1–25 by ESPN at retrieval. Conference
-        filters include games involving either team. Select a conference while
-        on Top 25 to combine both filters.
-      </p>
-      <div className="prediction-filters">
-        <label>
-          <span>Sort games</span>
-          <select
-            value={sort}
-            onChange={(event) => {
-              setSort(event.target.value);
-              setPage(0);
-            }}
-          >
-            <option value="signal">Strongest model signal first</option>
-            <option value="time">Tipoff (ET)</option>
-          </select>
-        </label>
-        <label>
-          <span>Conference</span>
-          <select
-            value={conference}
-            onChange={(event) => {
-              setConference(event.target.value);
-              if (group === "all") setGroup("conference");
-              setPage(0);
-            }}
-          >
-            <option value="all">All conferences</option>
-            {conferenceNames(dateRows).map((name) => (
-              <option key={name} value={name}>
-                {name}
-              </option>
-            ))}
-          </select>
-        </label>
-        <label>
-          <span>Search matchups</span>
-          <input
-            placeholder="Team name…"
-            value={query}
-            onChange={(event) => {
-              setQuery(event.target.value);
-              setPage(0);
-            }}
-          />
-        </label>
-        <label>
-          <span>Sportsbook</span>
-          <select
-            value={book}
-            onChange={(event) => setBook(event.target.value)}
-          >
-            {availableBooks.map((name) => (
-              <option key={name} value={name}>
-                {books[name] ?? name}
-              </option>
-            ))}
-          </select>
-        </label>
-        <label>
-          <span>Projection coverage</span>
-          <select
-            value={coverage}
-            onChange={(event) => {
-              setCoverage(event.target.value);
-              setPage(0);
-            }}
-          >
-            <option value="all">All matchups</option>
-            <option value="available">With a projection</option>
-            <option value="unavailable">Projection data gaps</option>
-            <option value="completed">Completed first halves</option>
-          </select>
-        </label>
-      </div>
+      <ResponsiveDetails summary="Filters & search">
+        <p className="group-description">
+          Top 25 includes either team ranked 1–25 by ESPN at retrieval.
+          Conference filters include games involving either team. Select a
+          conference while on Top 25 to combine both filters.
+        </p>
+        <div className="prediction-filters">
+          <label>
+            <span>Sort games</span>
+            <select
+              value={sort}
+              onChange={(event) => {
+                setSort(event.target.value);
+                setPage(0);
+              }}
+            >
+              <option value="signal">Strongest model signal first</option>
+              <option value="time">Tipoff (ET)</option>
+            </select>
+          </label>
+          <label>
+            <span>Conference</span>
+            <select
+              value={conference}
+              onChange={(event) => {
+                setConference(event.target.value);
+                if (group === "all") setGroup("conference");
+                setPage(0);
+              }}
+            >
+              <option value="all">All conferences</option>
+              {conferenceNames(dateRows).map((name) => (
+                <option key={name} value={name}>
+                  {name}
+                </option>
+              ))}
+            </select>
+          </label>
+          <label>
+            <span>Search matchups</span>
+            <input
+              placeholder="Team name…"
+              value={query}
+              onChange={(event) => {
+                setQuery(event.target.value);
+                setPage(0);
+              }}
+            />
+          </label>
+          <label>
+            <span>Sportsbook</span>
+            <select
+              value={book}
+              onChange={(event) => setBook(event.target.value)}
+            >
+              {availableBooks.map((name) => (
+                <option key={name} value={name}>
+                  {books[name] ?? name}
+                </option>
+              ))}
+            </select>
+          </label>
+          <label>
+            <span>Projection coverage</span>
+            <select
+              value={coverage}
+              onChange={(event) => {
+                setCoverage(event.target.value);
+                setPage(0);
+              }}
+            >
+              <option value="all">All matchups</option>
+              <option value="available">With a projection</option>
+              <option value="unavailable">Projection data gaps</option>
+              <option value="completed">Completed first halves</option>
+            </select>
+          </label>
+        </div>
+      </ResponsiveDetails>
       <p className="line-movement-legend">
         Current lines are shown.{" "}
         <span className="movement-up-text">Green +</span> means the total rose
@@ -606,29 +621,53 @@ export default function Predictions() {
         it fell. Hover, focus, or tap the small movement badge for the model and
         recorded-pick impact.
       </p>
+      <p className="results-count" aria-live="polite">
+        {rows.length} matchups · {dateLabel(selectedDate)} ·{" "}
+        {books[book] ?? book}
+      </p>
       <div
-        className="table-wrap"
+        className="table-wrap card-table-wrap"
         id="prediction-results"
         role="tabpanel"
         aria-labelledby={`prediction-group-${group}`}
       >
-        <table>
-          <thead>
-            <tr>
-              <th>Tipoff (ET)</th>
-              <th className="matchup-cell">Matchup</th>
-              <th>Predicted 1H total</th>
-              <th>
+        <table
+          role="table"
+          className="card-table"
+          aria-label="Matchup predictions"
+        >
+          <thead role="rowgroup">
+            <tr role="row">
+              <th role="columnheader" scope="col">
+                Tipoff (ET)
+              </th>
+              <th role="columnheader" scope="col" className="matchup-cell">
+                Matchup
+              </th>
+              <th role="columnheader" scope="col">
+                Predicted 1H total
+              </th>
+              <th role="columnheader" scope="col">
                 Current 1H line <small>{books[book] ?? book}</small>
               </th>
-              <th>Model − line</th>
-              <th>Research lean</th>
-              <th>Model signal</th>
-              <th>Actual 1H</th>
-              <th>Input origin / availability</th>
+              <th role="columnheader" scope="col">
+                Model − line
+              </th>
+              <th role="columnheader" scope="col">
+                Research lean
+              </th>
+              <th role="columnheader" scope="col">
+                Model signal
+              </th>
+              <th role="columnheader" scope="col">
+                Actual 1H
+              </th>
+              <th role="columnheader" scope="col">
+                Input origin / availability
+              </th>
             </tr>
           </thead>
-          <tbody>
+          <tbody role="rowgroup">
             {visible.map((row) => {
               const comparison = predictionComparison(row, book, basis);
               const signal = predictionSignal(
@@ -639,10 +678,15 @@ export default function Predictions() {
               );
               return (
                 <tr
+                  role="row"
                   key={row.gameId}
                   style={{ backgroundColor: signal.fill ?? undefined }}
                 >
-                  <td>
+                  <td
+                    role="cell"
+                    className="card-time"
+                    data-label="Tipoff (ET)"
+                  >
                     <GameTime startsAt={row.startsAt} />
                     <span
                       className={`tipoff-badge tipoff-${tipoffState(row, clock)}`}
@@ -654,7 +698,11 @@ export default function Predictions() {
                           : row.status}
                     </span>
                   </td>
-                  <td className="matchup-cell">
+                  <td
+                    role="cell"
+                    className="matchup-cell card-matchup"
+                    data-label="Matchup"
+                  >
                     <strong className="matchup-team">
                       {row.awayRank !== null && (
                         <span className="rank-badge">#{row.awayRank}</span>
@@ -675,10 +723,18 @@ export default function Predictions() {
                     </strong>
                     <small>{row.status}</small>
                   </td>
-                  <td className="prediction-total">
+                  <td
+                    role="cell"
+                    className="prediction-total card-primary"
+                    data-label="Predicted 1H"
+                  >
                     {format(row.projectedFirstHalfTotal)}
                   </td>
-                  <td className="sportsbook-line">
+                  <td
+                    role="cell"
+                    className="sportsbook-line card-primary"
+                    data-label={`Current 1H · ${books[book] ?? book}`}
+                  >
                     <LineMovement
                       row={row}
                       sportsbook={book}
@@ -687,12 +743,12 @@ export default function Predictions() {
                       at={clock}
                     />
                   </td>
-                  <td>
+                  <td role="cell" data-label="Model − line">
                     {comparison.signedEdge === null
                       ? "—"
                       : `${comparison.signedEdge > 0 ? "+" : ""}${format(comparison.signedEdge)}`}
                   </td>
-                  <td>
+                  <td role="cell" data-label="Research lean">
                     <span
                       className={`lean-badge lean-${comparison.lean?.toLowerCase() ?? "missing"}`}
                     >
@@ -702,11 +758,17 @@ export default function Predictions() {
                           : "Unrated · data gap")}
                     </span>
                   </td>
-                  <td>
+                  <td role="cell" data-label="Model signal">
                     <SignalBadge signal={signal} />
                   </td>
-                  <td>{row.actualFirstHalfTotal ?? "—"}</td>
-                  <td className="availability-cell">
+                  <td role="cell" data-label="Actual 1H">
+                    {row.actualFirstHalfTotal ?? "—"}
+                  </td>
+                  <td
+                    role="cell"
+                    className="availability-cell card-wide"
+                    data-label="Input availability"
+                  >
                     {row.projectedFirstHalfTotal === null ? (
                       <>
                         <strong>Projection data gap</strong>
