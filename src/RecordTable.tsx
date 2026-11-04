@@ -51,10 +51,7 @@ export default function RecordTable({
               Saved line
             </th>
             <th role="columnheader" scope="col">
-              Lean
-            </th>
-            <th role="columnheader" scope="col">
-              Saved signal
+              Lean / saved confidence
             </th>
             <th role="columnheader" scope="col">
               Actual 1H
@@ -83,8 +80,6 @@ export default function RecordTable({
                 key={record.id}
                 kind="record"
                 label={`${record.prediction.awayTeam} at ${record.prediction.homeTeam}`}
-                fill={record.signal.fill}
-                signalScore={record.signal.score}
               >
                 <td role="cell" className="card-time" data-label="Tipoff (ET)">
                   <GameTime startsAt={record.prediction.startsAt} />
@@ -140,15 +135,9 @@ export default function RecordTable({
                   >
                     {record.comparison.lean ?? "—"}
                   </span>
-                </td>
-                <td
-                  role="cell"
-                  className="card-detail"
-                  data-label="Saved signal"
-                >
                   <SignalBadge signal={record.signal} />
                 </td>
-                <td role="cell" className="card-detail" data-label="Actual 1H">
+                <td role="cell" className="card-actual" data-label="Actual 1H">
                   {grade.actual ?? "—"}
                 </td>
                 <td role="cell" className="card-result" data-label="Result">

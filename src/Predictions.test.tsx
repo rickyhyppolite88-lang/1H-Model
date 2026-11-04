@@ -95,7 +95,7 @@ afterEach(() => {
   vi.restoreAllMocks();
 });
 
-it("orders stronger research signals first and fades the row color without showing a hit probability", async () => {
+it("orders confidence scores without presenting them as win probabilities", async () => {
   vi.useFakeTimers({ toFake: ["Date"] });
   vi.setSystemTime(new Date("2026-11-02T22:00:00Z"));
   const { feed } = recordFixture();
@@ -134,13 +134,16 @@ it("orders stronger research signals first and fades the row color without showi
   const rows = screen.getAllByRole("row");
   expect(rows[1].textContent).toContain("Strong signal");
   expect(rows[2].textContent).toContain("Weak signal");
-  expect(rows[1].style.getPropertyValue("--signal-tint")).not.toBe(
-    rows[2].style.getPropertyValue("--signal-tint"),
-  );
+  expect(within(rows[1]).getByText("75%")).toBeTruthy();
+  expect(within(rows[2]).getByText("25%")).toBeTruthy();
   expect(
-    screen.getByText(/Stronger green means a stronger model signal/),
+    screen.getByText(/Confidence % is a model score, not a win probability/),
   ).toBeTruthy();
-  expect(screen.getByText("75/100")).toBeTruthy();
+  expect(
+    within(rows[1]).getByTitle(
+      /uncalibrated model score, not a win probability/,
+    ),
+  ).toBeTruthy();
 });
 
 it("provides dated downloads and automatically checks for updated predictions", async () => {
