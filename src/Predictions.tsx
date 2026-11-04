@@ -1,4 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
+import AvailabilityHelp from "./AvailabilityHelp";
+import DailyRecord from "./DailyRecord";
 import GameTime from "./GameTime";
 import {
   conferenceNames,
@@ -304,6 +306,13 @@ export default function Predictions() {
           covers {feed.through}; earlier dates are available in Game date (ET).
         </output>
       )}
+      <DailyRecord
+        date={selectedDate}
+        season={feed.season}
+        modelVersion={feed.modelVersion}
+        sportsbook={feed.defaultSportsbook}
+        basis={feed.defaultLineBasis}
+      />
       <div className="prediction-actions">
         <button
           className="secondary-button"
@@ -372,7 +381,7 @@ export default function Predictions() {
           </strong>
         </div>
         <div>
-          <span>Missing inputs / archive</span>
+          <span>Projection data gaps</span>
           <strong>
             {rows.filter((row) => row.projectedFirstHalfTotal === null).length}
           </strong>
@@ -389,6 +398,7 @@ export default function Predictions() {
           </strong>
         </div>
       </div>
+      <AvailabilityHelp />
       <div className="signal-legend">
         <strong>Stronger model signal</strong>
         <span className="signal-gradient" />
@@ -561,7 +571,7 @@ export default function Predictions() {
           >
             <option value="all">All matchups</option>
             <option value="available">With a projection</option>
-            <option value="unavailable">Missing inputs</option>
+            <option value="unavailable">Projection data gaps</option>
             <option value="completed">Completed first halves</option>
           </select>
         </label>
@@ -657,8 +667,8 @@ export default function Predictions() {
                     >
                       {comparison.lean ??
                         (row.projectedFirstHalfTotal !== null
-                          ? "Line unavailable"
-                          : "Unavailable")}
+                          ? "No line to compare"
+                          : "Unrated · data gap")}
                     </span>
                   </td>
                   <td>
@@ -666,10 +676,19 @@ export default function Predictions() {
                   </td>
                   <td>{row.actualFirstHalfTotal ?? "—"}</td>
                   <td className="availability-cell">
-                    {row.unavailableReason ??
-                      (row.featureKind === "captured_pregame"
-                        ? "Archived before tipoff"
-                        : "Reconstructed season debut")}
+                    {row.projectedFirstHalfTotal === null ? (
+                      <>
+                        <strong>Projection data gap</strong>
+                        <span>
+                          {row.unavailableReason ??
+                            "No valid pregame team-stat snapshot is available for this game."}
+                        </span>
+                      </>
+                    ) : row.featureKind === "captured_pregame" ? (
+                      "Archived before tipoff"
+                    ) : (
+                      "Historical estimate · reconstructed season debut"
+                    )}
                   </td>
                 </tr>
               );

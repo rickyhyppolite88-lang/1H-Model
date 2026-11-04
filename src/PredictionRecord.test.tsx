@@ -116,7 +116,11 @@ it("shows the shared win/loss record and exposes later versions without double c
   expect(
     screen.getByRole("heading", { name: "Running prediction record" }),
   ).toBeTruthy();
-  expect(screen.getByText("1 / 0 / 0")).toBeTruthy();
+  expect(
+    within(
+      screen.getByRole("region", { name: "Record for 2026-11-02" }),
+    ).getByText("1 / 0 / 0"),
+  ).toBeTruthy();
   expect(within(table).getAllByRole("row")).toHaveLength(2);
   fireEvent.change(screen.getByLabelText("Record view"), {
     target: { value: "all" },
@@ -124,7 +128,11 @@ it("shows the shared win/loss record and exposes later versions without double c
   expect(within(table).getAllByRole("row")).toHaveLength(3);
   expect(within(table).getByText("Win")).toBeTruthy();
   expect(within(table).getByText("Loss")).toBeTruthy();
-  expect(screen.getByText("1 / 0 / 0")).toBeTruthy();
+  expect(
+    within(
+      screen.getByRole("region", { name: "Record for 2026-11-02" }),
+    ).getByText("1 / 0 / 0"),
+  ).toBeTruthy();
   expect(
     screen
       .getByRole("link", { name: "Running record Excel ↓" })
