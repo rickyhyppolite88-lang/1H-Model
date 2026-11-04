@@ -8,6 +8,7 @@ import {
   useState,
 } from "react";
 import { z } from "zod";
+import MobileNavigation from "./MobileNavigation";
 import { type Phase, predict } from "./model/predictor";
 import {
   completeMetrics,
@@ -19,6 +20,7 @@ import PredictionRecord from "./PredictionRecord";
 import Predictions from "./Predictions";
 import SeasonAudit from "./SeasonAudit";
 import TeamEvaluation from "./TeamEvaluation";
+import ThemeToggle from "./ThemeToggle";
 
 const savedSchema = z.object({
   id: z.string(),
@@ -285,8 +287,8 @@ export default function App() {
           </span>
         </a>
         <div className="topbar-right">
-          <span className="status-dot" />
-          SEASON BRIDGE v1
+          <span className="league-badge">CBB · 1H</span>
+          <ThemeToggle />
           <a
             href="https://github.com/rickyhyppolite88-lang/1H-Model"
             target="_blank"
@@ -300,11 +302,11 @@ export default function App() {
       <main>
         <div className="intro">
           <div>
-            <div className="eyebrow">A NEW SEASON. A MEASURED START.</div>
+            <div className="eyebrow">COLLEGE BASKETBALL · 2026–27</div>
             <h1>
-              The first half,
+              First-half totals.
               <br />
-              <em>in perspective.</em>
+              <em>A clearer view.</em>
             </h1>
             <p>
               Last season sets the baseline. This season earns the weight.
@@ -1025,6 +1027,7 @@ export default function App() {
           </section>
         )}
       </main>
+      <MobileNavigation active={tab} sections={sections} onSelect={setTab} />
       <footer>
         <span>
           <strong>1H MODEL</strong> · Know what is in the number.

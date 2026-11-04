@@ -9,6 +9,7 @@ import {
   recordGrade,
 } from "./model/predictionRecord";
 import SignalBadge from "./SignalBadge";
+import TeamIdentity from "./TeamIdentity";
 
 const point = (n: number | null) => (n === null ? "—" : n.toFixed(2));
 
@@ -81,6 +82,7 @@ export default function RecordTable({
                 kind="record"
                 label={`${record.prediction.awayTeam} at ${record.prediction.homeTeam}`}
                 fill={record.signal.fill}
+                signalScore={record.signal.score}
               >
                 <td role="cell" className="card-time" data-label="Tipoff (ET)">
                   <GameTime startsAt={record.prediction.startsAt} />
@@ -100,9 +102,16 @@ export default function RecordTable({
                   className="matchup-cell card-matchup"
                   data-label="Matchup"
                 >
-                  <strong>
-                    {record.prediction.awayTeam} / {record.prediction.homeTeam}
-                  </strong>
+                  <TeamIdentity
+                    name={record.prediction.awayTeam}
+                    rank={record.prediction.awayRank}
+                    conference={record.prediction.awayConference}
+                  />
+                  <TeamIdentity
+                    name={record.prediction.homeTeam}
+                    rank={record.prediction.homeRank}
+                    conference={record.prediction.homeConference}
+                  />
                   {showVersions && (
                     <small className="card-detail">
                       Recorded <GameTime startsAt={record.recordedAt} />

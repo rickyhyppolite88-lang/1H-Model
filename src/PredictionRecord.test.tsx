@@ -261,9 +261,9 @@ it("shows all dates on the page and drills down without retaining another day's 
     name: "Recorded predictions",
   });
   expect(within(full).getAllByRole("row")).toHaveLength(4);
-  expect(within(full).getByText("Monday team / Team B")).toBeTruthy();
-  expect(within(full).getByText("Tuesday team / Team B")).toBeTruthy();
-  expect(within(full).getByText("Wednesday team / Team B")).toBeTruthy();
+  expect(within(full).getByText("Monday team")).toBeTruthy();
+  expect(within(full).getByText("Tuesday team")).toBeTruthy();
+  expect(within(full).getByText("Wednesday team")).toBeTruthy();
   expect(
     within(
       screen.getByRole("region", { name: "Full record summary" }),
@@ -283,8 +283,8 @@ it("shows all dates on the page and drills down without retaining another day's 
     name: "Recorded predictions",
   });
   expect(within(day).getAllByRole("row")).toHaveLength(2);
-  expect(within(day).queryByText("Monday team / Team B")).toBeNull();
-  expect(within(day).getByText("Tuesday team / Team B")).toBeTruthy();
+  expect(within(day).queryByText("Monday team")).toBeNull();
+  expect(within(day).getByText("Tuesday team")).toBeTruthy();
   expect(
     within(
       screen.getByRole("region", { name: "Record for 2026-11-03" }),
@@ -400,6 +400,6 @@ it("ignores slow responses after switching from full history to another day", as
     screen.queryByRole("region", { name: "Full record summary" }),
   ).toBeNull();
   const table = screen.getByRole("table", { name: "Recorded predictions" });
-  expect(within(table).getByText("Monday team / Team B")).toBeTruthy();
-  expect(within(table).queryByText("Wednesday team / Team B")).toBeNull();
+  expect(within(table).getByText("Monday team")).toBeTruthy();
+  expect(within(table).queryByText("Wednesday team")).toBeNull();
 });

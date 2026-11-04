@@ -6,7 +6,7 @@ import GameCardRow from "./GameCardRow";
 
 afterEach(cleanup);
 
-it("expands and collapses a card without changing its values or signal color", () => {
+it("expands and collapses a card without changing its values or saved signal fill", () => {
   render(
     <table>
       <tbody>
@@ -34,7 +34,7 @@ it("expands and collapses a card without changing its values or signal color", (
   expect(button.getAttribute("aria-expanded")).toBe("false");
   expect(screen.getByText("Predicted 74.25")).toBeTruthy();
   expect(screen.getByText("Saved line 72.50")).toBeTruthy();
-  expect(row?.style.backgroundColor).toBe("rgb(216, 235, 211)");
+  expect(row?.style.getPropertyValue("--signal-fill")).toBe("#d8ebd3");
 });
 
 it("keeps each game's expansion independent and retains actions inside the full card", () => {
