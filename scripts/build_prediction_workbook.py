@@ -87,7 +87,7 @@ def build_workbook(data: dict, output: Path) -> None:
             values = [tipoff, team_label(row, "away"), team_label(row, "home"), row["projectedFirstHalfTotal"],
                       comparison["line"], comparison["signedEdge"], comparison["lean"] or "Unavailable",
                       row.get("awayConference") or "Unknown", row.get("homeConference") or "Unknown",
-                      row["actualFirstHalfTotal"], row.get("unavailableReason") or ("Line unavailable" if comparison["line"] is None else "Available"),
+                      row["actualFirstHalfTotal"], row.get("unavailableReason") or row.get("marketStatus") or ("Line unavailable" if comparison["line"] is None else "Available"),
                       row["gameId"], row.get("awayRank"), row.get("homeRank"), "Yes" if row["top25"] else "No" if row["rankingsKnown"] else "Unknown", row.get("signal", {}).get("score"), row.get("signal", {}).get("label", "Unavailable")]
             for column, value in enumerate(values, 1):
                 cell = ws.cell(row_number, column, safe_text(value))

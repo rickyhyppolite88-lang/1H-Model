@@ -6,7 +6,13 @@ import DailyRecord, { type DailyRecordEvidence } from "./DailyRecord";
 import GameCardRow from "./GameCardRow";
 import GameTime from "./GameTime";
 import LineMovement from "./LineMovement";
+import MarketCoverage from "./MarketCoverage";
 import type { RecordedLinePick } from "./model/lineMovement";
+import {
+  marketStatus,
+  marketStatusLabel,
+  sportsbookNames,
+} from "./model/marketCoverage";
 import { recordGrade } from "./model/predictionRecord";
 import {
   conferenceNames,
@@ -35,16 +41,7 @@ import {
   usePreference,
 } from "./usePreference";
 
-const books: Record<string, string> = {
-  betmgm: "BetMGM",
-  draftkings: "DraftKings",
-  fanduel: "FanDuel",
-  bet365: "bet365",
-  caesars: "Caesars",
-  fanatics: "Fanatics",
-  hardrock: "Hard Rock",
-  bet_rivers_co: "BetRivers",
-};
+const books = sportsbookNames;
 const format = (value: number | null) =>
   value === null ? "—" : value.toFixed(2);
 const basis = "latest";
@@ -178,12 +175,21 @@ export default function Predictions() {
             .toLowerCase()
             .includes(query.trim().toLowerCase());
           const available = row.projectedFirstHalfTotal !== null;
+          const missingLine =
+            predictionComparison(row, book, basis).line === null;
           return (
             matches &&
             (coverage === "all" ||
               (coverage === "available" && available) ||
               (coverage === "unavailable" && !available) ||
-              (coverage === "completed" && row.actualFirstHalfTotal !== null))
+              (coverage === "completed" && row.actualFirstHalfTotal !== null) ||
+              (coverage === "line_missing" && missingLine) ||
+              (coverage === "other_books" &&
+                missingLine &&
+                row.markets.some(
+                  (market) =>
+                    marketStatus(row, market.sportsbook) === "available",
+                )))
           );
         })
         .sort((a, b) => {
@@ -342,6 +348,17 @@ export default function Predictions() {
           </label>
         </div>
       </div>
+      <MarketCoverage
+        feed={feed}
+        rows={dateRows}
+        date={selectedDate}
+        book={book}
+        now={clock}
+        onShowGaps={() => {
+          setCoverage("line_missing");
+          setPage(0);
+        }}
+      />
       <div className="board-toolbar">
         <div
           className="prediction-groups"
@@ -543,9 +560,9 @@ export default function Predictions() {
               <p>
                 Line checks target about one hour before tipoff, with follow-up
                 checks closer to the game. The movement tooltip shows the actual
-                quote time. Dated copies update after successful checks and
-                remain available afterward. Use the filtered CSV for the current
-                tipoff and conference filters.
+                source capture time. Dated copies update after successful checks
+                and remain available afterward. Use the filtered CSV for the
+                current tipoff and conference filters.
               </p>
             </div>
             {selectedArchive && (
@@ -672,6 +689,10 @@ export default function Predictions() {
               <option value="available">With a projection</option>
               <option value="unavailable">Projection data gaps</option>
               <option value="completed">Completed first halves</option>
+              <option value="line_missing">Missing selected-book line</option>
+              <option value="other_books">
+                Missing here; other books have lines
+              </option>
             </select>
           </label>
         </div>
@@ -855,6 +876,19 @@ export default function Predictions() {
                       "Archived before tipoff"
                     ) : (
                       "Historical estimate · reconstructed season debut"
+                    )}
+                    {comparison.line === null && (
+                      <span className="market-gap-reason">
+                        {marketStatusLabel(row, book)}.
+                        {row.markets.some(
+                          (market) =>
+                            market.sportsbook !== book &&
+                            marketStatus(row, market.sportsbook) ===
+                              "available",
+                        )
+                          ? " Other books have captured lines; change Sportsbook to compare."
+                          : " No other current book line is captured."}
+                      </span>
                     )}
                   </td>
                 </GameCardRow>

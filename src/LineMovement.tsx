@@ -7,6 +7,7 @@ import {
   type RecordAvailability,
   type RecordedLinePick,
 } from "./model/lineMovement";
+import { marketStatusLabel } from "./model/marketCoverage";
 import type { PredictionRow } from "./model/predictions";
 import { tipoffState } from "./model/time";
 
@@ -108,7 +109,12 @@ export default function LineMovement({
       data-direction={details.direction}
     >
       {details.current === null ? (
-        <span className="line-missing">Not posted</span>
+        <span
+          className="line-missing"
+          title={marketStatusLabel(row, sportsbook)}
+        >
+          No feed line
+        </span>
       ) : (
         details.current.toFixed(2)
       )}

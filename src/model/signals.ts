@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { marketStatus } from "./marketCoverage";
 import type { LineBasis, PredictionRow } from "./predictions";
 import { compareTotal } from "./predictor";
 
@@ -65,7 +66,10 @@ export function predictionSignal(
     );
   const market = row.markets.find((m) => m.sportsbook === book);
   const line =
-    (basis === "opening" ? market?.openingLine : market?.latestLine) ?? null;
+    basis === "latest" && marketStatus(row, book) !== "available"
+      ? null
+      : ((basis === "opening" ? market?.openingLine : market?.latestLine) ??
+        null);
   if (
     (market && Date.parse(market.capturedAt) > Date.parse(at)) ||
     (row.featureCapturedAt &&

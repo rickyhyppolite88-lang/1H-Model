@@ -1,3 +1,4 @@
+import { marketStatus } from "./marketCoverage";
 import type { PredictionRow } from "./predictions";
 import { compareTotal, type Side } from "./predictor";
 
@@ -23,7 +24,10 @@ export function describeLineMovement(
 ) {
   const market = row.markets.find((quote) => quote.sportsbook === sportsbook);
   const opening = market?.openingLine ?? null;
-  const current = market?.latestLine ?? null;
+  const current =
+    marketStatus(row, sportsbook) === "available"
+      ? (market?.latestLine ?? null)
+      : null;
   const delta =
     opening !== null && current !== null
       ? Number((current - opening).toFixed(4))

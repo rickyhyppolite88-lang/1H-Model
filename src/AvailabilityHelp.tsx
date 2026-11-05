@@ -18,12 +18,14 @@ export default function AvailabilityHelp() {
             qualified model pick is available. The reason appears on that game’s
             row.
           </dd>
-          <dt>Sportsbook line missing / Not posted</dt>
+          <dt>Sportsbook line missing from our feed</dt>
           <dd>
             A model total may be available, but that sportsbook’s first-half
             line was absent from the latest retrieved update. There is no
             over/under edge to compare yet. This does not imply a negative model
-            signal.
+            signal, and does not prove the sportsbook has not posted it. Data
+            coverage shows source checks, unmatched games, and other books with
+            captured lines.
           </dd>
           <dt>Signal unavailable</dt>
           <dd>

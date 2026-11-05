@@ -21,7 +21,7 @@ def poll(data, now=NOW):
 
 @pytest.mark.parametrize("minutes,expected", [(76, "skip"), (75, "markets"), (60, "markets"), (45, "markets"), (1, "markets")])
 def test_pre_tip_window_targets_about_one_hour_and_catches_late_jobs(minutes, expected):
-    result = poll(ledger(minutes=minutes))
+    result = poll(ledger(minutes=minutes, age=20))
     assert result["mode"] == expected
     assert result["nearTipGames"] == (0 if expected == "skip" else 1)
 
@@ -49,6 +49,17 @@ def test_periodic_discovery_does_not_require_an_already_known_near_tip_game():
     data["games"] = []
     assert poll(data)["mode"] == "markets"
     data["capturedAt"] = (NOW - timedelta(minutes=119)).isoformat()
+    assert poll(data)["mode"] == "skip"
+
+
+@pytest.mark.parametrize("age,mode", [(29, "skip"), (30, "markets"), (90, "markets")])
+def test_morning_lines_are_discovered_before_the_pre_tip_window(age, mode):
+    data = ledger(minutes=240, age=age)
+    assert poll(data)["mode"] == mode
+
+
+def test_tomorrows_games_do_not_trigger_the_faster_today_discovery():
+    data = ledger(minutes=24 * 60, age=30)
     assert poll(data)["mode"] == "skip"
 
 
