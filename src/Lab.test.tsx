@@ -142,6 +142,60 @@ it("shows upcoming research and explicit method descriptions without probability
   expect(within(table).queryByText(/48%/)).toBeNull();
 });
 
+it("lists qualified Lab research before watch-only forecasts and earlier data gaps", async () => {
+  const { store, index } = uiFixture();
+  const base = store.forecasts.find(
+    (row) => row.methodId === "enhanced-baseline-v1",
+  );
+  if (!base) throw new Error("fixture");
+  const extras = [
+    {
+      ...base,
+      id: "gap",
+      gameId: "gap",
+      awayTeam: "Gap team",
+      startsAt: "2026-11-02T22:30:00Z",
+      status: "data_gap" as const,
+      total: null,
+      side: null,
+    },
+    {
+      ...base,
+      id: "watch-upcoming",
+      gameId: "watch-upcoming",
+      awayTeam: "Upcoming watch",
+      startsAt: "2026-11-02T23:00:00Z",
+      status: "watch_only" as const,
+    },
+  ];
+  store.forecasts.push(...extras);
+  index.games.push(
+    ...extras.map((row) => ({
+      gameId: row.gameId,
+      startsAt: row.startsAt,
+      status: "Scheduled",
+      firstHalfComplete: false,
+    })),
+  );
+  vi.stubGlobal(
+    "fetch",
+    vi.fn(async (url: string) => ({
+      ok: true,
+      json: async () =>
+        structuredClone(url.includes("lab-index") ? index : store),
+    })),
+  );
+  render(<Lab />);
+  const table = await screen.findByRole("table", { name: "Lab forecasts" });
+  const names = [...table.querySelectorAll(".card-matchup")].map(
+    (cell) => cell.textContent,
+  );
+  expect(names).toHaveLength(3);
+  expect(names[0]).toContain("Team A");
+  expect(names[1]).toContain("Upcoming watch");
+  expect(names[2]).toContain("Gap team");
+});
+
 it("records completed first halves, actual totals and watch-only decisions without counting upcoming games", async () => {
   const { store, index } = uiFixture();
   vi.stubGlobal(

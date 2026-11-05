@@ -124,6 +124,61 @@ it("filters missing selected-book lines without losing the model projection or o
   expect(within(table).getByText("No feed line")).toBeTruthy();
 });
 
+it.each(["signal", "time"])(
+  "keeps usable upcoming picks ahead of earlier data gaps and regroups for the selected book (%s)",
+  async (sort) => {
+    const feed = todayFixture();
+    const base = feed.predictions[0];
+    const game = (id: string, startsAt: string) => ({
+      ...structuredClone(base),
+      gameId: id,
+      awayTeam: id,
+      startsAt,
+    });
+    feed.predictions = [
+      {
+        ...game("Missing inputs", "2026-11-03T16:00:00Z"),
+        projectedFirstHalfTotal: null,
+      },
+      { ...game("Missing line", "2026-11-03T17:00:00Z"), markets: [] },
+      {
+        ...game("Book-specific pick", "2026-11-03T18:00:00Z"),
+        markets: [{ ...base.markets[0], sportsbook: "draftkings" }],
+      },
+      game("Later priced pick", "2026-11-03T20:00:00Z"),
+      game("Earlier priced pick", "2026-11-03T19:00:00Z"),
+    ];
+    feed.counts = { matchups: 5, predicted: 4, unavailable: 1 };
+    vi.stubGlobal(
+      "fetch",
+      vi.fn(async (url: string) => ({
+        ok: true,
+        json: async () => responseFor(url, feed),
+      })),
+    );
+    render(<Predictions />);
+    const table = await screen.findByRole("table", {
+      name: "Matchup predictions",
+    });
+    fireEvent.change(screen.getByLabelText("Sort games"), {
+      target: { value: sort },
+    });
+    const names = () =>
+      [...table.querySelectorAll(".card-matchup")].map(
+        (cell) => cell.textContent,
+      );
+    expect(names()[0]).toContain("Earlier priced pick");
+    expect(names()[1]).toContain("Later priced pick");
+    expect(names().slice(2).join(" ")).toContain("Missing inputs");
+    expect(names().slice(2).join(" ")).toContain("Missing line");
+    fireEvent.change(screen.getByLabelText("Sportsbook"), {
+      target: { value: "draftkings" },
+    });
+    expect(names()[0]).toContain("Book-specific pick");
+    expect(names()).toHaveLength(5);
+  },
+);
+
 it("orders confidence scores without presenting them as win probabilities", async () => {
   vi.useFakeTimers({ toFake: ["Date"] });
   vi.setSystemTime(new Date("2026-11-02T22:00:00Z"));
