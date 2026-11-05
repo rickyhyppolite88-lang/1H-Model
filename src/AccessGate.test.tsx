@@ -59,7 +59,11 @@ async function signIn(password = testPassword) {
   fireEvent.change(screen.getByLabelText("Password"), {
     target: { value: password },
   });
-  fireEvent.click(screen.getByRole("button", { name: "Sign in" }));
+  // Flush the digest-driven state update and the session listeners before a
+  // test advances its fake clock; observing DOM content alone can race effects.
+  await act(async () => {
+    fireEvent.click(screen.getByRole("button", { name: "Sign in" }));
+  });
   await screen.findByText(
     password === testPassword
       ? "Model contents"
@@ -115,7 +119,9 @@ it("extends a live session for activity and locks when a sleeping tab resumes af
   act(() => vi.advanceTimersByTime(2 * 60 * 1000));
   expect(screen.getByText("Model contents")).toBeTruthy();
   vi.setSystemTime(Date.now() + idleTimeout);
-  fireEvent(window, new Event("focus"));
+  await act(async () => {
+    fireEvent(window, new Event("focus"));
+  });
   expect(screen.queryByText("Model contents")).toBeNull();
 });
 it("locks immediately on request and when another tab clears its session", async () => {
