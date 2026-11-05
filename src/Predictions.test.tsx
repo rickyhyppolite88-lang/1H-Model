@@ -115,7 +115,9 @@ it("filters missing selected-book lines without losing the model projection or o
   await screen.findByRole("heading", {
     name: "First-half lines & predictions",
   });
-  fireEvent.click(screen.getByRole("button", { name: "Show missing lines" }));
+  fireEvent.change(screen.getByLabelText("Projection coverage"), {
+    target: { value: "line_missing" },
+  });
   const table = screen.getByRole("table", { name: "Matchup predictions" });
   expect(within(table).getByText("Other book team")).toBeTruthy();
   expect(within(table).queryByText("Early team")).toBeNull();

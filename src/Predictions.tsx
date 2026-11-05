@@ -6,7 +6,6 @@ import DailyRecord, { type DailyRecordEvidence } from "./DailyRecord";
 import GameCardRow from "./GameCardRow";
 import GameTime from "./GameTime";
 import LineMovement from "./LineMovement";
-import MarketCoverage from "./MarketCoverage";
 import type { RecordedLinePick } from "./model/lineMovement";
 import {
   marketStatus,
@@ -348,17 +347,6 @@ export default function Predictions() {
           </label>
         </div>
       </div>
-      <MarketCoverage
-        feed={feed}
-        rows={dateRows}
-        date={selectedDate}
-        book={book}
-        now={clock}
-        onShowGaps={() => {
-          setCoverage("line_missing");
-          setPage(0);
-        }}
-      />
       <div className="board-toolbar">
         <div
           className="prediction-groups"
