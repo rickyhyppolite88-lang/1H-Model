@@ -1,25 +1,36 @@
 {
   "schemaVersion": 1,
   "startedAt": "2026-11-05T16:08:14.757Z",
-  "updatedAt": "2026-11-05T16:18:25.643Z",
+  "updatedAt": "2026-11-05T16:46:46.317Z",
+  "methodStartedAt": {
+    "enhanced-baseline-v1": "2026-11-05T16:46:46.317Z",
+    "baseline-control-v1": "2026-11-05T16:08:14.757Z",
+    "qualified-baseline-v1": "2026-11-05T16:08:14.757Z",
+    "first-half-defense-v1": "2026-11-05T16:08:14.757Z",
+    "bonus-exposure-v1": "2026-11-05T16:08:14.757Z"
+  },
   "config": {
     "schemaVersion": 1,
     "methods": [
       {
-        "id": "baseline-control-v1",
+        "id": "enhanced-baseline-v1",
         "enabled": true
+      },
+      {
+        "id": "baseline-control-v1",
+        "enabled": false
       },
       {
         "id": "qualified-baseline-v1",
-        "enabled": true
+        "enabled": false
       },
       {
         "id": "first-half-defense-v1",
-        "enabled": true
+        "enabled": false
       },
       {
         "id": "bonus-exposure-v1",
-        "enabled": true
+        "enabled": false
       }
     ]
   },
