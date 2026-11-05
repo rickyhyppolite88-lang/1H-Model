@@ -1,11 +1,12 @@
 # Research Lab
 
-The Lab keeps experimental methods separate from the Actual prediction record. It collects new forecasts before tipoff and grades completed first halves. Earlier diagnostic replays are not backfilled into its prospective record, and no Lab method changes the production total or the existing official grades.
+The Lab is one enhanced version of the Actual algorithm: the same 60% scoring / 40% pace-efficiency structure, adding first-half defense and bonus exposure, then applying the qualified-baseline selection rules. It collects new forecasts before tipoff and grades completed first halves separately from Actual. Earlier diagnostic replays are not backfilled, and Actual totals and grades are unchanged. The four earlier experiments are paused by default and remain accessible under **Lab version & history**.
 
 ## Methods and predeclared rules
 
 | Version | Forecast | Decision / evaluation |
 | --- | --- | --- |
+| `enhanced-baseline-v1` | Actual algorithm + first-half defense + bounded bonus points | The active combined model. Qualify only when `1.5 <= absolute edge < 8` and both adjusted scoring and pace components agree. Other usable projections are watch-only; missing factors are data gaps. |
 | `baseline-control-v1` | The unchanged model at the Lab capture time | Track every priced non-push research lean as a control. This is not a qualified betting system. |
 | `qualified-baseline-v1` | The same total | Qualify only when the absolute gap is at least 1.5 and below 8 points and both scoring and pace components agree with the side. All other usable priced forecasts are watch-only. |
 | `first-half-defense-v1` | `0.6 × (both 1H points scored + both 1H points allowed) / 2 + 0.4 × original pace/efficiency component` | Apply the same qualification rule. Prior allowed values receive 35% regression to the available prior league mean, then the original frozen current-season weights. Missing defensive inputs block this method. |
@@ -16,6 +17,16 @@ The first-half-defense experiment locates the archived current dataset by the or
 The bonus prototype uses only reconciled earlier halves actually observed before its forecast timestamp, excluding the target game and sources currently flagged as unresolved. Defensive foul rates and opponent foul-drawing rates each receive four league pseudo-games. Their product divided by the league foul rate estimates expected fouls. A Poisson arrival model is integrated over 20 minutes to estimate remaining bonus exposure after the seventh event. Both offenses' minutes are summed, so the combined range is 0–40 minutes. The forecast freezes its history cutoff, excluded games, league baseline, and team sample counts.
 
 This is an unvalidated, sparse-data experiment. It has no roster or referee adjustment. Men's one-and-one begins with the seventh team foul, double bonus with the tenth, and team fouls reset after the first half; see the [NCAA's 2026–27 rules comparison](https://ncaaorg.s3.amazonaws.com/championships/sports/basketball/rules/common/2026-27PRXBB_MajorRulesDifferences.pdf). Our logged-nontechnical-foul proxy omits technical classifications that can count toward official team fouls. It is not an exact official bonus reconstruction, and free throws after the threshold are not necessarily caused by the bonus.
+
+## Combined model and bonus points
+
+The combined version reuses the defense branch described above, then adds a bonus-points delta. The league-neutral reference is `2 * expectedBonusMinutes(leagueFouls)`, so a league-prior matchup receives zero adjustment. A ridge fit relates combined first-half free-throw makes to observed bonus-proxy minutes, controlling for estimated possessions per team: `(FGA - offensive rebounds + turnovers + 0.475 * FTA) / 2` across the two teams.
+
+The fit requires at least 30 earlier D1 halves with reconciled scoring and free-throw makes. Both centered regression slopes receive 50 prior-game equivalents of shrinkage toward zero. The bonus slope is bounded to 0–1 point per minute and the final delta to ±2 points. No bonus variation makes the fit unavailable; a valid nonpositive association yields a zero slope. These are predeclared experimental safeguards, not parameters optimized against yesterday's bets or demonstrated improvements. Foul timing, free throws and pace remain confounded, and the adjustment may duplicate information already in scoring/efficiency. Prospective comparison must determine whether it adds value.
+
+`Lab total = defense-adjusted total + bonus delta`. The same delta is applied to each component before checking agreement, preserving the 60/40 identity. Missing defense or insufficient bonus history blocks the combined forecast. No missing factor is silently replaced with zero. Frozen inputs retain the Actual total, both original components, defense total/delta, bonus total/delta, fitted coefficient, history count/cutoff, source exclusions and bounds. Each card expands to show **Actual → defense → bonus → Lab**; CSV includes the calculation and frozen inputs.
+
+Free-throw makes are an optional field for compatibility with older raw versions. Enriching an old measurement appends a new content-addressed observation at the real extraction time; earlier records and first-observed timestamps remain intact. A per-version collection start prevents the new combined model from claiming an earlier prospective history.
 
 ## Decisions, results, and comparison
 
@@ -33,7 +44,7 @@ Signal strength is shown as a score out of 100, not a probability. Observed outc
 
 ## Pages and controls
 
-- **Lab** in desktop navigation and the phone's bottom navigation: choose a method, read its description, inspect upcoming saved forecasts, and download its CSV.
+- **Lab** in desktop navigation and the phone's bottom navigation: opens the combined model, with older experiments under **Lab version & history**. Inspect upcoming saved forecasts, expand the calculation and download its CSV.
 - **Prediction record → Actual / Lab**: preserve the existing Actual view; the Lab view offers its own method selector and daily date dropdown. Both views retain their filters across refreshes.
 - **Method controls & data sources**: shows the shared collection status, source coverage, raw measurement gaps, and an owner-only link to collection controls.
 

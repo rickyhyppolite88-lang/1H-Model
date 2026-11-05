@@ -65,7 +65,10 @@ export function labFixture() {
   };
   const config = labConfigSchema.parse({
     schemaVersion: 1,
-    methods: labMethods.map((method) => ({ id: method.id, enabled: true })),
+    methods: labMethods.map((method) => ({
+      id: method.id,
+      enabled: method.id !== "enhanced-baseline-v1",
+    })),
   });
   const empty: LabStore = {
     schemaVersion: 1,
@@ -76,4 +79,27 @@ export function labFixture() {
     halves: [],
   };
   return { ...base, inputs, config, empty };
+}
+
+export function enhancedLabFixture() {
+  const f = labFixture();
+  f.config.methods = f.config.methods.map((method) => ({
+    ...method,
+    enabled: method.id === "enhanced-baseline-v1",
+  }));
+  f.inputs.halves = Array.from({ length: 40 }, (_, i) => ({
+    ...f.inputs.halves[0],
+    id: `fit-${i}`,
+    gameId: `fit-${i}`,
+    teams: f.inputs.halves[0].teams.map((team, side) => ({
+      ...team,
+      espnId: String(side + 1),
+      bonusMinutes: 1 + (i % 10),
+      fga: 24 + (i % 4),
+      fouls: 7 + (i % 5),
+      fta: 12,
+      freeThrowsMade: 3 + Math.floor((i % 10) / 2),
+    })),
+  }));
+  return f;
 }

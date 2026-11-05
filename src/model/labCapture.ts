@@ -1,5 +1,10 @@
 import type { SeasonLedger } from "./audit";
 import {
+  bonusFitRules,
+  bonusPointsDelta,
+  fitBonusPoints,
+} from "./bonusAdjustment";
+import {
   type LabConfig,
   type LabForecast,
   type LabHalf,
@@ -240,6 +245,7 @@ export function captureLab(
     for (const method of config.methods.filter((entry) => entry.enabled)) {
       let total = baselineValid ? row.projectedFirstHalfTotal : null;
       let simple = row.simpleTotal;
+      let pace = row.paceAdjustedTotal;
       let status: LabForecast["status"] = "data_gap";
       let reason = "No valid pregame model inputs.";
       let strength: number | null = null;
@@ -305,7 +311,10 @@ export function captureLab(
           reason =
             "No reconciled earlier D1 first halves were observed before this capture; bonus inputs are missing.";
       } else if (baselineValid) {
-        if (method.id === "first-half-defense-v1") {
+        if (
+          method.id === "first-half-defense-v1" ||
+          method.id === "enhanced-baseline-v1"
+        ) {
           const defense = allowedInputs(game, inputs, at);
           if (
             defense &&
@@ -315,6 +324,11 @@ export function captureLab(
             simple = (row.simpleTotal + defense.away + defense.home) / 2;
             total = simple * 0.6 + row.paceAdjustedTotal * 0.4;
             Object.assign(frozen, {
+              baselineSimpleTotal: row.simpleTotal,
+              baselinePaceTotal: row.paceAdjustedTotal,
+              defenseSimpleTotal: simple,
+              defenseAdjustedTotal: total,
+              defenseAdjustment: total - (row.projectedFirstHalfTotal ?? total),
               awayFirstHalfAllowed: defense.away,
               homeFirstHalfAllowed: defense.home,
               priorAllowedMean: defense.priorMean,
@@ -327,11 +341,63 @@ export function captureLab(
               "Frozen first-half defensive inputs are missing or cannot be matched to the original stats retrieval.";
           }
         }
+        if (method.id === "enhanced-baseline-v1" && total !== null) {
+          const excluded = new Set(inputs.excludedHistoryGames ?? []);
+          const history = inputs.halves.filter(
+            (half) => !excluded.has(half.gameId),
+          );
+          const estimates = bonusInputs(game, history, at, feed.season);
+          const fit = fitBonusPoints(
+            history,
+            feed.season,
+            game.id,
+            game.startsAt,
+            at,
+          );
+          if (estimates && fit && simple !== null && pace !== null) {
+            bonus = estimates.minutes;
+            bonusBaseline = estimates.baseline;
+            const neutral = 2 * expectedBonusMinutes(estimates.leagueFouls);
+            const adjustment = bonusPointsDelta(bonus, neutral, fit.slope);
+            total += adjustment;
+            // Applying the shared adjustment to both branches preserves the
+            // 60/40 total and checks agreement against the final Lab forecast.
+            simple += adjustment;
+            pace += adjustment;
+            Object.assign(frozen, {
+              historyAsOf: at,
+              excludedHistoryGames: [...excluded].sort().join(";"),
+              pseudoGames: 4,
+              poissonSteps: 200,
+              leagueFouls: estimates.leagueFouls,
+              leagueGames: estimates.leagueGames,
+              awayPriorHalves: estimates.awayGames,
+              homePriorHalves: estimates.homeGames,
+              bonusNeutralMinutes: neutral,
+              bonusPointsAdjustment: adjustment,
+              bonusPointsPerMinute: fit.slope,
+              bonusUnboundedSlope: fit.rawSlope,
+              bonusFitGames: fit.games,
+              bonusFitMinimumGames: bonusFitRules.minimumGames,
+              bonusFitPriorGames: bonusFitRules.priorGames,
+              bonusSlopeCap: bonusFitRules.maximumSlope,
+              bonusPointsCap: bonusFitRules.maximumAdjustment,
+              minimumEdge: 1.5,
+              outlierEdge: 8,
+              componentAgreementRequired: "Both adjusted components must agree",
+            });
+          } else {
+            total = null;
+            reason =
+              "Bonus inputs are missing or fewer than 30 earlier reconciled D1 halves with free-throw makes and bonus variation are available.";
+          }
+        }
         if (total !== null) {
           const candidate = {
             ...row,
             projectedFirstHalfTotal: total,
             simpleTotal: simple,
+            paceAdjustedTotal: pace,
             markets: row.markets.map((entry) =>
               entry.sportsbook === "betmgm" && staleMarket
                 ? { ...entry, latestLine: null }
@@ -384,7 +450,7 @@ export function captureLab(
         total,
         baselineTotal: baselineValid ? row.projectedFirstHalfTotal : null,
         simpleTotal: simple,
-        paceTotal: row.paceAdjustedTotal,
+        paceTotal: pace,
         side:
           total !== null && comparison.line !== null
             ? compareTotal(total, comparison.line).modelLean

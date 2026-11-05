@@ -24,7 +24,7 @@ def parse_half(data: dict, game: dict, season: str, observed_at: str, payload_ha
     if not plays:
         raise ValueError("No first-half play-by-play")
     stats = {str(team["team"]["id"]): {"espnId": str(team["team"]["id"]), "points": 0, "fouls": 0,
-             "bonusMinutes": 0, "fga": 0, "fta": 0, "threeMade": 0, "threeAttempted": 0,
+             "bonusMinutes": 0, "fga": 0, "fta": 0, "freeThrowsMade": 0, "threeMade": 0, "threeAttempted": 0,
              "turnovers": 0, "offensiveRebounds": 0} for team in competitors}
     shooting_points = {team: 0 for team in stats}
     seventh = {}
@@ -41,6 +41,8 @@ def parse_half(data: dict, game: dict, season: str, observed_at: str, payload_ha
             attempted = 1
         if play.get("shootingPlay") and attempted in [1, 2, 3]:
             row["fta" if attempted == 1 else "fga"] += 1
+            if attempted == 1:
+                row["freeThrowsMade"] += bool(play.get("scoringPlay"))
             if attempted == 3:
                 row["threeAttempted"] += 1
                 row["threeMade"] += bool(play.get("scoringPlay"))
@@ -89,10 +91,11 @@ def import_halves(ledger: dict, output: Path, cache_dir: Path | None = None) -> 
         observed = latest.get(game["id"])
         points = {team["espnId"]: team["points"] for team in observed["teams"]} if observed else {}
         changed = observed is None or observed["startsAt"] != game["startsAt"] or any(points.get(game[side]["espnId"]) != game[side]["firstHalfPoints"] for side in ["away", "home"])
+        needs_free_throws = observed is not None and any("freeThrowsMade" not in team for team in observed["teams"])
         checked = checks.get(game["id"], {}).get("checkedAt")
         recent = datetime.fromisoformat(game["startsAt"].replace("Z", "+00:00")) >= now - timedelta(days=2)
         stale = checked is None or now - datetime.fromisoformat(checked.replace("Z", "+00:00")) >= timedelta(hours=6)
-        if changed or (recent and stale) or game["id"] in errors:
+        if changed or needs_free_throws or (recent and stale) or game["id"] in errors:
             due.append(game)
 
     def fetch(game):

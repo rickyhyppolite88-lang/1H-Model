@@ -9,7 +9,7 @@ import {
 import { afterEach, beforeEach, expect, it, vi } from "vitest";
 import Lab from "./Lab";
 import { type LabIndex, labIndexSchema } from "./model/lab";
-import { labFixture } from "./model/lab.test-fixture";
+import { enhancedLabFixture } from "./model/lab.test-fixture";
 import { captureLab } from "./model/labCapture";
 import PredictionRecord from "./PredictionRecord";
 
@@ -18,11 +18,11 @@ vi.mock("./ActualPredictionRecord", () => ({
 }));
 
 function uiFixture() {
-  const f = labFixture();
+  const f = enhancedLabFixture();
   const store = captureLab(f.empty, f.config, f.feed, f.ledger, f.inputs, f.at);
   store.startedAt = "2026-11-02T20:00:00Z";
   const base = store.forecasts.find(
-    (row) => row.methodId === "qualified-baseline-v1",
+    (row) => row.methodId === "enhanced-baseline-v1",
   );
   if (!base) throw new Error("fixture");
   const finished = {
@@ -157,11 +157,13 @@ it("records completed first halves, actual totals and watch-only decisions witho
   expect(within(table).getByText("Finished team")).toBeTruthy();
   expect(within(table).getByText("Watch team")).toBeTruthy();
   expect(within(table).queryByText("Team A")).toBeNull();
-  expect(within(table).getAllByText("72")).toHaveLength(2);
+  expect(
+    [...table.querySelectorAll(".card-actual")].map((cell) => cell.textContent),
+  ).toEqual(["72", "72"]);
   const summary = screen.getByRole("region", { name: "Lab record summary" });
   expect(within(summary).getByText("1 / 0 / 0")).toBeTruthy();
   expect(screen.getByLabelText("Lab daily breakdown (ET)")).toBeTruthy();
-  fireEvent.change(screen.getByLabelText("Research method"), {
+  fireEvent.change(screen.getByLabelText("Lab version"), {
     target: { value: "bonus-exposure-v1" },
   });
   expect(screen.getByText("Bonus timing MAE")).toBeTruthy();
@@ -173,7 +175,7 @@ it("records completed first halves, actual totals and watch-only decisions witho
 it("retains paused-method history and separates the Actual and Lab record tabs", async () => {
   const { store, index } = uiFixture();
   const method = index.config.methods.find(
-    (entry) => entry.id === "qualified-baseline-v1",
+    (entry) => entry.id === "enhanced-baseline-v1",
   );
   if (method) method.enabled = false;
   vi.stubGlobal(
