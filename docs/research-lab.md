@@ -23,6 +23,8 @@ The first usable priced observation fixes a method's decision for a game, includ
 
 Numerical or price changes before tipoff append versions. Identical captures do not duplicate forecasts. No forecast is created after scheduled/reported tipoff, backdated, or reconstructed from a completed game. Source timestamps must precede the capture. A changed schedule produces review rather than silently grading a prediction against a different start time.
 
+A source check or selected-book quote over 45 minutes old is a market data gap, not a usable Lab entry. Its last-seen line remains in frozen inputs; the first subsequently usable priced observation establishes the decision. Bonus timing can still be measured independently of market availability. A new code build therefore cannot accidentally count an old retained line as a current experimental entry price.
+
 The Lab record shows only games with completed first-half result events, including games whose second half is still in progress. Qualified/control decisions enter win/loss totals; watch-only and missing-data cases remain visible but excluded. Pushes are excluded from the hit-rate denominator. Actual totals appear directly on the cards. Watch-only hypothetical outcomes are available in details and CSV, explicitly labeled.
 
 The matched baseline uses the unchanged total on **the experiment's same saved games and BetMGM lines**. The Lab starts later than the Actual record, so their aggregate win rates are not a comparable cohort. Reports include qualification coverage and point error on all projected games, including watch-only forecasts. Bonus timing has a separate minutes-error sample and no betting win rate.

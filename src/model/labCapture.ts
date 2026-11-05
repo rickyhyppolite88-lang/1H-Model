@@ -223,7 +223,17 @@ export function captureLab(
         Date.parse(features.statsRetrievedAt) <= Date.parse(at));
     const market = row.markets.find((entry) => entry.sportsbook === "betmgm");
     if (market && Date.parse(market.capturedAt) > Date.parse(at)) continue;
-    const comparison = predictionComparison(row, "betmgm", "latest");
+    const sourceCheck = row.marketCoverage?.checkedAt ?? feed.marketCapturedAt;
+    if (Date.parse(sourceCheck) > Date.parse(at)) continue;
+    const staleMarket =
+      Date.parse(at) - Date.parse(sourceCheck) > 45 * 60_000 ||
+      (market !== undefined &&
+        Date.parse(at) - Date.parse(market.capturedAt) > 45 * 60_000);
+    const rawComparison = predictionComparison(row, "betmgm", "latest");
+    const comparison = {
+      ...rawComparison,
+      line: staleMarket ? null : rawComparison.line,
+    };
     const quote = game.quotes.find(
       (entry) => entry.sportsbook === "betmgm",
     )?.latest;
@@ -248,6 +258,10 @@ export function captureLab(
         sourceBoard: market?.source ?? null,
         quoteCapturedAt: market?.capturedAt ?? null,
         marketCheckedAt: row.marketCoverage?.checkedAt ?? feed.marketCapturedAt,
+        lastSeenLine: rawComparison.line,
+        marketFreshness: staleMarket
+          ? "Stale; no usable Lab entry line"
+          : "Source check within 45 minutes",
         awayCurrentWeight: features?.away.currentWeight ?? null,
         homeCurrentWeight: features?.home.currentWeight ?? null,
       };
@@ -318,10 +332,17 @@ export function captureLab(
             ...row,
             projectedFirstHalfTotal: total,
             simpleTotal: simple,
+            markets: row.markets.map((entry) =>
+              entry.sportsbook === "betmgm" && staleMarket
+                ? { ...entry, latestLine: null }
+                : entry,
+            ),
           };
           const eligibility = qualify(candidate, at);
           status = eligibility.status;
-          reason = eligibility.reason;
+          reason = staleMarket
+            ? "The saved market check or quote is over 45 minutes old; waiting for a fresh source check."
+            : eligibility.reason;
           strength = eligibility.strength;
           if (
             method.id === "baseline-control-v1" &&

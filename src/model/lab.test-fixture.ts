@@ -11,6 +11,9 @@ import { datasetSchema } from "./schema";
 
 export function labFixture() {
   const base = recordFixture();
+  base.feed.marketCapturedAt = base.at;
+  base.feed.predictions[0].markets[0].capturedAt = base.at;
+  base.ledger.games[0].quotes[0].latestCapturedAt = base.at;
   const prior = datasetSchema.parse({
     schemaVersion: 1,
     season: "2025-26",

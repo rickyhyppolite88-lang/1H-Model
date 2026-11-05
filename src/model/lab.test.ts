@@ -10,6 +10,29 @@ import { labFixture } from "./lab.test-fixture";
 import { captureLab, expectedBonusMinutes } from "./labCapture";
 
 describe("separate prospective Lab", () => {
+  it("does not count a stale quote as a fresh experimental entry", () => {
+    const f = labFixture();
+    f.feed.marketCapturedAt = "2026-11-02T21:00:00Z";
+    let store = captureLab(f.empty, f.config, f.feed, f.ledger, f.inputs, f.at);
+    expect(
+      store.forecasts.find((row) => row.methodId === "qualified-baseline-v1"),
+    ).toMatchObject({
+      status: "data_gap",
+      line: null,
+      inputs: { lastSeenLine: 70 },
+    });
+    f.feed.marketCapturedAt = f.at;
+    f.feed.predictions[0].markets[0].capturedAt = "2026-11-02T21:00:00Z";
+    store = captureLab(f.empty, f.config, f.feed, f.ledger, f.inputs, f.at);
+    expect(
+      store.forecasts.find((row) => row.methodId === "baseline-control-v1")
+        ?.line,
+    ).toBeNull();
+    expect(
+      store.forecasts.find((row) => row.methodId === "bonus-exposure-v1")
+        ?.status,
+    ).toBe("measurement");
+  });
   it("captures all four experiments without mutating actual forecasts or using a bonus betting adjustment", () => {
     const f = labFixture();
     const original = JSON.stringify({ feed: f.feed, ledger: f.ledger });
