@@ -24,6 +24,7 @@ export const preferenceSportsbook = z
 export const preferenceSection: z.ZodType<string> = z.enum([
   "predictions",
   "record",
+  "lab",
   "audit",
   "evaluation",
   "data",
@@ -54,6 +55,10 @@ export const preferenceRecordView: z.ZodType<string> = z.enum([
   "games",
   "official",
   "all",
+]);
+export const preferenceRecordSource: z.ZodType<string> = z.enum([
+  "actual",
+  "lab",
 ]);
 
 export function readPreference<T>(

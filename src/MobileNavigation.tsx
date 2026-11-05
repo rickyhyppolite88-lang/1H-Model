@@ -8,6 +8,11 @@ const shortcuts = [
   ],
   ["record", "Full record", "M5 3h14v18l-3-2-4 2-4-2-3 2V3Zm4 5h6m-6 4h6"],
   [
+    "lab",
+    "Lab",
+    "M9 3h6m-5 0v6l-5 9a2 2 0 0 0 2 3h10a2 2 0 0 0 2-3l-5-9V3M8 14h8",
+  ],
+  [
     "evaluation",
     "Teams",
     "M4 20v-3a4 4 0 0 1 4-4h8a4 4 0 0 1 4 4v3M8 6a4 4 0 1 0 8 0 4 4 0 1 0-8 0",

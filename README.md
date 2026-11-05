@@ -99,6 +99,8 @@ Run `npm run markets:refresh` to retrieve public first-half markets and period r
 
 ## All predictions, code references, and daily downloads
 
+The **Lab** tab collects versioned research forecasts separately from the actual model. **Prediction record → Actual / Lab** switches between the existing official history and finished experimental first halves. Lab methods explain their rules, distinguish qualified from watch-only forecasts, compare against the baseline on the same saved lines, and expose raw measurement gaps. Collection starts prospectively; no historical replay is added to its win rate. See [Research Lab methods, records, and shared pause controls](docs/research-lab.md).
+
 The app opens on **Today’s lines**, showing only the current Eastern calendar date. The prominent **Game date (ET)** control changes both the table and dated downloads; **Today** returns to the current day. Earlier dates are shown only when selected, and a missing current-day refresh never substitutes yesterday’s games. The Today selection follows the Eastern date across midnight.
 
 Use **All games**, **Not tipped off**, and **Tipped off** to filter the selected date. Counts follow the conference, Top 25, search, and coverage filters. Tipoff status updates every minute using the scheduled start time and latest reported game status; delayed games remain upcoming, while postponed/canceled games appear only under All games. Lines and reported game status still come from the scheduled public-data refresh, rather than a live sportsbook feed. Missing quotes display **No feed line**. This never proves the book has not posted the market.

@@ -8,6 +8,7 @@ import {
 } from "react";
 import { z } from "zod";
 import { useAppLock } from "./AccessGate";
+import Lab from "./Lab";
 import MobileNavigation from "./MobileNavigation";
 import {
   completeMetrics,
@@ -52,6 +53,7 @@ const percent = (value: number) => `${Math.round(value * 100)}%`;
 const sections = [
   ["predictions", "Today’s lines"],
   ["record", "Prediction record"],
+  ["lab", "Lab"],
   ["audit", "Season lines & audit"],
   ["evaluation", "Team comparison"],
   ["data", "Season data"],
@@ -331,6 +333,7 @@ export default function App() {
 
         {tab === "predictions" && <Predictions />}
         {tab === "record" && <PredictionRecord />}
+        {tab === "lab" && <Lab />}
         {tab === "evaluation" && <TeamEvaluation />}
         {tab === "settings" && (
           <section className="panel settings-panel">
