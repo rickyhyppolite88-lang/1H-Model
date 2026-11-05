@@ -5,6 +5,17 @@ import { easternTipoff } from "./time";
 
 export const labMethods = [
   {
+    id: "enhanced-baseline-v1",
+    name: "Combined Lab model",
+    kind: "total",
+    description:
+      "The Actual algorithm with first-half defense and a bounded bonus-exposure adjustment, followed by the qualified-baseline selection rules.",
+    formula:
+      "60% × (both teams' 1H scored + both teams' 1H allowed) / 2 + 40% pace / efficiency + bonus adjustment. Qualify when 1.5 ≤ absolute edge < 8 and both adjusted components agree.",
+    limits:
+      "Bonus points use a tempo-controlled, shrunk historical free-throw fit, capped at ±2 points. This is an experimental association, not a proven causal effect or calibrated win probability. Missing factors block the forecast. Earlier Lab versions remain in history.",
+  },
+  {
     id: "baseline-control-v1",
     name: "Baseline control",
     kind: "total",
@@ -49,6 +60,7 @@ export const labMethods = [
   },
 ] as const;
 export const labMethodIds = [
+  "enhanced-baseline-v1",
   "baseline-control-v1",
   "qualified-baseline-v1",
   "first-half-defense-v1",
@@ -73,18 +85,27 @@ export const labConfigSchema = z
   });
 export type LabConfig = z.infer<typeof labConfigSchema>;
 
-const halfTeamSchema = z.object({
-  espnId: z.string(),
-  points: z.number().int().min(0),
-  fouls: z.number().int().min(0),
-  bonusMinutes: z.number().min(0).max(20),
-  fga: z.number().int().min(0),
-  fta: z.number().int().min(0),
-  threeMade: z.number().int().min(0),
-  threeAttempted: z.number().int().min(0),
-  turnovers: z.number().int().min(0),
-  offensiveRebounds: z.number().int().min(0),
-});
+const halfTeamSchema = z
+  .object({
+    espnId: z.string(),
+    points: z.number().int().min(0),
+    fouls: z.number().int().min(0),
+    bonusMinutes: z.number().min(0).max(20),
+    fga: z.number().int().min(0),
+    fta: z.number().int().min(0),
+    freeThrowsMade: z.number().int().min(0).optional(),
+    threeMade: z.number().int().min(0),
+    threeAttempted: z.number().int().min(0),
+    turnovers: z.number().int().min(0),
+    offensiveRebounds: z.number().int().min(0),
+  })
+  .refine(
+    (team) =>
+      team.freeThrowsMade === undefined || team.freeThrowsMade <= team.fta,
+    {
+      message: "Free throws made cannot exceed attempts",
+    },
+  );
 export const labHalfSchema = z.object({
   id: z.string(),
   gameId: z.string(),
@@ -156,6 +177,9 @@ export const labIndexSchema = z.object({
   schemaVersion: z.literal(1),
   startedAt: z.iso.datetime(),
   updatedAt: z.iso.datetime(),
+  methodStartedAt: z
+    .partialRecord(labMethodIdSchema, z.iso.datetime())
+    .optional(),
   config: labConfigSchema,
   rawCoverage: z.object({ games: z.number().int(), errors: z.number().int() }),
   games: z.array(
@@ -403,6 +427,12 @@ export function labToCsv(store: LabStore) {
     "bonus_minutes_forecast",
     "bonus_minutes_actual",
     "original_decision",
+    "defense_adjusted_total",
+    "defense_points_adjustment",
+    "bonus_points_adjustment",
+    "bonus_points_per_minute",
+    "bonus_fit_games",
+    "frozen_inputs_json",
   ];
   return `${[
     header,
@@ -435,6 +465,12 @@ export function labToCsv(store: LabStore) {
         row.bonusMinutes,
         result.actualBonus,
         ids.has(row.id) ? "Yes" : "No",
+        row.inputs.defenseAdjustedTotal,
+        row.inputs.defenseAdjustment,
+        row.inputs.bonusPointsAdjustment,
+        row.inputs.bonusPointsPerMinute,
+        row.inputs.bonusFitGames,
+        JSON.stringify(row.inputs),
       ];
     }),
   ]

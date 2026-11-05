@@ -42,6 +42,7 @@ def test_raw_counts_reconcile_and_seventh_personal_foul_excludes_technical():
     away, home = half["teams"]
     assert (away["points"], home["points"]) == (3, 5)
     assert away["fta"] == 2  # includes the missed FT with missing pointsAttempted
+    assert away["freeThrowsMade"] == 1 and home["freeThrowsMade"] == 0
     assert away["bonusMinutes"] == 9
     assert home["fouls"] == 7 and home["bonusMinutes"] == 0
     assert home["threeMade"] == 1 and home["threeAttempted"] == 1
@@ -94,8 +95,25 @@ def test_shared_pause_changes_only_the_selected_method_configuration(tmp_path):
     path.write_text(json.dumps(config), encoding="utf-8")
     settings.configure(path, "first-half-defense-v1", "disable")
     rows = json.loads(path.read_text())["methods"]
-    assert [row["enabled"] for row in rows] == [True, True, False, True]
+    assert all(row["enabled"] == (row["id"] != "first-half-defense-v1") for row in rows)
     settings.configure(path, "first-half-defense-v1", "enable")
     assert all(row["enabled"] for row in json.loads(path.read_text())["methods"])
     with pytest.raises(ValueError):
         settings.configure(path, "unknown", "disable")
+
+
+def test_free_throw_enrichment_appends_without_rewriting_older_raw_history(tmp_path):
+    data, game = fixture()
+    original = raw.parse_half(data, game, "2026-27", "2026-11-03T01:00:00Z", "a" * 64)
+    for team in original["teams"]:
+        team.pop("freeThrowsMade")
+    original["id"] = "old-schema-measurement"
+    output = tmp_path / "halves.json"
+    output.write_text(json.dumps({"halves": [original], "checks": [], "errors": []}), encoding="utf-8")
+    cached = tmp_path / "game.json"
+    cached.write_text(json.dumps(data), encoding="utf-8")
+    result = raw.import_halves({"season": "2026-27", "games": [game]}, output, tmp_path)
+    assert len(result["halves"]) == 2 and original in result["halves"]
+    enriched = next(half for half in result["halves"] if half["id"] != original["id"])
+    assert enriched["teams"][0]["freeThrowsMade"] == 1
+    assert enriched["observedAt"] > original["observedAt"]

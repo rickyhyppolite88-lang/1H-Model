@@ -3,7 +3,7 @@ import argparse
 import json
 from pathlib import Path
 
-METHODS = ["baseline-control-v1", "qualified-baseline-v1", "first-half-defense-v1", "bonus-exposure-v1"]
+METHODS = ["baseline-control-v1", "qualified-baseline-v1", "first-half-defense-v1", "bonus-exposure-v1", "enhanced-baseline-v1"]
 
 
 def configure(path: Path, method: str, action: str):

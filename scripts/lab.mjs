@@ -45,6 +45,10 @@ export async function updateLabFiles(server, { feed, ledger, prior, priorPath, r
     archives.push({ date, jsonPath, csvPath, games: games.size });
   }
   const index = model.labIndexSchema.parse({ schemaVersion: 1, startedAt: store.startedAt, updatedAt: at, config, archives,
+    methodStartedAt: Object.fromEntries(model.labMethodIds.flatMap((method) => {
+      const first = store.forecasts.find((row) => row.methodId === method);
+      return first ? [[method, first.recordedAt]] : [];
+    })),
     rawCoverage: { games: model.latestHalves(raw.halves).length, errors: raw.errors.length },
     games: ledger.games.filter((game) => ids.has(game.id)).map((game) => ({ gameId: game.id, startsAt: game.startsAt, status: game.status, firstHalfComplete: game.firstHalfComplete })),
   });

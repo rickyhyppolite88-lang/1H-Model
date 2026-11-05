@@ -24,9 +24,9 @@ const show = (value: number | null, suffix = "") =>
 
 export default function Lab({ recordOnly = false }: { recordOnly?: boolean }) {
   const [method, setMethod] = usePreference(
-    "lab.method",
+    "lab.method.v2",
     labMethodIdSchema,
-    "qualified-baseline-v1",
+    "enhanced-baseline-v1",
   );
   const [dateChoice, setDate] = usePreference(
     recordOnly ? "lab.recordDate" : "lab.date",
@@ -44,7 +44,10 @@ export default function Lab({ recordOnly = false }: { recordOnly?: boolean }) {
   const date = dateChoice === "today" ? today : dateChoice;
   const { index, store, error, retry } = useLabRecords(date);
   const definition =
-    labMethods.find((entry) => entry.id === method) ?? labMethods[1];
+    labMethods.find((entry) => entry.id === method) ?? labMethods[0];
+  const methodStartedAt =
+    index?.methodStartedAt?.[method] ??
+    (method === "enhanced-baseline-v1" ? undefined : index?.startedAt);
   const bonus = definition.kind === "bonus";
   const enabled =
     index?.config.methods.find((entry) => entry.id === method)?.enabled ??
@@ -122,28 +125,35 @@ export default function Lab({ recordOnly = false }: { recordOnly?: boolean }) {
         <div>
           <h2>{recordOnly ? "Lab prediction record" : "The Lab"}</h2>
           <p>
-            Experimental forecasts, separate from Actual. Every method is
-            research; signal strength is not a win probability.
+            The Actual algorithm plus first-half defense, bonus exposure and
+            qualification rules. This is research; signal strength is not a win
+            probability.
           </p>
         </div>
       </div>
       <div className="lab-controls">
-        <label>
-          Research method
-          <select
-            value={method}
-            onChange={(event) => {
-              setMethod(labMethodIdSchema.parse(event.target.value));
-              setPage(0);
-            }}
-          >
-            {labMethods.map((entry) => (
-              <option key={entry.id} value={entry.id}>
-                {entry.name}
-              </option>
-            ))}
-          </select>
-        </label>
+        <details className="lab-version-control">
+          <summary>Lab version & history</summary>
+          <label>
+            Lab version
+            <select
+              value={method}
+              onChange={(event) => {
+                setMethod(labMethodIdSchema.parse(event.target.value));
+                setPage(0);
+              }}
+            >
+              {labMethods.map((entry) => (
+                <option key={entry.id} value={entry.id}>
+                  {entry.name}
+                  {entry.id === "enhanced-baseline-v1"
+                    ? ""
+                    : " (previous experiment)"}
+                </option>
+              ))}
+            </select>
+          </label>
+        </details>
         <label>
           {recordOnly ? "Lab daily breakdown (ET)" : "Lab game date (ET)"}
           <select
@@ -251,10 +261,16 @@ export default function Lab({ recordOnly = false }: { recordOnly?: boolean }) {
       {!index && !error && <p className="empty-state">Loading the Lab…</p>}
       {index && (
         <p className="inline-note">
-          Collection began {easternTipoff(index.startedAt).date} at{" "}
-          {easternTipoff(index.startedAt).time} ET. Earlier games are not
-          backfilled into this prospective record. Last published{" "}
-          {easternTipoff(index.updatedAt).time} ET.
+          {methodStartedAt ? (
+            <>
+              This version began {easternTipoff(methodStartedAt).date} at{" "}
+              {easternTipoff(methodStartedAt).time} ET.
+            </>
+          ) : (
+            "This version is awaiting its first pregame capture."
+          )}{" "}
+          Earlier games are not backfilled into this prospective record. Last
+          published {easternTipoff(index.updatedAt).time} ET.
         </p>
       )}
       {summary && (

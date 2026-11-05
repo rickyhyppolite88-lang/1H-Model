@@ -80,6 +80,11 @@ export default function LabTable({
                   data-label={bonus ? "Bonus min" : "Lab 1H"}
                 >
                   {point(bonus ? row.bonusMinutes : row.total)}
+                  {row.methodId === "enhanced-baseline-v1" && (
+                    <small className="card-detail">
+                      Actual {point(row.baselineTotal)}
+                    </small>
+                  )}
                 </td>
                 <td
                   role="cell"
@@ -148,6 +153,22 @@ export default function LabTable({
                   data-label="Research details"
                 >
                   <p>{row.reason}</p>
+                  {row.methodId === "enhanced-baseline-v1" && (
+                    <p className="lab-calculation">
+                      Actual {point(row.baselineTotal)} → defense{" "}
+                      {point(
+                        typeof row.inputs.defenseAdjustedTotal === "number"
+                          ? row.inputs.defenseAdjustedTotal
+                          : null,
+                      )}{" "}
+                      → bonus{" "}
+                      {typeof row.inputs.bonusPointsAdjustment === "number"
+                        ? `${row.inputs.bonusPointsAdjustment >= 0 ? "+" : ""}${point(row.inputs.bonusPointsAdjustment)}`
+                        : "Missing"}{" "}
+                      → Lab {point(row.total)}. Qualification uses the final
+                      total and both adjusted components.
+                    </p>
+                  )}
                   <p>Research lean: {row.side ?? "No priced lean"}</p>
                   <p>
                     Baseline total: {point(row.baselineTotal)} · Saved line:{" "}
