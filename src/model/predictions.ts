@@ -1,5 +1,11 @@
 import { z } from "zod";
 import { type SeasonLedger, validFeatures } from "./audit";
+import {
+  gameMarketCoverageSchema,
+  marketCheckSchema,
+  marketStatus,
+  marketStatusLabel,
+} from "./marketCoverage";
 import { compareTotal, projectFirstHalf } from "./predictor";
 import { predictionSignal, signalSchema } from "./signals";
 import { easternTipoff } from "./time";
@@ -33,6 +39,7 @@ export const predictionSchema = z.object({
     .nullable(),
   featureCapturedAt: z.iso.datetime().nullable(),
   unavailableReason: z.string().nullable(),
+  marketCoverage: gameMarketCoverageSchema.optional(),
   markets: z.array(marketSchema),
   signal: signalSchema.optional(),
 });
@@ -60,6 +67,20 @@ export const predictionFeedSchema = z.object({
     unavailable: z.number().int(),
   }),
   predictions: z.array(predictionSchema),
+  marketChecks: z.array(marketCheckSchema).optional(),
+  unmatchedMarkets: z
+    .array(
+      z.object({
+        oddsGameId: z.string(),
+        away: z.string(),
+        home: z.string(),
+        source: z.url(),
+        startsAt: z.string().optional(),
+        reason: z.string().optional(),
+        booksWithLines: z.array(z.string()).optional(),
+      }),
+    )
+    .optional(),
 });
 export type PredictionRow = z.infer<typeof predictionSchema>;
 export type PredictionFeed = z.infer<typeof predictionFeedSchema>;
@@ -189,10 +210,20 @@ export function generatePredictions(
         : !game.away.modelId || !game.home.modelId
           ? "One or both teams are outside the model's team-stat coverage."
           : "No valid pregame feature archive or eligible season-debut reconstruction.",
+      marketCoverage: game.marketCoverage,
       markets: game.quotes.map((quote) => ({
         sportsbook: quote.sportsbook,
         openingLine: quote.opening?.total ?? null,
-        latestLine: quote.latest?.total ?? null,
+        latestLine:
+          !game.marketCoverage ||
+          (game.marketCoverage.status === "matched" &&
+            game.marketCoverage.books.some(
+              (book) =>
+                book.sportsbook === quote.sportsbook &&
+                book.status === "available",
+            ))
+            ? (quote.latest?.total ?? null)
+            : null,
         capturedAt: quote.latestCapturedAt,
         source: quote.source,
         closingVerified: false,
@@ -227,6 +258,8 @@ export function generatePredictions(
       ...row,
       signal: predictionSignal(row, "betmgm", "latest", generatedAt),
     })),
+    marketChecks: ledger.marketChecks,
+    unmatchedMarkets: ledger.unmatchedOdds,
   });
 }
 
@@ -237,7 +270,10 @@ export function predictionComparison(
 ) {
   const market = row.markets.find((quote) => quote.sportsbook === sportsbook);
   const line =
-    (basis === "opening" ? market?.openingLine : market?.latestLine) ?? null;
+    basis === "latest" && marketStatus(row, sportsbook) !== "available"
+      ? null
+      : ((basis === "opening" ? market?.openingLine : market?.latestLine) ??
+        null);
   const comparison =
     row.projectedFirstHalfTotal !== null && line !== null
       ? compareTotal(row.projectedFirstHalfTotal, line)
@@ -295,6 +331,7 @@ export function workbookPayload(feed: PredictionFeed) {
         feed.defaultLineBasis,
         feed.generatedAt,
       ),
+      marketStatus: marketStatusLabel(row, feed.defaultSportsbook),
     })),
   };
 }
@@ -340,6 +377,9 @@ export function predictionsToCsv(
     "model_signal_score",
     "model_signal_status",
     "model_signal_method",
+    "market_data_status",
+    "market_source_checked_at",
+    "other_books_with_current_lines",
   ];
   const round = (value: number | null) =>
     value === null ? null : Number(value.toFixed(4));
@@ -381,6 +421,16 @@ export function predictionsToCsv(
         signal.score,
         signal.label,
         signal.method,
+        marketStatusLabel(row, sportsbook),
+        row.marketCoverage?.checkedAt ?? null,
+        row.markets
+          .filter(
+            (market) =>
+              market.sportsbook !== sportsbook &&
+              marketStatus(row, market.sportsbook) === "available",
+          )
+          .map((market) => market.sportsbook)
+          .join("; "),
       ]
         .map(csvCell)
         .join(",");

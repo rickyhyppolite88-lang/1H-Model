@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { gameMarketCoverageSchema, marketCheckSchema } from "./marketCoverage";
 import { predict } from "./predictor";
 import { type SeasonDataset, teamSchema } from "./schema";
 import { type BlendedTeam, blendTeam, defaultBlend } from "./seasons";
@@ -59,6 +60,7 @@ export const ledgerSchema = z.object({
       scoresSource: z.url(),
       boxScoreUrl: z.url(),
       capturedAt: z.iso.datetime(),
+      marketCoverage: gameMarketCoverageSchema.optional(),
       featureSnapshot: featureSchema.nullable().optional(),
       quotes: z.array(
         z.object({
@@ -80,9 +82,13 @@ export const ledgerSchema = z.object({
       away: z.string(),
       home: z.string(),
       source: z.url(),
+      startsAt: z.string().optional(),
+      reason: z.string().optional(),
+      booksWithLines: z.array(z.string()).optional(),
     }),
   ),
   notes: z.array(z.string()),
+  marketChecks: z.array(marketCheckSchema).optional(),
 });
 export type SeasonLedger = z.infer<typeof ledgerSchema>;
 export type SeasonGame = SeasonLedger["games"][number];

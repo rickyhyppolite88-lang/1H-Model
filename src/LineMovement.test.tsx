@@ -87,7 +87,7 @@ it("shows decreases in red and explains missing opener or current data", () => {
       at={Date.parse("2026-11-03T01:00:00Z")}
     />,
   );
-  expect(screen.getByText("Not posted")).toBeTruthy();
+  expect(screen.getByText("No feed line")).toBeTruthy();
   expect(screen.getByRole("tooltip").textContent).toContain(
     "Current line unavailable",
   );

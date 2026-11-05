@@ -147,6 +147,14 @@ function signature(
           latest: q.latest,
         }))
       : undefined,
+    // Retained quote evidence can be unchanged when a book vanishes/reappears.
+    // Version the usable lines, without versioning check timestamps alone.
+    marketLines: includeQuotes
+      ? row.markets.map((market) => ({
+          sportsbook: market.sportsbook,
+          latestLine: market.latestLine,
+        }))
+      : undefined,
   });
 }
 

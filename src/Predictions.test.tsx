@@ -96,6 +96,32 @@ afterEach(() => {
   vi.restoreAllMocks();
 });
 
+it("filters missing selected-book lines without losing the model projection or other book coverage", async () => {
+  const feed = todayFixture();
+  feed.predictions[1] = {
+    ...feed.predictions[0],
+    gameId: "other-book",
+    awayTeam: "Other book team",
+    markets: [{ ...feed.predictions[0].markets[0], sportsbook: "draftkings" }],
+  };
+  vi.stubGlobal(
+    "fetch",
+    vi.fn(async (url: string) => ({
+      ok: true,
+      json: async () => responseFor(url, feed),
+    })),
+  );
+  render(<Predictions />);
+  await screen.findByRole("heading", {
+    name: "First-half lines & predictions",
+  });
+  fireEvent.click(screen.getByRole("button", { name: "Show missing lines" }));
+  const table = screen.getByRole("table", { name: "Matchup predictions" });
+  expect(within(table).getByText("Other book team")).toBeTruthy();
+  expect(within(table).queryByText("Early team")).toBeNull();
+  expect(within(table).getByText("No feed line")).toBeTruthy();
+});
+
 it("orders confidence scores without presenting them as win probabilities", async () => {
   vi.useFakeTimers({ toFake: ["Date"] });
   vi.setSystemTime(new Date("2026-11-02T22:00:00Z"));
@@ -395,7 +421,7 @@ it("toggles tipoff groups and exports only the selected date and group", async (
   expect(screen.getByRole("button", { name: "Tipped off 1" })).toBeTruthy();
   fireEvent.click(screen.getByRole("button", { name: "Not tipped off 1" }));
   expect(screen.getByText("Late team")).toBeTruthy();
-  expect(screen.getByText("Not posted")).toBeTruthy();
+  expect(screen.getByText("No feed line")).toBeTruthy();
   expect(screen.queryByText("Early team")).toBeNull();
   expect(screen.queryByText("Postponed team")).toBeNull();
   fireEvent.click(

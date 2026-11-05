@@ -41,6 +41,8 @@ export const preferenceCoverage: z.ZodType<string> = z.enum([
   "available",
   "unavailable",
   "completed",
+  "line_missing",
+  "other_books",
 ]);
 export const preferenceGroup: z.ZodType<string> = z.enum([
   "all",

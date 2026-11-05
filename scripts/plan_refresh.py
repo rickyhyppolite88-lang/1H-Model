@@ -16,6 +16,7 @@ EASTERN = ZoneInfo("America/New_York")
 PRETIP_MINUTES = 75
 MIN_REFRESH_MINUTES = 15
 DISCOVERY_HOURS = 2
+UPCOMING_DISCOVERY_MINUTES = 30
 RESULT_WINDOW_HOURS = 4
 
 
@@ -65,10 +66,13 @@ def plan_refresh(ledger: dict, now: datetime, event: str, schedule: str = "", *,
     if through < today:
         return decision("full", "Discover the new Eastern game date with fresh team stats and markets.")
     near = active = 0
+    upcoming_today = False
     for game in ledger["games"]:
         if re.search(r"cancel|postpon", game["status"], re.IGNORECASE) or game["firstHalfComplete"]:
             continue
         until_tip = instant(game["startsAt"]) - now
+        if until_tip > timedelta() and instant(game["startsAt"]).astimezone(EASTERN).date() == today:
+            upcoming_today = True
         reported_started = re.search(r"in progress|halftime|final|suspended|overtime", game["status"], re.IGNORECASE)
         if not reported_started and timedelta() < until_tip <= timedelta(minutes=PRETIP_MINUTES):
             near += 1
@@ -78,6 +82,8 @@ def plan_refresh(ledger: dict, now: datetime, event: str, schedule: str = "", *,
         return decision("markets", "Upcoming games are inside the 75-minute pre-tip window.", near, active)
     if active:
         return decision("markets", "Started games still need completed first-half results.", near, active)
+    if upcoming_today and age >= timedelta(minutes=UPCOMING_DISCOVERY_MINUTES):
+        return decision("markets", "Discover newly posted sportsbook lines every 30 minutes while today's games are upcoming.")
     if age >= timedelta(hours=DISCOVERY_HOURS):
         return decision("markets", "Discover schedule changes and newly posted markets after two hours.")
     return decision("skip", "No pre-tip or first-half-result check is due.")
