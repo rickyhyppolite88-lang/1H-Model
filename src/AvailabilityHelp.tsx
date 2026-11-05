@@ -23,9 +23,9 @@ export default function AvailabilityHelp() {
             A model total may be available, but that sportsbook’s first-half
             line was absent from the latest retrieved update. There is no
             over/under edge to compare yet. This does not imply a negative model
-            signal, and does not prove the sportsbook has not posted it. Data
-            coverage shows source checks, unmatched games, and other books with
-            captured lines.
+            signal, and does not prove the sportsbook has not posted it. Use the
+            sportsbook selector to compare other books, or the projection
+            coverage filter to find missing lines.
           </dd>
           <dt>Signal unavailable</dt>
           <dd>

@@ -6,7 +6,6 @@ import DailyRecord, { type DailyRecordEvidence } from "./DailyRecord";
 import GameCardRow from "./GameCardRow";
 import GameTime from "./GameTime";
 import LineMovement from "./LineMovement";
-import MarketCoverage from "./MarketCoverage";
 import type { RecordedLinePick } from "./model/lineMovement";
 import {
   marketStatus,
@@ -20,6 +19,7 @@ import {
   dailyArchiveSchema,
   filterPredictionGroups,
   type PredictionFeed,
+  type PredictionRow,
   predictionComparison,
   predictionFeedSchema,
   predictionsToCsv,
@@ -45,6 +45,14 @@ const books = sportsbookNames;
 const format = (value: number | null) =>
   value === null ? "—" : value.toFixed(2);
 const basis = "latest";
+function hasUpcomingPick(row: PredictionRow, book: string, now: number) {
+  const { lean } = predictionComparison(row, book, basis);
+  return (
+    tipoffState(row, now) === "upcoming" &&
+    row.featureKind === "captured_pregame" &&
+    (lean === "OVER" || lean === "UNDER")
+  );
+}
 const dateLabel = (date: string) =>
   new Intl.DateTimeFormat("en-US", {
     timeZone: "America/New_York",
@@ -193,6 +201,10 @@ export default function Predictions() {
           );
         })
         .sort((a, b) => {
+          const pickOrder =
+            Number(hasUpcomingPick(b, book, clock)) -
+            Number(hasUpcomingPick(a, book, clock));
+          if (pickOrder) return pickOrder;
           if (sort === "signal") {
             const at = new Date(clock).toISOString();
             const diff =
@@ -348,17 +360,6 @@ export default function Predictions() {
           </label>
         </div>
       </div>
-      <MarketCoverage
-        feed={feed}
-        rows={dateRows}
-        date={selectedDate}
-        book={book}
-        now={clock}
-        onShowGaps={() => {
-          setCoverage("line_missing");
-          setPage(0);
-        }}
-      />
       <div className="board-toolbar">
         <div
           className="prediction-groups"
@@ -624,8 +625,8 @@ export default function Predictions() {
                 setPage(0);
               }}
             >
-              <option value="signal">Highest confidence score first</option>
-              <option value="time">Tipoff (ET)</option>
+              <option value="signal">Picks first, then confidence</option>
+              <option value="time">Picks first, then tipoff (ET)</option>
             </select>
           </label>
           <label>
@@ -667,7 +668,10 @@ export default function Predictions() {
             <span>Sportsbook</span>
             <select
               value={book}
-              onChange={(event) => setBook(event.target.value)}
+              onChange={(event) => {
+                setBook(event.target.value);
+                setPage(0);
+              }}
             >
               {availableBooks.map((name) => (
                 <option key={name} value={name}>

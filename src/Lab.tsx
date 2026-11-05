@@ -87,11 +87,22 @@ export default function Lab({ recordOnly = false }: { recordOnly?: boolean }) {
         .toLowerCase()
         .includes(query.toLowerCase().trim()),
     )
-    .sort(
-      (a, b) =>
+    .sort((a, b) => {
+      if (!recordOnly) {
+        const priority = (row: LabForecast) =>
+          row.status === "qualified" || row.status === "control"
+            ? 0
+            : row.status === "watch_only"
+              ? 1
+              : 2;
+        const pickOrder = priority(a) - priority(b);
+        if (pickOrder) return pickOrder;
+      }
+      return (
         b.gameDate.localeCompare(a.gameDate) ||
-        a.startsAt.localeCompare(b.startsAt),
-    );
+        a.startsAt.localeCompare(b.startsAt)
+      );
+    });
   const summaryRows = recordOnly ? canonical.filter(isFinished) : canonical;
   const summary = store ? labSummary(summaryRows, store) : null;
   const pages = Math.max(1, Math.ceil(rows.length / 25));
