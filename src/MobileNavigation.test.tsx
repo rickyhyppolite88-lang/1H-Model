@@ -52,6 +52,19 @@ it("opens the record from the quick navigation", () => {
   expect(select).toHaveBeenCalledWith("record");
 });
 
+it("makes the Lab directly accessible from phone navigation", () => {
+  const select = vi.fn();
+  render(
+    <MobileNavigation
+      active="lab"
+      sections={[...sections, ["lab", "Lab"]]}
+      onSelect={select}
+    />,
+  );
+  fireEvent.click(screen.getByRole("button", { name: "Lab" }));
+  expect(select).toHaveBeenCalledWith("lab");
+});
+
 it("opens all model sections in a modal and closes it after navigation", () => {
   const select = vi.fn();
   render(
