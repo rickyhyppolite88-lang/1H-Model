@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "startedAt": "2026-11-05T16:08:14.757Z",
-  "updatedAt": "2026-11-06T02:19:15.622Z",
+  "updatedAt": "2026-11-06T03:11:07.333Z",
   "forecasts": [
     {
       "id": "2026-27_baseline-control-v1_401925031_v1",
@@ -28439,6 +28439,84 @@
         "outlierEdge": 8,
         "componentAgreementRequired": "Both adjusted components must agree"
       }
+    },
+    {
+      "id": "2026-27_enhanced-baseline-v1_401909739_v7",
+      "season": "2026-27",
+      "methodId": "enhanced-baseline-v1",
+      "gameId": "401909739",
+      "gameDate": "2026-11-05",
+      "startsAt": "2026-11-06T03:30:00Z",
+      "recordedAt": "2026-11-06T03:11:07.333Z",
+      "version": 7,
+      "revision": "6a515366f036d7254bda74f0936d0142dd81dee2",
+      "awayTeam": "Cal Poly Mustangs",
+      "homeTeam": "Arizona Wildcats",
+      "sportsbook": "betmgm",
+      "line": 83.5,
+      "overPrice": -120,
+      "underPrice": -110,
+      "total": 77.28495430967284,
+      "baselineTotal": 76.63092777220922,
+      "simpleTotal": 75.63254495451082,
+      "paceTotal": 79.7635683424159,
+      "side": "UNDER",
+      "signalStrength": 78,
+      "status": "qualified",
+      "reason": "Edge is at least 1.5 and below 8; both components agree.",
+      "bonusMinutes": 11.368480503990561,
+      "bonusBaselineMinutes": 8.625567190226874,
+      "inputs": {
+        "baselineModelVersion": "season-bridge-v1",
+        "baselineFeatureCapturedAt": "2026-11-05T06:20:15.490Z",
+        "statsRetrievedAt": "2026-11-05T06:20:11.148422Z",
+        "priorSnapshot": "data/input-snapshots/5d7d1cdd590b01d65ca838308bd098bc8be58fdb5d96faf922f4c44677d6d7de.json",
+        "currentSnapshot": "data/input-snapshots/a700ee15ace2d577e68a1eebe114df8c003d8c66fa830264cdaaade28cf39617.json",
+        "sourceBoard": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-05",
+        "quoteCapturedAt": "2026-11-06T03:11:04.255125Z",
+        "marketCheckedAt": "2026-11-06T03:11:04.255125Z",
+        "lastSeenLine": 83.5,
+        "marketFreshness": "Source check within 45 minutes",
+        "awayCurrentWeight": 0,
+        "homeCurrentWeight": 0.1111111111111111,
+        "away_firstHalfPoints": 37.10693150684931,
+        "away_pace": 75.58620547945206,
+        "away_offensiveEfficiency": 1.0448426027397262,
+        "away_defensiveEfficiency": 1.0797013698630136,
+        "home_firstHalfPoints": 38.17060578386606,
+        "home_pace": 72.86329375951294,
+        "home_offensiveEfficiency": 1.1165045357686454,
+        "home_defensiveEfficiency": 0.998023439878234,
+        "baselineSimpleTotal": 75.27753729071537,
+        "baselinePaceTotal": 78.66101349444997,
+        "defenseSimpleTotal": 74.5299901065449,
+        "defenseAdjustedTotal": 76.18239946170692,
+        "defenseAdjustment": -0.44852831050229724,
+        "awayFirstHalfAllowed": 38.79541095890411,
+        "homeFirstHalfAllowed": 34.98703196347032,
+        "priorAllowedMean": 35.07260273972603,
+        "priorLeagueRegression": 0.35,
+        "historyAsOf": "2026-11-06T03:11:07.333Z",
+        "excludedHistoryGames": "",
+        "pseudoGames": 4,
+        "poissonSteps": 200,
+        "leagueFouls": 8.311518324607329,
+        "leagueGames": 191,
+        "awayPriorHalves": 1,
+        "homePriorHalves": 1,
+        "bonusNeutralMinutes": 9.064121901693714,
+        "bonusPointsAdjustment": 1.1025548479659129,
+        "bonusPointsPerMinute": 0.47846496064759697,
+        "bonusUnboundedSlope": 0.47846496064759697,
+        "bonusFitGames": 191,
+        "bonusFitMinimumGames": 30,
+        "bonusFitPriorGames": 50,
+        "bonusSlopeCap": 1,
+        "bonusPointsCap": 2,
+        "minimumEdge": 1.5,
+        "outlierEdge": 8,
+        "componentAgreementRequired": "Both adjusted components must agree"
+      }
     }
   ],
   "results": [
@@ -29045,6 +29123,83 @@
       "startsAt": "2026-11-06T01:00:00Z",
       "awayPoints": 29,
       "homePoints": 56,
+      "source": "https://site.api.espn.com/apis/site/v2/sports/basketball/mens-college-basketball/scoreboard?dates=20261105&groups=50&limit=1000"
+    },
+    {
+      "id": "2026-27:401909501_result1",
+      "season": "2026-27",
+      "gameId": "401909501",
+      "observedAt": "2026-11-06T03:11:06.893Z",
+      "sourceCapturedAt": "2026-11-06T03:11:04.255125Z",
+      "startsAt": "2026-11-06T01:30:00Z",
+      "awayPoints": 35,
+      "homePoints": 50,
+      "source": "https://site.api.espn.com/apis/site/v2/sports/basketball/mens-college-basketball/scoreboard?dates=20261105&groups=50&limit=1000"
+    },
+    {
+      "id": "2026-27:401911334_result1",
+      "season": "2026-27",
+      "gameId": "401911334",
+      "observedAt": "2026-11-06T03:11:06.893Z",
+      "sourceCapturedAt": "2026-11-06T03:11:04.255125Z",
+      "startsAt": "2026-11-06T01:30:00Z",
+      "awayPoints": 28,
+      "homePoints": 51,
+      "source": "https://site.api.espn.com/apis/site/v2/sports/basketball/mens-college-basketball/scoreboard?dates=20261105&groups=50&limit=1000"
+    },
+    {
+      "id": "2026-27:401913526_result1",
+      "season": "2026-27",
+      "gameId": "401913526",
+      "observedAt": "2026-11-06T03:11:06.893Z",
+      "sourceCapturedAt": "2026-11-06T03:11:04.255125Z",
+      "startsAt": "2026-11-06T01:30:00Z",
+      "awayPoints": 30,
+      "homePoints": 53,
+      "source": "https://site.api.espn.com/apis/site/v2/sports/basketball/mens-college-basketball/scoreboard?dates=20261105&groups=50&limit=1000"
+    },
+    {
+      "id": "2026-27:401925922_result1",
+      "season": "2026-27",
+      "gameId": "401925922",
+      "observedAt": "2026-11-06T03:11:06.893Z",
+      "sourceCapturedAt": "2026-11-06T03:11:04.255125Z",
+      "startsAt": "2026-11-06T01:30:00Z",
+      "awayPoints": 23,
+      "homePoints": 45,
+      "source": "https://site.api.espn.com/apis/site/v2/sports/basketball/mens-college-basketball/scoreboard?dates=20261105&groups=50&limit=1000"
+    },
+    {
+      "id": "2026-27:401911518_result1",
+      "season": "2026-27",
+      "gameId": "401911518",
+      "observedAt": "2026-11-06T03:11:06.893Z",
+      "sourceCapturedAt": "2026-11-06T03:11:04.255125Z",
+      "startsAt": "2026-11-06T02:00:00Z",
+      "awayPoints": 24,
+      "homePoints": 26,
+      "source": "https://site.api.espn.com/apis/site/v2/sports/basketball/mens-college-basketball/scoreboard?dates=20261105&groups=50&limit=1000"
+    },
+    {
+      "id": "2026-27:401921133_result1",
+      "season": "2026-27",
+      "gameId": "401921133",
+      "observedAt": "2026-11-06T03:11:06.893Z",
+      "sourceCapturedAt": "2026-11-06T03:11:04.255125Z",
+      "startsAt": "2026-11-06T02:00:00Z",
+      "awayPoints": 24,
+      "homePoints": 37,
+      "source": "https://site.api.espn.com/apis/site/v2/sports/basketball/mens-college-basketball/scoreboard?dates=20261105&groups=50&limit=1000"
+    },
+    {
+      "id": "2026-27:401921698_result1",
+      "season": "2026-27",
+      "gameId": "401921698",
+      "observedAt": "2026-11-06T03:11:06.893Z",
+      "sourceCapturedAt": "2026-11-06T03:11:04.255125Z",
+      "startsAt": "2026-11-06T02:00:00Z",
+      "awayPoints": 19,
+      "homePoints": 27,
       "source": "https://site.api.espn.com/apis/site/v2/sports/basketball/mens-college-basketball/scoreboard?dates=20261105&groups=50&limit=1000"
     }
   ],
@@ -31098,6 +31253,310 @@
           "threeAttempted": 12,
           "turnovers": 9,
           "offensiveRebounds": 5
+        }
+      ]
+    },
+    {
+      "id": "401909501_19ad78aade123f5b0ee66f0892c16edff6a5a7f51efd4f8e9f191b4df2d1e8fd",
+      "gameId": "401909501",
+      "season": "2026-27",
+      "startsAt": "2026-11-06T01:30:00Z",
+      "observedAt": "2026-11-06T03:11:05.816234Z",
+      "source": "https://site.api.espn.com/apis/site/v2/sports/basketball/mens-college-basketball/summary?event=401909501",
+      "sourceSha256": "44bc993bd51663728d71f3c37c490030b611edad3a2b74bb2e5a5b0137e0c0ac",
+      "bothD1": true,
+      "teams": [
+        {
+          "espnId": "305",
+          "points": 50,
+          "fouls": 9,
+          "bonusMinutes": 7.35,
+          "fga": 28,
+          "fta": 12,
+          "freeThrowsMade": 9,
+          "threeMade": 7,
+          "threeAttempted": 13,
+          "turnovers": 3,
+          "offensiveRebounds": 1
+        },
+        {
+          "espnId": "58",
+          "points": 35,
+          "fouls": 10,
+          "bonusMinutes": 9.15,
+          "fga": 30,
+          "fta": 8,
+          "freeThrowsMade": 7,
+          "threeMade": 2,
+          "threeAttempted": 12,
+          "turnovers": 5,
+          "offensiveRebounds": 7
+        }
+      ]
+    },
+    {
+      "id": "401911334_5c496e39f8f39e1a4bd7798580cae68769594695df9c0bcf293b918357cb560d",
+      "gameId": "401911334",
+      "season": "2026-27",
+      "startsAt": "2026-11-06T01:30:00Z",
+      "observedAt": "2026-11-06T03:11:05.816234Z",
+      "source": "https://site.api.espn.com/apis/site/v2/sports/basketball/mens-college-basketball/summary?event=401911334",
+      "sourceSha256": "ee035d917431080448736b59ad9bb8f86e1b4313d038b72e2193c1d255cac970",
+      "bothD1": false,
+      "teams": [
+        {
+          "espnId": "2005",
+          "points": 51,
+          "fouls": 7,
+          "bonusMinutes": 7.8,
+          "fga": 39,
+          "fta": 16,
+          "freeThrowsMade": 10,
+          "threeMade": 5,
+          "threeAttempted": 16,
+          "turnovers": 6,
+          "offensiveRebounds": 7
+        },
+        {
+          "espnId": "502",
+          "points": 28,
+          "fouls": 11,
+          "bonusMinutes": 1.1,
+          "fga": 33,
+          "fta": 2,
+          "freeThrowsMade": 1,
+          "threeMade": 5,
+          "threeAttempted": 19,
+          "turnovers": 16,
+          "offensiveRebounds": 7
+        }
+      ]
+    },
+    {
+      "id": "401911518_fac9ef2084a3fdeaa03c7896d393081de74416e24eae44a509de068a5bc25754",
+      "gameId": "401911518",
+      "season": "2026-27",
+      "startsAt": "2026-11-06T02:00:00Z",
+      "observedAt": "2026-11-06T03:11:05.816234Z",
+      "source": "https://site.api.espn.com/apis/site/v2/sports/basketball/mens-college-basketball/summary?event=401911518",
+      "sourceSha256": "c3462ad14391f9193550052334502d1df496989bb7189a921852537708d6b283",
+      "bothD1": false,
+      "teams": [
+        {
+          "espnId": "2381",
+          "points": 24,
+          "fouls": 8,
+          "bonusMinutes": 5.566666666666666,
+          "fga": 26,
+          "fta": 11,
+          "freeThrowsMade": 4,
+          "threeMade": 4,
+          "threeAttempted": 13,
+          "turnovers": 10,
+          "offensiveRebounds": 7
+        },
+        {
+          "espnId": "302",
+          "points": 26,
+          "fouls": 11,
+          "bonusMinutes": 3.216666666666667,
+          "fga": 27,
+          "fta": 10,
+          "freeThrowsMade": 8,
+          "threeMade": 2,
+          "threeAttempted": 11,
+          "turnovers": 9,
+          "offensiveRebounds": 4
+        }
+      ]
+    },
+    {
+      "id": "401913526_98d2d30cf6f860cef971343f1ba162202f7a3dcbb03da432a2ad132a187268d0",
+      "gameId": "401913526",
+      "season": "2026-27",
+      "startsAt": "2026-11-06T01:30:00Z",
+      "observedAt": "2026-11-06T03:11:05.816234Z",
+      "source": "https://site.api.espn.com/apis/site/v2/sports/basketball/mens-college-basketball/summary?event=401913526",
+      "sourceSha256": "bc78df40de60fe3381f53731583e95fa8ab9d1bda7cbf5074c3a751a38d5e08e",
+      "bothD1": true,
+      "teams": [
+        {
+          "espnId": "219",
+          "points": 30,
+          "fouls": 10,
+          "bonusMinutes": 4.216666666666667,
+          "fga": 41,
+          "fta": 7,
+          "freeThrowsMade": 4,
+          "threeMade": 4,
+          "threeAttempted": 16,
+          "turnovers": 5,
+          "offensiveRebounds": 9
+        },
+        {
+          "espnId": "356",
+          "points": 53,
+          "fouls": 7,
+          "bonusMinutes": 8.2,
+          "fga": 36,
+          "fta": 9,
+          "freeThrowsMade": 7,
+          "threeMade": 6,
+          "threeAttempted": 15,
+          "turnovers": 7,
+          "offensiveRebounds": 5
+        }
+      ]
+    },
+    {
+      "id": "401921133_f7892ad0c51073f54073165cbcd148132755fe8ae430c3eee03c710cfedc60c8",
+      "gameId": "401921133",
+      "season": "2026-27",
+      "startsAt": "2026-11-06T02:00:00Z",
+      "observedAt": "2026-11-06T03:11:05.816234Z",
+      "source": "https://site.api.espn.com/apis/site/v2/sports/basketball/mens-college-basketball/summary?event=401921133",
+      "sourceSha256": "22cf7d8ba25ce84ff0741db5f41e664d4993667d04a7b1c8048088aad12b021b",
+      "bothD1": true,
+      "teams": [
+        {
+          "espnId": "2065",
+          "points": 24,
+          "fouls": 14,
+          "bonusMinutes": 7.083333333333333,
+          "fga": 22,
+          "fta": 17,
+          "freeThrowsMade": 10,
+          "threeMade": 2,
+          "threeAttempted": 9,
+          "turnovers": 12,
+          "offensiveRebounds": 3
+        },
+        {
+          "espnId": "2641",
+          "points": 37,
+          "fouls": 13,
+          "bonusMinutes": 12.116666666666667,
+          "fga": 30,
+          "fta": 19,
+          "freeThrowsMade": 10,
+          "threeMade": 3,
+          "threeAttempted": 15,
+          "turnovers": 6,
+          "offensiveRebounds": 7
+        }
+      ]
+    },
+    {
+      "id": "401921698_1b8e8e50871bd359d01656b485571163504ef908676c477e29f7ca9a99054ada",
+      "gameId": "401921698",
+      "season": "2026-27",
+      "startsAt": "2026-11-06T02:00:00Z",
+      "observedAt": "2026-11-06T03:11:05.816234Z",
+      "source": "https://site.api.espn.com/apis/site/v2/sports/basketball/mens-college-basketball/summary?event=401921698",
+      "sourceSha256": "5088a3073c89a02daf5a87c1fadcd84ef46be919726ef677652a79361031550a",
+      "bothD1": true,
+      "teams": [
+        {
+          "espnId": "119",
+          "points": 19,
+          "fouls": 6,
+          "bonusMinutes": 0,
+          "fga": 31,
+          "fta": 4,
+          "freeThrowsMade": 2,
+          "threeMade": 3,
+          "threeAttempted": 13,
+          "turnovers": 8,
+          "offensiveRebounds": 7
+        },
+        {
+          "espnId": "254",
+          "points": 27,
+          "fouls": 4,
+          "bonusMinutes": 0,
+          "fga": 26,
+          "fta": 5,
+          "freeThrowsMade": 3,
+          "threeMade": 4,
+          "threeAttempted": 13,
+          "turnovers": 11,
+          "offensiveRebounds": 6
+        }
+      ]
+    },
+    {
+      "id": "401921747_768f92c74338a0b9ee847fab2851406bac92b9fcecfada3887aecc1b11cb58b0",
+      "gameId": "401921747",
+      "season": "2026-27",
+      "startsAt": "2026-11-06T00:00:00Z",
+      "observedAt": "2026-11-06T03:11:05.816234Z",
+      "source": "https://site.api.espn.com/apis/site/v2/sports/basketball/mens-college-basketball/summary?event=401921747",
+      "sourceSha256": "fc4f1d72070a2fb5893f447f388b3e46de0346235cf147ecc14b16b4f5f47543",
+      "bothD1": true,
+      "teams": [
+        {
+          "espnId": "2132",
+          "points": 40,
+          "fouls": 11,
+          "bonusMinutes": 4.883333333333334,
+          "fga": 31,
+          "fta": 13,
+          "freeThrowsMade": 9,
+          "threeMade": 5,
+          "threeAttempted": 16,
+          "turnovers": 2,
+          "offensiveRebounds": 6
+        },
+        {
+          "espnId": "2739",
+          "points": 32,
+          "fouls": 10,
+          "bonusMinutes": 4.583333333333333,
+          "fga": 24,
+          "fta": 12,
+          "freeThrowsMade": 8,
+          "threeMade": 2,
+          "threeAttempted": 10,
+          "turnovers": 10,
+          "offensiveRebounds": 5
+        }
+      ]
+    },
+    {
+      "id": "401925922_605e4f8baf1304945b0aa53dcbb9aa33d04dd51dbdcfd3b70f217f7e522029f0",
+      "gameId": "401925922",
+      "season": "2026-27",
+      "startsAt": "2026-11-06T01:30:00Z",
+      "observedAt": "2026-11-06T03:11:05.816234Z",
+      "source": "https://site.api.espn.com/apis/site/v2/sports/basketball/mens-college-basketball/summary?event=401925922",
+      "sourceSha256": "f928476eeea821e4f06746e7b74fb55af4cfd29fc4b4fbe64968244c50596cb7",
+      "bothD1": false,
+      "teams": [
+        {
+          "espnId": "134743",
+          "points": 23,
+          "fouls": 11,
+          "bonusMinutes": 3.95,
+          "fga": 25,
+          "fta": 9,
+          "freeThrowsMade": 2,
+          "threeMade": 1,
+          "threeAttempted": 5,
+          "turnovers": 10,
+          "offensiveRebounds": 4
+        },
+        {
+          "espnId": "253",
+          "points": 45,
+          "fouls": 9,
+          "bonusMinutes": 10.616666666666667,
+          "fga": 34,
+          "fta": 17,
+          "freeThrowsMade": 10,
+          "threeMade": 3,
+          "threeAttempted": 13,
+          "turnovers": 3,
+          "offensiveRebounds": 8
         }
       ]
     }
