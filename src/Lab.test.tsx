@@ -9,7 +9,7 @@ import {
 import { afterEach, beforeEach, expect, it, vi } from "vitest";
 import Lab from "./Lab";
 import { type LabIndex, labIndexSchema } from "./model/lab";
-import { enhancedLabFixture } from "./model/lab.test-fixture";
+import { currentLabFixture } from "./model/lab.test-fixture";
 import { captureLab } from "./model/labCapture";
 import PredictionRecord from "./PredictionRecord";
 
@@ -18,11 +18,11 @@ vi.mock("./ActualPredictionRecord", () => ({
 }));
 
 function uiFixture() {
-  const f = enhancedLabFixture();
+  const f = currentLabFixture();
   const store = captureLab(f.empty, f.config, f.feed, f.ledger, f.inputs, f.at);
   store.startedAt = "2026-11-02T20:00:00Z";
   const base = store.forecasts.find(
-    (row) => row.methodId === "enhanced-baseline-v1",
+    (row) => row.methodId === "enhanced-baseline-v2",
   );
   if (!base) throw new Error("fixture");
   const finished = {
@@ -145,7 +145,7 @@ it("shows upcoming research and explicit method descriptions without probability
 it("lists qualified Lab research before watch-only forecasts and earlier data gaps", async () => {
   const { store, index } = uiFixture();
   const base = store.forecasts.find(
-    (row) => row.methodId === "enhanced-baseline-v1",
+    (row) => row.methodId === "enhanced-baseline-v2",
   );
   if (!base) throw new Error("fixture");
   const extras = [
@@ -229,7 +229,7 @@ it("records completed first halves, actual totals and watch-only decisions witho
 it("retains paused-method history and separates the Actual and Lab record tabs", async () => {
   const { store, index } = uiFixture();
   const method = index.config.methods.find(
-    (entry) => entry.id === "enhanced-baseline-v1",
+    (entry) => entry.id === "enhanced-baseline-v2",
   );
   if (method) method.enabled = false;
   vi.stubGlobal(

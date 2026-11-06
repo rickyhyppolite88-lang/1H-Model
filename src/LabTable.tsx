@@ -1,5 +1,8 @@
 /** biome-ignore-all lint/a11y/useSemanticElements: Mobile cards retain explicit native table roles. */
 /** biome-ignore-all lint/a11y/noRedundantRoles: CSS changes mobile table display. */
+
+import ContextDetails from "./ContextDetails";
+import FoulDetails from "./FoulDetails";
 import GameCardRow from "./GameCardRow";
 import GameTime from "./GameTime";
 import { gradeLab, type LabForecast, type LabStore } from "./model/lab";
@@ -80,7 +83,7 @@ export default function LabTable({
                   data-label={bonus ? "Bonus min" : "Lab 1H"}
                 >
                   {point(bonus ? row.bonusMinutes : row.total)}
-                  {row.methodId === "enhanced-baseline-v1" && (
+                  {row.methodId.startsWith("enhanced-baseline-") && (
                     <small className="card-detail">
                       Actual {point(row.baselineTotal)}
                     </small>
@@ -153,6 +156,25 @@ export default function LabTable({
                   data-label="Research details"
                 >
                   <p>{row.reason}</p>
+                  {row.methodId === "enhanced-baseline-v2" && (
+                    <p>
+                      Actual {point(row.baselineTotal)} → 1H defense{" "}
+                      {point(
+                        typeof row.inputs.defenseAdjustedTotal === "number"
+                          ? row.inputs.defenseAdjustedTotal
+                          : null,
+                      )}{" "}
+                      → venue/matchup{" "}
+                      {row.context
+                        ? `${row.context.adjustment >= 0 ? "+" : ""}${point(row.context.adjustment)}`
+                        : "Missing"}{" "}
+                      → FT/fouls{" "}
+                      {row.foulExposure
+                        ? `${row.foulExposure.pointsAdjustment >= 0 ? "+" : ""}${point(row.foulExposure.pointsAdjustment)}`
+                        : "Missing"}{" "}
+                      → Lab {point(row.total)}.
+                    </p>
+                  )}
                   {row.methodId === "enhanced-baseline-v1" && (
                     <p className="lab-calculation">
                       Actual {point(row.baselineTotal)} → defense{" "}
@@ -170,6 +192,14 @@ export default function LabTable({
                     </p>
                   )}
                   <p>Research lean: {row.side ?? "No priced lean"}</p>
+                  <ContextDetails context={row.context} />
+                  <FoulDetails
+                    forecast={row.foulExposure}
+                    away={row.awayTeam}
+                    home={row.homeTeam}
+                    actualFTA={result.actualFTA}
+                    actualFouls={result.actualFouls}
+                  />
                   <p>
                     Baseline total: {point(row.baselineTotal)} · Saved line:{" "}
                     {point(row.line)} · Model error: {point(result.error)}

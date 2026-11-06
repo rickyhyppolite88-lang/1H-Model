@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { gameContextSchema } from "./gameContext";
 import { gameMarketCoverageSchema, marketCheckSchema } from "./marketCoverage";
 import { predict } from "./predictor";
 import { type SeasonDataset, teamSchema } from "./schema";
@@ -60,6 +61,8 @@ export const ledgerSchema = z.object({
       scoresSource: z.url(),
       boxScoreUrl: z.url(),
       capturedAt: z.iso.datetime(),
+      context: gameContextSchema.optional(),
+      contextRetrievedAt: z.iso.datetime().optional(),
       marketCoverage: gameMarketCoverageSchema.optional(),
       featureSnapshot: featureSchema.nullable().optional(),
       quotes: z.array(

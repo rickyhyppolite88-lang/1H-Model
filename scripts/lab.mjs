@@ -1,4 +1,5 @@
 import { readFile, writeFile, mkdir, readdir, rename } from "node:fs/promises";
+import {createHash} from "node:crypto";
 
 export async function updateLabFiles(server, { feed, ledger, prior, priorPath, results, directory = "public" }) {
   const model = await server.ssrLoadModule("/src/model/lab.ts");
@@ -11,6 +12,25 @@ export async function updateLabFiles(server, { feed, ledger, prior, priorPath, r
   };
   const config = model.labConfigSchema.parse(await read("data/lab-config.json"));
   const at = new Date().toISOString();
+  let contextModel,contextModelPath;
+  try {
+    const {contextModelSchema,gameContextIndexSchema}=await server.ssrLoadModule("/src/model/gameContext.ts");
+    try {
+      const metadata=gameContextIndexSchema.parse(await read("data/game-contexts.json"));
+      const byId=new Map(metadata.games.map(game=>[game.gameId,game]));
+      ledger={...ledger,games:ledger.games.map(game=>{
+        const entry=byId.get(game.id);
+        return entry&&Date.parse(entry.startsAt)===Date.parse(game.startsAt)&&entry.awayEspnId===game.away.espnId&&entry.homeEspnId===game.home.espnId&&(!game.contextRetrievedAt||Date.parse(entry.contextRetrievedAt)>Date.parse(game.contextRetrievedAt)) ? {...game,context:entry.context,contextRetrievedAt:entry.contextRetrievedAt} : game;
+      })};
+    }catch(error){if(error.code!=="ENOENT")throw error;}
+    contextModel=contextModelSchema.parse(await read("data/context-model.json"));
+    const bytes=`${JSON.stringify(contextModel,null,2)}\n`;
+    const hash=createHash("sha256").update(bytes).digest("hex");
+    contextModelPath=`data/context-models/${hash}.json`;
+    await mkdir(`${directory}/data/context-models`,{recursive:true});
+    try {await writeFile(`${directory}/${contextModelPath}`,bytes,{flag:"wx"});}
+    catch(error){if(error.code!=="EEXIST")throw error;if(await readFile(`${directory}/${contextModelPath}`,"utf8")!==bytes)throw new Error("Archived context model hash mismatch");}
+  }catch(error){if(error.code!=="ENOENT")throw error;}
   let old = { schemaVersion: 1, startedAt: at, updatedAt: at, forecasts: [], results: [], halves: [] };
   let previousIndex;
   try { previousIndex = model.labIndexSchema.parse(await read("data/lab-index.json")); }
@@ -28,7 +48,7 @@ export async function updateLabFiles(server, { feed, ledger, prior, priorPath, r
     const path = `data/input-snapshots/${file}`;
     snapshots.push({ path, data: datasetSchema.parse(await read(path)) });
   }
-  let store = captureLab(old, config, feed, ledger, { prior, priorPath, snapshots, halves: raw.halves, excludedHistoryGames: raw.errors.map((error) => error.gameId) }, at);
+  let store = captureLab(old, config, feed, ledger, { prior, priorPath, snapshots, halves: raw.halves, excludedHistoryGames: raw.errors.map((error) => error.gameId), contextModel,contextModelPath }, at);
   const ids = new Set(store.forecasts.map((row) => row.gameId));
   const merge = { ...store, forecasts: [], results: results.filter((result) => ids.has(result.gameId)), halves: raw.halves.filter((half) => ids.has(half.gameId)) };
   store = model.mergeLabStores([store, merge], store.startedAt, at);

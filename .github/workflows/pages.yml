@@ -18,7 +18,7 @@ on:
         description: Lab collection method to change (optional)
         type: choice
         default: none
-        options: [none, enhanced-baseline-v1, baseline-control-v1, qualified-baseline-v1, first-half-defense-v1, bonus-exposure-v1]
+        options: [none, enhanced-baseline-v2, enhanced-baseline-v1, baseline-control-v1, qualified-baseline-v1, first-half-defense-v1, bonus-exposure-v1]
       lab_action:
         description: Shared Lab collection action; previous records are retained
         type: choice
@@ -102,6 +102,13 @@ jobs:
       - name: Collect reconciled first-half measurements for the Lab
         if: github.event_name != 'pull_request' && (needs.plan.outputs.mode == 'full' || needs.plan.outputs.mode == 'markets' || hashFiles('public/data/lab-halves.json') == '')
         run: python scripts/import_lab_halves.py
+      # Context fits change only when observed outcome history changes.
+      - name: Refresh venue and first-half context history
+        if: github.event_name != 'pull_request' && (needs.plan.outputs.mode == 'full' || needs.plan.outputs.mode == 'markets')
+        run: python scripts/import_context_history.py
+      - name: Fit opponent-controlled context effects
+        if: github.event_name != 'pull_request' && (needs.plan.outputs.mode == 'full' || needs.plan.outputs.mode == 'markets')
+        run: python scripts/fit_game_context.py
       - name: Freeze pregame features and replay completed halves
         run: npm run audit:season
       - name: Check formatting and TypeScript rules
