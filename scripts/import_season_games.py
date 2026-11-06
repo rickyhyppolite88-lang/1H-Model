@@ -11,6 +11,7 @@ import time
 import unicodedata
 from urllib.request import Request, urlopen
 from zoneinfo import ZoneInfo
+from game_context import event_context
 
 SBR = "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/"
 ESPN = "https://site.api.espn.com/apis/site/v2/sports/basketball/mens-college-basketball/scoreboard"
@@ -195,6 +196,7 @@ def import_games(season: str, start: date, through: date, output: Path) -> dict:
         previous = games.get(event_id, {})
         starts_at = datetime.fromisoformat(event["date"].replace("Z", "+00:00")).isoformat(timespec="seconds").replace("+00:00", "Z")
         games[event_id] = {"id": event_id, "startsAt": starts_at, "status": event["status"]["type"]["description"], "firstHalfComplete": complete and all(t["firstHalfPoints"] is not None for t in teams.values()), **teams,
+            "context": event_context(event), "contextRetrievedAt": now,
             "quotes": previous.get("quotes", []), "oddsGameId": previous.get("oddsGameId"), "featureSnapshot": previous.get("featureSnapshot"), "scoresSource": score_url,
             **({"marketCoverage": previous["marketCoverage"]} if previous.get("marketCoverage") else {}),
             "boxScoreUrl": f"https://www.espn.com/mens-college-basketball/boxscore/_/gameId/{event_id}", "capturedAt": now}

@@ -1,11 +1,12 @@
 # Research Lab
 
-The Lab is one enhanced version of the Actual algorithm: the same 60% scoring / 40% pace-efficiency structure, adding first-half defense and bonus exposure, then applying the qualified-baseline selection rules. It collects new forecasts before tipoff and grades completed first halves separately from Actual. Earlier diagnostic replays are not backfilled, and Actual totals and grades are unchanged. The four earlier experiments are paused by default and remain accessible under **Lab version & history**.
+The active Lab version (`enhanced-baseline-v2`) starts with the unchanged Actual 60% scoring / 40% pace-efficiency core, then adds first-half defense, venue/matchup context and a joint foul/free-throw adjustment. The qualified-baseline selection rules apply to the final total. Actual totals, algorithms and grades are unchanged. Earlier Lab versions are paused by default and remain accessible under **Lab version & history**. Each new version starts a genuinely new pregame record; completed games are not backfilled.
 
 ## Methods and predeclared rules
 
 | Version | Forecast | Decision / evaluation |
 | --- | --- | --- |
+| `enhanced-baseline-v2` | Actual + 1H defense + home/away, neutral, conference/tournament and crowd context + joint foul/FTA points | Context capped at ±4; joint FT/foul points capped at ±2. Same 1.5-to-below-8 edge and adjusted-component agreement rule. Bonus timing is measured without stacking another FT bonus. |
 | `enhanced-baseline-v1` | Actual algorithm + first-half defense + bounded bonus points | The active combined model. Qualify only when `1.5 <= absolute edge < 8` and both adjusted scoring and pace components agree. Other usable projections are watch-only; missing factors are data gaps. |
 | `baseline-control-v1` | The unchanged model at the Lab capture time | Track every priced non-push research lean as a control. This is not a qualified betting system. |
 | `qualified-baseline-v1` | The same total | Qualify only when the absolute gap is at least 1.5 and below 8 points and both scoring and pace components agree with the side. All other usable priced forecasts are watch-only. |
@@ -19,6 +20,24 @@ The bonus prototype uses only reconciled earlier halves actually observed before
 This is an unvalidated, sparse-data experiment. It has no roster or referee adjustment. Men's one-and-one begins with the seventh team foul, double bonus with the tenth, and team fouls reset after the first half; see the [NCAA's 2026–27 rules comparison](https://ncaaorg.s3.amazonaws.com/championships/sports/basketball/rules/common/2026-27PRXBB_MajorRulesDifferences.pdf). Our logged-nontechnical-foul proxy omits technical classifications that can count toward official team fouls. It is not an exact official bonus reconstruction, and free throws after the threshold are not necessarily caused by the bonus.
 
 ## Combined model and bonus points
+
+### Active v2: venue, game type, crowds and foul/free-throw exposure
+
+`Lab v2 total = first-half-defense-adjusted core + context delta + joint FT/foul delta`. The two deltas are applied to both components before qualification, preserving their 60/40 identity. Missing usable context or fewer than 30 reconciled earlier D1 halves for foul/FTA inputs produce a data gap, rather than a fabricated zero forecast.
+
+ESPN's declared home/away and neutral-site flags, conference-game flag, venue and explicit event/bracket notes determine the context. A standalone showcase is not automatically labelled a tournament; unresolved postseason classifications remain explicit. Team-specific home/away effects and neutral/conference/tournament/crowd effects are fitted jointly to residual errors left by the Actual core, with sample-size shrinkage. Prior-season dated end statistics are in-sample training controls; current-season baseline controls come from original recorded pregame forecasts. Team exposure baselines follow the frozen core's season weights and 35% prior league regression. These are research associations, not causal estimates or demonstrated improvements. Development replays did not justify promoting context adjustments into Actual.
+
+Crowds use **earlier venue attendance averages**, with at least three observations. The target game's attendance, ticket listings, live noise and fan allegiance are not inputs. A crowd below **3,000** estimated attendees contributes exactly **zero crowd adjustment**, including centering offsets; it does not penalize a small team. Missing/sparse attendance is also neutral. This cutoff is a provisional guardrail, not a claim that all smaller venues are quiet. Home/away performance can still contribute independently.
+
+The joint foul/FTA module uses only earlier observed, reconciled first halves and excludes the target game and unresolved sources. Team fouls committed, opponent fouls drawn, FT attempts drawn/allowed, estimated possessions, FT makes and conversion rate are shrunk with four league pseudo-games (FT percentage receives 30 prior attempts). It forecasts defensive foul rates against the opponent's foul-drawing rate, then estimates FT attempts from offensive and defensive FT-per-foul tendencies at the expected first-half pace. The points adjustment uses the matchup deviation from each offense's neutral-opponent FT baseline, bounded at ±2, to avoid simply adding team FT production already present in scoring averages.
+
+Seven-foul chances are Poisson estimates for **logged nontechnical fouls**, not calibrated official referee-call probabilities. FT-attempt ranges allow league-estimated overdispersion via a Gamma-Poisson count model; the displayed ranges target a central 80% model interval. No individual referee assignments or referee call-rate data are available. The original seventh-foul/bonus-timing proxy remains recorded, but the earlier v1 bonus-points term is **not** added again: fouls, bonus exposure and FTs overlap.
+
+Each saved observation contains the venue/context model hash and capture cutoff, crowd eligibility, expected per-team FTAs and fouls, count ranges, seventh-foul probabilities and frozen joint point adjustments. After a first half completes, reconciled actual FTAs/fouls appear in game details and CSV. The Lab record also reports combined-count MAE and seventh-foul probability Brier score, with sample count, separately from betting outcomes. These probabilities and ranges remain uncalibrated until enough prospective results exist.
+
+`context-history.json` retains content-addressed observations and source-day URLs/checksums; `context-model.json` is the latest fitted research artifact, with immutable copies under `data/context-models/`. Normal scheduled refreshes collect new outcomes and refresh the fit only when its inputs change. These files support Lab research and do not change the Actual prediction formula or record.
+
+### Previous v1: bounded bonus timing adjustment
 
 The combined version reuses the defense branch described above, then adds a bonus-points delta. The league-neutral reference is `2 * expectedBonusMinutes(leagueFouls)`, so a league-prior matchup receives zero adjustment. A ridge fit relates combined first-half free-throw makes to observed bonus-proxy minutes, controlling for estimated possessions per team: `(FGA - offensive rebounds + turnovers + 0.475 * FTA) / 2` across the two teams.
 

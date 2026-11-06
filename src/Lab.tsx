@@ -24,9 +24,9 @@ const show = (value: number | null, suffix = "") =>
 
 export default function Lab({ recordOnly = false }: { recordOnly?: boolean }) {
   const [method, setMethod] = usePreference(
-    "lab.method.v2",
+    "lab.method.v3",
     labMethodIdSchema,
-    "enhanced-baseline-v1",
+    "enhanced-baseline-v2",
   );
   const [dateChoice, setDate] = usePreference(
     recordOnly ? "lab.recordDate" : "lab.date",
@@ -47,7 +47,7 @@ export default function Lab({ recordOnly = false }: { recordOnly?: boolean }) {
     labMethods.find((entry) => entry.id === method) ?? labMethods[0];
   const methodStartedAt =
     index?.methodStartedAt?.[method] ??
-    (method === "enhanced-baseline-v1" ? undefined : index?.startedAt);
+    (method.startsWith("enhanced-baseline-") ? undefined : index?.startedAt);
   const bonus = definition.kind === "bonus";
   const enabled =
     index?.config.methods.find((entry) => entry.id === method)?.enabled ??
@@ -136,9 +136,9 @@ export default function Lab({ recordOnly = false }: { recordOnly?: boolean }) {
         <div>
           <h2>{recordOnly ? "Lab prediction record" : "The Lab"}</h2>
           <p>
-            The Actual algorithm plus first-half defense, bonus exposure and
-            qualification rules. This is research; signal strength is not a win
-            probability.
+            The Actual algorithm plus first-half defense, venue/matchup context,
+            meaningful crowd proxies and joint foul/free-throw research; signal
+            strength is not a win probability.
           </p>
         </div>
       </div>
@@ -157,7 +157,7 @@ export default function Lab({ recordOnly = false }: { recordOnly?: boolean }) {
               {labMethods.map((entry) => (
                 <option key={entry.id} value={entry.id}>
                   {entry.name}
-                  {entry.id === "enhanced-baseline-v1"
+                  {entry.id === "enhanced-baseline-v2"
                     ? ""
                     : " (previous experiment)"}
                 </option>
@@ -363,6 +363,24 @@ export default function Lab({ recordOnly = false }: { recordOnly?: boolean }) {
       )}
       {store ? (
         <>
+          {method === "enhanced-baseline-v2" && summary && (
+            <details className="lab-calibration">
+              <summary>Free-throw & foul research results</summary>
+              <p>
+                {summary.foulSamples} completed observations with reconciled
+                measurements. Combined FT-attempt MAE: {show(summary.ftaMae)} ·
+                logged-foul MAE: {show(summary.foulMae)} · 7+ logged-foul
+                probability Brier score: {show(summary.foulBrier)} (lower is
+                better).
+              </p>
+              <p>
+                These measure the original saved Lab observations, including
+                watch-only forecasts. Foul probabilities and 80% count ranges
+                remain uncalibrated research estimates, separate from betting
+                hit rates.
+              </p>
+            </details>
+          )}
           <h3>
             {recordOnly
               ? "Finished Lab predictions"

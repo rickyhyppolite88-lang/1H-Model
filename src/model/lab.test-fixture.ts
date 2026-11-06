@@ -1,3 +1,4 @@
+import { contextFixture, contextModelPath } from "./gameContext.test-fixture";
 import {
   type LabHalf,
   type LabStore,
@@ -67,7 +68,7 @@ export function labFixture() {
     schemaVersion: 1,
     methods: labMethods.map((method) => ({
       id: method.id,
-      enabled: method.id !== "enhanced-baseline-v1",
+      enabled: !method.id.startsWith("enhanced-baseline-"),
     })),
   });
   const empty: LabStore = {
@@ -101,5 +102,19 @@ export function enhancedLabFixture() {
       freeThrowsMade: 3 + Math.floor((i % 10) / 2),
     })),
   }));
+  return f;
+}
+
+export function currentLabFixture() {
+  const f = enhancedLabFixture();
+  const context = contextFixture();
+  f.ledger.games[0].context = context.game.context;
+  f.ledger.games[0].contextRetrievedAt = f.at;
+  f.config.methods = f.config.methods.map((method) => ({
+    ...method,
+    enabled: method.id === "enhanced-baseline-v2",
+  }));
+  f.inputs.contextModel = context.model;
+  f.inputs.contextModelPath = contextModelPath;
   return f;
 }

@@ -4,6 +4,8 @@ import {
   bonusPointsDelta,
   fitBonusPoints,
 } from "./bonusAdjustment";
+import { type FoulExposure, forecastFoulExposure } from "./foulExposure";
+import { type ContextModel, contextForecast } from "./gameContext";
 import {
   type LabConfig,
   type LabForecast,
@@ -25,6 +27,8 @@ export type LabInputs = {
   snapshots: { data: SeasonDataset; path: string }[];
   halves: LabHalf[];
   excludedHistoryGames?: string[];
+  contextModel?: ContextModel;
+  contextModelPath?: string;
 };
 
 function allowedInputs(
@@ -251,6 +255,8 @@ export function captureLab(
       let strength: number | null = null;
       let bonus: number | null = null;
       let bonusBaseline: number | null = null;
+      let context: LabForecast["context"];
+      let foulExposure: FoulExposure | undefined;
       const frozen: LabForecast["inputs"] = {
         baselineModelVersion: feed.modelVersion,
         baselineFeatureCapturedAt: features?.capturedAt ?? null,
@@ -313,7 +319,8 @@ export function captureLab(
       } else if (baselineValid) {
         if (
           method.id === "first-half-defense-v1" ||
-          method.id === "enhanced-baseline-v1"
+          method.id === "enhanced-baseline-v1" ||
+          method.id === "enhanced-baseline-v2"
         ) {
           const defense = allowedInputs(game, inputs, at);
           if (
@@ -392,6 +399,74 @@ export function captureLab(
               "Bonus inputs are missing or fewer than 30 earlier reconciled D1 halves with free-throw makes and bonus variation are available.";
           }
         }
+        if (method.id === "enhanced-baseline-v2" && total !== null) {
+          const excluded = new Set(inputs.excludedHistoryGames ?? []);
+          const history = latestHalves(
+            inputs.halves.filter((half) => !excluded.has(half.gameId)),
+            at,
+          ).filter(
+            (half) =>
+              half.season === feed.season &&
+              half.gameId !== game.id &&
+              Date.parse(half.startsAt) < Date.parse(game.startsAt),
+          );
+          context =
+            inputs.contextModel && inputs.contextModelPath
+              ? (contextForecast(
+                  game,
+                  inputs.contextModel,
+                  inputs.contextModelPath,
+                  feed.season,
+                  at,
+                ) ?? undefined)
+              : undefined;
+          foulExposure = features
+            ? (forecastFoulExposure(
+                game.away.espnId,
+                game.home.espnId,
+                (features.away.pace + features.home.pace) / 4,
+                history,
+              ) ?? undefined)
+            : undefined;
+          if (context && foulExposure && simple !== null && pace !== null) {
+            const adjustment =
+              context.adjustment + foulExposure.pointsAdjustment;
+            total += adjustment;
+            simple += adjustment;
+            pace += adjustment;
+            bonus =
+              expectedBonusMinutes(foulExposure.expectedAwayFouls) +
+              expectedBonusMinutes(foulExposure.expectedHomeFouls);
+            const league = history.filter((half) => half.bothD1);
+            bonusBaseline =
+              league.reduce(
+                (sum, half) =>
+                  sum +
+                  half.teams.reduce((n, team) => n + team.bonusMinutes, 0),
+                0,
+              ) / league.length;
+            Object.assign(frozen, {
+              historyAsOf: at,
+              excludedHistoryGames: [...excluded].sort().join(";"),
+              contextPointsAdjustment: context.adjustment,
+              contextModel: context.modelPath,
+              freeThrowPointsAdjustment: foulExposure.pointsAdjustment,
+              freeThrowPointsCap: 2,
+              contextPointsCap: 4,
+              pseudoGames: 4,
+              bonusTreatment:
+                "Timing tracked; no separate bonus-points adjustment stacked on FT/foul points.",
+              minimumEdge: 1.5,
+              outlierEdge: 8,
+              componentAgreementRequired: "Both adjusted components must agree",
+            });
+          } else {
+            total = null;
+            reason = !context
+              ? "Missing verified pregame venue/context inputs or context model."
+              : "At least 30 earlier reconciled D1 halves with FT makes and valid foul/possession inputs are required.";
+          }
+        }
         if (total !== null) {
           const candidate = {
             ...row,
@@ -461,6 +536,8 @@ export function captureLab(
         bonusMinutes: bonus,
         bonusBaselineMinutes: bonusBaseline,
         inputs: frozen,
+        ...(context ? { context } : {}),
+        ...(foulExposure ? { foulExposure } : {}),
       };
       const signature = (entry: typeof candidate | LabForecast) =>
         JSON.stringify({
@@ -474,6 +551,12 @@ export function captureLab(
           bonusBaseline: entry.bonusBaselineMinutes,
           overPrice: entry.overPrice,
           underPrice: entry.underPrice,
+          context:
+            "context" in entry && entry.context
+              ? { ...entry.context, capturedAt: undefined }
+              : undefined,
+          foulExposure:
+            "foulExposure" in entry ? entry.foulExposure : undefined,
         });
       if (previous && signature(candidate) === signature(previous)) continue;
       forecasts.push(

@@ -1,9 +1,22 @@
 import { z } from "zod";
+import { foulExposureSchema } from "./foulExposure";
+import { contextForecastSchema } from "./gameContext";
 import { resultEventSchema } from "./predictionRecord";
 import { csvCell } from "./predictions";
 import { easternTipoff } from "./time";
 
 export const labMethods = [
+  {
+    id: "enhanced-baseline-v2",
+    name: "Combined Lab · venue & fouls",
+    kind: "total",
+    description:
+      "The unchanged Actual core plus first-half defense, home/away performance, neutral-site and conference/tournament context, meaningful crowd proxies, and joint foul/free-throw exposure.",
+    formula:
+      "Defense-adjusted 60/40 core + venue/matchup adjustment (±4 max) + joint FT/foul adjustment (±2 max). Qualify when 1.5 ≤ absolute edge < 8 and both adjusted components agree.",
+    limits:
+      "Research only. Low/unknown crowds have zero crowd effect. Foul-call chances and count ranges are uncalibrated estimates of logged nontechnical fouls. Bonus timing is tracked within the joint foul/FT module, without stacking a second FT bonus. Original Actual and earlier Lab records are unchanged.",
+  },
   {
     id: "enhanced-baseline-v1",
     name: "Combined Lab model",
@@ -60,6 +73,7 @@ export const labMethods = [
   },
 ] as const;
 export const labMethodIds = [
+  "enhanced-baseline-v2",
   "enhanced-baseline-v1",
   "baseline-control-v1",
   "qualified-baseline-v1",
@@ -161,6 +175,8 @@ export const labForecastSchema = z.object({
     z.string(),
     z.union([z.string(), z.number().finite(), z.null()]),
   ),
+  context: contextForecastSchema.optional(),
+  foulExposure: foulExposureSchema.optional(),
 });
 export type LabForecast = z.infer<typeof labForecastSchema>;
 export const labStoreSchema = z.object({
@@ -311,6 +327,26 @@ export function gradeLab(
     !scheduleChanged
       ? half.teams.reduce((sum, team) => sum + team.bonusMinutes, 0)
       : null;
+  const verifiedHalf = actualBonus !== null ? half : undefined;
+  const actualFTA = verifiedHalf
+    ? verifiedHalf.teams.reduce((sum, team) => sum + team.fta, 0)
+    : null;
+  const actualFouls = verifiedHalf
+    ? verifiedHalf.teams.reduce((sum, team) => sum + team.fouls, 0)
+    : null;
+  const exposure = row.foulExposure;
+  const awayFouls = verifiedHalf?.teams.find(
+    (team) => team.espnId === exposure?.awayEspnId,
+  )?.fouls;
+  const homeFouls = verifiedHalf?.teams.find(
+    (team) => team.espnId === exposure?.homeEspnId,
+  )?.fouls;
+  const foulBrier =
+    exposure && awayFouls !== undefined && homeFouls !== undefined
+      ? ((exposure.awaySevenFoulProbability - Number(awayFouls >= 7)) ** 2 +
+          (exposure.homeSevenFoulProbability - Number(homeFouls >= 7)) ** 2) /
+        2
+      : null;
   const grade = scheduleChanged
     ? "Schedule review"
     : row.status === "data_gap"
@@ -331,6 +367,17 @@ export function gradeLab(
     grade,
     actual,
     actualBonus,
+    actualFTA,
+    actualFouls,
+    foulBrier,
+    ftaError:
+      exposure && actualFTA !== null
+        ? exposure.expectedAwayFTA + exposure.expectedHomeFTA - actualFTA
+        : null,
+    foulError:
+      exposure && actualFouls !== null
+        ? exposure.expectedAwayFouls + exposure.expectedHomeFouls - actualFouls
+        : null,
     hypothetical,
     baselineGrade: outcome(baselineSide),
     error:
@@ -395,6 +442,10 @@ export function labSummary(
     bonusMae: meanAbs(graded.map((entry) => entry.bonusError)),
     bonusBaselineMae: meanAbs(graded.map((entry) => entry.bonusBaselineError)),
     measured: graded.filter((entry) => entry.bonusError !== null).length,
+    ftaMae: meanAbs(graded.map((entry) => entry.ftaError)),
+    foulMae: meanAbs(graded.map((entry) => entry.foulError)),
+    foulBrier: meanAbs(graded.map((entry) => entry.foulBrier)),
+    foulSamples: graded.filter((entry) => entry.foulBrier !== null).length,
   };
 }
 
@@ -433,6 +484,24 @@ export function labToCsv(store: LabStore) {
     "bonus_points_per_minute",
     "bonus_fit_games",
     "frozen_inputs_json",
+    "venue",
+    "matchup_type",
+    "neutral_site",
+    "expected_attendance_PROXY",
+    "crowd_eligible",
+    "context_points_adjustment",
+    "expected_away_fta",
+    "expected_home_fta",
+    "expected_away_fouls",
+    "expected_home_fouls",
+    "away_7_logged_fouls_probability_UNCALIBRATED",
+    "home_7_logged_fouls_probability_UNCALIBRATED",
+    "joint_ft_foul_points_adjustment",
+    "actual_combined_fta",
+    "actual_combined_logged_fouls",
+    "logged_foul_probability_brier",
+    "frozen_context_json",
+    "frozen_foul_fta_json",
   ];
   return `${[
     header,
@@ -465,12 +534,30 @@ export function labToCsv(store: LabStore) {
         row.bonusMinutes,
         result.actualBonus,
         ids.has(row.id) ? "Yes" : "No",
-        row.inputs.defenseAdjustedTotal,
-        row.inputs.defenseAdjustment,
-        row.inputs.bonusPointsAdjustment,
-        row.inputs.bonusPointsPerMinute,
-        row.inputs.bonusFitGames,
+        row.inputs.defenseAdjustedTotal ?? null,
+        row.inputs.defenseAdjustment ?? null,
+        row.inputs.bonusPointsAdjustment ?? null,
+        row.inputs.bonusPointsPerMinute ?? null,
+        row.inputs.bonusFitGames ?? null,
         JSON.stringify(row.inputs),
+        row.context?.context.venueName ?? null,
+        row.context?.context.matchupType ?? null,
+        row.context ? String(row.context.context.neutralSite) : null,
+        row.context?.expectedAttendance ?? null,
+        row.context ? String(row.context.crowdEligible) : null,
+        row.context?.adjustment ?? null,
+        row.foulExposure?.expectedAwayFTA ?? null,
+        row.foulExposure?.expectedHomeFTA ?? null,
+        row.foulExposure?.expectedAwayFouls ?? null,
+        row.foulExposure?.expectedHomeFouls ?? null,
+        row.foulExposure?.awaySevenFoulProbability ?? null,
+        row.foulExposure?.homeSevenFoulProbability ?? null,
+        row.foulExposure?.pointsAdjustment ?? null,
+        result.actualFTA,
+        result.actualFouls,
+        result.foulBrier,
+        row.context ? JSON.stringify(row.context) : null,
+        row.foulExposure ? JSON.stringify(row.foulExposure) : null,
       ];
     }),
   ]
