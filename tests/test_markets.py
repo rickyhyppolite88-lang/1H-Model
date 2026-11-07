@@ -63,7 +63,7 @@ def test_rank_and_conference_classification(rank, expected, known):
     assert result == {"conferenceId": "23", "conference": "SEC", "rank": expected, "rankKnown": known}
 
 
-@pytest.mark.parametrize("espn_id,target", [("2393", "middle-tennessee-st-blue-raiders"), ("82", "illinois-chicago-flames"), ("399", "albany-great-danes"), ("2546", "se-missouri-st-redhawks"), ("145", "mississippi-rebels"), ("2547", "seattle-redhawks")])
+@pytest.mark.parametrize("espn_id,target", [("2393", "middle-tennessee-st-blue-raiders"), ("82", "illinois-chicago-flames"), ("399", "albany-great-danes"), ("2546", "se-missouri-st-redhawks"), ("145", "mississippi-rebels"), ("2547", "seattle-redhawks"), ("2463", "csu-northridge-matadors")])
 def test_verified_team_alias_requires_an_existing_model_record(espn_id, target):
     team = {"id": espn_id, "displayName": "Provider alias"}
     assert markets.model_id(team, [{"id": target, "name": "Model team"}]) == target
@@ -74,10 +74,12 @@ def test_incremental_refresh_keeps_a_known_midnight_game_without_refetching_prio
     output = tmp_path / "ledger.json"
     output.write_text(json.dumps({"season": "2026-27", "seasonStart": "2026-11-01", "through": "2026-11-01", "games": [{
         "id": "espn-1", "oddsGameId": "1", "startsAt": "2026-11-02T04:59:00Z", "quotes": [],
-        "away": {"espnId": "a"}, "home": {"espnId": "b"},
+        "away": {"espnId": "2463", "name": "Cal State Northridge Matadors"}, "home": {"espnId": "b"},
     }]}), encoding="utf-8")
     monkeypatch.setattr(markets, "read_url", lambda url: json.dumps({"leagues": [{"id": "41", "groups": [{"id": "50", "children": [{"id": "23", "name": "SEC"}]}]}]}) if "dropdown" in url else json.dumps({"events": []}) if "site.api.espn.com" in url else board())
     monkeypatch.setattr(markets.time, "sleep", lambda seconds: None)
     result = markets.import_games("2026-27", date(2026, 11, 2), date(2026, 11, 2), output)
     assert result["unmatchedOdds"] == []
     assert result["games"][0]["id"] == "espn-1"
+    assert result["games"][0]["away"]["modelId"] == "csu-northridge-matadors"
+    assert result["games"][0].get("featureSnapshot") is None

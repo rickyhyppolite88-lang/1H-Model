@@ -104,7 +104,8 @@ def model_id(team: dict, teams: list[dict]) -> str | None:
     # Verified ESPN team IDs for provider display-name differences; never fuzzy-match teams.
     aliases = {"2511": "queens-university-of-charlotte-royals", "2393": "middle-tennessee-st-blue-raiders",
                "82": "illinois-chicago-flames", "399": "albany-great-danes", "2546": "se-missouri-st-redhawks",
-               "145": "mississippi-rebels", "2547": "seattle-redhawks"}
+               "145": "mississippi-rebels", "2547": "seattle-redhawks",
+               "2463": "csu-northridge-matadors"}
     if str(team["id"]) in aliases:
         target = aliases[str(team["id"])]
         return target if any(row["id"] == target for row in teams) else None
@@ -182,6 +183,15 @@ def import_games(season: str, start: date, through: date, output: Path) -> dict:
         day += timedelta(days=1)
         time.sleep(0.3)
     games = {row["id"]: row for row in existing["games"]} if existing else {}
+    # Repair verified missing identity joins on retained dates during incremental imports.
+    # This changes team metadata only; frozen features and prior forecasts stay intact.
+    for saved in games.values():
+        for side in ("away", "home"):
+            team = saved[side]
+            if not team.get("modelId"):
+                target = model_id({"id": team["espnId"], "displayName": team.get("name", "")}, prior["teams"])
+                if target:
+                    team["modelId"] = target
     for event_id, (event, score_url) in events_by_id.items():
         competitors = event["competitions"][0]["competitors"]
         if len(competitors) != 2:

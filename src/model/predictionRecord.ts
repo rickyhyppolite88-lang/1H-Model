@@ -1,6 +1,7 @@
 import { z } from "zod";
 import { ledgerSchema, type SeasonLedger, validFeatures } from "./audit";
 import { dailyCoverageSchema, dailyRecordCoverage } from "./dailyRecord";
+import { gameContextSchema } from "./gameContext";
 import {
   csvCell,
   type PredictionFeed,
@@ -8,6 +9,7 @@ import {
   predictionFeedSchema,
   predictionSchema,
 } from "./predictions";
+import { participantsSchema, reviewSchedule } from "./scheduleReview";
 import { predictionSignal, signalSchema } from "./signals";
 import { easternTipoff } from "./time";
 
@@ -53,6 +55,7 @@ export const forecastRecordSchema = z.object({
   prediction: predictionSchema,
   features: gameSchema.shape.featureSnapshot,
   quotes: gameSchema.shape.quotes,
+  participants: participantsSchema.optional(),
 });
 export const resultEventSchema = z.object({
   id: z.string(),
@@ -64,6 +67,8 @@ export const resultEventSchema = z.object({
   awayPoints: z.number().int().min(0),
   homePoints: z.number().int().min(0),
   source: z.url(),
+  participants: participantsSchema.optional(),
+  context: gameContextSchema.optional(),
 });
 export const recordStoreSchema = z.object({
   schemaVersion: z.literal(1),
@@ -277,6 +282,7 @@ export function updatePredictionRecord(
       prediction: row,
       features: game.featureSnapshot ?? null,
       quotes: game.quotes,
+      participants: { away: game.away, home: game.home },
     });
     records.push(record);
     latest.set(key, record);
@@ -293,10 +299,16 @@ export function updatePredictionRecord(
       continue;
     const key = `${ledger.season}:${game.id}`;
     const previous = lastResult.get(key);
+    const participants = participantsSchema.parse({
+      away: game.away,
+      home: game.home,
+    });
     if (
       previous?.awayPoints === game.away.firstHalfPoints &&
       previous.homePoints === game.home.firstHalfPoints &&
-      (!previous.startsAt || previous.startsAt === game.startsAt)
+      previous.startsAt === game.startsAt &&
+      JSON.stringify(previous.participants) === JSON.stringify(participants) &&
+      JSON.stringify(previous.context) === JSON.stringify(game.context)
     )
       continue;
     if (previous && Date.parse(recordedAt) < Date.parse(previous.observedAt))
@@ -311,6 +323,8 @@ export function updatePredictionRecord(
       awayPoints: game.away.firstHalfPoints,
       homePoints: game.home.firstHalfPoints,
       source: game.scoresSource,
+      participants,
+      ...(game.context ? { context: game.context } : {}),
     };
     results.push(result);
     lastResult.set(key, result);
@@ -397,9 +411,16 @@ export function recordGrade(
     | "No projection"
     | "No line"
     | "No lean";
-  const scheduleChanged =
-    result?.startsAt !== undefined &&
-    result.startsAt !== record.prediction.startsAt;
+  const schedule = reviewSchedule(
+    {
+      ...record,
+      ...record.prediction,
+      awayModelId: record.features?.away.id,
+      homeModelId: record.features?.home.id,
+    },
+    result,
+  );
+  const scheduleChanged = schedule === "review";
   if (total === null) grade = "No projection";
   else if (record.state !== "pregame") grade = "Historical";
   else if (record.comparison.line === null) grade = "No line";
@@ -415,6 +436,8 @@ export function recordGrade(
   return {
     grade,
     actual,
+    schedule,
+    resultStartsAt: result?.startsAt ?? null,
     error:
       actual !== null && total !== null && !scheduleChanged
         ? total - actual
@@ -565,6 +588,8 @@ export function recordToCsv(store: RecordStore, canonicalIds: string[]) {
         "currentWeight",
       ].map((m) => `${side}_${m}`),
     ),
+    "schedule_status",
+    "result_tipoff_utc",
   ];
   const rows = store.records.map((r) => {
     const g = recordGrade(r, store.results);
@@ -603,6 +628,8 @@ export function recordToCsv(store: RecordStore, canonicalIds: string[]) {
           team?.currentWeight ?? null,
         ];
       }),
+      g.schedule,
+      g.resultStartsAt,
     ];
   });
   return `${[headers, ...rows].map((row) => row.map(csvCell).join(",")).join("\r\n")}\r\n`;

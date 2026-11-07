@@ -1,13 +1,13 @@
 # Research Lab
 
-The active Lab version (`enhanced-baseline-v2`) starts with the unchanged Actual 60% scoring / 40% pace-efficiency core, then adds first-half defense, venue/matchup context and a joint foul/free-throw adjustment. The qualified-baseline selection rules apply to the final total. Actual totals, algorithms and grades are unchanged. Earlier Lab versions are paused by default and remain accessible under **Lab version & history**. Each new version starts a genuinely new pregame record; completed games are not backfilled.
+The active Lab version (`enhanced-baseline-v2`) starts with the unchanged Actual 60% scoring / 40% pace-efficiency core, then adds first-half defense, venue/matchup context and a joint foul/free-throw adjustment. The qualified-baseline selection rules apply to the final total. Actual's projection formula and saved forecasts are unchanged; result corrections remain append-only. Earlier Lab versions are paused by default and remain accessible under **Lab version & history**. Each new version starts a genuinely new pregame record; completed games are not backfilled.
 
 ## Methods and predeclared rules
 
 | Version | Forecast | Decision / evaluation |
 | --- | --- | --- |
 | `enhanced-baseline-v2` | Actual + 1H defense + home/away, neutral, conference/tournament and crowd context + joint foul/FTA points | Context capped at ±4; joint FT/foul points capped at ±2. Same 1.5-to-below-8 edge and adjusted-component agreement rule. Bonus timing is measured without stacking another FT bonus. |
-| `enhanced-baseline-v1` | Actual algorithm + first-half defense + bounded bonus points | The active combined model. Qualify only when `1.5 <= absolute edge < 8` and both adjusted scoring and pace components agree. Other usable projections are watch-only; missing factors are data gaps. |
+| `enhanced-baseline-v1` | Actual algorithm + first-half defense + bounded bonus points | Previous combined model. Qualify only when `1.5 <= absolute edge < 8` and both adjusted scoring and pace components agree. Other usable projections are watch-only; missing factors are data gaps. |
 | `baseline-control-v1` | The unchanged model at the Lab capture time | Track every priced non-push research lean as a control. This is not a qualified betting system. |
 | `qualified-baseline-v1` | The same total | Qualify only when the absolute gap is at least 1.5 and below 8 points and both scoring and pace components agree with the side. All other usable priced forecasts are watch-only. |
 | `first-half-defense-v1` | `0.6 × (both 1H points scored + both 1H points allowed) / 2 + 0.4 × original pace/efficiency component` | Apply the same qualification rule. Prior allowed values receive 35% regression to the available prior league mean, then the original frozen current-season weights. Missing defensive inputs block this method. |
@@ -51,7 +51,17 @@ Free-throw makes are an optional field for compatibility with older raw versions
 
 The first usable priced observation fixes a method's decision for a game, including **watch-only**. Later line moves cannot promote that original watch-only decision into the qualified record. If inputs or a price were genuinely missing, the first subsequent usable priced pregame observation becomes the decision. For bonus timing, the first usable measurement forecast is the decision, independent of whether a market line exists.
 
-Numerical or price changes before tipoff append versions. Identical captures do not duplicate forecasts. No forecast is created after scheduled/reported tipoff, backdated, or reconstructed from a completed game. Source timestamps must precede the capture. A changed schedule produces review rather than silently grading a prediction against a different start time.
+Numerical or price changes before tipoff append versions. Identical captures do not duplicate forecasts. No forecast is created after scheduled/reported tipoff, backdated, or reconstructed from a completed game. Source timestamps must precede the capture.
+
+A changed tip time initially requires review. A completed-half result can resolve it when a trusted ESPN source identifies the same season/game and both teams, the change stays within six hours on the same Eastern date, and the original forecast preceded both tip times. Frozen ESPN/model IDs must match when available; legacy rows require exact saved team names. Lab forecasts with venue/context inputs also require the same venue, neutral-site flag, conference flag and game type. Missing identity evidence, different dates/opponents/venues or a forecast after the corrected tip remain ungraded. Time comparisons use instants, avoiding false mismatches from equivalent ISO formatting. Result events append participant and context evidence; forecast timestamps, lines, totals and IDs are never rewritten. Cards label verified changes, and CSV includes `schedule_status` and `result_tipoff_utc`.
+
+### Component comparison
+
+**Lab component comparison** appears in both the Lab and Prediction record → Lab, respecting the selected date or all dates. It measures the Actual core, defense branch, defense plus context, defense plus foul/FT, full v2, and full-model removals of home/away, neutral-site, game-type and crowd effects. Values come entirely from original frozen v2 observations; no latest statistics or fitted coefficients are substituted. Removing a context factor recomputes the original ±4 cap on the remaining saved factors.
+
+Every row uses the same completed, reconciled cohort with all components available. MAE includes unpriced and watch-only projections; W/L/P holds the full Lab's original qualified/control cohort and entry lines fixed. Component totals exactly on the saved line are reported as no lean. These are descriptive component replays, not newly qualified bets, independent official records or proof of predictive improvement. Missing components and unresolved schedule reviews are excluded from every row equally. The UI and CSV show sample counts and MAE differences from the core. No result automatically changes Actual's weights or promotes a component.
+
+The comparison recalculates as results arrive. Each normal publication also writes `data/lab-components.csv` for all dates and `data/lab/YYYY-MM-DD-components.csv` for individual dates; the page offers its own date-scoped CSV download.
 
 A source check or selected-book quote over 45 minutes old is a market data gap, not a usable Lab entry. Its last-seen line remains in frozen inputs; the first subsequently usable priced observation establishes the decision. Bonus timing can still be measured independently of market availability. A new code build therefore cannot accidentally count an old retained line as a current experimental entry price.
 

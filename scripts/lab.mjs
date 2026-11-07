@@ -3,6 +3,7 @@ import {createHash} from "node:crypto";
 
 export async function updateLabFiles(server, { feed, ledger, prior, priorPath, results, directory = "public" }) {
   const model = await server.ssrLoadModule("/src/model/lab.ts");
+  const { labComponentsToCsv } = await server.ssrLoadModule("/src/model/labComponents.ts");
   const { captureLab } = await server.ssrLoadModule("/src/model/labCapture.ts");
   const { datasetSchema } = await server.ssrLoadModule("/src/model/schema.ts");
   const read = async (path) => JSON.parse(await readFile(`${directory}/${path}`, "utf8"));
@@ -62,6 +63,7 @@ export async function updateLabFiles(server, { feed, ledger, prior, priorPath, r
     const csvPath = `data/lab/${date}.csv`;
     await save(jsonPath, shard);
     await save(csvPath, `\uFEFF${model.labToCsv(shard)}`, false);
+    await save(`data/lab/${date}-components.csv`, `\uFEFF${labComponentsToCsv(forecasts, shard)}`, false);
     archives.push({ date, jsonPath, csvPath, games: games.size });
   }
   const index = model.labIndexSchema.parse({ schemaVersion: 1, startedAt: store.startedAt, updatedAt: at, config, archives,
@@ -73,6 +75,7 @@ export async function updateLabFiles(server, { feed, ledger, prior, priorPath, r
     games: ledger.games.filter((game) => ids.has(game.id)).map((game) => ({ gameId: game.id, startsAt: game.startsAt, status: game.status, firstHalfComplete: game.firstHalfComplete })),
   });
   await save("data/lab-index.json", index);
+  await save("data/lab-components.csv", `\uFEFF${labComponentsToCsv(store.forecasts, store)}`, false);
   console.log(`Lab: ${store.forecasts.length} saved observations, ${archives.length} dated archives; ${index.rawCoverage.games} reconciled raw halves, ${index.rawCoverage.errors} raw data gaps`);
   return { index, store };
 }
