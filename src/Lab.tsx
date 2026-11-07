@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { z } from "zod";
+import LabComponents from "./LabComponents";
 import LabTable from "./LabTable";
 import {
   canonicalLabForecasts,
@@ -363,6 +364,9 @@ export default function Lab({ recordOnly = false }: { recordOnly?: boolean }) {
       )}
       {store ? (
         <>
+          {method === "enhanced-baseline-v2" && (
+            <LabComponents forecasts={summaryRows} store={store} date={date} />
+          )}
           {method === "enhanced-baseline-v2" && summary && (
             <details className="lab-calibration">
               <summary>Free-throw & foul research results</summary>

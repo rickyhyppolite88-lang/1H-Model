@@ -140,6 +140,20 @@ it("shows upcoming research and explicit method descriptions without probability
       .getAttribute("href"),
   ).toContain("actions/workflows/pages.yml");
   expect(within(table).queryByText(/48%/)).toBeNull();
+  const comparison = screen.getByRole("table", {
+    name: "Lab component comparison",
+  });
+  expect(
+    within(comparison).getByRole("rowheader", { name: "Actual core" }),
+  ).toBeTruthy();
+  expect(
+    within(comparison).getByRole("rowheader", {
+      name: "Full without crowd effect",
+    }),
+  ).toBeTruthy();
+  expect(
+    screen.getByRole("button", { name: "Download component comparison CSV" }),
+  ).toBeTruthy();
 });
 
 it("lists qualified Lab research before watch-only forecasts and earlier data gaps", async () => {

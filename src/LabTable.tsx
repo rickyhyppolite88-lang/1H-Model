@@ -6,6 +6,7 @@ import FoulDetails from "./FoulDetails";
 import GameCardRow from "./GameCardRow";
 import GameTime from "./GameTime";
 import { gradeLab, type LabForecast, type LabStore } from "./model/lab";
+import { scheduleMessages } from "./model/scheduleReview";
 import TeamIdentity from "./TeamIdentity";
 
 const point = (value: number | null) =>
@@ -146,9 +147,17 @@ export default function LabTable({
                 <td role="cell" className="card-result" data-label="Result">
                   <span
                     className={`record-grade grade-${result.grade.toLowerCase().replaceAll(" ", "-")}`}
+                    title={scheduleMessages[result.schedule]}
                   >
                     {result.grade}
                   </span>
+                  {result.schedule !== "unchanged" && (
+                    <small className="schedule-note">
+                      {result.schedule === "verified_time_change"
+                        ? "Tip-time change verified"
+                        : "Schedule review"}
+                    </small>
+                  )}
                 </td>
                 <td
                   role="cell"
