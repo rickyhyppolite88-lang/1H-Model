@@ -48,6 +48,7 @@ export const preferenceCoverage: z.ZodType<string> = z.enum([
 export const preferenceGroup: z.ZodType<string> = z.enum([
   "all",
   "top25",
+  "top10",
   "conference",
 ]);
 export const preferenceSort: z.ZodType<string> = z.enum(["signal", "time"]);

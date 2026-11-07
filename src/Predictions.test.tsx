@@ -266,6 +266,121 @@ it("provides dated downloads and automatically checks for updated predictions", 
   await waitFor(() => expect(fetcher).toHaveBeenCalledTimes(6));
 });
 
+it("ranks Top 10 edges after date/tipoff filters, updates for the book, exports and restores the view", async () => {
+  const feed = todayFixture();
+  const base = feed.predictions[0];
+  feed.predictions = Array.from({ length: 12 }, (_, index) => {
+    const total = 70 + (index % 2 ? -1 : 1) * (index + 1);
+    return {
+      ...base,
+      gameId: `edge-${index + 1}`,
+      awayTeam: `Edge ${index + 1}`,
+      awayConference: index < 6 ? "SEC" : "ACC",
+      homeConference: "Big East",
+      projectedFirstHalfTotal: total,
+      markets: [
+        ...base.markets,
+        {
+          ...base.markets[0],
+          sportsbook: "draftkings",
+          latestLine: total - (13 - index),
+        },
+      ],
+    };
+  });
+  feed.predictions.push(
+    {
+      ...base,
+      gameId: "started",
+      awayTeam: "Started outlier",
+      startsAt: "2026-11-03T14:00:00Z",
+      projectedFirstHalfTotal: 100,
+    },
+    {
+      ...base,
+      gameId: "wrong-day",
+      awayTeam: "Wrong day",
+      startsAt: "2026-11-02T23:00:00Z",
+      projectedFirstHalfTotal: 120,
+    },
+    { ...base, gameId: "no-line", awayTeam: "No line", markets: [] },
+  );
+  vi.stubGlobal(
+    "fetch",
+    vi.fn(async (url: string) => ({
+      ok: true,
+      json: async () => responseFor(url, feed),
+    })),
+  );
+  let exported: NodeBlob | undefined;
+  vi.stubGlobal("Blob", NodeBlob);
+  vi.stubGlobal(
+    "URL",
+    class extends URL {
+      static createObjectURL(blob: Blob | MediaSource) {
+        exported = blob as unknown as NodeBlob;
+        return "blob:top10";
+      }
+      static revokeObjectURL = vi.fn();
+    },
+  );
+  vi.spyOn(HTMLAnchorElement.prototype, "click").mockImplementation(() => {});
+  const view = render(<Predictions />);
+  let table = await screen.findByRole("table", { name: "Matchup predictions" });
+  const names = () =>
+    [...table.querySelectorAll(".card-matchup")].map(
+      (cell) => cell.textContent,
+    );
+  fireEvent.click(screen.getByRole("tab", { name: "Top 10 edges" }));
+  expect(names()).toHaveLength(10);
+  expect(names()[0]).toContain("Started outlier");
+  expect(within(table).queryByText("Wrong day")).toBeNull();
+  expect(within(table).queryByText("No line")).toBeNull();
+  expect(
+    (screen.getByLabelText("Sort games") as HTMLSelectElement).disabled,
+  ).toBe(true);
+  fireEvent.click(screen.getByRole("button", { name: "Not tipped off 10" }));
+  expect(names()).toHaveLength(10);
+  expect(names()[0]).toContain("Edge 12");
+  expect(within(table).getByText("Edge 3")).toBeTruthy();
+  expect(within(table).queryByText("Started outlier")).toBeNull();
+  fireEvent.click(
+    screen.getByRole("button", { name: /Download filtered 10 rows/ }),
+  );
+  const csv = await exported?.text();
+  expect(csv?.trim().split("\r\n")).toHaveLength(11);
+  expect(csv?.split("\r\n")[1]).toContain("edge-12,");
+  expect(csv).not.toContain("started,");
+  fireEvent.change(screen.getByLabelText("Sportsbook"), {
+    target: { value: "draftkings" },
+  });
+  expect(names()[0]).toContain("Edge 1");
+  expect(within(table).queryByText("Edge 12")).toBeNull();
+  fireEvent.change(screen.getByLabelText("Conference"), {
+    target: { value: "SEC" },
+  });
+  expect(names()).toHaveLength(6);
+  expect(
+    screen
+      .getByRole("tab", { name: "Top 10 edges" })
+      .getAttribute("aria-selected"),
+  ).toBe("true");
+  view.unmount();
+  render(<Predictions />);
+  table = await screen.findByRole("table", { name: "Matchup predictions" });
+  expect(
+    screen
+      .getByRole("tab", { name: "Top 10 edges" })
+      .getAttribute("aria-selected"),
+  ).toBe("true");
+  expect(names()).toHaveLength(6);
+  expect(names()[0]).toContain("Edge 1");
+  fireEvent.click(screen.getByRole("tab", { name: "All games" }));
+  expect(
+    (screen.getByLabelText("Sort games") as HTMLSelectElement).disabled,
+  ).toBe(false);
+});
+
 it("combines Top 25 with a conference and exports matching rows beyond the first page", async () => {
   const feed = todayFixture();
   const base = feed.predictions[0];
