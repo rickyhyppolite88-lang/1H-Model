@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-11-07T09:09:57.504Z",
+  "updatedAt": "2026-11-07T09:51:48.272Z",
   "records": [
     {
       "id": "2026-27_401918948_v1",
@@ -7883,6 +7883,149 @@
           },
           "openingCapturedAt": "2026-11-07T06:22:50.755588Z",
           "latestCapturedAt": "2026-11-07T09:09:54.632392Z",
+          "closingVerified": false,
+          "quoteTimestamp": null,
+          "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-07"
+        }
+      ]
+    },
+    {
+      "id": "2026-27_401918948_v2",
+      "season": "2026-27",
+      "gameId": "401918948",
+      "gameDate": "2026-11-07",
+      "version": 2,
+      "recordedAt": "2026-11-07T09:51:48.272Z",
+      "signalCalculatedAt": "2026-11-07T09:51:48.272Z",
+      "origin": "batch_capture",
+      "evidence": null,
+      "inputSnapshots": {
+        "prior": "data/input-snapshots/5d7d1cdd590b01d65ca838308bd098bc8be58fdb5d96faf922f4c44677d6d7de.json",
+        "current": "data/input-snapshots/ff1a170aff1aa955198788c33251b855d6e9c1d2cd11eb05a01160e195ca2340.json",
+        "currentMatchesFrozenInputs": true
+      },
+      "modelVersion": "season-bridge-v1",
+      "source": {
+        "repository": "https://github.com/rickyhyppolite88-lang/1H-Model",
+        "projectionCode": "https://github.com/rickyhyppolite88-lang/1H-Model/blob/daae830572eccad53143db3b67798ed9ea7045b0/src/model/predictor.ts",
+        "batchCode": "https://github.com/rickyhyppolite88-lang/1H-Model/blob/daae830572eccad53143db3b67798ed9ea7045b0/src/model/predictions.ts",
+        "revision": "daae830572eccad53143db3b67798ed9ea7045b0"
+      },
+      "state": "pregame",
+      "sportsbook": "betmgm",
+      "basis": "latest",
+      "comparison": {
+        "line": null,
+        "signedEdge": null,
+        "lean": null
+      },
+      "signal": {
+        "method": "model-signal-v1",
+        "score": null,
+        "label": "Unavailable",
+        "reason": "A pregame projection, both components, and the selected line are required.",
+        "fill": null
+      },
+      "prediction": {
+        "gameId": "401918948",
+        "startsAt": "2026-11-07T17:00:00Z",
+        "awayTeam": "Morehead State Eagles",
+        "homeTeam": "Louisville Cardinals",
+        "awayConference": "Ohio Valley",
+        "homeConference": "ACC",
+        "awayRank": null,
+        "homeRank": 11,
+        "rankingsKnown": true,
+        "status": "Scheduled",
+        "projectedFirstHalfTotal": 74.3429516221977,
+        "actualFirstHalfTotal": null,
+        "simpleTotal": 73.76370654490105,
+        "paceAdjustedTotal": 75.21181923814268,
+        "featureKind": "captured_pregame",
+        "featureCapturedAt": "2026-11-07T06:22:56.545Z",
+        "unavailableReason": null,
+        "marketCoverage": {
+          "checkedAt": "2026-11-07T09:51:43.824737Z",
+          "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-07",
+          "status": "matched",
+          "books": [
+            {
+              "sportsbook": "fanatics",
+              "status": "available"
+            }
+          ]
+        },
+        "markets": [
+          {
+            "sportsbook": "fanatics",
+            "openingLine": 72.5,
+            "latestLine": 71.5,
+            "capturedAt": "2026-11-07T09:51:43.824737Z",
+            "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-07",
+            "closingVerified": false
+          }
+        ],
+        "signal": {
+          "method": "model-signal-v1",
+          "score": null,
+          "label": "Unavailable",
+          "reason": "A pregame projection, both components, and the selected line are required.",
+          "fill": null
+        }
+      },
+      "features": {
+        "kind": "captured_pregame",
+        "capturedAt": "2026-11-07T06:22:56.545Z",
+        "priorAsOf": "2026-04-07",
+        "currentAsOf": "2026-11-07",
+        "modelVersion": "season-bridge-v1",
+        "statsRetrievedAt": "2026-11-07T06:22:50.484392Z",
+        "away": {
+          "id": "morehead-st-eagles",
+          "name": "Morehead St",
+          "firstHalfPoints": 32.99754520547945,
+          "pace": 69.86496438356166,
+          "offensiveEfficiency": 1.0005140821917808,
+          "defensiveEfficiency": 1.099321095890411,
+          "currentWeight": 0.2,
+          "currentGames": 2,
+          "priorAvailable": true,
+          "strengthOfSchedule": -11.8,
+          "notes": [
+            "Roster continuity is not measured; league regression reduces reliance on last year's roster."
+          ]
+        },
+        "home": {
+          "id": "louisville-cardinals",
+          "name": "Louisville",
+          "firstHalfPoints": 40.76616133942161,
+          "pace": 71.7788493150685,
+          "offensiveEfficiency": 1.1312156468797565,
+          "defensiveEfficiency": 1.0168901065449008,
+          "currentWeight": 0.1111111111111111,
+          "currentGames": 1,
+          "priorAvailable": true,
+          "strengthOfSchedule": -4.3,
+          "notes": [
+            "Roster continuity is not measured; league regression reduces reliance on last year's roster."
+          ]
+        }
+      },
+      "quotes": [
+        {
+          "sportsbook": "fanatics",
+          "opening": {
+            "total": 72.5,
+            "overPrice": 100,
+            "underPrice": -120
+          },
+          "latest": {
+            "total": 71.5,
+            "overPrice": -120,
+            "underPrice": 100
+          },
+          "openingCapturedAt": "2026-11-07T06:22:50.755588Z",
+          "latestCapturedAt": "2026-11-07T09:51:43.824737Z",
           "closingVerified": false,
           "quoteTimestamp": null,
           "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-07"
