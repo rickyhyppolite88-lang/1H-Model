@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-11-07T08:18:30.282Z",
+  "updatedAt": "2026-11-07T09:09:57.504Z",
   "records": [
     {
       "id": "2026-27_401918948_v1",
@@ -7740,6 +7740,149 @@
           },
           "openingCapturedAt": "2026-11-07T06:22:50.755588Z",
           "latestCapturedAt": "2026-11-07T07:26:36.570794Z",
+          "closingVerified": false,
+          "quoteTimestamp": null,
+          "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-07"
+        }
+      ]
+    },
+    {
+      "id": "2026-27_401911262_v3",
+      "season": "2026-27",
+      "gameId": "401911262",
+      "gameDate": "2026-11-07",
+      "version": 3,
+      "recordedAt": "2026-11-07T09:09:57.504Z",
+      "signalCalculatedAt": "2026-11-07T09:09:57.504Z",
+      "origin": "batch_capture",
+      "evidence": null,
+      "inputSnapshots": {
+        "prior": "data/input-snapshots/5d7d1cdd590b01d65ca838308bd098bc8be58fdb5d96faf922f4c44677d6d7de.json",
+        "current": "data/input-snapshots/ff1a170aff1aa955198788c33251b855d6e9c1d2cd11eb05a01160e195ca2340.json",
+        "currentMatchesFrozenInputs": true
+      },
+      "modelVersion": "season-bridge-v1",
+      "source": {
+        "repository": "https://github.com/rickyhyppolite88-lang/1H-Model",
+        "projectionCode": "https://github.com/rickyhyppolite88-lang/1H-Model/blob/2ec8402b9669f32bd88593f069b7d2f5e4272e4b/src/model/predictor.ts",
+        "batchCode": "https://github.com/rickyhyppolite88-lang/1H-Model/blob/2ec8402b9669f32bd88593f069b7d2f5e4272e4b/src/model/predictions.ts",
+        "revision": "2ec8402b9669f32bd88593f069b7d2f5e4272e4b"
+      },
+      "state": "pregame",
+      "sportsbook": "betmgm",
+      "basis": "latest",
+      "comparison": {
+        "line": null,
+        "signedEdge": null,
+        "lean": null
+      },
+      "signal": {
+        "method": "model-signal-v1",
+        "score": null,
+        "label": "Unavailable",
+        "reason": "A pregame projection, both components, and the selected line are required.",
+        "fill": null
+      },
+      "prediction": {
+        "gameId": "401911262",
+        "startsAt": "2026-11-08T00:00:00Z",
+        "awayTeam": "St. Bonaventure Bonnies",
+        "homeTeam": "Canisius Golden Griffins",
+        "awayConference": "Atlantic 10",
+        "homeConference": "Metro",
+        "awayRank": null,
+        "homeRank": null,
+        "rankingsKnown": true,
+        "status": "Scheduled",
+        "projectedFirstHalfTotal": 68.55130288966863,
+        "actualFirstHalfTotal": null,
+        "simpleTotal": 65.69232267884321,
+        "paceAdjustedTotal": 72.83977320590678,
+        "featureKind": "captured_pregame",
+        "featureCapturedAt": "2026-11-07T06:22:56.545Z",
+        "unavailableReason": null,
+        "marketCoverage": {
+          "checkedAt": "2026-11-07T09:09:54.632392Z",
+          "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-07",
+          "status": "matched",
+          "books": [
+            {
+              "sportsbook": "fanatics",
+              "status": "available"
+            }
+          ]
+        },
+        "markets": [
+          {
+            "sportsbook": "fanatics",
+            "openingLine": 69.5,
+            "latestLine": 69.5,
+            "capturedAt": "2026-11-07T09:09:54.632392Z",
+            "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-07",
+            "closingVerified": false
+          }
+        ],
+        "signal": {
+          "method": "model-signal-v1",
+          "score": null,
+          "label": "Unavailable",
+          "reason": "A pregame projection, both components, and the selected line are required.",
+          "fill": null
+        }
+      },
+      "features": {
+        "kind": "captured_pregame",
+        "capturedAt": "2026-11-07T06:22:56.545Z",
+        "priorAsOf": "2026-04-07",
+        "currentAsOf": "2026-11-07",
+        "modelVersion": "season-bridge-v1",
+        "statsRetrievedAt": "2026-11-07T06:22:50.484392Z",
+        "away": {
+          "id": "st-bonaventure-bonnies",
+          "name": "St Bonaventure",
+          "firstHalfPoints": 34.96171689497716,
+          "pace": 70.38773820395738,
+          "offensiveEfficiency": 1.0674823135464233,
+          "defensiveEfficiency": 1.0748678843226787,
+          "currentWeight": 0.1111111111111111,
+          "currentGames": 1,
+          "priorAvailable": true,
+          "strengthOfSchedule": -7.1,
+          "notes": [
+            "Roster continuity is not measured; league regression reduces reliance on last year's roster."
+          ]
+        },
+        "home": {
+          "id": "canisius-golden-griffins",
+          "name": "Canisius",
+          "firstHalfPoints": 30.730605783866054,
+          "pace": 68.53218264840181,
+          "offensiveEfficiency": 0.955971202435312,
+          "defensiveEfficiency": 1.096312328767123,
+          "currentWeight": 0.1111111111111111,
+          "currentGames": 1,
+          "priorAvailable": true,
+          "strengthOfSchedule": 7.1,
+          "notes": [
+            "Roster continuity is not measured; league regression reduces reliance on last year's roster."
+          ]
+        }
+      },
+      "quotes": [
+        {
+          "sportsbook": "fanatics",
+          "opening": {
+            "total": 69.5,
+            "overPrice": 100,
+            "underPrice": -120
+          },
+          "latest": {
+            "total": 69.5,
+            "overPrice": -120,
+            "underPrice": 100
+          },
+          "openingCapturedAt": "2026-11-07T06:22:50.755588Z",
+          "latestCapturedAt": "2026-11-07T09:09:54.632392Z",
           "closingVerified": false,
           "quoteTimestamp": null,
           "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-07"
