@@ -23,6 +23,7 @@ import {
   predictionComparison,
   predictionFeedSchema,
   predictionsToCsv,
+  topEdgePredictions,
 } from "./model/predictions";
 import { predictionSignal } from "./model/signals";
 import { easternTipoff, tipoffState } from "./model/time";
@@ -216,9 +217,15 @@ export default function Predictions() {
         }),
     [dateRows, query, coverage, conference, group, sort, clock, book],
   );
-  const rows = matchingRows.filter(
-    (row) => timing === "all" || tipoffState(row, clock) === timing,
-  );
+  function rowsForTiming(value: string) {
+    const filtered = matchingRows.filter(
+      (row) => value === "all" || tipoffState(row, clock) === value,
+    );
+    return group === "top10"
+      ? topEdgePredictions(filtered, book, basis)
+      : filtered;
+  }
+  const rows = rowsForTiming(timing);
   if (error)
     return (
       <div className="notice error" role="alert">
@@ -369,6 +376,7 @@ export default function Predictions() {
           {[
             ["all", "All games"],
             ["top25", "Top 25"],
+            ["top10", "Top 10 edges"],
             ["conference", "Conferences"],
           ].map(([value, label]) => (
             <button
@@ -379,8 +387,13 @@ export default function Predictions() {
               aria-selected={group === value}
               key={value}
               className={group === value ? "active" : ""}
+              title={
+                value === "top10"
+                  ? "The 10 largest absolute model-to-line edges for your selected sportsbook and filters, including signals flagged for review."
+                  : undefined
+              }
               onClick={() => {
-                setGroup(value as "all" | "top25" | "conference");
+                setGroup(value);
                 if (value === "all") setConference("all");
                 setPage(0);
               }}
@@ -404,15 +417,7 @@ export default function Predictions() {
                 setPage(0);
               }}
             >
-              {label}{" "}
-              <span>
-                {
-                  matchingRows.filter(
-                    (row) =>
-                      value === "all" || tipoffState(row, clock) === value,
-                  ).length
-                }
-              </span>
+              {label} <span>{rowsForTiming(value).length}</span>
             </button>
           ))}
         </fieldset>
@@ -619,12 +624,16 @@ export default function Predictions() {
           <label>
             <span>Sort games</span>
             <select
-              value={sort}
+              value={group === "top10" ? "edge" : sort}
+              disabled={group === "top10"}
               onChange={(event) => {
                 setSort(event.target.value);
                 setPage(0);
               }}
             >
+              {group === "top10" && (
+                <option value="edge">Biggest absolute edge</option>
+              )}
               <option value="signal">Picks first, then confidence</option>
               <option value="time">Picks first, then tipoff (ET)</option>
             </select>
@@ -705,6 +714,12 @@ export default function Predictions() {
       <p className="results-count" aria-live="polite">
         {rows.length} matchups · {dateLabel(selectedDate)} ·{" "}
         {books[book] ?? book}
+        {group === "top10" && (
+          <span className="card-expand-hint">
+            Largest absolute edges first, using your sportsbook and filters.
+            Large edges can still be flagged for review.
+          </span>
+        )}
         <span className="card-expand-hint">
           Confidence % is a model score, not a win probability. Select a matchup
           for full details.

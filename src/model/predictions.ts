@@ -285,6 +285,31 @@ export function predictionComparison(
   };
 }
 
+/** Largest model-to-line gaps in either direction, using the selected book. */
+export function topEdgePredictions(
+  rows: PredictionRow[],
+  sportsbook: string,
+  basis: LineBasis = "latest",
+) {
+  return rows
+    .map((row) => ({
+      row,
+      edge: predictionComparison(row, sportsbook, basis).signedEdge,
+    }))
+    .filter(
+      (entry): entry is { row: PredictionRow; edge: number } =>
+        entry.edge !== null && entry.edge !== 0,
+    )
+    .sort(
+      (a, b) =>
+        Math.abs(b.edge) - Math.abs(a.edge) ||
+        Date.parse(a.row.startsAt) - Date.parse(b.row.startsAt) ||
+        a.row.gameId.localeCompare(b.row.gameId),
+    )
+    .slice(0, 10)
+    .map(({ row }) => row);
+}
+
 export function isTop25(row: PredictionRow) {
   return row.awayRank !== null || row.homeRank !== null;
 }
