@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-11-09T09:44:37.931Z",
+  "updatedAt": "2026-11-09T10:30:25.546Z",
   "records": [
     {
       "id": "2026-27_401925630_v1",
@@ -6751,6 +6751,149 @@
           },
           "openingCapturedAt": "2026-11-09T05:28:01.542279Z",
           "latestCapturedAt": "2026-11-09T09:44:33.172874Z",
+          "closingVerified": false,
+          "quoteTimestamp": null,
+          "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-09"
+        }
+      ]
+    },
+    {
+      "id": "2026-27_401906759_v4",
+      "season": "2026-27",
+      "gameId": "401906759",
+      "gameDate": "2026-11-09",
+      "version": 4,
+      "recordedAt": "2026-11-09T10:30:25.546Z",
+      "signalCalculatedAt": "2026-11-09T10:30:25.546Z",
+      "origin": "batch_capture",
+      "evidence": null,
+      "inputSnapshots": {
+        "prior": "data/input-snapshots/5d7d1cdd590b01d65ca838308bd098bc8be58fdb5d96faf922f4c44677d6d7de.json",
+        "current": "data/input-snapshots/786133f47c1eb487e40d30d348ccfe929780c5c154f5179cb83b71de25f53edf.json",
+        "currentMatchesFrozenInputs": true
+      },
+      "modelVersion": "season-bridge-v1",
+      "source": {
+        "repository": "https://github.com/rickyhyppolite88-lang/1H-Model",
+        "projectionCode": "https://github.com/rickyhyppolite88-lang/1H-Model/blob/50ea7d5bcafb5728dc5289ecfb0601745e61515b/src/model/predictor.ts",
+        "batchCode": "https://github.com/rickyhyppolite88-lang/1H-Model/blob/50ea7d5bcafb5728dc5289ecfb0601745e61515b/src/model/predictions.ts",
+        "revision": "50ea7d5bcafb5728dc5289ecfb0601745e61515b"
+      },
+      "state": "pregame",
+      "sportsbook": "betmgm",
+      "basis": "latest",
+      "comparison": {
+        "line": null,
+        "signedEdge": null,
+        "lean": null
+      },
+      "signal": {
+        "method": "model-signal-v1",
+        "score": null,
+        "label": "Unavailable",
+        "reason": "A pregame projection, both components, and the selected line are required.",
+        "fill": null
+      },
+      "prediction": {
+        "gameId": "401906759",
+        "startsAt": "2026-11-10T00:30:00Z",
+        "awayTeam": "Oakland Golden Grizzlies",
+        "homeTeam": "Alabama Crimson Tide",
+        "awayConference": "Horizon",
+        "homeConference": "SEC",
+        "awayRank": null,
+        "homeRank": 20,
+        "rankingsKnown": true,
+        "status": "Scheduled",
+        "projectedFirstHalfTotal": 79.2311588691291,
+        "actualFirstHalfTotal": null,
+        "simpleTotal": 77.91276811955169,
+        "paceAdjustedTotal": 81.20874499349522,
+        "featureKind": "captured_pregame",
+        "featureCapturedAt": "2026-11-09T05:28:07.549Z",
+        "unavailableReason": null,
+        "marketCoverage": {
+          "checkedAt": "2026-11-09T10:30:22.276395Z",
+          "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-09",
+          "status": "matched",
+          "books": [
+            {
+              "sportsbook": "fanatics",
+              "status": "available"
+            }
+          ]
+        },
+        "markets": [
+          {
+            "sportsbook": "fanatics",
+            "openingLine": 82.5,
+            "latestLine": 82.5,
+            "capturedAt": "2026-11-09T10:30:22.276395Z",
+            "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-09",
+            "closingVerified": false
+          }
+        ],
+        "signal": {
+          "method": "model-signal-v1",
+          "score": null,
+          "label": "Unavailable",
+          "reason": "A pregame projection, both components, and the selected line are required.",
+          "fill": null
+        }
+      },
+      "features": {
+        "kind": "captured_pregame",
+        "capturedAt": "2026-11-09T05:28:07.549Z",
+        "priorAsOf": "2026-04-07",
+        "currentAsOf": "2026-11-09",
+        "modelVersion": "season-bridge-v1",
+        "statsRetrievedAt": "2026-11-09T05:28:01.045322Z",
+        "away": {
+          "id": "oakland-golden-grizzlies",
+          "name": "Oakland",
+          "firstHalfPoints": 35.90322291407223,
+          "pace": 71.52269489414695,
+          "offensiveEfficiency": 1.0543582565379825,
+          "defensiveEfficiency": 1.1378191780821916,
+          "currentWeight": 0.2727272727272727,
+          "currentGames": 3,
+          "priorAvailable": true,
+          "strengthOfSchedule": 9.8,
+          "notes": [
+            "Roster continuity is not measured; league regression reduces reliance on last year's roster."
+          ]
+        },
+        "home": {
+          "id": "alabama-crimson-tide",
+          "name": "Alabama",
+          "firstHalfPoints": 42.00954520547945,
+          "pace": 76.82096438356166,
+          "offensiveEfficiency": 1.143434082191781,
+          "defensiveEfficiency": 1.0438810958904108,
+          "currentWeight": 0.2,
+          "currentGames": 2,
+          "priorAvailable": true,
+          "strengthOfSchedule": -2,
+          "notes": [
+            "Roster continuity is not measured; league regression reduces reliance on last year's roster."
+          ]
+        }
+      },
+      "quotes": [
+        {
+          "sportsbook": "fanatics",
+          "opening": {
+            "total": 82.5,
+            "overPrice": -105,
+            "underPrice": -115
+          },
+          "latest": {
+            "total": 82.5,
+            "overPrice": -115,
+            "underPrice": -105
+          },
+          "openingCapturedAt": "2026-11-09T05:28:01.542279Z",
+          "latestCapturedAt": "2026-11-09T10:30:22.276395Z",
           "closingVerified": false,
           "quoteTimestamp": null,
           "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-09"
