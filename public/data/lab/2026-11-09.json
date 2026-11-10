@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "startedAt": "2026-11-05T16:08:14.757Z",
-  "updatedAt": "2026-11-10T15:04:57.501Z",
+  "updatedAt": "2026-11-10T15:12:37.698Z",
   "forecasts": [
     {
       "id": "2026-27_enhanced-baseline-v2_401925630_v1",
@@ -36138,6 +36138,40 @@
         "city": "Seattle",
         "state": "WA"
       }
+    },
+    {
+      "id": "2026-27:401929003_result1",
+      "season": "2026-27",
+      "gameId": "401929003",
+      "observedAt": "2026-11-10T15:12:36.923Z",
+      "sourceCapturedAt": "2026-11-10T15:12:26.892012Z",
+      "startsAt": "2026-11-10T04:59:00Z",
+      "awayPoints": 40,
+      "homePoints": 36,
+      "source": "https://site.api.espn.com/apis/site/v2/sports/basketball/mens-college-basketball/scoreboard?dates=20261109&groups=50&limit=1000",
+      "participants": {
+        "away": {
+          "espnId": "2501",
+          "modelId": "portland-pilots",
+          "name": "Portland Pilots"
+        },
+        "home": {
+          "espnId": "62",
+          "modelId": "hawaii-rainbow-warriors",
+          "name": "Hawai'i Rainbow Warriors"
+        }
+      },
+      "context": {
+        "neutralSite": false,
+        "conferenceGame": false,
+        "matchupType": "nonconference_regular",
+        "eventLabel": "Rainbow Classic",
+        "venueId": "540",
+        "venueKey": "id:540",
+        "venueName": "Stan Sheriff Center",
+        "city": "Honolulu",
+        "state": "HI"
+      }
     }
   ],
   "halves": [
@@ -38038,6 +38072,120 @@
           "threeAttempted": 28,
           "turnovers": 7,
           "offensiveRebounds": 10
+        }
+      ]
+    },
+    {
+      "id": "401919733_06e068e0310007df4f770d1098c2e89b4237e6f59b1a3f0dd5b714622f0801d7",
+      "gameId": "401919733",
+      "season": "2026-27",
+      "startsAt": "2026-11-10T00:00:00Z",
+      "observedAt": "2026-11-10T15:12:30.023858Z",
+      "source": "https://site.api.espn.com/apis/site/v2/sports/basketball/mens-college-basketball/summary?event=401919733",
+      "sourceSha256": "df603ad36955a7185ff5efad8ea81bc6ebacce33d28b9f9dcc9ccaf1d1ddc605",
+      "bothD1": true,
+      "teams": [
+        {
+          "espnId": "2130",
+          "points": 33,
+          "fouls": 11,
+          "bonusMinutes": 8.633333333333333,
+          "fga": 24,
+          "fta": 20,
+          "freeThrowsMade": 15,
+          "threeMade": 4,
+          "threeAttempted": 12,
+          "turnovers": 10,
+          "offensiveRebounds": 5
+        },
+        {
+          "espnId": "2569",
+          "points": 53,
+          "fouls": 15,
+          "bonusMinutes": 10.483333333333333,
+          "fga": 28,
+          "fta": 16,
+          "freeThrowsMade": 14,
+          "threeMade": 7,
+          "threeAttempted": 13,
+          "turnovers": 7,
+          "offensiveRebounds": 3
+        }
+      ]
+    },
+    {
+      "id": "401919781_8229f6994ce1e1f3d03730916cfc7bf3e0da396da19991254b96f8e87f78e65b",
+      "gameId": "401919781",
+      "season": "2026-27",
+      "startsAt": "2026-11-10T00:00:00Z",
+      "observedAt": "2026-11-10T15:12:30.023858Z",
+      "source": "https://site.api.espn.com/apis/site/v2/sports/basketball/mens-college-basketball/summary?event=401919781",
+      "sourceSha256": "516eda9ac267ab4809d765528f88d7ea736e9e98570576c05b6da0e5f2c496a3",
+      "bothD1": false,
+      "teams": [
+        {
+          "espnId": "2330",
+          "points": 53,
+          "fouls": 7,
+          "bonusMinutes": 0,
+          "fga": 38,
+          "fta": 6,
+          "freeThrowsMade": 4,
+          "threeMade": 7,
+          "threeAttempted": 18,
+          "turnovers": 3,
+          "offensiveRebounds": 9
+        },
+        {
+          "espnId": "347",
+          "points": 20,
+          "fouls": 6,
+          "bonusMinutes": 3.716666666666667,
+          "fga": 28,
+          "fta": 7,
+          "freeThrowsMade": 4,
+          "threeMade": 2,
+          "threeAttempted": 17,
+          "turnovers": 9,
+          "offensiveRebounds": 6
+        }
+      ]
+    },
+    {
+      "id": "401929003_4abf69d64bc9f3a6e9276d9918dac5f017e0adb7a9ed30034a8649fcd7079e93",
+      "gameId": "401929003",
+      "season": "2026-27",
+      "startsAt": "2026-11-10T04:59:00Z",
+      "observedAt": "2026-11-10T15:12:30.023858Z",
+      "source": "https://site.api.espn.com/apis/site/v2/sports/basketball/mens-college-basketball/summary?event=401929003",
+      "sourceSha256": "7f505fee5085214c5fb7772785648b537032519fa0992a88780fe371f0ca4f9c",
+      "bothD1": true,
+      "teams": [
+        {
+          "espnId": "2501",
+          "points": 40,
+          "fouls": 9,
+          "bonusMinutes": 8.233333333333333,
+          "fga": 21,
+          "fta": 9,
+          "freeThrowsMade": 7,
+          "threeMade": 5,
+          "threeAttempted": 8,
+          "turnovers": 7,
+          "offensiveRebounds": 3
+        },
+        {
+          "espnId": "62",
+          "points": 36,
+          "fouls": 9,
+          "bonusMinutes": 8.6,
+          "fga": 30,
+          "fta": 3,
+          "freeThrowsMade": 2,
+          "threeMade": 4,
+          "threeAttempted": 12,
+          "turnovers": 1,
+          "offensiveRebounds": 3
         }
       ]
     }
