@@ -6,11 +6,32 @@ import {
   screen,
   within,
 } from "@testing-library/react";
-import { afterEach, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, expect, it, vi } from "vitest";
 import type { UnitPlay } from "./model/units";
 import UnitCalendar from "./UnitCalendar";
 
 afterEach(cleanup);
+beforeEach(() => localStorage.clear());
+
+it("keeps the calendar month and accounting choice after reopening the record", () => {
+  const first = render(
+    <UnitCalendar plays={plays} date="all" onSelectDate={vi.fn()} available />,
+  );
+  fireEvent.change(screen.getByLabelText("Unit accounting"), {
+    target: { value: "historical" },
+  });
+  fireEvent.click(
+    screen.getByRole("button", { name: "Previous Actual month" }),
+  );
+  first.unmount();
+  render(
+    <UnitCalendar plays={plays} date="all" onSelectDate={vi.fn()} available />,
+  );
+  expect(screen.getByRole("heading", { name: "October 2026" })).toBeTruthy();
+  expect(
+    (screen.getByLabelText("Unit accounting") as HTMLSelectElement).value,
+  ).toBe("historical");
+});
 const plays: UnitPlay[] = [
   {
     id: "win",

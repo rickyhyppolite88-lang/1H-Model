@@ -1,4 +1,5 @@
-import { useId, useState } from "react";
+import { useId } from "react";
+import { z } from "zod";
 import { easternTipoff } from "./model/time";
 import {
   formatUnits,
@@ -8,6 +9,13 @@ import {
   unitPlaysCsv,
   unitPolicy,
 } from "./model/units";
+import { usePreference } from "./usePreference";
+
+const monthSchema = z
+  .string()
+  .regex(/^\d{4}-(0[1-9]|1[0-2])$/)
+  .nullable();
+const accountingSchema = z.enum(["tracked", "historical"]).nullable();
 
 export default function UnitCalendar({
   plays,
@@ -30,8 +38,16 @@ export default function UnitCalendar({
       .map((row) => row.date)
       .sort()
       .at(-1) ?? easternTipoff(new Date().toISOString()).date;
-  const [monthChoice, setMonth] = useState<string | null>(null);
-  const [modeChoice, setMode] = useState<UnitMode | null>(null);
+  const [monthChoice, setMonth] = usePreference(
+    `units.${label}.month`,
+    monthSchema,
+    null,
+  );
+  const [modeChoice, setMode] = usePreference(
+    `units.${label}.accounting`,
+    accountingSchema,
+    null,
+  );
   const mode =
     modeChoice ??
     (plays.some((row) => row.mode === "tracked") ? "tracked" : "historical");
