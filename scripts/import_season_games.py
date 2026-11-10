@@ -138,6 +138,9 @@ def quote(line: dict | None) -> dict | None:
     if not line or line.get("total") is None:
         return None
     total = line["total"]
+    # This provider uses zero totals/odds as placeholders for an unavailable market.
+    if total == 0:
+        return None
     if not isinstance(total, (int, float)) or not 1 <= total <= 150:
         raise ValueError("Invalid first-half total")
     return {"total": total, "overPrice": line.get("overOdds"), "underPrice": line.get("underOdds")}
