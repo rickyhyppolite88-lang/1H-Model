@@ -68,21 +68,50 @@ function fixture() {
       comparison: { ...first.comparison, line: 73 },
     },
   );
-  store.results = [first.gameId, "tuesday"].map((gameId) => ({
-    id: `${gameId}-result`,
-    season: first.season,
-    gameId,
-    observedAt: "2026-11-04T03:00:00Z",
-    sourceCapturedAt: "2026-11-04T03:00:00Z",
-    awayPoints: 36,
-    homePoints: 36,
-    source: "https://example.com/results",
-  }));
+  for (const [id, name] of [
+    ["unpriced", "Unpriced team"],
+    ["gap", "Missing inputs team"],
+    ["review", "Unstaked review team"],
+  ]) {
+    store.records.push({
+      ...first,
+      id,
+      gameId: id,
+      prediction: {
+        ...first.prediction,
+        gameId: id,
+        awayTeam: name,
+        projectedFirstHalfTotal:
+          id === "gap" ? null : first.prediction.projectedFirstHalfTotal,
+      },
+      state: id === "gap" ? "unavailable" : "pregame",
+      comparison:
+        id === "unpriced"
+          ? { line: null, signedEdge: null, lean: null }
+          : first.comparison,
+      signal: {
+        ...first.signal,
+        score: null,
+        label: id === "review" ? "Outlier review" : "Unavailable",
+      },
+    });
+  }
+  store.results = [first.gameId, "tuesday", "unpriced", "gap", "review"].map(
+    (gameId) => ({
+      id: `${gameId}-result`,
+      season: first.season,
+      gameId,
+      observedAt: "2026-11-04T03:00:00Z",
+      sourceCapturedAt: "2026-11-04T03:00:00Z",
+      awayPoints: 36,
+      homePoints: 36,
+      source: "https://example.com/results",
+    }),
+  );
   return { store, index: buildRecordIndex(store) };
 }
 
-function mockArchives(failDate = "") {
-  const { store, index } = fixture();
+function unitFixture({ store, index }: ReturnType<typeof fixture>) {
   const ledger: UnitLedger = {
     schemaVersion: 1,
     startedAt: index.updatedAt,
@@ -96,6 +125,11 @@ function mockArchives(failDate = "") {
       actualUnitPlay(row, store.results, ledger),
     ),
   };
+  return { ledger, unitResults };
+}
+function mockArchives(failDate = "") {
+  const { store, index } = fixture();
+  const { ledger, unitResults } = unitFixture({ store, index });
   const fetcher = vi.fn(async (url: string) => ({
     ok: !failDate || !url.includes(`${failDate}.json`),
     json: async () =>
@@ -143,34 +177,24 @@ it("shows finished first halves and updates the same summary box from the daily 
   await screen.findByText("1 / 1 / 0");
 });
 
-it("excludes upcoming games in every view and clears filters when selecting an unfinished day", async () => {
+it("excludes upcoming games and clears search when selecting an unfinished day", async () => {
   mockArchives();
   render(<PredictionRecord />);
   await screen.findByRole("table", { name: "Recorded predictions" });
-  for (const value of ["all", "official", "games"]) {
-    fireEvent.change(screen.getByLabelText("Record view"), {
-      target: { value },
-    });
-    expect(within(table()).queryByText("Upcoming team")).toBeNull();
-  }
+  expect(within(table()).queryByText("Upcoming team")).toBeNull();
+  expect(screen.queryByLabelText("Record view")).toBeNull();
   fireEvent.change(screen.getByLabelText("Search recorded matchups"), {
     target: { value: "Monday" },
   });
-  fireEvent.change(screen.getByLabelText("Record view"), {
-    target: { value: "all" },
-  });
   selectDate("2026-11-04");
   await screen.findByText(
-    /No finished first-half results are recorded for 2026-11-04 yet/,
+    /No finished staked plays are recorded for 2026-11-04 yet/,
   );
   expect(within(summary()).getByText("0 / 0 / 0")).toBeTruthy();
   expect(
     (screen.getByLabelText("Search recorded matchups") as HTMLInputElement)
       .value,
   ).toBe("");
-  expect(
-    (screen.getByLabelText("Record view") as HTMLSelectElement).value,
-  ).toBe("games");
   expect(within(table()).getAllByRole("row")).toHaveLength(1);
 });
 
@@ -180,12 +204,9 @@ it("preserves saved versions and full archive downloads without inflating the of
   await screen.findByRole("table", { name: "Recorded predictions" });
   selectDate("2026-11-02");
   await screen.findByText("1 / 0 / 0");
-  fireEvent.change(screen.getByLabelText("Record view"), {
-    target: { value: "all" },
-  });
-  expect(within(table()).getAllByRole("row")).toHaveLength(3);
+  expect(within(table()).getAllByRole("row")).toHaveLength(2);
   expect(within(table()).getByText("Win")).toBeTruthy();
-  expect(within(table()).getByText("Loss")).toBeTruthy();
+  expect(within(table()).queryByText("Loss")).toBeNull();
   expect(within(summary()).getByText("1 / 0 / 0")).toBeTruthy();
   fireEvent.click(screen.getByText("Source data and downloads"));
   expect(
@@ -195,7 +216,7 @@ it("preserves saved versions and full archive downloads without inflating the of
   ).toContain("prediction-record/2026-11-02.json");
   expect(
     screen
-      .getByRole("link", { name: "Running record Excel ↓" })
+      .getByRole("link", { name: "Complete forecast archive Excel ↓" })
       .getAttribute("href"),
   ).toContain("prediction-record.xlsx");
 });
@@ -220,22 +241,32 @@ it("never shows partial totals when an archive fails and can retry", async () =>
 
 it("ignores slow full-history responses after selecting another day", async () => {
   const { store, index } = fixture();
+  const { ledger, unitResults } = unitFixture({ store, index });
   let finish: (() => void) | undefined;
   vi.stubGlobal(
     "fetch",
     vi.fn(async (url: string) => ({
       ok: true,
       json: async () =>
-        url.includes("index")
-          ? structuredClone(index)
-          : url.includes("2026-11-03.json")
-            ? new Promise((resolve) => {
-                finish = () =>
-                  resolve(structuredClone(recordForDate(store, "2026-11-03")));
-              })
-            : structuredClone(
-                recordForDate(store, url.match(/\d{4}-\d{2}-\d{2}/)?.[0] ?? ""),
-              ),
+        url.includes("unit-ledger")
+          ? ledger
+          : url.includes("unit-results")
+            ? unitResults
+            : url.includes("index")
+              ? structuredClone(index)
+              : url.includes("2026-11-03.json")
+                ? new Promise((resolve) => {
+                    finish = () =>
+                      resolve(
+                        structuredClone(recordForDate(store, "2026-11-03")),
+                      );
+                  })
+                : structuredClone(
+                    recordForDate(
+                      store,
+                      url.match(/\d{4}-\d{2}-\d{2}/)?.[0] ?? "",
+                    ),
+                  ),
     })),
   );
   render(<PredictionRecord />);
@@ -256,11 +287,47 @@ it("opens a calendar day with that day's original graded picks, saved odds, stak
     await screen.findByRole("button", { name: "2026-11-03: -0.50u" }),
   );
   await screen.findByText("0 / 1 / 0");
-  expect(
-    (screen.getByLabelText("Record view") as HTMLSelectElement).value,
-  ).toBe("official");
+  expect(screen.queryByLabelText("Record view")).toBeNull();
   expect(within(table()).getByText("Tuesday team")).toBeTruthy();
   expect(within(table()).queryByText("Monday team")).toBeNull();
   expect(within(table()).getByText("-0.50u")).toBeTruthy();
   expect(within(table()).getByText(/-105/)).toBeTruthy();
+});
+
+it("shows only staked original plays in both the record table and its summary, including when an old all-versions preference was saved", async () => {
+  localStorage.setItem(
+    "1h-model-view-v1:record.view",
+    JSON.stringify({ savedAt: Date.now(), value: "all" }),
+  );
+  mockArchives();
+  render(<PredictionRecord />);
+  await screen.findByRole("table", { name: "Recorded predictions" });
+  expect(within(table()).getAllByRole("row")).toHaveLength(3);
+  for (const name of [
+    "Unpriced team",
+    "Missing inputs team",
+    "Unstaked review team",
+  ])
+    expect(within(table()).queryByText(name)).toBeNull();
+  expect(within(summary()).getByText("1 / 1 / 0")).toBeTruthy();
+  expect(within(summary()).getAllByText("2")).toHaveLength(2);
+  expect(screen.queryByLabelText("Record view")).toBeNull();
+});
+
+it("keeps the full record unavailable if stakes fail to load instead of showing unfiltered games", async () => {
+  const fetcher = mockArchives();
+  vi.stubGlobal(
+    "fetch",
+    vi.fn(async (url: string) =>
+      url.includes("unit-")
+        ? { ok: false, json: async () => ({}) }
+        : fetcher(url),
+    ),
+  );
+  render(<PredictionRecord />);
+  await screen.findByText(/Unit stakes could not be refreshed/);
+  expect(
+    screen.queryByRole("table", { name: "Recorded predictions" }),
+  ).toBeNull();
+  expect(within(summary()).queryByText("1 / 1 / 0")).toBeNull();
 });

@@ -106,3 +106,8 @@ python scripts/configure_lab.py --method first-half-defense-v1 --action disable
 ```
 
 The normal Pages workflow collects raw measurements on due refreshes, and on the first production build if the raw store does not yet exist. Pull requests run isolated collection/model tests without a live raw fetch. CSV/JSON archives regenerate and deploy with validated data; an open Lab screen checks for published changes every five minutes.
+
+
+### Entry books and future tipoff selection
+
+New forecasts default to DraftKings. Prior recorded books and decisions remain unchanged for games already started when the persisted `last-pretip-v1` policy begins. Future games use the latest captured pre-tip decision across book versions; qualified unit records additionally require a source quote verified within the final 15 minutes. A final watch-only or data-gap decision receives no stake. Immutable older observations remain in the archives. Full-record cards, totals and unit CSVs show only staked entries, while the main Lab retains the broader research history and bonus measurements.

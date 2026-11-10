@@ -19,11 +19,17 @@ import {
 import type { DailyArchive, PredictionFeed } from "./model/predictions";
 import { recordFixture } from "./model/record.test-fixture";
 import Predictions from "./Predictions";
+import { preferencePrefix } from "./usePreference";
 
 beforeEach(() => {
   localStorage.clear();
   vi.useFakeTimers({ toFake: ["Date"] });
   vi.setSystemTime(new Date("2026-11-03T15:00:00Z"));
+  // Existing market-coverage cases explicitly exercise a selected BetMGM book.
+  localStorage.setItem(
+    `${preferencePrefix}sportsbook.draftkings-default-v1`,
+    JSON.stringify({ savedAt: Date.now(), value: "betmgm" }),
+  );
 });
 
 function todayFixture() {
@@ -182,6 +188,10 @@ it.each(["signal", "time"])(
 it("orders confidence scores without presenting them as win probabilities", async () => {
   vi.useFakeTimers({ toFake: ["Date"] });
   vi.setSystemTime(new Date("2026-11-02T22:00:00Z"));
+  localStorage.setItem(
+    `${preferencePrefix}sportsbook.draftkings-default-v1`,
+    JSON.stringify({ savedAt: Date.now(), value: "betmgm" }),
+  );
   const { feed } = recordFixture();
   const base = feed.predictions[0];
   feed.predictions = [
@@ -229,6 +239,84 @@ it("orders confidence scores without presenting them as win probabilities", asyn
     ),
   ).toBeTruthy();
 });
+
+it("starts with DraftKings even with an old default stored, then preserves the user's new book choice", async () => {
+  localStorage.removeItem(
+    `${preferencePrefix}sportsbook.draftkings-default-v1`,
+  );
+  localStorage.setItem(
+    `${preferencePrefix}sportsbook`,
+    JSON.stringify({ savedAt: Date.now(), value: "betmgm" }),
+  );
+  const feed = todayFixture();
+  feed.predictions = feed.predictions.map((row) => ({
+    ...row,
+    markets: row.markets.flatMap((market) => [
+      { ...market, sportsbook: "draftkings" },
+      { ...market, sportsbook: "fanduel" },
+    ]),
+  }));
+  vi.stubGlobal(
+    "fetch",
+    vi.fn(async (url: string) => ({
+      ok: true,
+      json: async () => responseFor(url, feed),
+    })),
+  );
+  const first = render(<Predictions />);
+  await screen.findByRole("table", { name: "Matchup predictions" });
+  expect((screen.getByLabelText("Sportsbook") as HTMLSelectElement).value).toBe(
+    "draftkings",
+  );
+  fireEvent.change(screen.getByLabelText("Sportsbook"), {
+    target: { value: "fanduel" },
+  });
+  first.unmount();
+  render(<Predictions />);
+  await screen.findByRole("table", { name: "Matchup predictions" });
+  expect((screen.getByLabelText("Sportsbook") as HTMLSelectElement).value).toBe(
+    "fanduel",
+  );
+});
+
+it.each([false, true])(
+  "marks a future stake provisional until the final quote check is verified: %s",
+  async (fresh) => {
+    vi.setSystemTime(new Date("2026-11-02T23:57:00Z"));
+    localStorage.removeItem(
+      `${preferencePrefix}sportsbook.draftkings-default-v1`,
+    );
+    const { feed } = recordFixture();
+    feed.generatedAt = "2026-11-02T23:57:00Z";
+    feed.defaultSportsbook = "draftkings";
+    feed.entryPolicy = {
+      method: "last-pretip-v1",
+      startedAt: "2026-11-02T23:40:00Z",
+      maxQuoteAgeMinutes: 15,
+    };
+    feed.predictions[0].markets = feed.predictions[0].markets.map((row) => ({
+      ...row,
+      sportsbook: "draftkings",
+      capturedAt: fresh ? feed.generatedAt : "2026-11-02T22:00:00Z",
+    }));
+    vi.stubGlobal(
+      "fetch",
+      vi.fn(async (url: string) => ({
+        ok: true,
+        json: async () => responseFor(url, feed),
+      })),
+    );
+    render(<Predictions />);
+    const table = await screen.findByRole("table", {
+      name: "Matchup predictions",
+    });
+    expect(
+      within(table).getByText(
+        fresh ? "0.5u suggested" : "Awaiting pre-tip check",
+      ),
+    ).toBeTruthy();
+  },
+);
 
 it("provides dated downloads and automatically checks for updated predictions", async () => {
   vi.useFakeTimers({ toFake: ["Date", "setInterval", "clearInterval"] });

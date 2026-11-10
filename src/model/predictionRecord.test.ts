@@ -17,7 +17,7 @@ describe("permanent prediction record", () => {
     const later = "2026-11-03T01:00:00Z";
     const old = updatePredictionRecord(
       f.store,
-      generatePredictions(f.ledger, later),
+      generatePredictions(f.ledger, later, "main", "betmgm"),
       f.ledger,
       later,
     );
@@ -54,7 +54,7 @@ describe("permanent prediction record", () => {
       recovered.records[1].id,
     ]);
     const at = "2026-11-03T02:00:00Z";
-    const changed = generatePredictions(f.ledger, at);
+    const changed = generatePredictions(f.ledger, at, "main", "betmgm");
     changed.predictions[0].projectedFirstHalfTotal = 80;
     const next = updatePredictionRecord(recovered, changed, f.ledger, at);
     expect(next.records[2].version).toBe(3);
@@ -74,7 +74,12 @@ describe("permanent prediction record", () => {
   it("does not replace an existing counted forecast with an older recovered line", () => {
     const f = recordFixture();
     const old = updatePredictionRecord(f.store, f.feed, f.ledger, f.at);
-    const feed = generatePredictions(f.ledger, "2026-11-02T21:30:00Z");
+    const feed = generatePredictions(
+      f.ledger,
+      "2026-11-02T21:30:00Z",
+      "main",
+      "betmgm",
+    );
     feed.source.revision = "a".repeat(40);
     const result = recoverPublishedPredictions(
       old,
@@ -136,7 +141,7 @@ describe("permanent prediction record", () => {
     const f = recordFixture();
     const first = updatePredictionRecord(f.store, f.feed, f.ledger, f.at);
     const at = "2026-11-03T02:00:00Z";
-    const feed = generatePredictions(f.ledger, at);
+    const feed = generatePredictions(f.ledger, at, "main", "betmgm");
     feed.predictions[0].projectedFirstHalfTotal = 80;
     const next = updatePredictionRecord(first, feed, f.ledger, at);
     expect(next.records).toHaveLength(2);
@@ -151,7 +156,7 @@ describe("permanent prediction record", () => {
     f.ledger.games[0].quotes[0].latestCapturedAt = "2026-11-02T22:05:00Z";
     const next = updatePredictionRecord(
       first,
-      generatePredictions(f.ledger, "2026-11-02T22:10:00Z"),
+      generatePredictions(f.ledger, "2026-11-02T22:10:00Z", "main", "betmgm"),
       f.ledger,
       "2026-11-02T22:10:00Z",
     );
@@ -177,7 +182,7 @@ describe("permanent prediction record", () => {
     quote.total = 73;
     const next = updatePredictionRecord(
       first,
-      generatePredictions(f.ledger, "2026-11-02T22:10:00Z"),
+      generatePredictions(f.ledger, "2026-11-02T22:10:00Z", "main", "betmgm"),
       f.ledger,
       "2026-11-02T22:10:00Z",
     );
@@ -207,7 +212,7 @@ describe("permanent prediction record", () => {
     if (q) q.total = 75;
     const settled = updatePredictionRecord(
       first,
-      generatePredictions(f.ledger, "2026-11-03T02:00:00Z"),
+      generatePredictions(f.ledger, "2026-11-03T02:00:00Z", "main", "betmgm"),
       f.ledger,
       "2026-11-03T02:00:00Z",
     );
@@ -233,7 +238,7 @@ describe("permanent prediction record", () => {
     g.home.firstHalfPoints = 38;
     store = updatePredictionRecord(
       store,
-      generatePredictions(f.ledger, "2026-11-03T02:00:00Z"),
+      generatePredictions(f.ledger, "2026-11-03T02:00:00Z", "main", "betmgm"),
       f.ledger,
       "2026-11-03T02:00:00Z",
     );
@@ -242,7 +247,7 @@ describe("permanent prediction record", () => {
     g.home.firstHalfPoints = 33;
     store = updatePredictionRecord(
       store,
-      generatePredictions(f.ledger, "2026-11-03T02:10:00Z"),
+      generatePredictions(f.ledger, "2026-11-03T02:10:00Z", "main", "betmgm"),
       f.ledger,
       "2026-11-03T02:10:00Z",
     );
@@ -263,7 +268,7 @@ describe("permanent prediction record", () => {
     const at = f.ledger.games[0].startsAt;
     const store = updatePredictionRecord(
       f.store,
-      generatePredictions(f.ledger, at),
+      generatePredictions(f.ledger, at, "main", "betmgm"),
       f.ledger,
       at,
     );
@@ -278,7 +283,7 @@ describe("permanent prediction record", () => {
     features.kind = "reconstructed_season_debut";
     const store = updatePredictionRecord(
       f.store,
-      generatePredictions(f.ledger, f.at),
+      generatePredictions(f.ledger, f.at, "main", "betmgm"),
       f.ledger,
       f.at,
     );
@@ -291,7 +296,7 @@ describe("permanent prediction record", () => {
     f.ledger.games[0].away.modelId = null;
     const store = updatePredictionRecord(
       f.store,
-      generatePredictions(f.ledger, f.at),
+      generatePredictions(f.ledger, f.at, "main", "betmgm"),
       f.ledger,
       f.at,
     );
@@ -312,7 +317,7 @@ describe("permanent prediction record", () => {
     g.home.firstHalfPoints = 35;
     store = updatePredictionRecord(
       store,
-      generatePredictions(f.ledger, "2026-11-03T02:00:00Z"),
+      generatePredictions(f.ledger, "2026-11-03T02:00:00Z", "main", "betmgm"),
       f.ledger,
       "2026-11-03T02:00:00Z",
     );
@@ -329,7 +334,7 @@ describe("permanent prediction record", () => {
     f.ledger.games[0].quotes[0].latest = null;
     let store = updatePredictionRecord(
       f.store,
-      generatePredictions(f.ledger, f.at),
+      generatePredictions(f.ledger, f.at, "main", "betmgm"),
       f.ledger,
       f.at,
     );
@@ -341,7 +346,7 @@ describe("permanent prediction record", () => {
     };
     store = updatePredictionRecord(
       store,
-      generatePredictions(f.ledger, "2026-11-02T22:10:00Z"),
+      generatePredictions(f.ledger, "2026-11-02T22:10:00Z", "main", "betmgm"),
       f.ledger,
       "2026-11-02T22:10:00Z",
     );
@@ -359,7 +364,7 @@ describe("permanent prediction record", () => {
       g.home.firstHalfPoints = kind === "missing score" ? null : 35;
       store = updatePredictionRecord(
         store,
-        generatePredictions(f.ledger, "2026-11-03T02:00:00Z"),
+        generatePredictions(f.ledger, "2026-11-03T02:00:00Z", "main", "betmgm"),
         f.ledger,
         "2026-11-03T02:00:00Z",
       );
@@ -386,7 +391,7 @@ describe("permanent prediction record", () => {
     g.home.firstHalfPoints = 40;
     store = updatePredictionRecord(
       store,
-      generatePredictions(f.ledger, "2026-11-04T02:00:00Z"),
+      generatePredictions(f.ledger, "2026-11-04T02:00:00Z", "main", "betmgm"),
       f.ledger,
       "2026-11-04T02:00:00Z",
     );
@@ -425,7 +430,7 @@ describe("permanent prediction record", () => {
     f.ledger.games[0].away.name = "=SUM(1,2)";
     const store = updatePredictionRecord(
       f.store,
-      generatePredictions(f.ledger, f.at),
+      generatePredictions(f.ledger, f.at, "main", "betmgm"),
       f.ledger,
       f.at,
     );

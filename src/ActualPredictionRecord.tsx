@@ -1,11 +1,8 @@
 import { useEffect, useRef, useState } from "react";
-import AvailabilityHelp from "./AvailabilityHelp";
 import GameTime from "./GameTime";
-import { dailyRecordCoverage, dailyRecordGames } from "./model/dailyRecord";
 import {
   type RecordIndex,
   type RecordStore,
-  recordGrade,
   recordIndexSchema,
   recordStoreSchema,
 } from "./model/predictionRecord";
@@ -14,13 +11,12 @@ import {
   finishedRecordSummary,
   mergeRecordStores,
 } from "./model/recordViews";
-import { actualUnitPlay } from "./model/units";
+import { actualUnitPlay, hasUnitStake } from "./model/units";
 import RecordTable from "./RecordTable";
 import UnitCalendar from "./UnitCalendar";
 import {
   preferencePage,
   preferenceRecordDate,
-  preferenceRecordView,
   preferenceText,
   usePreference,
 } from "./usePreference";
@@ -44,11 +40,10 @@ export default function PredictionRecord() {
     preferenceRecordDate,
     "all",
   );
-  const [group, setGroup] = usePreference("record.group", preferenceText, "");
-  const [view, setView] = usePreference(
-    "record.view",
-    preferenceRecordView,
-    "games",
+  const [group, setGroup] = usePreference(
+    "record.group.original-books-v1",
+    preferenceText,
+    "all",
   );
   const [query, setQuery] = usePreference("record.search", preferenceText, "");
   const [page, setPage] = usePreference("record.page", preferencePage, 0);
@@ -143,8 +138,10 @@ export default function PredictionRecord() {
       <div className="empty-state">Loading the shared prediction record…</div>
     );
   const benchmark =
-    index.summary.find((entry) => summaryKey(entry) === group) ??
-    index.summary[index.summary.length - 1];
+    group === "all"
+      ? undefined
+      : (index.summary.find((entry) => summaryKey(entry) === group) ??
+        index.summary[index.summary.length - 1]);
   const current = loaded?.key === loadKey ? loaded : null;
   const store = current?.store ?? null;
   const modelRecords = (store?.records ?? []).filter(
@@ -159,42 +156,25 @@ export default function PredictionRecord() {
     .filter((record) => index.canonicalIds.includes(record.id))
     .map((record) => actualUnitPlay(record, store?.results ?? [], unitLedger));
   const unitMap = new Map(unitPlays.map((play) => [play.id, play]));
-  const scopedStore = store
-    ? finishedRecordStore({
-        ...store,
-        records: store.records.filter(
-          (record) =>
-            (!benchmark ||
-              (record.season === benchmark.season &&
-                record.modelVersion === benchmark.modelVersion &&
-                record.sportsbook === benchmark.sportsbook &&
-                record.basis === benchmark.basis)) &&
-            (date === "all" || record.gameDate === date),
-        ),
-      })
-    : null;
+  const scopedStore =
+    store && unitLedger
+      ? finishedRecordStore({
+          ...store,
+          records: modelRecords.filter(
+            (record) =>
+              hasUnitStake(unitMap.get(record.id)) &&
+              (date === "all" || record.gameDate === date),
+          ),
+        })
+      : null;
   const summary = scopedStore
     ? finishedRecordSummary(scopedStore, index.canonicalIds)
     : null;
-  const coverage = scopedStore
-    ? dailyRecordCoverage(scopedStore, index.canonicalIds)
-    : null;
-  const ids = new Set(index.canonicalIds);
-  const selected =
-    view === "games"
-      ? dailyRecordGames(scopedStore?.records ?? [], index.canonicalIds)
-      : (scopedStore?.records ?? []);
-  const rows = selected
-    .filter(
-      (record) =>
-        `${record.prediction.awayTeam} ${record.prediction.homeTeam}`
-          .toLowerCase()
-          .includes(query.trim().toLowerCase()) &&
-        (view !== "official" ||
-          (ids.has(record.id) &&
-            ["Win", "Loss", "Push"].includes(
-              recordGrade(record, store?.results ?? []).grade,
-            ))),
+  const rows = (scopedStore?.records ?? [])
+    .filter((record) =>
+      `${record.prediction.awayTeam} ${record.prediction.homeTeam}`
+        .toLowerCase()
+        .includes(query.trim().toLowerCase()),
     )
     .sort(
       (a, b) =>
@@ -206,7 +186,6 @@ export default function PredictionRecord() {
   const safePage = Math.min(page, pages - 1);
   const visible = rows.slice(safePage * 25, (safePage + 1) * 25);
   function resetFilters() {
-    setView("games");
     setQuery("");
     setPage(0);
   }
@@ -222,9 +201,9 @@ export default function PredictionRecord() {
         <div>
           <h2>Running prediction record</h2>
           <p>
-            Finished first-half results. Tap a calendar day to see its picks,
-            stakes and results. Saved confidence % is the original model score,
-            not a win probability.
+            Finished first-half plays with a recorded or replayed stake. Tap a
+            calendar day to see its picks, stakes and results. Saved confidence
+            % is the original model score, not a win probability.
           </p>
         </div>
       </div>
@@ -239,12 +218,13 @@ export default function PredictionRecord() {
         <label className="record-model-control">
           Record season / model
           <select
-            value={benchmark ? summaryKey(benchmark) : ""}
+            value={benchmark ? summaryKey(benchmark) : "all"}
             onChange={(event) => {
               setGroup(event.target.value);
               resetFilters();
             }}
           >
+            <option value="all">All recorded books · frozen entries</option>
             {index.summary.map((entry) => (
               <option key={summaryKey(entry)} value={summaryKey(entry)}>
                 {entry.season} · {entry.modelVersion} · {entry.sportsbook}/
@@ -263,6 +243,7 @@ export default function PredictionRecord() {
         plays={(calendarPlays ?? []).filter(
           (play) =>
             play.source === "actual" &&
+            hasUnitStake(play) &&
             play.actual !== null &&
             (!benchmark ||
               (play.season === benchmark.season &&
@@ -271,10 +252,7 @@ export default function PredictionRecord() {
                 play.basis === benchmark.basis)),
         )}
         date={date}
-        onSelectDate={(value) => {
-          selectDate(value);
-          if (value !== "all") setView("official");
-        }}
+        onSelectDate={selectDate}
         available={Boolean(unitLedger && calendarPlays)}
         error={unitError}
       />
@@ -325,18 +303,20 @@ export default function PredictionRecord() {
                 <strong>{rate(summary.winRate)}</strong>
               </div>
               <div>
-                <span>Official graded picks</span>
+                <span>Graded staked plays</span>
                 <strong>{summary.counted}</strong>
               </div>
               <div>
-                <span>Finished games</span>
+                <span>Finished staked plays</span>
                 <strong>{summary.games}</strong>
               </div>
             </div>
             <p className="inline-note">
-              Only each game’s original eligible pregame pick counts in the
-              win/loss record. Pushes are excluded from win rate.{" "}
-              {summary.ungraded} finished games have no official grade.
+              Only frozen plays with a stake count here. Historical tier replays
+              stay labeled. Pushes are excluded from win rate.{" "}
+              {summary.ungraded > 0
+                ? `${summary.ungraded} staked plays await a verified grade.`
+                : ""}
               {summary.review > 0
                 ? ` ${summary.review} results need schedule review.`
                 : ""}
@@ -353,26 +333,12 @@ export default function PredictionRecord() {
       <div className="record-history-heading">
         <h3>
           {date === "all"
-            ? "Finished prediction history"
-            : `Finished predictions for ${date}`}
+            ? "Finished staked plays"
+            : `Finished staked plays for ${date}`}
         </h3>
         <span>{date === "all" ? "All saved dates" : "Selected day only"}</span>
       </div>
       <div className="record-history-filters">
-        <label>
-          Record view
-          <select
-            value={view}
-            onChange={(event) => {
-              setView(event.target.value);
-              setPage(0);
-            }}
-          >
-            <option value="games">Finished games · one row per matchup</option>
-            <option value="official">Official graded results</option>
-            <option value="all">All saved versions · finished games</option>
-          </select>
-        </label>
         <label>
           Search recorded matchups
           <input
@@ -399,7 +365,11 @@ export default function PredictionRecord() {
           </button>
         </div>
       ) : !scopedStore ? (
-        <div className="empty-state">Loading finished prediction history…</div>
+        <div className="empty-state">
+          {unitError && !unitLedger
+            ? "The staked record is unavailable until saved stakes load."
+            : "Loading finished staked plays…"}
+        </div>
       ) : (
         <>
           <RecordTable
@@ -407,23 +377,18 @@ export default function PredictionRecord() {
             results={scopedStore.results}
             canonicalIds={index.canonicalIds}
             unitPlays={unitMap}
-            showVersions={view === "all"}
+            showVersions={false}
             onOpenDay={date === "all" ? selectDate : undefined}
             emptyMessage={
               summary?.games
                 ? undefined
-                : `No finished first-half results are recorded${date === "all" ? "" : ` for ${date}`} yet. Upcoming games are available in Today’s lines.`
+                : `No finished staked plays are recorded${date === "all" ? "" : ` for ${date}`} yet. Upcoming games are available in Today’s lines.`
             }
           />
           <div className="prediction-pagination">
             <span>
-              {rows.length}{" "}
-              {view === "all"
-                ? "finished-game versions"
-                : view === "official"
-                  ? "official graded picks"
-                  : "finished games"}{" "}
-              in this view · {date === "all" ? "all dates" : date}
+              {rows.length} finished staked plays in this view ·{" "}
+              {date === "all" ? "all dates" : date}
             </span>
             <div className="button-group">
               <button
@@ -483,28 +448,14 @@ export default function PredictionRecord() {
             </div>
           </details>
         )}
-        {coverage && (
-          <details>
-            <summary>Coverage & data gaps</summary>
-            <p>
-              {coverage.games} finished games · {coverage.projected} with
-              projections · {coverage.unavailable} missing model inputs.
-            </p>
-            <p>
-              {coverage.unpriced} without a recorded line ·{" "}
-              {coverage.historical} historical estimates · {coverage.noLean}{" "}
-              without a model lean.
-            </p>
-            <AvailabilityHelp />
-          </details>
-        )}
         <details>
           <summary>How records and exclusions work</summary>
           <p>
-            Games appear once the first-half result is final. Only original
-            eligible pregame picks enter the win/loss record. Later versions
-            remain in All saved versions. Results use the original saved line;
-            later movement does not change the official grade.
+            Games appear once the first-half result is final. Only plays with
+            recorded or replayed stakes appear here. Future entries use the last
+            verified pre-tip line from the final 15 minutes, freezing the pick,
+            confidence and units together. Earlier entries retain their original
+            line and grade. Complete versions remain in the archive downloads.
           </p>
         </details>
         <details>
@@ -527,7 +478,7 @@ export default function PredictionRecord() {
               href={`${import.meta.env.BASE_URL}data/prediction-record.xlsx`}
               download="1h-prediction-record.xlsx"
             >
-              Running record Excel ↓
+              Complete forecast archive Excel ↓
             </a>
             <a
               className="secondary-button"

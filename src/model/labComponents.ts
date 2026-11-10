@@ -64,13 +64,15 @@ export function labComponentComparison(
   forecasts: LabForecast[],
   store: LabStore,
 ) {
-  const cohort = canonicalLabForecasts(forecasts).flatMap((row) => {
-    const totals = savedLabComponents(row);
-    const result = gradeLab(row, store);
-    return totals && result.error !== null && result.actual !== null
-      ? [{ row, totals, actual: result.actual }]
-      : [];
-  });
+  const cohort = canonicalLabForecasts(forecasts, store.entryPolicy).flatMap(
+    (row) => {
+      const totals = savedLabComponents(row);
+      const result = gradeLab(row, store);
+      return totals && result.error !== null && result.actual !== null
+        ? [{ row, totals, actual: result.actual }]
+        : [];
+    },
+  );
   const baselineMae = cohort.length
     ? cohort.reduce(
         (sum, entry) => sum + Math.abs(entry.totals.baseline - entry.actual),

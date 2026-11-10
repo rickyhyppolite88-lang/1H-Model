@@ -3801,6 +3801,9 @@ h1 em {
 .unit-day small {
   font-size: 0.65rem;
 }
+.unit-day .unit-suffix {
+  font-size: 0.8em;
+}
 .unit-day.unit-positive {
   background: var(--positive-soft);
   color: var(--positive);
@@ -3874,6 +3877,10 @@ h1 em {
   }
   .unit-day strong {
     font-size: clamp(0.6rem, 2.6vw, 0.85rem);
+  }
+  .unit-day strong.unit-value-wide {
+    font-size: clamp(0.5rem, 2.2vw, 0.75rem);
+    letter-spacing: -0.02em;
   }
   .unit-calendar-heading h3 {
     font-size: 1.1rem;

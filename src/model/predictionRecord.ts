@@ -1,6 +1,12 @@
 import { z } from "zod";
 import { ledgerSchema, type SeasonLedger, validFeatures } from "./audit";
 import { dailyCoverageSchema, dailyRecordCoverage } from "./dailyRecord";
+import {
+  type EntryPolicy,
+  entryPolicySchema,
+  usesTipoffEntry,
+  verifiedTipoffQuote,
+} from "./entryPolicy";
 import { gameContextSchema } from "./gameContext";
 import {
   csvCell,
@@ -12,7 +18,7 @@ import {
 import { ratingFallback, recordRating } from "./ratingDisplay";
 import { participantsSchema, reviewSchedule } from "./scheduleReview";
 import { predictionSignal, signalSchema } from "./signals";
-import { easternTipoff } from "./time";
+import { easternTipoff, tipoffState } from "./time";
 
 export { dailyRecordGames, dailyRecordStatus } from "./dailyRecord";
 
@@ -74,6 +80,7 @@ export const resultEventSchema = z.object({
 export const recordStoreSchema = z.object({
   schemaVersion: z.literal(1),
   updatedAt: z.iso.datetime(),
+  entryPolicy: entryPolicySchema.optional(),
   records: z.array(forecastRecordSchema),
   results: z.array(resultEventSchema),
 });
@@ -107,6 +114,7 @@ const countsSchema = z.object({
 export const recordIndexSchema = z.object({
   schemaVersion: z.literal(1),
   updatedAt: z.iso.datetime(),
+  entryPolicy: entryPolicySchema.optional(),
   canonicalIds: z.array(z.string()),
   summary: z.array(countsSchema),
   archives: z.array(
@@ -174,6 +182,7 @@ export function updatePredictionRecord(
     origin?: ForecastRecord["origin"];
     evidence?: ForecastRecord["evidence"];
     signalAt?: string;
+    entryPolicy?: EntryPolicy;
     inputSnapshots?: {
       prior: string;
       current: string;
@@ -184,10 +193,17 @@ export function updatePredictionRecord(
   if (feed.season !== ledger.season)
     throw new Error("Record sources cover different seasons.");
   const records = [...store.records];
+  const entryPolicy =
+    store.entryPolicy ?? options.entryPolicy ?? feed.entryPolicy;
   const results = [...store.results];
   const games = new Map(ledger.games.map((g) => [g.id, g]));
   const latest = new Map<string, ForecastRecord>();
   const versions = new Map<string, number>();
+  const entryBooks = new Map<string, string>();
+  for (const record of canonicalRecords(records)) {
+    const key = `${record.season}:${record.modelVersion}:${record.gameId}`;
+    if (!entryBooks.has(key)) entryBooks.set(key, record.sportsbook);
+  }
   for (const r of records) {
     const key = gameKey(r);
     const previous = latest.get(key);
@@ -203,6 +219,14 @@ export function updatePredictionRecord(
     const game = games.get(row.gameId);
     if (!game) throw new Error(`Missing source game ${row.gameId}`);
     const key = `${feed.season}:${row.gameId}`;
+    const entryKey = `${feed.season}:${feed.modelVersion}:${row.gameId}`;
+    const sportsbook = usesTipoffEntry(
+      row.startsAt,
+      entryPolicy,
+      `${feed.season}:${row.gameId}`,
+    )
+      ? feed.defaultSportsbook
+      : (entryBooks.get(entryKey) ?? feed.defaultSportsbook);
     const previous = latest.get(key);
     if (previous) {
       if (Date.parse(recordedAt) < Date.parse(previous.recordedAt))
@@ -220,19 +244,35 @@ export function updatePredictionRecord(
           Date.parse(row.startsAt),
         );
       if (
+        !(
+          usesTipoffEntry(
+            row.startsAt,
+            entryPolicy,
+            `${feed.season}:${row.gameId}`,
+          ) &&
+          verifiedTipoffQuote(
+            row.startsAt,
+            game.quotes.find((q) => q.sportsbook === sportsbook)
+              ?.latestCapturedAt,
+            entryPolicy,
+          ) &&
+          game.quotes.find((q) => q.sportsbook === sportsbook)
+            ?.latestCapturedAt !==
+            previous.quotes.find((q) => q.sportsbook === sportsbook)
+              ?.latestCapturedAt
+        ) &&
         signature(row, game, beforeTip) ===
           signature(previous.prediction, oldGame, beforeTip) &&
         previous.modelVersion === feed.modelVersion &&
-        previous.sportsbook === feed.defaultSportsbook &&
+        previous.sportsbook === sportsbook &&
         previous.basis === feed.defaultLineBasis
       )
         continue;
     }
     const version = (versions.get(key) ?? 0) + 1;
-    const quote = row.markets.find(
-      (m) => m.sportsbook === feed.defaultSportsbook,
-    );
+    const quote = row.markets.find((m) => m.sportsbook === sportsbook);
     const pregame =
+      tipoffState(row, Date.parse(recordedAt)) === "upcoming" &&
       !game.firstHalfComplete &&
       validFeatures(game) &&
       row.featureKind === "captured_pregame" &&
@@ -267,16 +307,12 @@ export function updatePredictionRecord(
           : pregame
             ? "pregame"
             : "historical",
-      sportsbook: feed.defaultSportsbook,
+      sportsbook,
       basis: feed.defaultLineBasis,
-      comparison: predictionComparison(
-        row,
-        feed.defaultSportsbook,
-        feed.defaultLineBasis,
-      ),
+      comparison: predictionComparison(row, sportsbook, feed.defaultLineBasis),
       signal: predictionSignal(
         row,
-        feed.defaultSportsbook,
+        sportsbook,
         feed.defaultLineBasis,
         options.signalAt ?? recordedAt,
       ),
@@ -286,6 +322,7 @@ export function updatePredictionRecord(
       participants: { away: game.away, home: game.home },
     });
     records.push(record);
+    if (canonicalRecords([record]).length) entryBooks.set(entryKey, sportsbook);
     latest.set(key, record);
     versions.set(key, version);
   }
@@ -331,6 +368,7 @@ export function updatePredictionRecord(
     lastResult.set(key, result);
   }
   return recordStoreSchema.parse({
+    ...(entryPolicy ? { entryPolicy } : {}),
     schemaVersion: 1,
     updatedAt: options.signalAt ?? recordedAt,
     records,
@@ -446,8 +484,59 @@ export function recordGrade(
   };
 }
 
-/** First eligible forecast for each game and benchmark is the official record. */
-export function canonicalRecords(records: ForecastRecord[]) {
+/** Legacy entries keep the first eligible forecast; future entries freeze the last verified pre-tip snapshot. */
+export function canonicalRecords(
+  records: ForecastRecord[],
+  entryPolicy?: EntryPolicy,
+) {
+  if (entryPolicy) {
+    const ordered = [...records].sort(
+      (a, b) =>
+        a.recordedAt.localeCompare(b.recordedAt) || a.version - b.version,
+    );
+    const future = new Map<string, boolean>();
+    for (const record of ordered) {
+      const key = `${record.season}:${record.modelVersion}:${record.gameId}`;
+      future.set(
+        key,
+        Boolean(future.get(key)) ||
+          usesTipoffEntry(
+            record.prediction.startsAt,
+            entryPolicy,
+            `${record.season}:${record.gameId}`,
+          ),
+      );
+    }
+    const chosen = new Map<string, ForecastRecord>();
+    for (const record of ordered) {
+      const game = `${record.season}:${record.modelVersion}:${record.gameId}`;
+      if (future.get(game)) {
+        if (
+          Date.parse(record.recordedAt) <
+            Date.parse(record.prediction.startsAt) &&
+          record.prediction.actualFirstHalfTotal === null
+        )
+          chosen.set(`tip:${game}`, record);
+      } else if (canonicalRecords([record]).length) {
+        const key = `legacy:${groupKey(record)}:${record.gameId}`;
+        if (!chosen.has(key)) chosen.set(key, record);
+      }
+    }
+    return [...chosen.values()].filter((record) => {
+      if (!canonicalRecords([record]).length) return false;
+      const quote = record.quotes.find(
+        (row) => row.sportsbook === record.sportsbook,
+      );
+      return verifiedTipoffQuote(
+        record.prediction.startsAt,
+        record.basis === "opening"
+          ? quote?.openingCapturedAt
+          : quote?.latestCapturedAt,
+        entryPolicy,
+        `${record.season}:${record.gameId}`,
+      );
+    });
+  }
   const map = new Map<string, ForecastRecord>();
   for (const r of [...records].sort(
     (a, b) => a.recordedAt.localeCompare(b.recordedAt) || a.version - b.version,
@@ -477,7 +566,7 @@ const bandLabel = (r: ForecastRecord) =>
           : "75–100";
 
 export function buildRecordIndex(store: RecordStore): RecordIndex {
-  const canonical = canonicalRecords(store.records);
+  const canonical = canonicalRecords(store.records, store.entryPolicy);
   const keys = [...new Set(store.records.map(groupKey))];
   const tally = (records: ForecastRecord[]) => {
     const grades = records.map((r) => recordGrade(r, store.results));
@@ -522,6 +611,7 @@ export function buildRecordIndex(store: RecordStore): RecordIndex {
     .sort()
     .reverse();
   return recordIndexSchema.parse({
+    ...(store.entryPolicy ? { entryPolicy: store.entryPolicy } : {}),
     schemaVersion: 1,
     updatedAt: store.updatedAt,
     canonicalIds: canonical.map((r) => r.id),

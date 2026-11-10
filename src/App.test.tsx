@@ -8,6 +8,7 @@ import {
   updatePredictionRecord,
 } from "./model/predictionRecord";
 import { recordFixture } from "./model/record.test-fixture";
+import { actualUnitPlay, type UnitLedger } from "./model/units";
 
 const load = (name: string) =>
   JSON.parse(readFileSync(`public/data/${name}.json`, "utf8"));
@@ -34,7 +35,21 @@ record.results = [
     source: "https://example.com/results",
   },
 ];
+record.updatedAt = "2026-11-03T02:00:00Z";
 const recordIndex = buildRecordIndex(record);
+const unitLedger: UnitLedger = {
+  schemaVersion: 1,
+  startedAt: record.updatedAt,
+  updatedAt: recordIndex.updatedAt,
+  assignments: [],
+};
+const unitResults = {
+  schemaVersion: 1,
+  updatedAt: unitLedger.updatedAt,
+  plays: record.records.map((row) =>
+    actualUnitPlay(row, record.results, unitLedger),
+  ),
+};
 const dialogClose = Object.getOwnPropertyDescriptor(
   HTMLDialogElement.prototype,
   "close",
@@ -52,17 +67,21 @@ beforeEach(() => {
       ok: true,
       json: async () =>
         structuredClone(
-          url.includes("prediction-record-index")
-            ? recordIndex
-            : url.includes("prediction-record/")
-              ? record
-              : url.includes("team-evaluation.json")
-                ? teamEvaluation
-                : url.includes("predictions.json")
-                  ? predictions
-                  : url.includes("prior-season")
-                    ? prior
-                    : current,
+          url.includes("unit-ledger")
+            ? unitLedger
+            : url.includes("unit-results")
+              ? unitResults
+              : url.includes("prediction-record-index")
+                ? recordIndex
+                : url.includes("prediction-record/")
+                  ? record
+                  : url.includes("team-evaluation.json")
+                    ? teamEvaluation
+                    : url.includes("predictions.json")
+                      ? predictions
+                      : url.includes("prior-season")
+                        ? prior
+                        : current,
         ),
     })),
   );

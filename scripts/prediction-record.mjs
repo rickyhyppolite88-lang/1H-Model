@@ -12,7 +12,7 @@ export async function loadPredictionRecord(model) {
       map.set(item.id,item);
     }
   }
-  return {schemaVersion:1,updatedAt:index.updatedAt,records:[...records.values()].sort((a,b) => a.recordedAt.localeCompare(b.recordedAt)||a.version-b.version),results:[...results.values()].sort((a,b) => a.observedAt.localeCompare(b.observedAt))};
+  return {schemaVersion:1,updatedAt:index.updatedAt,...(index.entryPolicy?{entryPolicy:index.entryPolicy}:{}),records:[...records.values()].sort((a,b) => a.recordedAt.localeCompare(b.recordedAt)||a.version-b.version),results:[...results.values()].sort((a,b) => a.observedAt.localeCompare(b.observedAt))};
 }
 
 export async function savePredictionRecord(model,store) {

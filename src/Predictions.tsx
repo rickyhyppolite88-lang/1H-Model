@@ -6,6 +6,7 @@ import DailyRecord, { type DailyRecordEvidence } from "./DailyRecord";
 import GameCardRow from "./GameCardRow";
 import GameTime from "./GameTime";
 import LineMovement from "./LineMovement";
+import { usesTipoffEntry, verifiedTipoffQuote } from "./model/entryPolicy";
 import type { RecordedLinePick } from "./model/lineMovement";
 import {
   marketStatus,
@@ -17,6 +18,7 @@ import {
   conferenceNames,
   type DailyArchive,
   dailyArchiveSchema,
+  defaultSportsbook,
   filterPredictionGroups,
   type PredictionFeed,
   type PredictionRow,
@@ -82,9 +84,9 @@ export default function Predictions() {
   const [error, setError] = useState("");
   const [query, setQuery] = usePreference("lines.search", preferenceText, "");
   const [book, setBook] = usePreference(
-    "sportsbook",
+    "sportsbook.draftkings-default-v1",
     preferenceSportsbook,
-    "betmgm",
+    defaultSportsbook,
   );
   const [recordEvidence, setRecordEvidence] =
     useState<DailyRecordEvidence | null>(null);
@@ -784,6 +786,18 @@ export default function Predictions() {
                 basis,
                 new Date(clock).toISOString(),
               );
+              const awaitingTipCheck =
+                usesTipoffEntry(
+                  row.startsAt,
+                  feed.entryPolicy,
+                  `${feed.season}:${row.gameId}`,
+                ) &&
+                !verifiedTipoffQuote(
+                  row.startsAt,
+                  row.markets.find((market) => market.sportsbook === book)
+                    ?.capturedAt,
+                  feed.entryPolicy,
+                );
               return (
                 <GameCardRow
                   key={row.gameId}
@@ -875,7 +889,9 @@ export default function Predictions() {
                       <small className="unit-suggestion">
                         {unitsForScore(rating.signal.score) === null
                           ? "No automatic stake"
-                          : `${unitsForScore(rating.signal.score)}u suggested`}
+                          : awaitingTipCheck
+                            ? "Awaiting pre-tip check"
+                            : `${unitsForScore(rating.signal.score)}u suggested`}
                       </small>
                     )}
                   </td>
@@ -968,7 +984,8 @@ export default function Predictions() {
           in the CSV. Model totals do not require an available sportsbook line.
           Positive model-minus-line means OVER; negative means UNDER. These are
           regular-season research leans. The filtered CSV includes every
-          matching row across all pages. Excel workbooks use BetMGM/latest, with
+          matching row across all pages. Excel workbooks use{" "}
+          {books[feed.defaultSportsbook] ?? feed.defaultSportsbook}/latest, with
           All Games, Top 25 and conference sheets. Cross-conference games appear
           in both relevant sheets.
         </p>

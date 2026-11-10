@@ -34,14 +34,23 @@ try {
   await rename("public/data/season-games.tmp", "public/data/season-games.json");
   await writeFile("public/data/season-audit.json", `${JSON.stringify(result, null, 2)}\n`);
   const revision=execFileSync("git",["rev-parse","HEAD"],{encoding:"utf8"}).trim();
-  const predictions = generatePredictions(enriched, new Date().toISOString(), revision);
+  const oldRecord = await loadPredictionRecord(recordModel);
+  const generatedAt = new Date().toISOString();
+  const { tipoffState } = await server.ssrLoadModule("/src/model/time.ts");
+  // Fix the rollout boundary by game ID as well as time, even if a past schedule is later corrected.
+  const legacyGameKeys = enriched.games.filter((game) => tipoffState({
+    ...game,
+    actualFirstHalfTotal: game.firstHalfComplete && game.away.firstHalfPoints !== null && game.home.firstHalfPoints !== null
+      ? game.away.firstHalfPoints + game.home.firstHalfPoints : null,
+  }, Date.parse(generatedAt)) === "started").map((game) => `${enriched.season}:${game.id}`).sort();
+  const entryPolicy = oldRecord.entryPolicy??{method:"last-pretip-v1",startedAt:generatedAt,maxQuoteAgeMinutes:15,legacyGameKeys};
+  const predictions = generatePredictions(enriched, generatedAt, revision, undefined, entryPolicy);
   await writeFile("public/data/predictions.json", `${JSON.stringify(predictions, null, 2)}\n`);
   await writeFile("public/data/predictions.csv", `\uFEFF${predictionsToCsv(predictions.predictions,predictions.defaultSportsbook,predictions.defaultLineBasis,predictions.generatedAt)}`);
-  const oldRecord = await loadPredictionRecord(recordModel);
-  const record = recordModel.updatePredictionRecord(oldRecord,predictions,enriched,predictions.generatedAt,{inputSnapshots:{prior:priorArchive,current:currentArchive,currentRetrievedAt:current.retrievedAt}});
+  const record = recordModel.updatePredictionRecord(oldRecord,predictions,enriched,predictions.generatedAt,{entryPolicy,inputSnapshots:{prior:priorArchive,current:currentArchive,currentRetrievedAt:current.retrievedAt}});
   const recordOutput = await savePredictionRecord(recordModel,record);
-  const labOutput = await updateLabFiles(server,{feed:predictions,ledger:enriched,prior,priorPath:priorArchive,results:record.results});
-  await updateUnitFiles(server, record, labOutput.store, predictions.generatedAt);
+  const labOutput = await updateLabFiles(server,{feed:predictions,ledger:enriched,prior,priorPath:priorArchive,results:record.results,entryPolicy:record.entryPolicy});
+  await updateUnitFiles(server, record, labOutput.store, new Date().toISOString());
   await mkdir(".cache/workbooks", { recursive: true });
   const workbook = async (feed, name, destination, builder = "scripts/build_prediction_workbook.py") => {
     const input = `.cache/workbooks/${name}.json`;

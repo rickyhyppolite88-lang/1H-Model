@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import GameTime from "./GameTime";
 import { dailyRecordedResults } from "./model/dailyResults";
+import { sportsbookNames } from "./model/marketCoverage";
 import {
   type RecordIndex,
   type RecordStore,
@@ -38,14 +39,24 @@ export function DailyRecordSummary({
   gamesCsvPath?: string;
 }) {
   const results = dailyRecordedResults(store, canonicalIds, date);
+  const entryBooks = [
+    ...new Set(
+      store.records
+        .filter((record) => canonicalIds.includes(record.id))
+        .map(
+          (record) => sportsbookNames[record.sportsbook] ?? record.sportsbook,
+        ),
+    ),
+  ];
   return (
     <section className="daily-results" aria-label={`Record for ${date}`}>
       <h3>Record for {date} · ET</h3>
       <p>
-        Whole-day record · {sportsbook === "betmgm" ? "BetMGM" : sportsbook}/
-        {basis} at recording. Each game’s first eligible pregame pick counts
-        once, using its original saved line. Table filters do not change this
-        record.
+        Whole-day forecast record ·{" "}
+        {entryBooks.join(" / ") || sportsbookNames[sportsbook] || sportsbook}/
+        {basis} at recording. Each game’s frozen eligible pregame pick counts
+        once, using its saved entry line. Table filters do not change this
+        record. The full record shows the staked subset.
       </p>
       <div className="audit-metrics">
         <div>
@@ -151,7 +162,8 @@ export default function DailyRecord({
                     r.gameDate === date &&
                     r.season === season &&
                     r.modelVersion === modelVersion &&
-                    r.sportsbook === sportsbook &&
+                    (Boolean(store.entryPolicy) ||
+                      r.sportsbook === sportsbook) &&
                     r.basis === basis,
                 ),
               }

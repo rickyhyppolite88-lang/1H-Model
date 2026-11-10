@@ -65,6 +65,33 @@ function fixture() {
   };
 }
 
+it("keeps older recorded books visible after the default changes to DraftKings", async () => {
+  const { store, scope } = fixture();
+  store.entryPolicy = {
+    method: "last-pretip-v1",
+    startedAt: "2026-11-05T00:00:00Z",
+    maxQuoteAgeMinutes: 15,
+  };
+  const index = buildRecordIndex(store);
+  vi.stubGlobal(
+    "fetch",
+    vi.fn(async (url: string) => ({
+      ok: true,
+      json: async () =>
+        structuredClone(
+          url.includes("index") ? index : recordForDate(store, "2026-11-02"),
+        ),
+    })),
+  );
+  render(<DailyRecord {...scope} sportsbook="draftkings" date="2026-11-02" />);
+  await screen.findByText("1 / 0 / 0");
+  const box = screen.getByRole("region", {
+    name: "Record for 2026-11-02",
+  });
+  expect(within(box).getByText("1 / 0 / 0")).toBeTruthy();
+  expect(within(box).getByText(/BetMGM/)).toBeTruthy();
+});
+
 it("clears the previous day's numbers immediately and loads the new day's original-line record", async () => {
   const { store, index, scope } = fixture();
   let complete: ((store: RecordStore) => void) | undefined;

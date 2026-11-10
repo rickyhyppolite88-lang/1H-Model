@@ -109,6 +109,11 @@ it("shows green and red daily net units and selects a day without mixing histori
       .className,
   ).toContain("unit-positive");
   expect(
+    within(calendar)
+      .getByRole("button", { name: "2026-11-02: +1.36u" })
+      .querySelector("strong")?.textContent,
+  ).toBe("+1.36u");
+  expect(
     within(calendar).getByRole("button", { name: "2026-11-03: -1.00u" })
       .className,
   ).toContain("unit-negative");

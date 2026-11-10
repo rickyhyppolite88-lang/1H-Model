@@ -1,4 +1,10 @@
 import { z } from "zod";
+import {
+  type EntryPolicy,
+  entryPolicySchema,
+  mergeEntryPolicies,
+  usesTipoffEntry,
+} from "./entryPolicy";
 import { foulExposureSchema } from "./foulExposure";
 import { contextForecastSchema } from "./gameContext";
 import { resultEventSchema } from "./predictionRecord";
@@ -153,7 +159,7 @@ export const labForecastSchema = z.object({
   revision: z.string(),
   awayTeam: z.string(),
   homeTeam: z.string(),
-  sportsbook: z.literal("betmgm"),
+  sportsbook: z.enum(["betmgm", "draftkings"]),
   line: z.number().positive().nullable(),
   overPrice: z.number().nullable(),
   underPrice: z.number().nullable(),
@@ -186,6 +192,7 @@ export const labStoreSchema = z.object({
   schemaVersion: z.literal(1),
   startedAt: z.iso.datetime(),
   updatedAt: z.iso.datetime(),
+  entryPolicy: entryPolicySchema.optional(),
   forecasts: z.array(labForecastSchema),
   results: z.array(resultEventSchema),
   halves: z.array(labHalfSchema),
@@ -196,6 +203,7 @@ export const labIndexSchema = z.object({
   schemaVersion: z.literal(1),
   startedAt: z.iso.datetime(),
   updatedAt: z.iso.datetime(),
+  entryPolicy: entryPolicySchema.optional(),
   methodStartedAt: z
     .partialRecord(labMethodIdSchema, z.iso.datetime())
     .optional(),
@@ -237,6 +245,13 @@ export function mergeLabStores(
   }
   return {
     schemaVersion: 1,
+    ...(stores.some((store) => store.entryPolicy)
+      ? {
+          entryPolicy: mergeEntryPolicies(
+            stores.map((store) => store.entryPolicy),
+          ),
+        }
+      : {}),
     startedAt,
     updatedAt,
     forecasts: unique(stores.flatMap((store) => store.forecasts)).sort(
@@ -253,10 +268,24 @@ export function mergeLabStores(
 }
 
 /** The first priced, usable observation fixes the decision, including watch-only. */
-export function canonicalLabForecasts(forecasts: LabForecast[]) {
+export function canonicalLabForecasts(
+  forecasts: LabForecast[],
+  entryPolicy?: EntryPolicy,
+) {
+  const futureGames = new Set(
+    forecasts
+      .filter((row) =>
+        usesTipoffEntry(
+          row.startsAt,
+          entryPolicy,
+          `${row.season}:${row.gameId}`,
+        ),
+      )
+      .map((row) => `${row.season}:${row.methodId}:${row.gameId}`),
+  );
   const groups = new Map<string, LabForecast[]>();
   for (const row of forecasts) {
-    const key = `${row.season}:${row.methodId}:${row.gameId}:${row.sportsbook}`;
+    const key = `${row.season}:${row.methodId}:${row.gameId}:${futureGames.has(`${row.season}:${row.methodId}:${row.gameId}`) ? "tip" : row.sportsbook}`;
     groups.set(key, [...(groups.get(key) ?? []), row]);
   }
   return [...groups.values()].map((rows) => {
@@ -264,6 +293,16 @@ export function canonicalLabForecasts(forecasts: LabForecast[]) {
       (a, b) =>
         a.recordedAt.localeCompare(b.recordedAt) || a.version - b.version,
     );
+    if (
+      futureGames.has(`${rows[0].season}:${rows[0].methodId}:${rows[0].gameId}`)
+    )
+      return (
+        rows
+          .filter(
+            (row) => Date.parse(row.recordedAt) < Date.parse(row.startsAt),
+          )
+          .at(-1) ?? rows[0]
+      );
     return (
       rows.find((row) =>
         row.methodId === "bonus-exposure-v1"
@@ -286,7 +325,7 @@ export function latestHalves(halves: LabHalf[], at = "9999-12-31T23:59:59Z") {
 
 export function gradeLab(
   row: LabForecast,
-  store: Pick<LabStore, "results" | "halves">,
+  store: Pick<LabStore, "results" | "halves" | "entryPolicy">,
 ) {
   const result = [...store.results]
     .filter(
@@ -424,9 +463,9 @@ export function gradeLab(
 
 export function labSummary(
   rows: LabForecast[],
-  store: Pick<LabStore, "results" | "halves">,
+  store: Pick<LabStore, "results" | "halves" | "entryPolicy">,
 ) {
-  const graded = canonicalLabForecasts(rows).map((row) => ({
+  const graded = canonicalLabForecasts(rows, store.entryPolicy).map((row) => ({
     row,
     ...gradeLab(row, store),
   }));
@@ -474,7 +513,9 @@ export function labSummary(
 
 export function labToCsv(store: LabStore) {
   const ids = new Set(
-    canonicalLabForecasts(store.forecasts).map((row) => row.id),
+    canonicalLabForecasts(store.forecasts, store.entryPolicy).map(
+      (row) => row.id,
+    ),
   );
   const header = [
     "id",

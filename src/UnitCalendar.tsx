@@ -202,7 +202,18 @@ export default function UnitCalendar({
               title={`${key} · ${day.wins}W / ${day.losses}L / ${day.pushes}P · ${day.unresolved} unsettled`}
             >
               <span>{i + 1}</span>
-              <strong>{text.endsWith("u") ? text.slice(0, -1) : text}</strong>
+              <strong
+                className={text.length > 6 ? "unit-value-wide" : undefined}
+              >
+                {text.endsWith("u") ? (
+                  <>
+                    {text.slice(0, -1)}
+                    <span className="unit-suffix">u</span>
+                  </>
+                ) : (
+                  text
+                )}
+              </strong>
               {day.unresolved > 0 && <small>+{day.unresolved} open</small>}
             </button>
           );

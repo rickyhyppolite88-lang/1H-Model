@@ -4,9 +4,15 @@ import {
   bonusPointsDelta,
   fitBonusPoints,
 } from "./bonusAdjustment";
+import {
+  type EntryPolicy,
+  usesTipoffEntry,
+  verifiedTipoffQuote,
+} from "./entryPolicy";
 import { type FoulExposure, forecastFoulExposure } from "./foulExposure";
 import { type ContextModel, contextForecast } from "./gameContext";
 import {
+  canonicalLabForecasts,
   type LabConfig,
   type LabForecast,
   type LabHalf,
@@ -14,6 +20,7 @@ import {
   labForecastSchema,
   latestHalves,
 } from "./lab";
+import { sportsbookNames } from "./marketCoverage";
 import type { PredictionFeed, PredictionRow } from "./predictions";
 import { predictionComparison } from "./predictions";
 import { compareTotal } from "./predictor";
@@ -166,9 +173,9 @@ function bonusInputs(
   };
 }
 
-function qualify(row: PredictionRow, at: string) {
-  const comparison = predictionComparison(row, "betmgm", "latest");
-  const signal = predictionSignal(row, "betmgm", "latest", at);
+function qualify(row: PredictionRow, at: string, sportsbook: string) {
+  const comparison = predictionComparison(row, sportsbook, "latest");
+  const signal = predictionSignal(row, sportsbook, "latest", at);
   if (row.projectedFirstHalfTotal === null)
     return {
       status: "data_gap" as const,
@@ -178,7 +185,7 @@ function qualify(row: PredictionRow, at: string) {
   if (comparison.line === null)
     return {
       status: "data_gap" as const,
-      reason: "No current BetMGM first-half line in the captured source.",
+      reason: `No current ${sportsbookNames[sportsbook] ?? sportsbook} first-half line in the captured source.`,
       strength: null,
     };
   const edge = Math.abs(comparison.signedEdge ?? 0);
@@ -206,6 +213,7 @@ export function captureLab(
   ledger: SeasonLedger,
   inputs: LabInputs,
   at: string,
+  nextEntryPolicy?: EntryPolicy,
 ): LabStore {
   if (
     Date.parse(at) < Date.parse(store.updatedAt) ||
@@ -213,8 +221,25 @@ export function captureLab(
   )
     throw new Error("Cannot backdate a Lab capture");
   const forecasts = [...store.forecasts];
+  const entryPolicy = store.entryPolicy ?? nextEntryPolicy ?? feed.entryPolicy;
+  const entryBooks = new Map<string, string>();
+  for (const entry of canonicalLabForecasts(forecasts).sort((a, b) =>
+    a.recordedAt.localeCompare(b.recordedAt),
+  )) {
+    const key = `${entry.season}:${entry.gameId}`;
+    if (entry.total !== null && entry.line !== null && !entryBooks.has(key))
+      entryBooks.set(key, entry.sportsbook);
+  }
   const games = new Map(ledger.games.map((game) => [game.id, game]));
   for (const row of feed.predictions) {
+    const sportsbook = usesTipoffEntry(
+      row.startsAt,
+      entryPolicy,
+      `${feed.season}:${row.gameId}`,
+    )
+      ? feed.defaultSportsbook
+      : (entryBooks.get(`${feed.season}:${row.gameId}`) ??
+        feed.defaultSportsbook);
     const game = games.get(row.gameId);
     if (
       !game ||
@@ -230,7 +255,7 @@ export function captureLab(
       row.featureCapturedAt === features.capturedAt &&
       (!features.statsRetrievedAt ||
         Date.parse(features.statsRetrievedAt) <= Date.parse(at));
-    const market = row.markets.find((entry) => entry.sportsbook === "betmgm");
+    const market = row.markets.find((entry) => entry.sportsbook === sportsbook);
     if (market && Date.parse(market.capturedAt) > Date.parse(at)) continue;
     const sourceCheck = row.marketCoverage?.checkedAt ?? feed.marketCapturedAt;
     if (Date.parse(sourceCheck) > Date.parse(at)) continue;
@@ -238,13 +263,13 @@ export function captureLab(
       Date.parse(at) - Date.parse(sourceCheck) > 45 * 60_000 ||
       (market !== undefined &&
         Date.parse(at) - Date.parse(market.capturedAt) > 45 * 60_000);
-    const rawComparison = predictionComparison(row, "betmgm", "latest");
+    const rawComparison = predictionComparison(row, sportsbook, "latest");
     const comparison = {
       ...rawComparison,
       line: staleMarket ? null : rawComparison.line,
     };
     const quote = game.quotes.find(
-      (entry) => entry.sportsbook === "betmgm",
+      (entry) => entry.sportsbook === sportsbook,
     )?.latest;
     for (const method of config.methods.filter((entry) => entry.enabled)) {
       let total = baselineValid ? row.projectedFirstHalfTotal : null;
@@ -268,6 +293,23 @@ export function captureLab(
               snapshot.data.retrievedAt === features?.statsRetrievedAt,
           )?.path ?? null,
         sourceBoard: market?.source ?? null,
+        ...(usesTipoffEntry(
+          row.startsAt,
+          entryPolicy,
+          `${feed.season}:${row.gameId}`,
+        ) &&
+        verifiedTipoffQuote(
+          row.startsAt,
+          game.quotes.find((entry) => entry.sportsbook === sportsbook)
+            ?.latestCapturedAt,
+          entryPolicy,
+        )
+          ? {
+              entryQuoteCapturedAt:
+                game.quotes.find((entry) => entry.sportsbook === sportsbook)
+                  ?.latestCapturedAt ?? null,
+            }
+          : {}),
         quoteCapturedAt: market?.capturedAt ?? null,
         marketCheckedAt: row.marketCoverage?.checkedAt ?? feed.marketCapturedAt,
         lastSeenLine: rawComparison.line,
@@ -474,12 +516,12 @@ export function captureLab(
             simpleTotal: simple,
             paceAdjustedTotal: pace,
             markets: row.markets.map((entry) =>
-              entry.sportsbook === "betmgm" && staleMarket
+              entry.sportsbook === sportsbook && staleMarket
                 ? { ...entry, latestLine: null }
                 : entry,
             ),
           };
-          const eligibility = qualify(candidate, at);
+          const eligibility = qualify(candidate, at, sportsbook);
           status = eligibility.status;
           reason = staleMarket
             ? "The saved market check or quote is over 45 minutes old; waiting for a fresh source check."
@@ -504,7 +546,16 @@ export function captureLab(
             entry.methodId === method.id,
         )
         .at(-1);
-      if (previous && Date.parse(at) >= Date.parse(previous.startsAt)) continue;
+      if (
+        previous &&
+        Date.parse(at) >= Date.parse(previous.startsAt) &&
+        !usesTipoffEntry(
+          row.startsAt,
+          entryPolicy,
+          `${feed.season}:${row.gameId}`,
+        )
+      )
+        continue;
       const candidate = {
         id: "pending",
         season: feed.season,
@@ -518,7 +569,7 @@ export function captureLab(
         awayTeam: row.awayTeam,
         homeTeam: row.homeTeam,
         participants: { away: game.away, home: game.home },
-        sportsbook: "betmgm",
+        sportsbook,
         line: comparison.line,
         overPrice: comparison.line !== null ? (quote?.overPrice ?? null) : null,
         underPrice:
@@ -552,6 +603,7 @@ export function captureLab(
           bonusBaseline: entry.bonusBaselineMinutes,
           overPrice: entry.overPrice,
           underPrice: entry.underPrice,
+          entryQuoteCapturedAt: entry.inputs.entryQuoteCapturedAt ?? null,
           context:
             "context" in entry && entry.context
               ? { ...entry.context, capturedAt: undefined }
@@ -568,5 +620,10 @@ export function captureLab(
       );
     }
   }
-  return { ...store, updatedAt: at, forecasts };
+  return {
+    ...store,
+    ...(entryPolicy ? { entryPolicy } : {}),
+    updatedAt: at,
+    forecasts,
+  };
 }

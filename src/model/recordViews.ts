@@ -1,4 +1,5 @@
 import { dailyRecordGames } from "./dailyRecord";
+import { mergeEntryPolicies } from "./entryPolicy";
 import {
   type ForecastRecord,
   type RecordStore,
@@ -93,6 +94,13 @@ export function mergeRecordStores(
   }
   return {
     schemaVersion: 1,
+    ...(stores.some((store) => store.entryPolicy)
+      ? {
+          entryPolicy: mergeEntryPolicies(
+            stores.map((store) => store.entryPolicy),
+          ),
+        }
+      : {}),
     updatedAt: latest,
     records: [...records.values()],
     results: [...results.values()].sort(

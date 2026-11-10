@@ -31,6 +31,19 @@ def test_successful_check_is_not_repeated_too_soon(age, mode):
     assert poll(ledger(age=age))["mode"] == mode
 
 
+@pytest.mark.parametrize("age,mode", [(4.99, "skip"), (5, "markets"), (10, "markets")])
+def test_final_fifteen_minutes_check_lines_every_five_minutes(age, mode):
+    result = poll(ledger(minutes=8, age=age))
+    assert result["mode"] == mode
+    if mode == "markets":
+        assert "Final pre-tip" in result["reason"]
+
+
+@pytest.mark.parametrize("status", ["Canceled", "Postponed", "In Progress", "Final"])
+def test_final_pretip_acceleration_does_not_rank_started_or_inactive_games(status):
+    assert poll(ledger(minutes=8, age=5, status=status))["mode"] == "skip"
+
+
 @pytest.mark.parametrize("status,complete", [("Canceled", False), ("Cancelled", False), ("Postponed", False), ("Final", True), ("In Progress", True)])
 def test_canceled_or_completed_halves_do_not_trigger_near_tip_checks(status, complete):
     assert poll(ledger(status=status, complete=complete))["mode"] == "skip"

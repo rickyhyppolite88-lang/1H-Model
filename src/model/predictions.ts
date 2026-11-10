@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { type SeasonLedger, validFeatures } from "./audit";
+import { type EntryPolicy, entryPolicySchema } from "./entryPolicy";
 import {
   gameMarketCoverageSchema,
   marketCheckSchema,
@@ -10,6 +11,7 @@ import { compareTotal, projectFirstHalf } from "./predictor";
 import { predictionRating, ratingFallback } from "./ratingDisplay";
 import { predictionSignal, signalSchema } from "./signals";
 import { easternTipoff } from "./time";
+export const defaultSportsbook = "draftkings";
 
 export type LineBasis = "opening" | "latest";
 const marketSchema = z.object({
@@ -55,6 +57,7 @@ export const predictionFeedSchema = z.object({
   modelVersion: z.literal("season-bridge-v1"),
   mode: z.literal("regular_season_research"),
   defaultSportsbook: z.string(),
+  entryPolicy: entryPolicySchema.optional(),
   defaultLineBasis: z.literal("latest"),
   source: z.object({
     repository: z.url(),
@@ -173,6 +176,8 @@ export function generatePredictions(
   ledger: SeasonLedger,
   generatedAt: string,
   revision = "main",
+  sportsbook = defaultSportsbook,
+  entryPolicy?: EntryPolicy,
 ): PredictionFeed {
   if (revision !== "main" && !/^[a-f0-9]{40}$/.test(revision))
     throw new Error("Invalid source revision");
@@ -242,7 +247,8 @@ export function generatePredictions(
     marketCapturedAt: ledger.capturedAt,
     modelVersion: "season-bridge-v1",
     mode: "regular_season_research",
-    defaultSportsbook: "betmgm",
+    defaultSportsbook: sportsbook,
+    ...(entryPolicy ? { entryPolicy } : {}),
     defaultLineBasis: "latest",
     source: {
       repository,
@@ -257,7 +263,7 @@ export function generatePredictions(
     },
     predictions: predictions.map((row) => ({
       ...row,
-      signal: predictionSignal(row, "betmgm", "latest", generatedAt),
+      signal: predictionSignal(row, sportsbook, "latest", generatedAt),
     })),
     marketChecks: ledger.marketChecks,
     unmatchedMarkets: ledger.unmatchedOdds,
@@ -370,7 +376,7 @@ export const csvCell = (value: string | number | null) => {
 
 export function predictionsToCsv(
   rows: PredictionRow[],
-  sportsbook = "betmgm",
+  sportsbook = defaultSportsbook,
   basis: LineBasis = "latest",
   at = new Date().toISOString(),
 ) {
