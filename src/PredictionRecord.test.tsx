@@ -253,7 +253,7 @@ it("opens a calendar day with that day's original graded picks, saved odds, stak
   mockArchives();
   render(<PredictionRecord />);
   fireEvent.click(
-    await screen.findByRole("button", { name: "2026-11-03: -1.00u" }),
+    await screen.findByRole("button", { name: "2026-11-03: -0.50u" }),
   );
   await screen.findByText("0 / 1 / 0");
   expect(
@@ -261,6 +261,6 @@ it("opens a calendar day with that day's original graded picks, saved odds, stak
   ).toBe("official");
   expect(within(table()).getByText("Tuesday team")).toBeTruthy();
   expect(within(table()).queryByText("Monday team")).toBeNull();
-  expect(within(table()).getByText("-1.00u")).toBeTruthy();
+  expect(within(table()).getByText("-0.50u")).toBeTruthy();
   expect(within(table()).getByText(/-105/)).toBeTruthy();
 });

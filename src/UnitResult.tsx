@@ -2,13 +2,17 @@ import { formatPrice, formatUnits, type UnitPlay } from "./model/units";
 
 export default function UnitResult({ play }: { play?: UnitPlay }) {
   if (!play || play.units === null)
-    return <span className="unit-result">No recorded stake</span>;
+    return (
+      <span className="unit-result">
+        {play?.mode === "historical" ? "No replay stake" : "No recorded stake"}
+      </span>
+    );
   return (
     <span
       className="unit-result"
       title={
         play.mode === "historical"
-          ? "Retrospective 1-unit simulation, not a pregame stake"
+          ? "Historical confidence-tier replay; no pregame stake was assigned"
           : "Model stake locked before tipoff; not a confirmed wager"
       }
     >
@@ -28,8 +32,11 @@ export default function UnitResult({ play }: { play?: UnitPlay }) {
       </strong>
       <small>
         {formatPrice(play.price)} ·{" "}
-        {play.mode === "historical" ? "Simulated" : "Recorded"}
+        {play.mode === "historical" ? "Replay" : "Recorded"}
       </small>
+      {play.scoreSource === "derived_saved_inputs" && (
+        <small>Score calculated later</small>
+      )}
     </span>
   );
 }

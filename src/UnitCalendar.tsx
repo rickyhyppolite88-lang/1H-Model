@@ -94,7 +94,7 @@ export default function UnitCalendar({
             {label} ·{" "}
             {mode === "tracked"
               ? "Recorded model stakes"
-              : "Historical 1u simulation"}
+              : "Historical tier replay"}
           </span>
           <h3>{monthLabel}</h3>
         </div>
@@ -127,7 +127,7 @@ export default function UnitCalendar({
           >
             <option value="tracked">Recorded stakes · confidence tiers</option>
             <option value="historical">
-              Historical simulation · 1u per pick
+              Historical replay · confidence tiers
             </option>
           </select>
         </label>
@@ -237,33 +237,36 @@ export default function UnitCalendar({
           ? `${summary.risk.toFixed(1)}u risked · ${summary.settled} settled plays`
           : "Loading unit results…"}
         {summary.unresolved ? ` · ${summary.unresolved} unsettled` : ""}
+        {summary.unstaked ? ` · ${summary.unstaked} no stake` : ""}
       </p>
-      <details className="unit-calendar-policy">
-        <summary>Unit rules & accounting</summary>
-        <p className="inline-note">
-          {mode === "historical"
-            ? "Simulation only: 1u risked on each original eligible pick before the unit plan began. These were not recorded stakes or confirmed wagers."
-            : unitPolicy.description}{" "}
-          One unit is the amount risked. Confidence is a model ranking, not a
-          win probability.{" "}
-          {summary.unresolved > 0
-            ? `${summary.unresolved} plays are excluded from net units until results and matching saved odds are available.`
-            : ""}
-        </p>
-      </details>
-      {error && (
-        <p role="alert" className="notice error">
-          {error}
-        </p>
-      )}
-      <button
-        type="button"
-        className="secondary-button"
-        onClick={download}
-        disabled={!available || !selected.length}
-      >
-        Download {date === "all" ? "month" : "day"} units CSV ↓
-      </button>
+      <div className="unit-calendar-footer">
+        <details className="unit-calendar-policy">
+          <summary>Unit rules & accounting</summary>
+          <p className="inline-note">
+            {mode === "historical"
+              ? `Replay only: apply the same confidence tiers to the original picks before the unit plan began. ${unitPolicy.description} Older scores calculated later from frozen inputs stay labeled. No pregame stake assignment is created.`
+              : unitPolicy.description}{" "}
+            One unit is the amount risked. Confidence is a model ranking, not a
+            win probability.{" "}
+            {summary.unresolved > 0
+              ? `${summary.unresolved} plays are excluded from net units until results and matching saved odds are available.`
+              : ""}
+          </p>
+        </details>
+        {error && (
+          <p role="alert" className="notice error">
+            {error}
+          </p>
+        )}
+        <button
+          type="button"
+          className="secondary-button"
+          onClick={download}
+          disabled={!available || !selected.length}
+        >
+          Download {date === "all" ? "month" : "day"} units CSV ↓
+        </button>
+      </div>
     </section>
   );
 }

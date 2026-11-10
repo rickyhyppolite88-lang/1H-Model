@@ -49,6 +49,7 @@ const plays: UnitPlay[] = [
     line: 70,
     price: -110,
     score: 80,
+    scoreSource: "saved",
     units: 1.5,
     actual: 72,
     grade: "Win",
@@ -71,6 +72,7 @@ const plays: UnitPlay[] = [
     line: 70,
     price: -110,
     score: 65,
+    scoreSource: "saved",
     units: 1,
     actual: 72,
     grade: "Loss",
@@ -88,8 +90,9 @@ it("shows green and red daily net units and selects a day without mixing histori
           ...plays[0],
           id: "old",
           date: "2026-11-01",
-          units: 1,
-          net: 100 / 110,
+          units: 1.5,
+          net: 150 / 110,
+          assignedAt: null,
           mode: "historical",
         },
       ]}
@@ -118,7 +121,7 @@ it("shows green and red daily net units and selects a day without mixing histori
     target: { value: "historical" },
   });
   expect(
-    within(calendar).getByRole("button", { name: "2026-11-01: +0.91u" }),
+    within(calendar).getByRole("button", { name: "2026-11-01: +1.36u" }),
   ).toBeTruthy();
   expect(within(calendar).queryByText("+0.36u")).toBeNull();
 });

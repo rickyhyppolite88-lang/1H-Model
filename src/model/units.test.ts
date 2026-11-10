@@ -117,7 +117,7 @@ describe("confidence unit accounting", () => {
     row.comparison.line = 70.5;
     expect(savedRecordPrice(row)).toBeNull();
   });
-  it("labels old 1u replays and never presents a later-derived score as a saved stake", () => {
+  it("replays the confidence tiers without creating or presenting a saved pregame stake", () => {
     const f = fixture();
     const ledger = updateUnitLedger(
       null,
@@ -136,20 +136,78 @@ describe("confidence unit accounting", () => {
       homePoints: 36,
     });
     const play = actualUnitPlay(f.actual.records[0], f.actual.results, ledger);
-    expect(play).toMatchObject({ mode: "historical", units: 1, grade: "Win" });
-    expect(play.net).toBeCloseTo(100 / 115);
+    expect(play).toMatchObject({
+      mode: "historical",
+      units: 1.5,
+      grade: "Win",
+      score: 80,
+      scoreSource: "saved",
+      assignedAt: null,
+      policy: "confidence-units-v1",
+    });
+    expect(play.net).toBeCloseTo(150 / 115);
+    expect(ledger.assignments).toHaveLength(0);
     expect(
       actualUnitPlay(f.actual.records[0], f.actual.results, null).net,
     ).toBeNull();
     const watch = f.lab.forecasts.find((row) => row.status === "control");
     if (watch) expect(labUnitPlay(watch, f.lab, ledger).units).toBeNull();
-    expect(unitPlaysCsv([play])).toContain("historical_1u_simulation");
+    expect(unitPlaysCsv([play])).toContain("historical_confidence_tier_replay");
     expect(
       summarizeUnits([
         play,
         { ...play, id: "review", grade: "Pending", net: null },
       ]),
-    ).toMatchObject({ settled: 1, unresolved: 1, wins: 1, risk: 1 });
+    ).toMatchObject({ settled: 1, unresolved: 1, wins: 1, risk: 1.5 });
+  });
+  it("labels replay scores derived only from frozen inputs and excludes outlier reviews from replay stakes", () => {
+    const f = fixture();
+    const row = f.actual.records[0];
+    const ledger = updateUnitLedger(
+      null,
+      f.actual,
+      f.lab,
+      "2026-11-03T01:00:00Z",
+    );
+    row.signal.score = null;
+    const derived = actualUnitPlay(row, [], ledger);
+    expect(derived.scoreSource).toBe("derived_saved_inputs");
+    expect(derived.units).toBe(unitsForScore(derived.score));
+    expect(derived.assignedAt).toBeNull();
+    row.signal.label = "Outlier review";
+    const review = actualUnitPlay(row, [], ledger);
+    expect(review).toMatchObject({
+      mode: "historical",
+      score: null,
+      units: null,
+      net: null,
+      scoreSource: "unavailable",
+    });
+    expect(row.signal.score).toBeNull();
+    expect(ledger.assignments).toHaveLength(0);
+  });
+  it("uses the same replay tiers for qualified Lab picks while keeping watch-only forecasts unstaked", () => {
+    const f = fixture();
+    const row = f.lab.forecasts.find((entry) => entry.status === "qualified");
+    if (!row) throw new Error("qualified fixture missing");
+    row.signalStrength = 95;
+    const ledger = updateUnitLedger(
+      null,
+      f.actual,
+      f.lab,
+      "2026-11-03T01:00:00Z",
+    );
+    expect(labUnitPlay(row, f.lab, ledger)).toMatchObject({
+      mode: "historical",
+      units: 2,
+      score: 95,
+      scoreSource: "saved",
+      assignedAt: null,
+    });
+    expect(
+      labUnitPlay({ ...row, status: "watch_only" }, f.lab, ledger).units,
+    ).toBeNull();
+    expect(ledger.assignments).toHaveLength(0);
   });
   it("rejects duplicate and backdated assignments in persisted ledgers", () => {
     const f = fixture();

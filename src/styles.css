@@ -3753,6 +3753,25 @@ h1 em {
   font-size: 0.75rem;
   color: var(--text-secondary);
 }
+.unit-calendar-footer {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+.unit-calendar-footer details {
+  flex: 1 1 100px;
+  margin: 0;
+}
+.unit-calendar-footer details[open],
+.unit-calendar-footer .notice {
+  flex-basis: 100%;
+}
+.unit-calendar-footer summary {
+  min-height: 44px;
+  align-content: center;
+}
 .unit-weekday {
   text-align: center;
   color: var(--text-secondary);
@@ -3849,7 +3868,7 @@ h1 em {
     gap: 3px;
   }
   .unit-day {
-    min-height: 58px;
+    min-height: 48px;
     border-radius: 7px;
     font-size: 0.75rem;
   }
@@ -3861,9 +3880,13 @@ h1 em {
   }
   .unit-calendar-controls {
     gap: 0.5rem;
+    margin-block: 0.5rem;
   }
   .unit-calendar-controls label {
     min-width: 0;
     width: 100%;
+  }
+  .unit-calendar-totals {
+    padding-top: 0.75rem;
   }
 }

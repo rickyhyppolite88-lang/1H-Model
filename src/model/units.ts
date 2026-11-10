@@ -12,6 +12,7 @@ import {
   recordGrade,
 } from "./predictionRecord";
 import { csvCell } from "./predictions";
+import { labRating, recordRating } from "./ratingDisplay";
 
 export const unitSizes = [0.5, 1, 1.5, 2] as const;
 export const unitPolicy = {
@@ -120,6 +121,7 @@ export const unitPlaySchema = z.object({
   line: z.number().nullable(),
   price: z.number().nullable(),
   score: z.number().nullable(),
+  scoreSource: z.enum(["saved", "derived_saved_inputs", "unavailable"]),
   units: z.number().positive().nullable(),
   grade: z.string(),
   actual: z.number().nullable(),
@@ -287,12 +289,17 @@ function accounting(
   source: "actual" | "lab",
   id: string,
   startsAt: string,
+  replayScore: number | null,
 ) {
   const saved = ledger?.assignments.find((row) => row.id === `${source}:${id}`);
   if (saved) return { units: saved.units, mode: "tracked" as const, saved };
-  // A retrospective flat-stake comparison, explicitly separate from recorded stakes.
+  // Replay the selected policy without inventing a pregame stake assignment.
   if (ledger && Date.parse(startsAt) <= Date.parse(ledger.startedAt))
-    return { units: 1, mode: "historical" as const, saved: null };
+    return {
+      units: unitsForScore(replayScore),
+      mode: "historical" as const,
+      saved: null,
+    };
   return { units: null, mode: null, saved: null };
 }
 
@@ -302,12 +309,17 @@ export function actualUnitPlay(
   ledger: UnitLedger | null,
 ): UnitPlay {
   const { grade, actual } = recordGrade(record, results);
+  const rating = recordRating(record);
   const stake = accounting(
     ledger,
     "actual",
     record.id,
     record.prediction.startsAt,
+    rating.signal.score,
   );
+  const replay = stake.mode === "historical";
+  const score =
+    stake.saved?.score ?? (replay ? rating.signal.score : record.signal.score);
   const price = stake.saved?.price ?? savedRecordPrice(record);
   return {
     id: record.id,
@@ -317,14 +329,20 @@ export function actualUnitPlay(
     sportsbook: record.sportsbook,
     basis: record.basis,
     assignedAt: stake.saved?.assignedAt ?? null,
-    policy: stake.saved?.policy ?? null,
+    policy: stake.saved?.policy ?? (replay ? unitPolicy.id : null),
     date: record.gameDate,
     away: record.prediction.awayTeam,
     home: record.prediction.homeTeam,
     side: record.comparison.lean,
     line: record.comparison.line,
     price,
-    score: stake.saved?.score ?? record.signal.score,
+    score,
+    scoreSource:
+      score === null
+        ? "unavailable"
+        : replay && rating.source === "derived_saved_inputs"
+          ? "derived_saved_inputs"
+          : "saved",
     units: stake.units,
     grade,
     actual,
@@ -338,10 +356,14 @@ export function labUnitPlay(
   ledger: UnitLedger | null,
 ): UnitPlay {
   const result = gradeLab(row, store);
+  const rating = labRating(row);
   const stake =
     row.status === "qualified"
-      ? accounting(ledger, "lab", row.id, row.startsAt)
+      ? accounting(ledger, "lab", row.id, row.startsAt, rating.signal.score)
       : { units: null, mode: null, saved: null };
+  const replay = stake.mode === "historical";
+  const score =
+    stake.saved?.score ?? (replay ? rating.signal.score : row.signalStrength);
   const price =
     stake.saved?.price ??
     (row.side === "OVER"
@@ -357,14 +379,20 @@ export function labUnitPlay(
     sportsbook: row.sportsbook,
     basis: "latest",
     assignedAt: stake.saved?.assignedAt ?? null,
-    policy: stake.saved?.policy ?? null,
+    policy: stake.saved?.policy ?? (replay ? unitPolicy.id : null),
     date: row.gameDate,
     away: row.awayTeam,
     home: row.homeTeam,
     side: row.side,
     line: row.line,
     price,
-    score: stake.saved?.score ?? row.signalStrength,
+    score,
+    scoreSource:
+      score === null
+        ? "unavailable"
+        : replay && rating.source === "derived_saved_inputs"
+          ? "derived_saved_inputs"
+          : "saved",
     units: stake.units,
     grade: result.grade,
     actual: result.actual,
@@ -380,6 +408,7 @@ export function summarizeUnits(plays: UnitPlay[]) {
     settled: settled.length,
     unresolved: plays.filter((row) => row.units !== null && row.net === null)
       .length,
+    unstaked: plays.filter((row) => row.units === null).length,
     wins: settled.filter((row) => row.grade === "Win").length,
     losses: settled.filter((row) => row.grade === "Loss").length,
     pushes: settled.filter((row) => row.grade === "Push").length,
@@ -394,7 +423,7 @@ export function unitPlaysCsv(plays: UnitPlay[]) {
       "side",
       "line",
       "american_odds",
-      "saved_score",
+      "confidence_score",
       "units_risked",
       "actual_1h",
       "result",
@@ -408,6 +437,7 @@ export function unitPlaysCsv(plays: UnitPlay[]) {
       "stake_policy",
       "source",
       "season",
+      "score_source",
     ],
     ...plays.map((row) => [
       row.date,
@@ -422,7 +452,7 @@ export function unitPlaysCsv(plays: UnitPlay[]) {
       row.grade,
       row.net === null ? null : Number(row.net.toFixed(6)),
       row.mode === "historical"
-        ? "historical_1u_simulation"
+        ? "historical_confidence_tier_replay"
         : row.mode === "tracked"
           ? "recorded_model_stake"
           : "no_stake",
@@ -434,6 +464,7 @@ export function unitPlaysCsv(plays: UnitPlay[]) {
       row.policy,
       row.source,
       row.season,
+      row.scoreSource,
     ]),
   ]
     .map((row) => row.map(csvCell).join(","))
