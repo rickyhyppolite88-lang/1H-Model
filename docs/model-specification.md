@@ -8,7 +8,7 @@ The saved version was a tournament model, active March 20, 2026, incorporating M
 
 ## Inputs and snapshots
 
-Men's NCAA basketball team stats are imported from TeamRankings' dated public first-half points, possessions, offensive efficiency, defensive efficiency, and schedule-strength tables. Season labels use start/end years; the public season table header uses the start year (e.g. `2025` for 2025–26). Team games played come from the wins/losses record in the dated schedule-strength table.
+Men's NCAA basketball team stats are imported from TeamRankings' dated public first-half points, possessions, offensive efficiency, defensive efficiency, and schedule-strength tables. Season labels use start/end years; the public season table header uses the start year (e.g. `2025` for 2025–26). Team games played sum the visible numeric parts of the team record in the dated schedule-strength table. Both two-part and three-part records are supported, including `W Kentucky (1-1-1)` on November 10, 2026. Missing or malformed records still block the import rather than inventing a count; date, season, team coverage and numeric bounds remain validated.
 
 Two independent snapshot files retain their season, as-of date, retrieval timestamp, exact source URLs, and nullable metrics. Offensive/defensive efficiency is points per possession. Tables must have matching team IDs. Archived teams without source links receive explicit `unlinked-` IDs based on their visible names; they are never fuzzily attached to another program.
 
