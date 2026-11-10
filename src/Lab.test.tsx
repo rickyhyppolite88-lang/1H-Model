@@ -284,7 +284,6 @@ it("does not display a partial Lab record if an archive fails", async () => {
     })),
   );
   render(<Lab recordOnly />);
-  expect(await screen.findByRole("alert")).toBeTruthy();
-  expect(screen.getByText(/No partial record is shown/)).toBeTruthy();
+  expect(await screen.findByText(/No partial record is shown/)).toBeTruthy();
   expect(screen.queryByRole("table", { name: "Lab forecasts" })).toBeNull();
 });

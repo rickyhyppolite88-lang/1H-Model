@@ -12,8 +12,11 @@ import {
   labToCsv,
 } from "./model/lab";
 import { easternTipoff, tipoffState } from "./model/time";
+import { labUnitPlay } from "./model/units";
+import UnitCalendar from "./UnitCalendar";
 import { useLabRecords } from "./useLabRecords";
 import { preferencePage, preferenceText, usePreference } from "./usePreference";
+import { useUnitLedger } from "./useUnitLedger";
 
 const dateSchema = z.union([
   z.literal("all"),
@@ -24,6 +27,11 @@ const show = (value: number | null, suffix = "") =>
   value === null ? "—" : `${value.toFixed(2)}${suffix}`;
 
 export default function Lab({ recordOnly = false }: { recordOnly?: boolean }) {
+  const {
+    ledger: unitLedger,
+    plays: calendarPlays,
+    error: unitError,
+  } = useUnitLedger();
   const [method, setMethod] = usePreference(
     "lab.method.v3",
     labMethodIdSchema,
@@ -71,17 +79,21 @@ export default function Lab({ recordOnly = false }: { recordOnly?: boolean }) {
     store?.results.some(
       (result) => result.gameId === row.gameId && result.season === row.season,
     ) ?? false;
-  const choices = recordOnly
-    ? canonical.filter(isFinished)
-    : [...latest.values()].filter((row) => {
-        const current = index?.games.find((game) => game.gameId === row.gameId);
-        return (
-          current &&
-          !current.firstHalfComplete &&
-          tipoffState({ ...current, actualFirstHalfTotal: null }, now) ===
-            "upcoming"
-        );
-      });
+  const choices = (
+    recordOnly
+      ? canonical.filter(isFinished)
+      : [...latest.values()].filter((row) => {
+          const current = index?.games.find(
+            (game) => game.gameId === row.gameId,
+          );
+          return (
+            current &&
+            !current.firstHalfComplete &&
+            tipoffState({ ...current, actualFirstHalfTotal: null }, now) ===
+              "upcoming"
+          );
+        })
+  ).filter((row) => date === "all" || row.gameDate === date);
   const rows = choices
     .filter((row) =>
       `${row.awayTeam} ${row.homeTeam}`
@@ -104,8 +116,14 @@ export default function Lab({ recordOnly = false }: { recordOnly?: boolean }) {
         a.startsAt.localeCompare(b.startsAt)
       );
     });
-  const summaryRows = recordOnly ? canonical.filter(isFinished) : canonical;
+  const summaryRows = (
+    recordOnly ? canonical.filter(isFinished) : canonical
+  ).filter((row) => date === "all" || row.gameDate === date);
   const summary = store ? labSummary(summaryRows, store) : null;
+  const unitPlays = store
+    ? canonical.map((row) => labUnitPlay(row, store, unitLedger))
+    : [];
+  const unitMap = new Map(unitPlays.map((play) => [play.id, play]));
   const pages = Math.max(1, Math.ceil(rows.length / 25));
   const safePage = Math.min(page, pages - 1);
   const dates = [
@@ -120,9 +138,20 @@ export default function Lab({ recordOnly = false }: { recordOnly?: boolean }) {
   const exportCsv = () => {
     if (!store) return;
     const url = URL.createObjectURL(
-      new Blob(["\uFEFF", labToCsv({ ...store, forecasts })], {
-        type: "text/csv;charset=utf-8",
-      }),
+      new Blob(
+        [
+          "\uFEFF",
+          labToCsv({
+            ...store,
+            forecasts: forecasts.filter(
+              (row) => date === "all" || row.gameDate === date,
+            ),
+          }),
+        ],
+        {
+          type: "text/csv;charset=utf-8",
+        },
+      ),
     );
     const link = document.createElement("a");
     link.href = url;
@@ -205,6 +234,15 @@ export default function Lab({ recordOnly = false }: { recordOnly?: boolean }) {
         >
           Download Lab CSV ↓
         </button>
+        {recordOnly && (
+          <a
+            className="secondary-button"
+            href={`${import.meta.env.BASE_URL}data/lab-units.csv`}
+            download="1h-lab-units.csv"
+          >
+            All Lab unit plays CSV ↓
+          </a>
+        )}
       </div>
       <details
         className="lab-method-card"
@@ -284,6 +322,25 @@ export default function Lab({ recordOnly = false }: { recordOnly?: boolean }) {
           Earlier games are not backfilled into this prospective record. Last
           published {easternTipoff(index.updatedAt).time} ET.
         </p>
+      )}
+      {recordOnly && !bonus && (
+        <UnitCalendar
+          label="Lab"
+          plays={(calendarPlays ?? []).filter(
+            (play) =>
+              play.source === "lab" &&
+              play.method === method &&
+              play.actual !== null,
+          )}
+          date={date}
+          available={Boolean(calendarPlays && unitLedger)}
+          error={unitError}
+          onSelectDate={(value) => {
+            setDate(value);
+            setPage(0);
+            setQuery("");
+          }}
+        />
       )}
       {summary && (
         <section className="record-overview" aria-label="Lab record summary">
@@ -394,6 +451,7 @@ export default function Lab({ recordOnly = false }: { recordOnly?: boolean }) {
             rows={rows.slice(safePage * 25, (safePage + 1) * 25)}
             store={store}
             bonus={bonus}
+            unitPlays={recordOnly ? unitMap : undefined}
           />
           <div className="prediction-pagination">
             <span>

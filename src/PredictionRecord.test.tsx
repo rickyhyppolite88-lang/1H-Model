@@ -10,10 +10,12 @@ import {
 import { afterEach, beforeEach, expect, it, vi } from "vitest";
 import {
   buildRecordIndex,
+  canonicalRecords,
   recordForDate,
   updatePredictionRecord,
 } from "./model/predictionRecord";
 import { recordFixture } from "./model/record.test-fixture";
+import { actualUnitPlay, type UnitLedger } from "./model/units";
 import PredictionRecord from "./PredictionRecord";
 
 beforeEach(() => localStorage.clear());
@@ -81,13 +83,30 @@ function fixture() {
 
 function mockArchives(failDate = "") {
   const { store, index } = fixture();
+  const ledger: UnitLedger = {
+    schemaVersion: 1,
+    startedAt: index.updatedAt,
+    updatedAt: index.updatedAt,
+    assignments: [],
+  };
+  const unitResults = {
+    schemaVersion: 1,
+    updatedAt: index.updatedAt,
+    plays: canonicalRecords(store.records).map((row) =>
+      actualUnitPlay(row, store.results, ledger),
+    ),
+  };
   const fetcher = vi.fn(async (url: string) => ({
     ok: !failDate || !url.includes(`${failDate}.json`),
     json: async () =>
       structuredClone(
-        url.includes("index")
-          ? index
-          : recordForDate(store, url.match(/\d{4}-\d{2}-\d{2}/)?.[0] ?? ""),
+        url.includes("unit-ledger")
+          ? ledger
+          : url.includes("unit-results")
+            ? unitResults
+            : url.includes("index")
+              ? index
+              : recordForDate(store, url.match(/\d{4}-\d{2}-\d{2}/)?.[0] ?? ""),
       ),
   }));
   vi.stubGlobal("fetch", fetcher);
@@ -228,4 +247,20 @@ it("ignores slow full-history responses after selecting another day", async () =
   expect(within(summary()).getByText("1 / 0 / 0")).toBeTruthy();
   expect(within(table()).getByText("Monday team")).toBeTruthy();
   expect(within(table()).queryByText("Tuesday team")).toBeNull();
+});
+
+it("opens a calendar day with that day's original graded picks, saved odds, stake and net units", async () => {
+  mockArchives();
+  render(<PredictionRecord />);
+  fireEvent.click(
+    await screen.findByRole("button", { name: "2026-11-03: -1.00u" }),
+  );
+  await screen.findByText("0 / 1 / 0");
+  expect(
+    (screen.getByLabelText("Record view") as HTMLSelectElement).value,
+  ).toBe("official");
+  expect(within(table()).getByText("Tuesday team")).toBeTruthy();
+  expect(within(table()).queryByText("Monday team")).toBeNull();
+  expect(within(table()).getByText("-1.00u")).toBeTruthy();
+  expect(within(table()).getByText(/-105/)).toBeTruthy();
 });
