@@ -3,6 +3,7 @@ import { foulExposureSchema } from "./foulExposure";
 import { contextForecastSchema } from "./gameContext";
 import { resultEventSchema } from "./predictionRecord";
 import { csvCell } from "./predictions";
+import { labRating, ratingFallback } from "./ratingDisplay";
 import { participantsSchema, reviewSchedule } from "./scheduleReview";
 import { easternTipoff } from "./time";
 
@@ -526,11 +527,16 @@ export function labToCsv(store: LabStore) {
     "frozen_foul_fta_json",
     "schedule_status",
     "result_tipoff_utc",
+    "display_score",
+    "display_rating",
+    "display_score_source",
+    "display_score_reason",
   ];
   return `${[
     header,
     ...store.forecasts.map((row) => {
       const result = gradeLab(row, store);
+      const rating = labRating(row);
       const tip = easternTipoff(row.startsAt);
       const captured = easternTipoff(row.recordedAt);
       return [
@@ -584,6 +590,10 @@ export function labToCsv(store: LabStore) {
         row.foulExposure ? JSON.stringify(row.foulExposure) : null,
         result.schedule,
         result.resultStartsAt,
+        rating.signal.score,
+        rating.signal.score ?? ratingFallback(rating.signal),
+        rating.source,
+        rating.signal.reason,
       ];
     }),
   ]

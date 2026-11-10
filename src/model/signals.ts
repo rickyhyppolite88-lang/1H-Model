@@ -90,6 +90,37 @@ export function predictionSignal(
       "Unavailable",
       "A pregame projection, both components, and the selected line are required.",
     );
+  return projectionSignal(row, line);
+}
+
+/** Rating from explicit frozen numerical inputs; never reads time or outcomes. */
+export function projectionSignal(
+  row: Pick<
+    PredictionRow,
+    "projectedFirstHalfTotal" | "simpleTotal" | "paceAdjustedTotal"
+  >,
+  line: number | null,
+): ModelSignal {
+  const neutral = (
+    label: ModelSignal["label"],
+    reason: string,
+  ): ModelSignal => ({
+    method: "model-signal-v1",
+    score: null,
+    label,
+    reason,
+    fill: null,
+  });
+  if (
+    row.projectedFirstHalfTotal === null ||
+    row.simpleTotal === null ||
+    row.paceAdjustedTotal === null ||
+    line === null
+  )
+    return neutral(
+      "Unavailable",
+      "The projection, both model components and a comparison line are required for a score.",
+    );
   const { edge, modelLean } = compareTotal(row.projectedFirstHalfTotal, line);
   if (modelLean === "PUSH")
     return neutral("No lean", "The projection equals the line.");

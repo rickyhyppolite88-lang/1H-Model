@@ -9,6 +9,7 @@ import {
   predictionFeedSchema,
   predictionSchema,
 } from "./predictions";
+import { ratingFallback, recordRating } from "./ratingDisplay";
 import { participantsSchema, reviewSchedule } from "./scheduleReview";
 import { predictionSignal, signalSchema } from "./signals";
 import { easternTipoff } from "./time";
@@ -590,9 +591,14 @@ export function recordToCsv(store: RecordStore, canonicalIds: string[]) {
     ),
     "schedule_status",
     "result_tipoff_utc",
+    "display_score",
+    "display_rating",
+    "display_score_source",
+    "display_score_reason",
   ];
   const rows = store.records.map((r) => {
     const g = recordGrade(r, store.results);
+    const rating = recordRating(r);
     const t = easternTipoff(r.prediction.startsAt);
     return [
       r.id,
@@ -630,6 +636,10 @@ export function recordToCsv(store: RecordStore, canonicalIds: string[]) {
       }),
       g.schedule,
       g.resultStartsAt,
+      rating.signal.score,
+      rating.signal.score ?? ratingFallback(rating.signal),
+      rating.source,
+      rating.signal.reason,
     ];
   });
   return `${[headers, ...rows].map((row) => row.map(csvCell).join(",")).join("\r\n")}\r\n`;

@@ -7,6 +7,7 @@ import {
   marketStatusLabel,
 } from "./marketCoverage";
 import { compareTotal, projectFirstHalf } from "./predictor";
+import { predictionRating, ratingFallback } from "./ratingDisplay";
 import { predictionSignal, signalSchema } from "./signals";
 import { easternTipoff } from "./time";
 
@@ -405,6 +406,10 @@ export function predictionsToCsv(
     "market_data_status",
     "market_source_checked_at",
     "other_books_with_current_lines",
+    "display_score",
+    "display_rating",
+    "display_score_source",
+    "display_score_reason",
   ];
   const round = (value: number | null) =>
     value === null ? null : Number(value.toFixed(4));
@@ -413,6 +418,7 @@ export function predictionsToCsv(
     ...rows.map((row) => {
       const tipoff = easternTipoff(row.startsAt);
       const signal = predictionSignal(row, sportsbook, basis, at);
+      const rating = predictionRating(row, sportsbook, basis, at);
       const comparison = predictionComparison(row, sportsbook, basis);
       const market = row.markets.find(
         (quote) => quote.sportsbook === sportsbook,
@@ -456,6 +462,10 @@ export function predictionsToCsv(
           )
           .map((market) => market.sportsbook)
           .join("; "),
+        rating.signal.score,
+        rating.signal.score ?? ratingFallback(rating.signal),
+        rating.source,
+        rating.signal.reason,
       ]
         .map(csvCell)
         .join(",");
