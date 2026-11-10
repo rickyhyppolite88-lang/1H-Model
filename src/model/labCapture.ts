@@ -517,6 +517,7 @@ export function captureLab(
         revision: feed.source.revision,
         awayTeam: row.awayTeam,
         homeTeam: row.homeTeam,
+        participants: { away: game.away, home: game.home },
         sportsbook: "betmgm",
         line: comparison.line,
         overPrice: comparison.line !== null ? (quote?.overPrice ?? null) : null,

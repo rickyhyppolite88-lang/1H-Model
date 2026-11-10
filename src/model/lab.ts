@@ -3,6 +3,7 @@ import { foulExposureSchema } from "./foulExposure";
 import { contextForecastSchema } from "./gameContext";
 import { resultEventSchema } from "./predictionRecord";
 import { csvCell } from "./predictions";
+import { participantsSchema, reviewSchedule } from "./scheduleReview";
 import { easternTipoff } from "./time";
 
 export const labMethods = [
@@ -177,6 +178,7 @@ export const labForecastSchema = z.object({
   ),
   context: contextForecastSchema.optional(),
   foulExposure: foulExposureSchema.optional(),
+  participants: participantsSchema.optional(),
 });
 export type LabForecast = z.infer<typeof labForecastSchema>;
 export const labStoreSchema = z.object({
@@ -291,8 +293,16 @@ export function gradeLab(
     )
     .sort((a, b) => b.observedAt.localeCompare(a.observedAt))[0];
   const actual = result ? result.awayPoints + result.homePoints : null;
-  const scheduleChanged =
-    result?.startsAt !== undefined && result.startsAt !== row.startsAt;
+  const schedule = reviewSchedule(
+    {
+      ...row,
+      awayEspnId: row.foulExposure?.awayEspnId,
+      homeEspnId: row.foulExposure?.homeEspnId,
+      context: row.context?.context,
+    },
+    result,
+  );
+  const scheduleChanged = schedule === "review";
   const outcome = (side: LabForecast["side"]) =>
     actual === null ||
     row.line === null ||
@@ -318,7 +328,17 @@ export function gradeLab(
     (event) =>
       event.season === row.season &&
       event.gameId === row.gameId &&
-      event.startsAt === row.startsAt,
+      Date.parse(event.startsAt) ===
+        Date.parse(result?.startsAt ?? row.startsAt) &&
+      (!result?.participants ||
+        (["away", "home"] as const).every((side) =>
+          event.teams.some(
+            (team) =>
+              team.espnId === result.participants?.[side].espnId &&
+              team.points ===
+                result[side === "away" ? "awayPoints" : "homePoints"],
+          ),
+        )),
   );
   const actualBonus =
     half &&
@@ -366,6 +386,8 @@ export function gradeLab(
   return {
     grade,
     actual,
+    schedule,
+    resultStartsAt: result?.startsAt ?? null,
     actualBonus,
     actualFTA,
     actualFouls,
@@ -502,6 +524,8 @@ export function labToCsv(store: LabStore) {
     "logged_foul_probability_brier",
     "frozen_context_json",
     "frozen_foul_fta_json",
+    "schedule_status",
+    "result_tipoff_utc",
   ];
   return `${[
     header,
@@ -558,6 +582,8 @@ export function labToCsv(store: LabStore) {
         result.foulBrier,
         row.context ? JSON.stringify(row.context) : null,
         row.foulExposure ? JSON.stringify(row.foulExposure) : null,
+        result.schedule,
+        result.resultStartsAt,
       ];
     }),
   ]

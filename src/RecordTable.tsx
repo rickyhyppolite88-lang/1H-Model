@@ -8,6 +8,7 @@ import {
   type RecordStore,
   recordGrade,
 } from "./model/predictionRecord";
+import { scheduleMessages } from "./model/scheduleReview";
 import SignalBadge from "./SignalBadge";
 import TeamIdentity from "./TeamIdentity";
 
@@ -155,11 +156,19 @@ export default function RecordTable({
                 <td role="cell" className="card-result" data-label="Result">
                   <span
                     className={`record-grade grade-${grade.grade.toLowerCase().replaceAll(" ", "-")}`}
+                    title={scheduleMessages[grade.schedule]}
                   >
                     {grade.grade === "Pending" && grade.actual !== null
                       ? "Review needed"
                       : grade.grade}
                   </span>
+                  {grade.schedule !== "unchanged" && (
+                    <small className="schedule-note">
+                      {grade.schedule === "verified_time_change"
+                        ? "Tip-time change verified"
+                        : "Schedule review"}
+                    </small>
+                  )}
                 </td>
                 <td
                   role="cell"

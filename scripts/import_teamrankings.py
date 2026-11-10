@@ -87,7 +87,10 @@ def parse_table(html: str, metric: str, season: str, as_of: str) -> dict[str, di
     for cells in parser.rows:
         if len(cells) < 3 or not cells[1]["text"]:
             raise ValueError(f"{metric}: malformed team row")
-        name = re.sub(r"\s*\(\d+-\d+\)\s*$", "", cells[1]["text"]).strip()
+        # The provider can publish either two- or three-part records, e.g.
+        # W Kentucky (1-1-1) on 2026-11-10. Preserve every reported game.
+        record = re.search(r"\((\d+)-(\d+)(?:-(\d+))?\)\s*$", cells[1]["text"])
+        name = cells[1]["text"][:record.start()].strip() if record else cells[1]["text"].strip()
         if cells[1]["href"]:
             path = urlparse(cells[1]["href"]).path
             if not path.startswith("/ncaa-basketball/team/"):
@@ -98,7 +101,6 @@ def parse_table(html: str, metric: str, season: str, as_of: str) -> dict[str, di
             team_id = "unlinked-" + re.sub(r"[^a-z0-9]+", "-", name.casefold()).strip("-")
         if team_id in teams:
             raise ValueError(f"{metric}: duplicate team ID {team_id}")
-        record = re.search(r"\((\d+)-(\d+)\)\s*$", cells[1]["text"])
         visible = cells[2]["text"].replace(",", "")
         number = None if visible in {"--", "N/A", "", "-"} else float(visible)
         if number is not None and not math.isfinite(number):
@@ -115,7 +117,7 @@ def parse_table(html: str, metric: str, season: str, as_of: str) -> dict[str, di
             raise ValueError(f"{metric}: missing games record for {team_id}")
         teams[team_id] = {
             "name": name, "value": number,
-            "gamesPlayed": sum(map(int, record.groups())) if record else None,
+            "gamesPlayed": sum(int(part) for part in record.groups() if part is not None) if record else None,
         }
     if len(teams) < 300:
         raise ValueError(f"{metric}: only {len(teams)} teams; refusing a partial or blocked response")
