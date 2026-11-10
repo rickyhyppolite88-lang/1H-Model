@@ -6,7 +6,9 @@ import FoulDetails from "./FoulDetails";
 import GameCardRow from "./GameCardRow";
 import GameTime from "./GameTime";
 import { gradeLab, type LabForecast, type LabStore } from "./model/lab";
+import { labRating } from "./model/ratingDisplay";
 import { scheduleMessages } from "./model/scheduleReview";
+import SignalBadge from "./SignalBadge";
 import TeamIdentity from "./TeamIdentity";
 
 const point = (value: number | null) =>
@@ -46,6 +48,7 @@ export default function LabTable({
         <tbody role="rowgroup">
           {rows.map((row) => {
             const result = gradeLab(row, store);
+            const rating = labRating(row);
             const status = {
               control: "Control",
               qualified: "Qualified research",
@@ -118,17 +121,14 @@ export default function LabTable({
                   className="card-confidence"
                   data-label="Strength / 100"
                 >
-                  <div className="signal-badge">
-                    <span className="confidence-label">
-                      {bonus ? "Bet forecast" : "Strength / 100"}
-                    </span>
-                    <strong>
-                      {bonus ? "None" : (row.signalStrength ?? "—")}
-                    </strong>
-                    <small className="card-detail">
-                      Uncalibrated strength, not win probability
-                    </small>
-                  </div>
+                  {bonus ? (
+                    <div className="signal-badge">
+                      <span className="confidence-label">Bet forecast</span>
+                      <strong>None</strong>
+                    </div>
+                  ) : (
+                    <SignalBadge {...rating} scoreUnit="points" />
+                  )}
                 </td>
                 <td
                   role="cell"

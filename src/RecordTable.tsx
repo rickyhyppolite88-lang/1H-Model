@@ -8,6 +8,7 @@ import {
   type RecordStore,
   recordGrade,
 } from "./model/predictionRecord";
+import { recordRating } from "./model/ratingDisplay";
 import { scheduleMessages } from "./model/scheduleReview";
 import SignalBadge from "./SignalBadge";
 import TeamIdentity from "./TeamIdentity";
@@ -55,7 +56,7 @@ export default function RecordTable({
               Lean
             </th>
             <th role="columnheader" scope="col">
-              Saved confidence
+              Confidence rating
             </th>
             <th role="columnheader" scope="col">
               Actual 1H
@@ -79,6 +80,7 @@ export default function RecordTable({
         <tbody role="rowgroup">
           {records.map((record) => {
             const grade = recordGrade(record, results);
+            const rating = recordRating(record);
             return (
               <GameCardRow
                 key={record.id}
@@ -143,12 +145,9 @@ export default function RecordTable({
                 <td
                   role="cell"
                   className="card-confidence"
-                  data-label="Saved confidence"
+                  data-label="Confidence rating"
                 >
-                  <SignalBadge
-                    signal={record.signal}
-                    label="Saved confidence"
-                  />
+                  <SignalBadge {...rating} />
                 </td>
                 <td role="cell" className="card-actual" data-label="Actual 1H">
                   {grade.actual ?? "—"}

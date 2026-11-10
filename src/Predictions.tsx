@@ -25,6 +25,7 @@ import {
   predictionsToCsv,
   topEdgePredictions,
 } from "./model/predictions";
+import { predictionRating } from "./model/ratingDisplay";
 import { predictionSignal } from "./model/signals";
 import { easternTipoff, tipoffState } from "./model/time";
 import ResponsiveDetails from "./ResponsiveDetails";
@@ -556,8 +557,11 @@ export default function Predictions() {
               Confidence expresses the existing 0–100 model-strength score as a
               percentage. It is not a win probability. Scoring/pace agreement
               strengthens the score; 8+ point gaps are held for outlier review.
-              Missing or closed signals show — rather than an invented
-              percentage. The Prediction record keeps each original saved score.
+              Extreme gaps show Review. After tipoff, the shown-line score uses
+              the displayed projection and line; it is labeled separately from a
+              saved pregame score. Older record scores calculated from frozen
+              inputs are labeled Calculated later. Missing inputs are identified
+              explicitly.
             </p>
           </div>
           <div className="daily-downloads">
@@ -773,7 +777,7 @@ export default function Predictions() {
           <tbody role="rowgroup">
             {visible.map((row) => {
               const comparison = predictionComparison(row, book, basis);
-              const signal = predictionSignal(
+              const rating = predictionRating(
                 row,
                 book,
                 basis,
@@ -865,7 +869,7 @@ export default function Predictions() {
                     className="card-confidence"
                     data-label="Confidence score"
                   >
-                    <SignalBadge signal={signal} />
+                    <SignalBadge {...rating} />
                   </td>
                   <td
                     role="cell"

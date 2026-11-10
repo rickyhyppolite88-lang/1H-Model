@@ -415,7 +415,9 @@ export default function PredictionRecord() {
             <p>
               Official finished results for{" "}
               {date === "all" ? "all dates" : date}; confidence scores are
-              research rankings, not win probabilities.
+              research rankings, not win probabilities. These bands use only
+              original saved scores; ratings labeled Calculated later remain
+              separate.
             </p>
             <div className="table-wrap">
               <table aria-label="Signal results">
