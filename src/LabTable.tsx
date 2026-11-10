@@ -8,8 +8,10 @@ import GameTime from "./GameTime";
 import { gradeLab, type LabForecast, type LabStore } from "./model/lab";
 import { labRating } from "./model/ratingDisplay";
 import { scheduleMessages } from "./model/scheduleReview";
+import { type UnitPlay, unitsForScore } from "./model/units";
 import SignalBadge from "./SignalBadge";
 import TeamIdentity from "./TeamIdentity";
+import UnitResult from "./UnitResult";
 
 const point = (value: number | null) =>
   value === null ? "—" : value.toFixed(2);
@@ -17,10 +19,12 @@ export default function LabTable({
   rows,
   store,
   bonus,
+  unitPlays,
 }: {
   rows: LabForecast[];
   store: LabStore;
   bonus: boolean;
+  unitPlays?: Map<string, UnitPlay>;
 }) {
   return (
     <div className="table-wrap card-table-wrap">
@@ -129,6 +133,13 @@ export default function LabTable({
                   ) : (
                     <SignalBadge {...rating} scoreUnit="points" />
                   )}
+                  {!unitPlays &&
+                    row.status === "qualified" &&
+                    unitsForScore(row.signalStrength) !== null && (
+                      <small className="unit-suggestion">
+                        {unitsForScore(row.signalStrength)}u suggested
+                      </small>
+                    )}
                 </td>
                 <td
                   role="cell"
@@ -158,6 +169,7 @@ export default function LabTable({
                         : "Schedule review"}
                     </small>
                   )}
+                  {unitPlays && <UnitResult play={unitPlays.get(row.id)} />}
                 </td>
                 <td
                   role="cell"

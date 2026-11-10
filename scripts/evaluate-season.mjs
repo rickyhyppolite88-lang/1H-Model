@@ -4,6 +4,7 @@ import { execFileSync } from "node:child_process";
 import { createHash } from "node:crypto";
 import { loadPredictionRecord, savePredictionRecord } from "./prediction-record.mjs";
 import { updateLabFiles } from "./lab.mjs";
+import { updateUnitFiles } from "./unit-ledger.mjs";
 
 const server = await createServer({ configFile: false, server: { middlewareMode: true }, optimizeDeps: { noDiscovery: true, include: [] }, appType: "custom" });
 try {
@@ -39,7 +40,8 @@ try {
   const oldRecord = await loadPredictionRecord(recordModel);
   const record = recordModel.updatePredictionRecord(oldRecord,predictions,enriched,predictions.generatedAt,{inputSnapshots:{prior:priorArchive,current:currentArchive,currentRetrievedAt:current.retrievedAt}});
   const recordOutput = await savePredictionRecord(recordModel,record);
-  await updateLabFiles(server,{feed:predictions,ledger:enriched,prior,priorPath:priorArchive,results:record.results});
+  const labOutput = await updateLabFiles(server,{feed:predictions,ledger:enriched,prior,priorPath:priorArchive,results:record.results});
+  await updateUnitFiles(server, record, labOutput.store, predictions.generatedAt);
   await mkdir(".cache/workbooks", { recursive: true });
   const workbook = async (feed, name, destination, builder = "scripts/build_prediction_workbook.py") => {
     const input = `.cache/workbooks/${name}.json`;

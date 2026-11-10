@@ -14,7 +14,9 @@ import {
   finishedRecordSummary,
   mergeRecordStores,
 } from "./model/recordViews";
+import { actualUnitPlay } from "./model/units";
 import RecordTable from "./RecordTable";
+import UnitCalendar from "./UnitCalendar";
 import {
   preferencePage,
   preferenceRecordDate,
@@ -22,6 +24,7 @@ import {
   preferenceText,
   usePreference,
 } from "./usePreference";
+import { useUnitLedger } from "./useUnitLedger";
 
 const rate = (n: number | null) =>
   n === null ? "—" : `${(n * 100).toFixed(1)}%`;
@@ -29,6 +32,11 @@ const summaryKey = (s: RecordIndex["summary"][number]) =>
   `${s.season}:${s.modelVersion}:${s.sportsbook}:${s.basis}`;
 
 export default function PredictionRecord() {
+  const {
+    ledger: unitLedger,
+    plays: calendarPlays,
+    error: unitError,
+  } = useUnitLedger();
   const [index, setIndex] = useState<RecordIndex | null>(null);
   const [indexError, setIndexError] = useState("");
   const [date, setDate] = usePreference(
@@ -118,9 +126,7 @@ export default function PredictionRecord() {
             key: loadKey,
             store: null,
             error:
-              date === "all"
-                ? "The full record could not load all dates. No partial history is shown."
-                : "The selected day’s record could not be loaded.",
+              "The full record could not load all dates. No partial history is shown.",
           });
       }
     };
@@ -141,6 +147,18 @@ export default function PredictionRecord() {
     index.summary[index.summary.length - 1];
   const current = loaded?.key === loadKey ? loaded : null;
   const store = current?.store ?? null;
+  const modelRecords = (store?.records ?? []).filter(
+    (record) =>
+      !benchmark ||
+      (record.season === benchmark.season &&
+        record.modelVersion === benchmark.modelVersion &&
+        record.sportsbook === benchmark.sportsbook &&
+        record.basis === benchmark.basis),
+  );
+  const unitPlays = modelRecords
+    .filter((record) => index.canonicalIds.includes(record.id))
+    .map((record) => actualUnitPlay(record, store?.results ?? [], unitLedger));
+  const unitMap = new Map(unitPlays.map((play) => [play.id, play]));
   const scopedStore = store
     ? finishedRecordStore({
         ...store,
@@ -204,8 +222,8 @@ export default function PredictionRecord() {
         <div>
           <h2>Running prediction record</h2>
           <p>
-            Finished first-half results. Choose all dates or one day to update
-            the record below. Saved confidence % is the original model score,
+            Finished first-half results. Tap a calendar day to see its picks,
+            stakes and results. Saved confidence % is the original model score,
             not a win probability.
           </p>
         </div>
@@ -241,6 +259,25 @@ export default function PredictionRecord() {
           {indexError}
         </p>
       )}
+      <UnitCalendar
+        plays={(calendarPlays ?? []).filter(
+          (play) =>
+            play.source === "actual" &&
+            play.actual !== null &&
+            (!benchmark ||
+              (play.season === benchmark.season &&
+                play.method === benchmark.modelVersion &&
+                play.sportsbook === benchmark.sportsbook &&
+                play.basis === benchmark.basis)),
+        )}
+        date={date}
+        onSelectDate={(value) => {
+          selectDate(value);
+          if (value !== "all") setView("official");
+        }}
+        available={Boolean(unitLedger && calendarPlays)}
+        error={unitError}
+      />
       <section
         className="record-overview"
         aria-label="Full record summary"
@@ -369,6 +406,7 @@ export default function PredictionRecord() {
             records={visible}
             results={scopedStore.results}
             canonicalIds={index.canonicalIds}
+            unitPlays={unitMap}
             showVersions={view === "all"}
             onOpenDay={date === "all" ? selectDate : undefined}
             emptyMessage={
@@ -477,6 +515,13 @@ export default function PredictionRecord() {
             archives.
           </p>
           <div className="prediction-actions">
+            <a
+              className="secondary-button"
+              href={`${import.meta.env.BASE_URL}data/actual-units.csv`}
+              download="1h-actual-units.csv"
+            >
+              All Actual unit plays CSV ↓
+            </a>
             <a
               className="secondary-button"
               href={`${import.meta.env.BASE_URL}data/prediction-record.xlsx`}

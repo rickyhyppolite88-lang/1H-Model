@@ -10,8 +10,10 @@ import {
 } from "./model/predictionRecord";
 import { recordRating } from "./model/ratingDisplay";
 import { scheduleMessages } from "./model/scheduleReview";
+import type { UnitPlay } from "./model/units";
 import SignalBadge from "./SignalBadge";
 import TeamIdentity from "./TeamIdentity";
+import UnitResult from "./UnitResult";
 
 const point = (n: number | null) => (n === null ? "—" : n.toFixed(2));
 
@@ -22,6 +24,7 @@ export default function RecordTable({
   showVersions,
   onOpenDay,
   emptyMessage,
+  unitPlays,
 }: {
   records: ForecastRecord[];
   results: RecordStore["results"];
@@ -29,6 +32,7 @@ export default function RecordTable({
   showVersions: boolean;
   onOpenDay?: (date: string) => void;
   emptyMessage?: string;
+  unitPlays?: Map<string, UnitPlay>;
 }) {
   const ids = new Set(canonicalIds);
   return (
@@ -168,6 +172,7 @@ export default function RecordTable({
                         : "Schedule review"}
                     </small>
                   )}
+                  {unitPlays && <UnitResult play={unitPlays.get(record.id)} />}
                 </td>
                 <td
                   role="cell"

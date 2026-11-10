@@ -28,6 +28,7 @@ import {
 import { predictionRating } from "./model/ratingDisplay";
 import { predictionSignal } from "./model/signals";
 import { easternTipoff, tipoffState } from "./model/time";
+import { unitsForScore } from "./model/units";
 import ResponsiveDetails from "./ResponsiveDetails";
 import SignalBadge from "./SignalBadge";
 import TeamIdentity from "./TeamIdentity";
@@ -870,6 +871,13 @@ export default function Predictions() {
                     data-label="Confidence score"
                   >
                     <SignalBadge {...rating} />
+                    {rating.source === "live" && (
+                      <small className="unit-suggestion">
+                        {unitsForScore(rating.signal.score) === null
+                          ? "No automatic stake"
+                          : `${unitsForScore(rating.signal.score)}u suggested`}
+                      </small>
+                    )}
                   </td>
                   <td
                     role="cell"
