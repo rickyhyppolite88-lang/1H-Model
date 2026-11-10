@@ -1,5 +1,10 @@
 import { z } from "zod";
 import {
+  entryPolicySchema,
+  usesTipoffEntry,
+  verifiedTipoffQuote,
+} from "./entryPolicy";
+import {
   canonicalLabForecasts,
   gradeLab,
   type LabForecast,
@@ -70,10 +75,11 @@ export const unitLedgerSchema = z
     startedAt: z.iso.datetime(),
     updatedAt: z.iso.datetime(),
     assignments: z.array(unitAssignmentSchema),
+    entryPolicy: entryPolicySchema.optional(),
   })
   .superRefine((ledger, context) => {
     const ids = new Set<string>();
-    const selections = new Set<string>();
+    const legacySelections = new Set<string>();
     if (Date.parse(ledger.startedAt) > Date.parse(ledger.updatedAt))
       context.addIssue({
         code: "custom",
@@ -82,8 +88,21 @@ export const unitLedgerSchema = z
     for (const row of ledger.assignments) {
       const selection = stakeSelection(row);
       if (
+        !usesTipoffEntry(
+          row.startsAt,
+          ledger.entryPolicy,
+          `${row.season}:${row.gameId}`,
+        )
+      ) {
+        if (legacySelections.has(selection))
+          context.addIssue({
+            code: "custom",
+            message: "Duplicate legacy stake selection",
+          });
+        legacySelections.add(selection);
+      }
+      if (
         ids.has(row.id) ||
-        selections.has(selection) ||
         Date.parse(row.assignedAt) < Date.parse(ledger.startedAt) ||
         Date.parse(row.assignedAt) > Date.parse(ledger.updatedAt)
       )
@@ -92,7 +111,6 @@ export const unitLedgerSchema = z
           message: "Duplicate or backdated stake assignment",
         });
       ids.add(row.id);
-      selections.add(selection);
     }
   });
 export type UnitLedger = z.infer<typeof unitLedgerSchema>;
@@ -102,8 +120,7 @@ const stakeSelection = (
     UnitAssignment,
     "source" | "season" | "method" | "sportsbook" | "basis" | "gameId"
   >,
-) =>
-  `${row.source}:${row.season}:${row.method}:${row.sportsbook}:${row.basis}:${row.gameId}`;
+) => `${row.source}:${row.season}:${row.method}:${row.gameId}`;
 export type UnitMode = "tracked" | "historical";
 export const unitPlaySchema = z.object({
   id: z.string(),
@@ -127,6 +144,8 @@ export const unitPlaySchema = z.object({
   actual: z.number().nullable(),
   net: z.number().nullable(),
   mode: z.enum(["tracked", "historical"]).nullable(),
+  entryPolicy: z.enum(["first-entry-v1", "last-pretip-v1"]).optional(),
+  lineCapturedAt: z.iso.datetime().nullable().optional(),
 });
 export const unitResultsSchema = z.object({
   schemaVersion: z.literal(1),
@@ -134,6 +153,8 @@ export const unitResultsSchema = z.object({
   plays: z.array(unitPlaySchema),
 });
 export type UnitPlay = z.infer<typeof unitPlaySchema>;
+export const hasUnitStake = (play: UnitPlay | undefined) =>
+  play?.units !== null && play?.units !== undefined && play.units > 0;
 
 export function savedRecordPrice(record: ForecastRecord) {
   const quote = record.quotes.find(
@@ -168,7 +189,7 @@ export const formatPrice = (value: number | null) =>
     ? `${value > 0 ? "+" : ""}${value}`
     : "Odds unavailable";
 
-/** Append stakes on the first eligible capture after launch; never resize or backfill a finished play. */
+/** Append immutable stake snapshots. A future entry may supersede an earlier snapshot until tipoff. */
 export function updateUnitLedger(
   previous: UnitLedger | null,
   actual: RecordStore,
@@ -178,13 +199,13 @@ export function updateUnitLedger(
   if (previous && Date.parse(at) < Date.parse(previous.updatedAt))
     throw new Error("Cannot backdate the unit ledger");
   const assignments = [...(previous?.assignments ?? [])];
-  const known = new Set(assignments.map(stakeSelection));
+  const known = new Set(assignments.map((row) => row.id));
   const add = (
     row: Omit<UnitAssignment, "assignedAt" | "policy" | "units">,
   ) => {
     const units = unitsForScore(row.score);
     if (
-      known.has(stakeSelection(row)) ||
+      known.has(row.id) ||
       units === null ||
       Date.parse(at) >= Date.parse(row.startsAt)
     )
@@ -197,9 +218,9 @@ export function updateUnitLedger(
         units,
       }),
     );
-    known.add(stakeSelection(row));
+    known.add(row.id);
   };
-  for (const row of canonicalRecords(actual.records)) {
+  for (const row of canonicalRecords(actual.records, actual.entryPolicy)) {
     const side = row.comparison.lean;
     if (
       (side !== "OVER" && side !== "UNDER") ||
@@ -213,6 +234,11 @@ export function updateUnitLedger(
     )
       continue;
     if (
+      !usesTipoffEntry(
+        row.prediction.startsAt,
+        actual.entryPolicy,
+        `${row.season}:${row.gameId}`,
+      ) &&
       actual.records.some(
         (version) =>
           version.season === row.season &&
@@ -238,12 +264,20 @@ export function updateUnitLedger(
       price: savedRecordPrice(row),
     });
   }
-  for (const row of canonicalLabForecasts(lab.forecasts)) {
+  for (const row of canonicalLabForecasts(lab.forecasts, lab.entryPolicy)) {
     if (
       row.status !== "qualified" ||
       (row.side !== "OVER" && row.side !== "UNDER") ||
       row.line === null ||
       row.signalStrength === null ||
+      !verifiedTipoffQuote(
+        row.startsAt,
+        typeof row.inputs.entryQuoteCapturedAt === "string"
+          ? row.inputs.entryQuoteCapturedAt
+          : null,
+        lab.entryPolicy,
+        `${row.season}:${row.gameId}`,
+      ) ||
       Date.parse(row.recordedAt) > Date.parse(at) ||
       lab.results.some(
         (r) => r.season === row.season && r.gameId === row.gameId,
@@ -251,6 +285,11 @@ export function updateUnitLedger(
     )
       continue;
     if (
+      !usesTipoffEntry(
+        row.startsAt,
+        lab.entryPolicy,
+        `${row.season}:${row.gameId}`,
+      ) &&
       lab.forecasts.some(
         (version) =>
           version.season === row.season &&
@@ -277,6 +316,7 @@ export function updateUnitLedger(
     });
   }
   return unitLedgerSchema.parse({
+    ...(actual.entryPolicy ? { entryPolicy: actual.entryPolicy } : {}),
     schemaVersion: 1,
     startedAt: previous?.startedAt ?? at,
     updatedAt: at,
@@ -323,6 +363,17 @@ export function actualUnitPlay(
   const price = stake.saved?.price ?? savedRecordPrice(record);
   return {
     id: record.id,
+    entryPolicy: usesTipoffEntry(
+      record.prediction.startsAt,
+      ledger?.entryPolicy,
+      `${record.season}:${record.gameId}`,
+    )
+      ? "last-pretip-v1"
+      : "first-entry-v1",
+    lineCapturedAt:
+      record.quotes.find((quote) => quote.sportsbook === record.sportsbook)?.[
+        record.basis === "opening" ? "openingCapturedAt" : "latestCapturedAt"
+      ] ?? null,
     source: "actual",
     season: record.season,
     method: record.modelVersion,
@@ -373,6 +424,17 @@ export function labUnitPlay(
         : null);
   return {
     id: row.id,
+    entryPolicy: usesTipoffEntry(
+      row.startsAt,
+      ledger?.entryPolicy,
+      `${row.season}:${row.gameId}`,
+    )
+      ? "last-pretip-v1"
+      : "first-entry-v1",
+    lineCapturedAt:
+      typeof row.inputs.entryQuoteCapturedAt === "string"
+        ? row.inputs.entryQuoteCapturedAt
+        : null,
     source: "lab",
     season: row.season,
     method: row.methodId,
@@ -438,6 +500,8 @@ export function unitPlaysCsv(plays: UnitPlay[]) {
       "source",
       "season",
       "score_source",
+      "entry_policy",
+      "line_captured_at",
     ],
     ...plays.map((row) => [
       row.date,
@@ -465,6 +529,8 @@ export function unitPlaysCsv(plays: UnitPlay[]) {
       row.source,
       row.season,
       row.scoreSource,
+      row.entryPolicy ?? "first-entry-v1",
+      row.lineCapturedAt ?? null,
     ]),
   ]
     .map((row) => row.map(csvCell).join(","))

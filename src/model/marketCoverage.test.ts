@@ -21,7 +21,7 @@ it.each(["no_current_line", "not_in_feed", "not_matched"] as const)(
       books:
         status === "no_current_line" ? [{ sportsbook: "betmgm", status }] : [],
     };
-    const feed = generatePredictions(ledger, at);
+    const feed = generatePredictions(ledger, at, "main", "betmgm");
     const row = feed.predictions[0];
     expect(ledger.games[0].quotes[0].latest?.total).toBe(70);
     expect(row.markets[0].openingLine).toBe(70);
@@ -30,7 +30,9 @@ it.each(["no_current_line", "not_in_feed", "not_matched"] as const)(
     expect(predictionComparison(row, "betmgm", "latest").lean).toBeNull();
     expect(predictionSignal(row, "betmgm", "latest", at).score).toBeNull();
     expect(describeLineMovement(row, "betmgm").current).toBeNull();
-    expect(predictionsToCsv([row])).toContain(marketStatusLabel(row, "betmgm"));
+    expect(predictionsToCsv([row], "betmgm")).toContain(
+      marketStatusLabel(row, "betmgm"),
+    );
   },
 );
 
@@ -51,7 +53,7 @@ it("records a usable line returning at the same total, without counting an old r
   };
   const first = updatePredictionRecord(
     store,
-    generatePredictions(ledger, at),
+    generatePredictions(ledger, at, "main", "betmgm"),
     ledger,
     at,
   );
@@ -65,7 +67,7 @@ it("records a usable line returning at the same total, without counting an old r
   };
   const next = updatePredictionRecord(
     first,
-    generatePredictions(ledger, later),
+    generatePredictions(ledger, later, "main", "betmgm"),
     ledger,
     later,
   );
@@ -77,7 +79,7 @@ it("records a usable line returning at the same total, without counting an old r
   expect(
     updatePredictionRecord(
       next,
-      generatePredictions(ledger, checkedAgain),
+      generatePredictions(ledger, checkedAgain, "main", "betmgm"),
       ledger,
       checkedAgain,
     ).records,

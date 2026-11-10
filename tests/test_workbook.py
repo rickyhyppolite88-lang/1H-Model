@@ -17,8 +17,9 @@ def row(game_id, away, home, rank=None):
 
 
 @pytest.mark.parametrize("timestamp,hour,day", [("2026-11-03T00:00:00Z", 19, 2), ("2026-07-03T00:00:00Z", 20, 2)])
-def test_workbook_groups_match_unique_games_and_keep_typed_values(tmp_path, timestamp, hour, day):
-    data = {"generatedAt": "2026-11-02T23:00:00Z", "defaultSportsbook": "betmgm", "defaultLineBasis": "latest",
+@pytest.mark.parametrize("book", ["betmgm", "draftkings"])
+def test_workbook_groups_match_unique_games_and_keep_typed_values(tmp_path, timestamp, hour, day, book):
+    data = {"generatedAt": "2026-11-02T23:00:00Z", "defaultSportsbook": book, "defaultLineBasis": "latest",
             "source": {"projectionCode": "https://example.com/model"},
             "predictions": [row("one", "SEC", "ACC", 1), row("two", "SEC", "SEC"), row("three", None, "Big Ten", 25)]}
     output = tmp_path / "predictions.xlsx"
@@ -33,6 +34,8 @@ def test_workbook_groups_match_unique_games_and_keep_typed_values(tmp_path, time
     assert ids("ACC") == ["one"]
     assert ids("Unclassified") == ["three"]
     sheet = workbook["All Games"]
+    assert book in sheet["A3"].value
+    assert sheet["E7"].value == 70.5 and sheet["E7"].data_type == "n"
     assert sheet["D7"].value == 72.25 and sheet["D7"].data_type == "n"
     assert sheet["F7"].value == 1.75 and sheet["J7"].value is None
     assert sheet["A7"].value.hour == hour and sheet["A7"].value.day == day

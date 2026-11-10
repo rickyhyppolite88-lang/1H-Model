@@ -3,6 +3,7 @@
 import GameCardRow from "./GameCardRow";
 import GameTime from "./GameTime";
 import { dailyRecordStatus } from "./model/dailyRecord";
+import { sportsbookNames } from "./model/marketCoverage";
 import {
   type ForecastRecord,
   type RecordStore,
@@ -85,6 +86,13 @@ export default function RecordTable({
           {records.map((record) => {
             const grade = recordGrade(record, results);
             const rating = recordRating(record);
+            const quote = record.quotes.find(
+              (row) => row.sportsbook === record.sportsbook,
+            );
+            const lineCapturedAt =
+              record.basis === "opening"
+                ? quote?.openingCapturedAt
+                : quote?.latestCapturedAt;
             return (
               <GameCardRow
                 key={record.id}
@@ -138,6 +146,14 @@ export default function RecordTable({
                   data-label="Saved line"
                 >
                   {point(record.comparison.line)}
+                  <small>
+                    {sportsbookNames[record.sportsbook] ?? record.sportsbook}
+                  </small>
+                  {lineCapturedAt && (
+                    <small className="card-detail">
+                      Line captured <GameTime startsAt={lineCapturedAt} />
+                    </small>
+                  )}
                 </td>
                 <td role="cell" className="card-lean" data-label="Lean">
                   <span

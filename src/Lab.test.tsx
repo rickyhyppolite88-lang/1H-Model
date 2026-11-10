@@ -8,9 +8,15 @@ import {
 } from "@testing-library/react";
 import { afterEach, beforeEach, expect, it, vi } from "vitest";
 import Lab from "./Lab";
-import { type LabIndex, labIndexSchema } from "./model/lab";
+import {
+  canonicalLabForecasts,
+  type LabIndex,
+  type LabStore,
+  labIndexSchema,
+} from "./model/lab";
 import { currentLabFixture } from "./model/lab.test-fixture";
 import { captureLab } from "./model/labCapture";
+import { labUnitPlay, type UnitLedger } from "./model/units";
 import PredictionRecord from "./PredictionRecord";
 
 vi.mock("./ActualPredictionRecord", () => ({
@@ -104,6 +110,25 @@ function uiFixture() {
   return { store, index };
 }
 
+function labResponse(url: string, index: LabIndex, store: LabStore) {
+  const ledger: UnitLedger = {
+    schemaVersion: 1,
+    startedAt: index.updatedAt,
+    updatedAt: index.updatedAt,
+    assignments: [],
+  };
+  if (url.includes("unit-ledger")) return ledger;
+  if (url.includes("unit-results"))
+    return {
+      schemaVersion: 1,
+      updatedAt: index.updatedAt,
+      plays: canonicalLabForecasts(store.forecasts).map((row) =>
+        labUnitPlay(row, store, ledger),
+      ),
+    };
+  return url.includes("lab-index") ? index : store;
+}
+
 beforeEach(() => {
   localStorage.clear();
   vi.useFakeTimers({ toFake: ["Date"] });
@@ -122,8 +147,7 @@ it("shows upcoming research and explicit method descriptions without probability
     "fetch",
     vi.fn(async (url: string) => ({
       ok: true,
-      json: async () =>
-        structuredClone(url.includes("lab-index") ? index : store),
+      json: async () => structuredClone(labResponse(url, index, store)),
     })),
   );
   render(<Lab />);
@@ -195,8 +219,7 @@ it("lists qualified Lab research before watch-only forecasts and earlier data ga
     "fetch",
     vi.fn(async (url: string) => ({
       ok: true,
-      json: async () =>
-        structuredClone(url.includes("lab-index") ? index : store),
+      json: async () => structuredClone(labResponse(url, index, store)),
     })),
   );
   render(<Lab />);
@@ -210,33 +233,52 @@ it("lists qualified Lab research before watch-only forecasts and earlier data ga
   expect(names[2]).toContain("Gap team");
 });
 
-it("records completed first halves, actual totals and watch-only decisions without counting upcoming games", async () => {
+it("shows completed staked Lab plays while excluding watch-only and upcoming games", async () => {
+  localStorage.setItem(
+    "1h-model-view-v1:lab.method.v3",
+    JSON.stringify({ savedAt: Date.now(), value: "bonus-exposure-v1" }),
+  );
   const { store, index } = uiFixture();
   vi.stubGlobal(
     "fetch",
     vi.fn(async (url: string) => ({
       ok: true,
-      json: async () =>
-        structuredClone(url.includes("lab-index") ? index : store),
+      json: async () => structuredClone(labResponse(url, index, store)),
     })),
   );
   render(<Lab recordOnly />);
   const table = await screen.findByRole("table", { name: "Lab forecasts" });
   expect(within(table).getByText("Finished team")).toBeTruthy();
-  expect(within(table).getByText("Watch team")).toBeTruthy();
+  expect(within(table).queryByText("Watch team")).toBeNull();
   expect(within(table).queryByText("Team A")).toBeNull();
   expect(
     [...table.querySelectorAll(".card-actual")].map((cell) => cell.textContent),
-  ).toEqual(["72", "72"]);
+  ).toEqual(["72"]);
   const summary = screen.getByRole("region", { name: "Lab record summary" });
   expect(within(summary).getByText("1 / 0 / 0")).toBeTruthy();
   expect(screen.getByLabelText("Lab daily breakdown (ET)")).toBeTruthy();
+  expect(screen.queryByRole("option", { name: /Bonus exposure/ })).toBeNull();
+});
+
+it("retains measurement-only bonus research in The Lab rather than the staked record", async () => {
+  const { store, index } = uiFixture();
+  vi.stubGlobal(
+    "fetch",
+    vi.fn(async (url: string) => ({
+      ok: true,
+      json: async () => structuredClone(labResponse(url, index, store)),
+    })),
+  );
+  render(<Lab />);
+  await screen.findByRole("table", { name: "Lab forecasts" });
+  fireEvent.change(screen.getByLabelText("Lab game date (ET)"), {
+    target: { value: "all" },
+  });
   fireEvent.change(screen.getByLabelText("Lab version"), {
     target: { value: "bonus-exposure-v1" },
   });
-  expect(screen.getByText("Bonus timing MAE")).toBeTruthy();
-  expect(screen.getByText("2.00 min")).toBeTruthy();
-  expect(screen.getByText(/1H total: 72/)).toBeTruthy();
+  expect(await screen.findByText("Bonus timing MAE")).toBeTruthy();
+  expect(await screen.findByText("10.00 min")).toBeTruthy();
   expect(screen.queryByText("Observed hit rate")).toBeNull();
 });
 
@@ -250,8 +292,7 @@ it("retains paused-method history and separates the Actual and Lab record tabs",
     "fetch",
     vi.fn(async (url: string) => ({
       ok: true,
-      json: async () =>
-        structuredClone(url.includes("lab-index") ? index : store),
+      json: async () => structuredClone(labResponse(url, index, store)),
     })),
   );
   render(<PredictionRecord />);
@@ -279,8 +320,7 @@ it("does not display a partial Lab record if an archive fails", async () => {
     "fetch",
     vi.fn(async (url: string) => ({
       ok: !url.includes("2026-11-01"),
-      json: async () =>
-        structuredClone(url.includes("lab-index") ? index : store),
+      json: async () => structuredClone(labResponse(url, index, store)),
     })),
   );
   render(<Lab recordOnly />);

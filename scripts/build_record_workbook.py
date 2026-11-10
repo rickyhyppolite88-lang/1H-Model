@@ -17,7 +17,7 @@ def local(value):
 def build_workbook(data, output):
     wb = Workbook()
     wb.remove(wb.active)
-    context = f"Updated {local(data['updatedAt']):%b %d, %Y %I:%M %p} ET. BetMGM/latest at recording is the fixed benchmark."
+    context = f"Updated {local(data['updatedAt']):%b %d, %Y %I:%M %p} ET. Lines retain their recorded sportsbook and entry rule."
     summary = [[s[k] for k in ["season", "modelVersion", "sportsbook", "basis", "games", "versions", "pregame", "wins", "losses", "pushes", "pending", "winRate", "mae"]] for s in data["summary"]]
     sheet(wb, "Record Summary", "Running prediction record", context,
           "One first eligible pregame forecast per game counts. Pushes are excluded from win rate. Historical estimates do not count.",

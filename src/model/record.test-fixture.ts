@@ -79,5 +79,10 @@ export function recordFixture() {
     records: [],
     results: [],
   };
-  return { at, ledger, store, feed: generatePredictions(ledger, at) };
+  return {
+    at,
+    ledger,
+    store,
+    feed: generatePredictions(ledger, at, "main", "betmgm"),
+  };
 }

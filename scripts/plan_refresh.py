@@ -11,7 +11,8 @@ from zoneinfo import ZoneInfo
 
 FULL_SCHEDULE = "20 6,12,18 * * *"
 LEGACY_FULL_SCHEDULE = "20 11,17,23 * * *"
-POLL_SCHEDULE = "7,17,27,37,47,57 * * * *"
+POLL_SCHEDULE = "2,7,12,17,22,27,32,37,42,47,52,57 * * * *"
+LEGACY_POLL_SCHEDULE = "7,17,27,37,47,57 * * * *"
 EASTERN = ZoneInfo("America/New_York")
 PRETIP_MINUTES = 75
 MIN_REFRESH_MINUTES = 15
@@ -33,10 +34,10 @@ def plan_refresh(ledger: dict, now: datetime, event: str, schedule: str = "", *,
     now = now.astimezone(timezone.utc)
     today = now.astimezone(EASTERN).date()
 
-    def decision(mode: str, reason: str, near: int = 0, active: int = 0) -> dict:
+    def decision(mode: str, reason: str, near: int = 0, active: int = 0, minimum: int = MIN_REFRESH_MINUTES) -> dict:
         return {"mode": mode, "reason": reason, "date": today.isoformat(), "plannedAt": now.isoformat().replace("+00:00", "Z"),
                 "nearTipGames": near, "activeHalves": active, "targetMinutesBeforeTipoff": 60, "preTipWindowMinutes": PRETIP_MINUTES,
-                "minimumRefreshMinutes": MIN_REFRESH_MINUTES}
+                "minimumRefreshMinutes": minimum}
 
     if event not in {"schedule", "workflow_dispatch"}:
         return decision("build", "Validate and publish code without refreshing public sources.")
@@ -52,7 +53,7 @@ def plan_refresh(ledger: dict, now: datetime, event: str, schedule: str = "", *,
         return decision("full" if refresh_data else "markets", "Manual public-data refresh.")
     if schedule in {FULL_SCHEDULE, LEGACY_FULL_SCHEDULE}:
         return decision("full", "Scheduled team-stat, schedule, line, and result refresh.")
-    if schedule != POLL_SCHEDULE:
+    if schedule not in {POLL_SCHEDULE, LEGACY_POLL_SCHEDULE}:
         raise ValueError("Unrecognized refresh schedule")
     captured = instant(ledger["capturedAt"])
     if captured > now + timedelta(minutes=2):
@@ -61,6 +62,14 @@ def plan_refresh(ledger: dict, now: datetime, event: str, schedule: str = "", *,
     through = date.fromisoformat(ledger["through"])
     if through > today:
         raise ValueError("The market ledger is dated after the planning day")
+    closing = sum(
+        not game["firstHalfComplete"]
+        and not re.search(r"cancel|postpon|in progress|halftime|final|suspended|overtime", game["status"], re.IGNORECASE)
+        and timedelta() < instant(game["startsAt"]) - now <= timedelta(minutes=15)
+        for game in ledger["games"]
+    )
+    if closing and age >= timedelta(minutes=5):
+        return decision("markets", "Final pre-tip line check in the last 15 minutes.", closing, minimum=5)
     if age < timedelta(minutes=MIN_REFRESH_MINUTES):
         return decision("skip", "A successful market refresh is less than 15 minutes old.")
     if through < today:

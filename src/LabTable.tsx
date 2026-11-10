@@ -5,7 +5,9 @@ import ContextDetails from "./ContextDetails";
 import FoulDetails from "./FoulDetails";
 import GameCardRow from "./GameCardRow";
 import GameTime from "./GameTime";
+import { usesTipoffEntry, verifiedTipoffQuote } from "./model/entryPolicy";
 import { gradeLab, type LabForecast, type LabStore } from "./model/lab";
+import { sportsbookNames } from "./model/marketCoverage";
 import { labRating } from "./model/ratingDisplay";
 import { scheduleMessages } from "./model/scheduleReview";
 import { type UnitPlay, unitsForScore } from "./model/units";
@@ -53,6 +55,19 @@ export default function LabTable({
           {rows.map((row) => {
             const result = gradeLab(row, store);
             const rating = labRating(row);
+            const awaitingTipCheck =
+              usesTipoffEntry(
+                row.startsAt,
+                store.entryPolicy,
+                `${row.season}:${row.gameId}`,
+              ) &&
+              !verifiedTipoffQuote(
+                row.startsAt,
+                typeof row.inputs.entryQuoteCapturedAt === "string"
+                  ? row.inputs.entryQuoteCapturedAt
+                  : null,
+                store.entryPolicy,
+              );
             const status = {
               control: "Control",
               qualified: "Qualified research",
@@ -100,9 +115,24 @@ export default function LabTable({
                 <td
                   role="cell"
                   className="card-primary sportsbook-line"
-                  data-label={bonus ? "League min" : "Saved BetMGM"}
+                  data-label={
+                    bonus
+                      ? "League min"
+                      : `Saved ${sportsbookNames[row.sportsbook] ?? row.sportsbook}`
+                  }
                 >
                   {point(bonus ? row.bonusBaselineMinutes : row.line)}
+                  {!bonus && (
+                    <small>
+                      {sportsbookNames[row.sportsbook] ?? row.sportsbook}
+                    </small>
+                  )}
+                  {typeof row.inputs.entryQuoteCapturedAt === "string" && (
+                    <small className="card-detail">
+                      Line captured{" "}
+                      <GameTime startsAt={row.inputs.entryQuoteCapturedAt} />
+                    </small>
+                  )}
                 </td>
                 <td
                   role="cell"
@@ -137,7 +167,9 @@ export default function LabTable({
                     row.status === "qualified" &&
                     unitsForScore(row.signalStrength) !== null && (
                       <small className="unit-suggestion">
-                        {unitsForScore(row.signalStrength)}u suggested
+                        {awaitingTipCheck
+                          ? "Awaiting pre-tip check"
+                          : `${unitsForScore(row.signalStrength)}u suggested`}
                       </small>
                     )}
                 </td>

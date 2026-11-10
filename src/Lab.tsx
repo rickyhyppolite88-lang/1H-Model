@@ -12,7 +12,7 @@ import {
   labToCsv,
 } from "./model/lab";
 import { easternTipoff, tipoffState } from "./model/time";
-import { labUnitPlay } from "./model/units";
+import { hasUnitStake, labUnitPlay } from "./model/units";
 import UnitCalendar from "./UnitCalendar";
 import { useLabRecords } from "./useLabRecords";
 import { preferencePage, preferenceText, usePreference } from "./usePreference";
@@ -32,11 +32,15 @@ export default function Lab({ recordOnly = false }: { recordOnly?: boolean }) {
     plays: calendarPlays,
     error: unitError,
   } = useUnitLedger();
-  const [method, setMethod] = usePreference(
+  const [chosenMethod, setMethod] = usePreference(
     "lab.method.v3",
     labMethodIdSchema,
     "enhanced-baseline-v2",
   );
+  const method =
+    recordOnly && chosenMethod === "bonus-exposure-v1"
+      ? "enhanced-baseline-v2"
+      : chosenMethod;
   const [dateChoice, setDate] = usePreference(
     recordOnly ? "lab.recordDate" : "lab.date",
     dateSchema,
@@ -64,7 +68,11 @@ export default function Lab({ recordOnly = false }: { recordOnly?: boolean }) {
   const forecasts = (store?.forecasts ?? []).filter(
     (row) => row.methodId === method,
   );
-  const canonical = canonicalLabForecasts(forecasts);
+  const canonical = canonicalLabForecasts(forecasts, store?.entryPolicy);
+  const unitPlays = store
+    ? canonical.map((row) => labUnitPlay(row, store, unitLedger))
+    : [];
+  const unitMap = new Map(unitPlays.map((play) => [play.id, play]));
   const latest = new Map<string, LabForecast>();
   for (const row of forecasts) {
     const old = latest.get(row.gameId);
@@ -81,7 +89,9 @@ export default function Lab({ recordOnly = false }: { recordOnly?: boolean }) {
     ) ?? false;
   const choices = (
     recordOnly
-      ? canonical.filter(isFinished)
+      ? canonical.filter(
+          (row) => isFinished(row) && hasUnitStake(unitMap.get(row.id)),
+        )
       : [...latest.values()].filter((row) => {
           const current = index?.games.find(
             (game) => game.gameId === row.gameId,
@@ -117,13 +127,16 @@ export default function Lab({ recordOnly = false }: { recordOnly?: boolean }) {
       );
     });
   const summaryRows = (
-    recordOnly ? canonical.filter(isFinished) : canonical
+    recordOnly
+      ? canonical.filter(
+          (row) => isFinished(row) && hasUnitStake(unitMap.get(row.id)),
+        )
+      : canonical
   ).filter((row) => date === "all" || row.gameDate === date);
-  const summary = store ? labSummary(summaryRows, store) : null;
-  const unitPlays = store
-    ? canonical.map((row) => labUnitPlay(row, store, unitLedger))
-    : [];
-  const unitMap = new Map(unitPlays.map((play) => [play.id, play]));
+  const summary =
+    store && (!recordOnly || unitLedger)
+      ? labSummary(summaryRows, store)
+      : null;
   const pages = Math.max(1, Math.ceil(rows.length / 25));
   const safePage = Math.min(page, pages - 1);
   const dates = [
@@ -143,7 +156,7 @@ export default function Lab({ recordOnly = false }: { recordOnly?: boolean }) {
           "\uFEFF",
           labToCsv({
             ...store,
-            forecasts: forecasts.filter(
+            forecasts: (recordOnly ? summaryRows : forecasts).filter(
               (row) => date === "all" || row.gameDate === date,
             ),
           }),
@@ -184,14 +197,16 @@ export default function Lab({ recordOnly = false }: { recordOnly?: boolean }) {
                 setPage(0);
               }}
             >
-              {labMethods.map((entry) => (
-                <option key={entry.id} value={entry.id}>
-                  {entry.name}
-                  {entry.id === "enhanced-baseline-v2"
-                    ? ""
-                    : " (previous experiment)"}
-                </option>
-              ))}
+              {labMethods
+                .filter((entry) => !recordOnly || entry.kind !== "bonus")
+                .map((entry) => (
+                  <option key={entry.id} value={entry.id}>
+                    {entry.name}
+                    {entry.id === "enhanced-baseline-v2"
+                      ? ""
+                      : " (previous experiment)"}
+                  </option>
+                ))}
             </select>
           </label>
         </details>
@@ -329,6 +344,7 @@ export default function Lab({ recordOnly = false }: { recordOnly?: boolean }) {
           plays={(calendarPlays ?? []).filter(
             (play) =>
               play.source === "lab" &&
+              hasUnitStake(play) &&
               play.method === method &&
               play.actual !== null,
           )}
@@ -380,24 +396,32 @@ export default function Lab({ recordOnly = false }: { recordOnly?: boolean }) {
               <span>
                 {bonus
                   ? "League baseline MAE"
-                  : "Qualified / control forecasts"}
+                  : recordOnly
+                    ? "Staked plays"
+                    : "Qualified / control forecasts"}
               </span>
               <strong>
                 {bonus
                   ? show(summary.bonusBaselineMae, " min")
-                  : `${summary.qualified} / ${summary.games}`}
+                  : recordOnly
+                    ? summary.games
+                    : `${summary.qualified} / ${summary.games}`}
               </strong>
             </div>
             <div>
               <span>
                 {bonus
                   ? "Missing measurement inputs"
-                  : "Watch-only / data gaps"}
+                  : recordOnly
+                    ? "Results to review"
+                    : "Watch-only / data gaps"}
               </span>
               <strong>
                 {bonus
                   ? summary.gaps
-                  : `${summary.watchOnly} / ${summary.gaps}`}
+                  : recordOnly
+                    ? summary.pending
+                    : `${summary.watchOnly} / ${summary.gaps}`}
               </strong>
             </div>
           </div>
@@ -414,12 +438,12 @@ export default function Lab({ recordOnly = false }: { recordOnly?: boolean }) {
           <p className="inline-note">
             These samples are experimental and do not change the Actual record.{" "}
             {recordOnly
-              ? "Only completed first halves appear below."
-              : "The table shows the latest saved pregame observations; the Lab record fixes each game's first usable priced decision, including watch-only."}
+              ? "Only completed first halves with a recorded or replayed stake appear below."
+              : "The table shows the latest saved pregame observations. Future records freeze the last pre-tip decision; earlier games keep their original entry. Watch-only decisions remain research and receive no stake."}
           </p>
         </section>
       )}
-      {store ? (
+      {store && (!recordOnly || unitLedger) ? (
         <>
           {method === "enhanced-baseline-v2" && (
             <LabComponents forecasts={summaryRows} store={store} date={date} />
@@ -444,7 +468,7 @@ export default function Lab({ recordOnly = false }: { recordOnly?: boolean }) {
           )}
           <h3>
             {recordOnly
-              ? "Finished Lab predictions"
+              ? "Finished Lab staked plays"
               : "Upcoming research forecasts"}
           </h3>
           <LabTable
@@ -479,7 +503,7 @@ export default function Lab({ recordOnly = false }: { recordOnly?: boolean }) {
           </div>
           {recordOnly && !rows.length && (
             <p className="inline-note">
-              No completed first halves have been recorded for this Lab method
+              No finished staked plays have been recorded for this Lab method
               and date yet. Upcoming forecasts are in The Lab.
             </p>
           )}

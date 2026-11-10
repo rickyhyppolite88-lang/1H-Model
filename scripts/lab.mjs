@@ -1,7 +1,7 @@
 import { readFile, writeFile, mkdir, readdir, rename } from "node:fs/promises";
 import {createHash} from "node:crypto";
 
-export async function updateLabFiles(server, { feed, ledger, prior, priorPath, results, directory = "public" }) {
+export async function updateLabFiles(server, { feed, ledger, prior, priorPath, results, entryPolicy, directory = "public" }) {
   const model = await server.ssrLoadModule("/src/model/lab.ts");
   const { labComponentsToCsv } = await server.ssrLoadModule("/src/model/labComponents.ts");
   const { captureLab } = await server.ssrLoadModule("/src/model/labCapture.ts");
@@ -49,7 +49,7 @@ export async function updateLabFiles(server, { feed, ledger, prior, priorPath, r
     const path = `data/input-snapshots/${file}`;
     snapshots.push({ path, data: datasetSchema.parse(await read(path)) });
   }
-  let store = captureLab(old, config, feed, ledger, { prior, priorPath, snapshots, halves: raw.halves, excludedHistoryGames: raw.errors.map((error) => error.gameId), contextModel,contextModelPath }, at);
+  let store = captureLab(old, config, feed, ledger, { prior, priorPath, snapshots, halves: raw.halves, excludedHistoryGames: raw.errors.map((error) => error.gameId), contextModel,contextModelPath }, at, entryPolicy);
   const ids = new Set(store.forecasts.map((row) => row.gameId));
   const merge = { ...store, forecasts: [], results: results.filter((result) => ids.has(result.gameId)), halves: raw.halves.filter((half) => ids.has(half.gameId)) };
   store = model.mergeLabStores([store, merge], store.startedAt, at);
@@ -66,7 +66,7 @@ export async function updateLabFiles(server, { feed, ledger, prior, priorPath, r
     await save(`data/lab/${date}-components.csv`, `\uFEFF${labComponentsToCsv(forecasts, shard)}`, false);
     archives.push({ date, jsonPath, csvPath, games: games.size });
   }
-  const index = model.labIndexSchema.parse({ schemaVersion: 1, startedAt: store.startedAt, updatedAt: at, config, archives,
+  const index = model.labIndexSchema.parse({ schemaVersion: 1, startedAt: store.startedAt, updatedAt: at, ...(store.entryPolicy?{entryPolicy:store.entryPolicy}:{}), config, archives,
     methodStartedAt: Object.fromEntries(model.labMethodIds.flatMap((method) => {
       const first = store.forecasts.find((row) => row.methodId === method);
       return first ? [[method, first.recordedAt]] : [];
