@@ -1634,13 +1634,6 @@ footer {
   color: var(--text-secondary);
   margin: 12px 0 20px;
 }
-.record-model-control {
-  display: grid;
-  gap: 8px;
-  max-width: 440px;
-  margin-bottom: 20px;
-  font-size: 12px;
-}
 .record-overview {
   padding: 20px;
   border: 1px solid var(--border);
@@ -3689,6 +3682,48 @@ h1 em {
   background: var(--surface);
   max-width: 760px;
 }
+.record-dashboard {
+  display: grid;
+  gap: 20px;
+  min-width: 0;
+  margin-block: 20px;
+}
+.record-dashboard > * {
+  min-width: 0;
+}
+.record-dashboard .unit-calendar {
+  max-width: none;
+  margin: 0;
+}
+.unit-calendar-hint {
+  color: var(--text-secondary);
+  font-size: 0.75rem;
+  line-height: 1.5;
+  margin: 0.4rem 0 0.8rem;
+}
+@media (min-width: 781px) {
+  .app-shell.record-page {
+    max-width: none;
+    padding-inline: clamp(24px, 3vw, 56px);
+  }
+}
+@media (min-width: 1100px) {
+  .record-dashboard {
+    grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+    align-items: start;
+    gap: 24px;
+  }
+  .record-dashboard .record-overview {
+    padding: 24px;
+  }
+  .record-dashboard .audit-metrics {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+  }
+  .record-dashboard .record-date-control {
+    width: 100%;
+  }
+}
 .unit-calendar-heading,
 .unit-calendar-controls,
 .unit-calendar-totals {
@@ -3821,6 +3856,12 @@ h1 em {
 .unit-day:disabled {
   opacity: 0.35;
   cursor: default;
+}
+.unit-day-empty {
+  opacity: 0.35;
+}
+.unit-day-empty:hover {
+  opacity: 0.6;
 }
 .unit-calendar-totals {
   align-items: flex-start;

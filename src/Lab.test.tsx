@@ -178,6 +178,32 @@ it("shows upcoming research and explicit method descriptions without probability
   expect(
     screen.getByRole("button", { name: "Download component comparison CSV" }),
   ).toBeTruthy();
+  fireEvent.click(document.body);
+  expect(
+    (screen.getByLabelText("Lab game date (ET)") as HTMLSelectElement).value,
+  ).toBe("today");
+});
+
+it("returns the Lab record to all dates from empty space and keeps play clicks in the selected day", async () => {
+  const { store, index } = uiFixture();
+  vi.stubGlobal(
+    "fetch",
+    vi.fn(async (url: string) => ({
+      ok: true,
+      json: async () => structuredClone(labResponse(url, index, store)),
+    })),
+  );
+  render(<Lab recordOnly />);
+  await screen.findByRole("table", { name: "Lab forecasts" });
+  const date = screen.getByLabelText(
+    "Lab daily breakdown (ET)",
+  ) as HTMLSelectElement;
+  fireEvent.change(date, { target: { value: "today" } });
+  const table = await screen.findByRole("table", { name: "Lab forecasts" });
+  fireEvent.click(within(table).getByText("Finished team"));
+  expect(date.value).toBe("today");
+  fireEvent.click(document.body);
+  expect(date.value).toBe("all");
 });
 
 it("lists qualified Lab research before watch-only forecasts and earlier data gaps", async () => {

@@ -127,8 +127,8 @@ function unitFixture({ store, index }: ReturnType<typeof fixture>) {
   };
   return { ledger, unitResults };
 }
-function mockArchives(failDate = "") {
-  const { store, index } = fixture();
+function mockArchives(failDate = "", source = fixture()) {
+  const { store, index } = source;
   const { ledger, unitResults } = unitFixture({ store, index });
   const fetcher = vi.fn(async (url: string) => ({
     ok: !failDate || !url.includes(`${failDate}.json`),
@@ -330,4 +330,65 @@ it("keeps the full record unavailable if stakes fail to load instead of showing 
     screen.queryByRole("table", { name: "Recorded predictions" }),
   ).toBeNull();
   expect(within(summary()).queryByText("1 / 1 / 0")).toBeNull();
+});
+
+it("combines frozen entries across books and ignores the old sportsbook view preference", async () => {
+  const source = fixture();
+  const tuesday = source.store.records.find((row) => row.id === "tuesday");
+  if (!tuesday) throw new Error("Missing Tuesday fixture");
+  tuesday.sportsbook = "draftkings";
+  tuesday.quotes = tuesday.quotes.map((quote) => ({
+    ...quote,
+    sportsbook: "draftkings",
+  }));
+  source.index = buildRecordIndex(source.store);
+  localStorage.setItem(
+    "1h-model-view-v1:record.group.original-books-v1",
+    JSON.stringify({
+      savedAt: Date.now(),
+      value: "2026-27:season-bridge-v1:betmgm:latest",
+    }),
+  );
+  mockArchives("", source);
+  render(<PredictionRecord />);
+  await screen.findByRole("table", { name: "Recorded predictions" });
+  expect(screen.queryByLabelText("Record season / model")).toBeNull();
+  expect(within(summary()).getByText("1 / 1 / 0")).toBeTruthy();
+  expect(within(table()).getByText("BetMGM")).toBeTruthy();
+  expect(within(table()).getByText("DraftKings")).toBeTruthy();
+});
+
+it("dismisses a selected day from blank space without dismissing clicks on plays or controls", async () => {
+  mockArchives();
+  render(<PredictionRecord />);
+  await screen.findByRole("table", { name: "Recorded predictions" });
+  selectDate("2026-11-03");
+  await screen.findByText("0 / 1 / 0");
+  fireEvent.click(within(table()).getByText("Tuesday team"));
+  fireEvent.click(screen.getByLabelText("Search recorded matchups"));
+  expect(
+    (screen.getByLabelText("Daily breakdown (ET)") as HTMLSelectElement).value,
+  ).toBe("2026-11-03");
+  fireEvent.click(document.body);
+  await screen.findByText("1 / 1 / 0");
+  expect(
+    (screen.getByLabelText("Daily breakdown (ET)") as HTMLSelectElement).value,
+  ).toBe("all");
+  expect(within(table()).getByText("Monday team")).toBeTruthy();
+  selectDate("2026-11-02");
+  await screen.findByText("1 / 0 / 0");
+  fireEvent.click(
+    screen.getByRole("button", { name: /2026-11-01: .*no plays/ }),
+  );
+  await screen.findByText("1 / 1 / 0");
+});
+
+it("can dismiss a daily record with Escape", async () => {
+  mockArchives();
+  render(<PredictionRecord />);
+  await screen.findByRole("table", { name: "Recorded predictions" });
+  selectDate("2026-11-02");
+  await screen.findByText("1 / 0 / 0");
+  fireEvent.keyDown(document, { key: "Escape" });
+  await screen.findByText("1 / 1 / 0");
 });
