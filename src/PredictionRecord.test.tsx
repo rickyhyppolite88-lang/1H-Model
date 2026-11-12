@@ -29,6 +29,15 @@ function fixture() {
   const f = recordFixture();
   const store = updatePredictionRecord(f.store, f.feed, f.ledger, f.at);
   const first = store.records[0];
+  first.sportsbook = "draftkings";
+  first.quotes = first.quotes.map((quote) => ({
+    ...quote,
+    sportsbook: "draftkings",
+  }));
+  first.prediction.markets = first.prediction.markets.map((market) => ({
+    ...market,
+    sportsbook: "draftkings",
+  }));
   first.prediction.awayTeam = "Monday team";
   store.updatedAt = "2026-11-04T14:00:00Z";
   store.records.push(
@@ -332,7 +341,7 @@ it("keeps the full record unavailable if stakes fail to load instead of showing 
   expect(within(summary()).queryByText("1 / 1 / 0")).toBeNull();
 });
 
-it("combines frozen entries across books and ignores the old sportsbook view preference", async () => {
+it("shows the single DraftKings timeline and ignores the old sportsbook view preference", async () => {
   const source = fixture();
   const tuesday = source.store.records.find((row) => row.id === "tuesday");
   if (!tuesday) throw new Error("Missing Tuesday fixture");
@@ -354,8 +363,7 @@ it("combines frozen entries across books and ignores the old sportsbook view pre
   await screen.findByRole("table", { name: "Recorded predictions" });
   expect(screen.queryByLabelText("Record season / model")).toBeNull();
   expect(within(summary()).getByText("1 / 1 / 0")).toBeTruthy();
-  expect(within(table()).getByText("BetMGM")).toBeTruthy();
-  expect(within(table()).getByText("DraftKings")).toBeTruthy();
+  expect(within(table()).getAllByText("DraftKings")).toHaveLength(2);
 });
 
 it("dismisses a selected day from blank space without dismissing clicks on plays or controls", async () => {
@@ -391,4 +399,33 @@ it("can dismiss a daily record with Escape", async () => {
   await screen.findByText("1 / 0 / 0");
   fireEvent.keyDown(document, { key: "Escape" });
   await screen.findByText("1 / 1 / 0");
+});
+
+it("never falls back to another book if the DraftKings calendar feed is unavailable or mismatched", async () => {
+  const fetcher = mockArchives();
+  vi.stubGlobal(
+    "fetch",
+    vi.fn(async (url: string) => {
+      const response = await fetcher(url);
+      if (!url.includes("unit-results-draftkings")) return response;
+      const result = await response.json();
+      return {
+        ok: true,
+        json: async () => ({
+          ...result,
+          plays: [
+            {
+              ...(result as { plays: object[] }).plays[0],
+              sportsbook: "betmgm",
+            },
+          ],
+        }),
+      };
+    }),
+  );
+  render(<PredictionRecord />);
+  await screen.findByText(/Unit stakes could not be refreshed/);
+  expect(
+    screen.queryByRole("table", { name: "Recorded predictions" }),
+  ).toBeNull();
 });

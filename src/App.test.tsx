@@ -23,6 +23,17 @@ const record = updatePredictionRecord(
   fixture.ledger,
   fixture.at,
 );
+for (const row of record.records) {
+  row.sportsbook = "draftkings";
+  row.quotes = row.quotes.map((quote) => ({
+    ...quote,
+    sportsbook: "draftkings",
+  }));
+  row.prediction.markets = row.prediction.markets.map((market) => ({
+    ...market,
+    sportsbook: "draftkings",
+  }));
+}
 record.results = [
   {
     id: "finished",
@@ -71,9 +82,9 @@ beforeEach(() => {
             ? unitLedger
             : url.includes("unit-results")
               ? unitResults
-              : url.includes("prediction-record-index")
+              : /prediction-record(?:-draftkings)?-index/.test(url)
                 ? recordIndex
-                : url.includes("prediction-record/")
+                : /prediction-record(?:-draftkings)?\//.test(url)
                   ? record
                   : url.includes("team-evaluation.json")
                     ? teamEvaluation
@@ -98,7 +109,9 @@ it("opens the full record and date dropdown from the phone shortcut", async () =
   render(<App />);
   fireEvent.click(screen.getByRole("button", { name: "Full record" }));
   expect(
-    await screen.findByRole("heading", { name: "Running prediction record" }),
+    await screen.findByRole("heading", {
+      name: "DraftKings prediction record",
+    }),
   ).toBeTruthy();
   expect(
     screen.getByRole("heading", { name: "Full prediction record" }),
@@ -118,7 +131,9 @@ it("removes Matchup Lab while retaining the other section controls", async () =>
     target: { value: "record" },
   });
   expect(
-    await screen.findByRole("heading", { name: "Running prediction record" }),
+    await screen.findByRole("heading", {
+      name: "DraftKings prediction record",
+    }),
   ).toBeTruthy();
 });
 

@@ -79,6 +79,13 @@ export function predictionRating(
 }
 
 export function recordRating(record: ForecastRecord): RatingDisplay {
+  if (record.replay)
+    return {
+      signal: projectionSignal(record.prediction, record.comparison.line),
+      source: "derived_saved_inputs",
+      label: "Replay confidence",
+      provenance: "Calculated later · DraftKings replay",
+    };
   if (record.signal.score !== null || record.signal.label === "Outlier review")
     return {
       signal: record.signal,

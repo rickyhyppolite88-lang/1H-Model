@@ -63,6 +63,15 @@ export const forecastRecordSchema = z.object({
   features: gameSchema.shape.featureSnapshot,
   quotes: gameSchema.shape.quotes,
   participants: participantsSchema.optional(),
+  replay: z
+    .object({
+      method: z.literal("draftkings-archive-v1"),
+      sourceRecordId: z.string(),
+      sourceQuoteRecordId: z.string(),
+      originalSportsbook: z.string(),
+      calculatedAt: z.iso.datetime(),
+    })
+    .optional(),
 });
 export const resultEventSchema = z.object({
   id: z.string(),
@@ -124,13 +133,19 @@ export const recordIndexSchema = z.object({
       versions: z.number(),
       jsonPath: z
         .string()
-        .regex(/^data\/prediction-record\/\d{4}-\d{2}-\d{2}\.json$/),
+        .regex(
+          /^data\/prediction-record(?:-draftkings)?\/\d{4}-\d{2}-\d{2}\.json$/,
+        ),
       csvPath: z
         .string()
-        .regex(/^data\/prediction-record\/\d{4}-\d{2}-\d{2}\.csv$/),
+        .regex(
+          /^data\/prediction-record(?:-draftkings)?\/\d{4}-\d{2}-\d{2}\.csv$/,
+        ),
       gamesCsvPath: z
         .string()
-        .regex(/^data\/prediction-record\/\d{4}-\d{2}-\d{2}-games\.csv$/)
+        .regex(
+          /^data\/prediction-record(?:-draftkings)?\/\d{4}-\d{2}-\d{2}-games\.csv$/,
+        )
         .optional(),
       coverage: dailyCoverageSchema.optional(),
     }),

@@ -144,8 +144,12 @@ export const unitPlaySchema = z.object({
   actual: z.number().nullable(),
   net: z.number().nullable(),
   mode: z.enum(["tracked", "historical"]).nullable(),
-  entryPolicy: z.enum(["first-entry-v1", "last-pretip-v1"]).optional(),
+  entryPolicy: z
+    .enum(["first-entry-v1", "last-pretip-v1", "draftkings-replay-v1"])
+    .optional(),
   lineCapturedAt: z.iso.datetime().nullable().optional(),
+  replaySourceRecordId: z.string().optional(),
+  replaySourceQuoteRecordId: z.string().optional(),
 });
 export const unitResultsSchema = z.object({
   schemaVersion: z.literal(1),
@@ -350,26 +354,40 @@ export function actualUnitPlay(
 ): UnitPlay {
   const { grade, actual } = recordGrade(record, results);
   const rating = recordRating(record);
-  const stake = accounting(
-    ledger,
-    "actual",
-    record.id,
-    record.prediction.startsAt,
-    rating.signal.score,
-  );
+  const stake = record.replay
+    ? {
+        units: unitsForScore(rating.signal.score),
+        mode: "historical" as const,
+        saved: null,
+      }
+    : accounting(
+        ledger,
+        "actual",
+        record.id,
+        record.prediction.startsAt,
+        rating.signal.score,
+      );
   const replay = stake.mode === "historical";
   const score =
     stake.saved?.score ?? (replay ? rating.signal.score : record.signal.score);
   const price = stake.saved?.price ?? savedRecordPrice(record);
   return {
     id: record.id,
-    entryPolicy: usesTipoffEntry(
-      record.prediction.startsAt,
-      ledger?.entryPolicy,
-      `${record.season}:${record.gameId}`,
-    )
-      ? "last-pretip-v1"
-      : "first-entry-v1",
+    ...(record.replay
+      ? {
+          replaySourceRecordId: record.replay.sourceRecordId,
+          replaySourceQuoteRecordId: record.replay.sourceQuoteRecordId,
+        }
+      : {}),
+    entryPolicy: record.replay
+      ? "draftkings-replay-v1"
+      : usesTipoffEntry(
+            record.prediction.startsAt,
+            ledger?.entryPolicy,
+            `${record.season}:${record.gameId}`,
+          )
+        ? "last-pretip-v1"
+        : "first-entry-v1",
     lineCapturedAt:
       record.quotes.find((quote) => quote.sportsbook === record.sportsbook)?.[
         record.basis === "opening" ? "openingCapturedAt" : "latestCapturedAt"
@@ -502,6 +520,8 @@ export function unitPlaysCsv(plays: UnitPlay[]) {
       "score_source",
       "entry_policy",
       "line_captured_at",
+      "replay_source_record_id",
+      "replay_source_quote_record_id",
     ],
     ...plays.map((row) => [
       row.date,
@@ -531,6 +551,8 @@ export function unitPlaysCsv(plays: UnitPlay[]) {
       row.scoreSource,
       row.entryPolicy ?? "first-entry-v1",
       row.lineCapturedAt ?? null,
+      row.replaySourceRecordId ?? null,
+      row.replaySourceQuoteRecordId ?? null,
     ]),
   ]
     .map((row) => row.map(csvCell).join(","))
