@@ -200,7 +200,7 @@ export default function App() {
     team.name.toLowerCase().includes(search.toLowerCase()),
   );
   return (
-    <div className="app-shell">
+    <div className={`app-shell${tab === "record" ? " record-page" : ""}`}>
       <header className="topbar">
         <a className="wordmark" href={import.meta.env.BASE_URL}>
           <span className="brand-mark">1H</span>

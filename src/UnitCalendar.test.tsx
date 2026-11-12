@@ -130,12 +130,13 @@ it("shows green and red daily net units and selects a day without mixing histori
   ).toBeTruthy();
   expect(within(calendar).queryByText("+0.36u")).toBeNull();
 });
-it("preserves month alignment and marks missing odds or reviews instead of treating them as zero-profit plays", () => {
+it("marks unresolved days for review and returns to the overall record from an empty date", () => {
+  const onSelectDate = vi.fn();
   render(
     <UnitCalendar
       plays={[{ ...plays[0], net: null, price: null }]}
       date="2026-11-02"
-      onSelectDate={vi.fn()}
+      onSelectDate={onSelectDate}
       available
     />,
   );
@@ -145,9 +146,10 @@ it("preserves month alignment and marks missing odds or reviews instead of treat
       .getAttribute("aria-pressed"),
   ).toBe("true");
   expect(screen.getByText(/1 plays are excluded/)).toBeTruthy();
-  expect(
-    screen
-      .getByRole("button", { name: "2026-11-01: —" })
-      .hasAttribute("disabled"),
-  ).toBe(true);
+  fireEvent.click(
+    screen.getByRole("button", {
+      name: "2026-11-01: —; no plays; show overall record",
+    }),
+  );
+  expect(onSelectDate).toHaveBeenCalledWith("all");
 });

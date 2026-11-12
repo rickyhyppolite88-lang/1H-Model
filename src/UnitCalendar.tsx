@@ -143,6 +143,9 @@ export default function UnitCalendar({
           All finished dates
         </button>
       </div>
+      <p className="unit-calendar-hint">
+        Tap a day with plays. Tap empty space to return to the overall record.
+      </p>
       <fieldset
         className="unit-calendar-grid"
         aria-label={`${monthLabel} daily net units`}
@@ -168,6 +171,7 @@ export default function UnitCalendar({
         {Array.from({ length: count }, (_, i) => {
           const key = `${month}-${String(i + 1).padStart(2, "0")}`;
           const rows = days.get(key) ?? [];
+          const hasPlays = available && rows.length > 0;
           const day = summarizeUnits(rows);
           const hasFinished = rows.some((row) => row.actual !== null);
           const text = !available
@@ -191,15 +195,20 @@ export default function UnitCalendar({
             <button
               type="button"
               key={key}
-              className={`unit-day unit-${tone}`}
-              aria-label={`${key}: ${text}${day.unresolved ? `; ${day.unresolved} unsettled` : ""}`}
-              aria-pressed={date === key}
-              disabled={!plays.some((row) => row.date === key)}
+              className={`unit-day unit-${tone}${hasPlays ? "" : " unit-day-empty"}`}
+              aria-label={`${key}: ${text}${day.unresolved ? `; ${day.unresolved} unsettled` : ""}${hasPlays ? "" : "; no plays; show overall record"}`}
+              aria-pressed={hasPlays && date === key}
+              disabled={!available}
+              tabIndex={hasPlays ? 0 : -1}
               onClick={() => {
                 setMonth(month);
-                onSelectDate(key);
+                onSelectDate(hasPlays ? key : "all");
               }}
-              title={`${key} · ${day.wins}W / ${day.losses}L / ${day.pushes}P · ${day.unresolved} unsettled`}
+              title={
+                hasPlays
+                  ? `${key} · ${day.wins}W / ${day.losses}L / ${day.pushes}P · ${day.unresolved} unsettled`
+                  : "No plays · Show overall record"
+              }
             >
               <span>{i + 1}</span>
               <strong

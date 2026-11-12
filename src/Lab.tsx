@@ -16,6 +16,7 @@ import { hasUnitStake, labUnitPlay } from "./model/units";
 import UnitCalendar from "./UnitCalendar";
 import { useLabRecords } from "./useLabRecords";
 import { preferencePage, preferenceText, usePreference } from "./usePreference";
+import { useRecordDateReset } from "./useRecordDateReset";
 import { useUnitLedger } from "./useUnitLedger";
 
 const dateSchema = z.union([
@@ -55,6 +56,12 @@ export default function Lab({ recordOnly = false }: { recordOnly?: boolean }) {
   }, []);
   const today = easternTipoff(new Date(now).toISOString()).date;
   const date = dateChoice === "today" ? today : dateChoice;
+  function selectRecordDate(value: string) {
+    setDate(value);
+    setPage(0);
+    setQuery("");
+  }
+  useRecordDateReset(date, selectRecordDate, recordOnly);
   const { index, store, error, retry } = useLabRecords(date);
   const definition =
     labMethods.find((entry) => entry.id === method) ?? labMethods[0];
@@ -173,7 +180,9 @@ export default function Lab({ recordOnly = false }: { recordOnly?: boolean }) {
     URL.revokeObjectURL(url);
   };
   return (
-    <section className="panel lab-panel">
+    <section
+      className={`panel lab-panel${recordOnly ? " lab-record-panel" : ""}`}
+    >
       <div className="section-heading">
         <span className="step">LAB</span>
         <div>
@@ -338,111 +347,110 @@ export default function Lab({ recordOnly = false }: { recordOnly?: boolean }) {
           published {easternTipoff(index.updatedAt).time} ET.
         </p>
       )}
-      {recordOnly && !bonus && (
-        <UnitCalendar
-          label="Lab"
-          plays={(calendarPlays ?? []).filter(
-            (play) =>
-              play.source === "lab" &&
-              hasUnitStake(play) &&
-              play.method === method &&
-              play.actual !== null,
-          )}
-          date={date}
-          available={Boolean(calendarPlays && unitLedger)}
-          error={unitError}
-          onSelectDate={(value) => {
-            setDate(value);
-            setPage(0);
-            setQuery("");
-          }}
-        />
-      )}
-      {summary && (
-        <section className="record-overview" aria-label="Lab record summary">
-          <div className="record-overview-top">
-            <div>
-              <h3>
-                {recordOnly ? "Finished Lab results" : "Research performance"}
-              </h3>
-              <p>
-                {date === "all" ? "All saved dates" : `${date} · ET`} ·{" "}
-                {definition.name}
+      <div className={recordOnly ? "record-dashboard" : undefined}>
+        {recordOnly && !bonus && (
+          <UnitCalendar
+            label="Lab"
+            plays={(calendarPlays ?? []).filter(
+              (play) =>
+                play.source === "lab" &&
+                hasUnitStake(play) &&
+                play.method === method &&
+                play.actual !== null,
+            )}
+            date={date}
+            available={Boolean(calendarPlays && unitLedger)}
+            error={unitError}
+            onSelectDate={selectRecordDate}
+          />
+        )}
+        {summary && (
+          <section className="record-overview" aria-label="Lab record summary">
+            <div className="record-overview-top">
+              <div>
+                <h3>
+                  {recordOnly ? "Finished Lab results" : "Research performance"}
+                </h3>
+                <p>
+                  {date === "all" ? "All saved dates" : `${date} · ET`} ·{" "}
+                  {definition.name}
+                </p>
+              </div>
+            </div>
+            <div className="audit-metrics">
+              <div>
+                <span>
+                  {bonus ? "Measured first halves" : "Wins / losses / pushes"}
+                </span>
+                <strong>
+                  {bonus
+                    ? summary.measured
+                    : `${summary.wins} / ${summary.losses} / ${summary.pushes}`}
+                </strong>
+              </div>
+              <div>
+                <span>{bonus ? "Bonus timing MAE" : "Observed hit rate"}</span>
+                <strong>
+                  {bonus
+                    ? show(summary.bonusMae, " min")
+                    : summary.winRate === null
+                      ? "—"
+                      : `${(summary.winRate * 100).toFixed(1)}%`}
+                </strong>
+              </div>
+              <div>
+                <span>
+                  {bonus
+                    ? "League baseline MAE"
+                    : recordOnly
+                      ? "Staked plays"
+                      : "Qualified / control forecasts"}
+                </span>
+                <strong>
+                  {bonus
+                    ? show(summary.bonusBaselineMae, " min")
+                    : recordOnly
+                      ? summary.games
+                      : `${summary.qualified} / ${summary.games}`}
+                </strong>
+              </div>
+              <div>
+                <span>
+                  {bonus
+                    ? "Missing measurement inputs"
+                    : recordOnly
+                      ? "Results to review"
+                      : "Watch-only / data gaps"}
+                </span>
+                <strong>
+                  {bonus
+                    ? summary.gaps
+                    : recordOnly
+                      ? summary.pending
+                      : `${summary.watchOnly} / ${summary.gaps}`}
+                </strong>
+              </div>
+            </div>
+            {!bonus && (
+              <p className="inline-note">
+                Matched baseline on the same saved lines: {summary.baselineWins}
+                –{summary.baselineLosses}. Point MAE on settled
+                qualified/control games: Lab {show(summary.matchedMae)} ·
+                baseline {show(summary.matchedBaselineMae)}. Watch-only
+                forecasts do not enter this win rate; pushes are excluded. All
+                projected games MAE: {show(summary.mae)}.
               </p>
-            </div>
-          </div>
-          <div className="audit-metrics">
-            <div>
-              <span>
-                {bonus ? "Measured first halves" : "Wins / losses / pushes"}
-              </span>
-              <strong>
-                {bonus
-                  ? summary.measured
-                  : `${summary.wins} / ${summary.losses} / ${summary.pushes}`}
-              </strong>
-            </div>
-            <div>
-              <span>{bonus ? "Bonus timing MAE" : "Observed hit rate"}</span>
-              <strong>
-                {bonus
-                  ? show(summary.bonusMae, " min")
-                  : summary.winRate === null
-                    ? "—"
-                    : `${(summary.winRate * 100).toFixed(1)}%`}
-              </strong>
-            </div>
-            <div>
-              <span>
-                {bonus
-                  ? "League baseline MAE"
-                  : recordOnly
-                    ? "Staked plays"
-                    : "Qualified / control forecasts"}
-              </span>
-              <strong>
-                {bonus
-                  ? show(summary.bonusBaselineMae, " min")
-                  : recordOnly
-                    ? summary.games
-                    : `${summary.qualified} / ${summary.games}`}
-              </strong>
-            </div>
-            <div>
-              <span>
-                {bonus
-                  ? "Missing measurement inputs"
-                  : recordOnly
-                    ? "Results to review"
-                    : "Watch-only / data gaps"}
-              </span>
-              <strong>
-                {bonus
-                  ? summary.gaps
-                  : recordOnly
-                    ? summary.pending
-                    : `${summary.watchOnly} / ${summary.gaps}`}
-              </strong>
-            </div>
-          </div>
-          {!bonus && (
+            )}
             <p className="inline-note">
-              Matched baseline on the same saved lines: {summary.baselineWins}–
-              {summary.baselineLosses}. Point MAE on settled qualified/control
-              games: Lab {show(summary.matchedMae)} · baseline{" "}
-              {show(summary.matchedBaselineMae)}. Watch-only forecasts do not
-              enter this win rate; pushes are excluded. All projected games MAE:{" "}
-              {show(summary.mae)}.
+              These samples are experimental and do not change the Actual
+              record.{" "}
+              {recordOnly
+                ? "Only completed first halves with a recorded or replayed stake appear below."
+                : "The table shows the latest saved pregame observations. Future records freeze the last pre-tip decision; earlier games keep their original entry. Watch-only decisions remain research and receive no stake."}
             </p>
-          )}
-          <p className="inline-note">
-            These samples are experimental and do not change the Actual record.{" "}
-            {recordOnly
-              ? "Only completed first halves with a recorded or replayed stake appear below."
-              : "The table shows the latest saved pregame observations. Future records freeze the last pre-tip decision; earlier games keep their original entry. Watch-only decisions remain research and receive no stake."}
-          </p>
-        </section>
-      )}
+          </section>
+        )}
+      </div>
       {store && (!recordOnly || unitLedger) ? (
         <>
           {method === "enhanced-baseline-v2" && (

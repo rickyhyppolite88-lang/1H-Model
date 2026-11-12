@@ -20,12 +20,11 @@ import {
   preferenceText,
   usePreference,
 } from "./usePreference";
+import { useRecordDateReset } from "./useRecordDateReset";
 import { useUnitLedger } from "./useUnitLedger";
 
 const rate = (n: number | null) =>
   n === null ? "—" : `${(n * 100).toFixed(1)}%`;
-const summaryKey = (s: RecordIndex["summary"][number]) =>
-  `${s.season}:${s.modelVersion}:${s.sportsbook}:${s.basis}`;
 
 export default function PredictionRecord() {
   const {
@@ -40,13 +39,14 @@ export default function PredictionRecord() {
     preferenceRecordDate,
     "all",
   );
-  const [group, setGroup] = usePreference(
-    "record.group.original-books-v1",
-    preferenceText,
-    "all",
-  );
   const [query, setQuery] = usePreference("record.search", preferenceText, "");
   const [page, setPage] = usePreference("record.page", preferencePage, 0);
+  function selectDate(value: string) {
+    setDate(value);
+    setQuery("");
+    setPage(0);
+  }
+  useRecordDateReset(date, selectDate);
   const [retry, setRetry] = useState(0);
   const [loaded, setLoaded] = useState<{
     key: string;
@@ -137,21 +137,9 @@ export default function PredictionRecord() {
     ) : (
       <div className="empty-state">Loading the shared prediction record…</div>
     );
-  const benchmark =
-    group === "all"
-      ? undefined
-      : (index.summary.find((entry) => summaryKey(entry) === group) ??
-        index.summary[index.summary.length - 1]);
   const current = loaded?.key === loadKey ? loaded : null;
   const store = current?.store ?? null;
-  const modelRecords = (store?.records ?? []).filter(
-    (record) =>
-      !benchmark ||
-      (record.season === benchmark.season &&
-        record.modelVersion === benchmark.modelVersion &&
-        record.sportsbook === benchmark.sportsbook &&
-        record.basis === benchmark.basis),
-  );
+  const modelRecords = store?.records ?? [];
   const unitPlays = modelRecords
     .filter((record) => index.canonicalIds.includes(record.id))
     .map((record) => actualUnitPlay(record, store?.results ?? [], unitLedger));
@@ -185,14 +173,6 @@ export default function PredictionRecord() {
   const pages = Math.max(1, Math.ceil(rows.length / 25));
   const safePage = Math.min(page, pages - 1);
   const visible = rows.slice(safePage * 25, (safePage + 1) * 25);
-  function resetFilters() {
-    setQuery("");
-    setPage(0);
-  }
-  function selectDate(value: string) {
-    setDate(value);
-    resetFilters();
-  }
 
   return (
     <section className="panel prediction-record-panel">
@@ -207,129 +187,99 @@ export default function PredictionRecord() {
           </p>
         </div>
       </div>
-      {benchmark && (
-        <p className="record-benchmark">
-          {benchmark.season} · {benchmark.modelVersion} ·{" "}
-          {benchmark.sportsbook === "betmgm" ? "BetMGM" : benchmark.sportsbook}/
-          {benchmark.basis} at recording
-        </p>
-      )}
-      {index.summary.length > 1 && (
-        <label className="record-model-control">
-          Record season / model
-          <select
-            value={benchmark ? summaryKey(benchmark) : "all"}
-            onChange={(event) => {
-              setGroup(event.target.value);
-              resetFilters();
-            }}
-          >
-            <option value="all">All recorded books · frozen entries</option>
-            {index.summary.map((entry) => (
-              <option key={summaryKey(entry)} value={summaryKey(entry)}>
-                {entry.season} · {entry.modelVersion} · {entry.sportsbook}/
-                {entry.basis}
-              </option>
-            ))}
-          </select>
-        </label>
-      )}
       {indexError && (
         <p className="notice error" role="alert">
           {indexError}
         </p>
       )}
-      <UnitCalendar
-        plays={(calendarPlays ?? []).filter(
-          (play) =>
-            play.source === "actual" &&
-            hasUnitStake(play) &&
-            play.actual !== null &&
-            (!benchmark ||
-              (play.season === benchmark.season &&
-                play.method === benchmark.modelVersion &&
-                play.sportsbook === benchmark.sportsbook &&
-                play.basis === benchmark.basis)),
-        )}
-        date={date}
-        onSelectDate={selectDate}
-        available={Boolean(unitLedger && calendarPlays)}
-        error={unitError}
-      />
-      <section
-        className="record-overview"
-        aria-label="Full record summary"
-        aria-live="polite"
-        aria-busy={!summary && !current?.error}
-      >
-        <div className="record-overview-top">
-          <div>
-            <h3>Full prediction record</h3>
-            <p>
-              {date === "all"
-                ? "All dates · finished first halves"
-                : `${date} · ET · finished first halves`}
-            </p>
-          </div>
-          <label className="record-date-control">
-            Daily breakdown (ET)
-            <select
-              value={date}
-              onChange={(event) => selectDate(event.target.value)}
-            >
-              <option value="all">All dates · full record</option>
-              {date !== "all" && !archive && (
-                <option value={date}>{date} · no saved archive</option>
-              )}
-              {index.archives.map((entry) => (
-                <option key={entry.date} value={entry.date}>
-                  {entry.date} · ET
-                </option>
-              ))}
-            </select>
-          </label>
-        </div>
-        {summary ? (
-          <>
-            <div className="audit-metrics">
-              <div>
-                <span>Wins / losses / pushes</span>
-                <strong>
-                  {summary.wins} / {summary.losses} / {summary.pushes}
-                </strong>
-              </div>
-              <div>
-                <span>Observed win rate</span>
-                <strong>{rate(summary.winRate)}</strong>
-              </div>
-              <div>
-                <span>Graded staked plays</span>
-                <strong>{summary.counted}</strong>
-              </div>
-              <div>
-                <span>Finished staked plays</span>
-                <strong>{summary.games}</strong>
-              </div>
+      <div className="record-dashboard">
+        <UnitCalendar
+          plays={(calendarPlays ?? []).filter(
+            (play) =>
+              play.source === "actual" &&
+              hasUnitStake(play) &&
+              play.actual !== null,
+          )}
+          date={date}
+          onSelectDate={selectDate}
+          available={Boolean(unitLedger && calendarPlays)}
+          error={unitError}
+        />
+        <section
+          className="record-overview"
+          aria-label="Full record summary"
+          aria-live="polite"
+          aria-busy={!summary && !current?.error}
+        >
+          <div className="record-overview-top">
+            <div>
+              <h3>Full prediction record</h3>
+              <p>
+                {date === "all"
+                  ? "All dates · finished first halves"
+                  : `${date} · ET · finished first halves`}
+              </p>
             </div>
-            <p className="inline-note">
-              Only frozen plays with a stake count here. Historical tier replays
-              stay labeled. Pushes are excluded from win rate.{" "}
-              {summary.ungraded > 0
-                ? `${summary.ungraded} staked plays await a verified grade.`
-                : ""}
-              {summary.review > 0
-                ? ` ${summary.review} results need schedule review.`
-                : ""}
+            <label className="record-date-control">
+              Daily breakdown (ET)
+              <select
+                value={date}
+                onChange={(event) => selectDate(event.target.value)}
+              >
+                <option value="all">All dates · full record</option>
+                {date !== "all" && !archive && (
+                  <option value={date}>{date} · no saved archive</option>
+                )}
+                {index.archives.map((entry) => (
+                  <option key={entry.date} value={entry.date}>
+                    {entry.date} · ET
+                  </option>
+                ))}
+              </select>
+            </label>
+          </div>
+          {summary ? (
+            <>
+              <div className="audit-metrics">
+                <div>
+                  <span>Wins / losses / pushes</span>
+                  <strong>
+                    {summary.wins} / {summary.losses} / {summary.pushes}
+                  </strong>
+                </div>
+                <div>
+                  <span>Observed win rate</span>
+                  <strong>{rate(summary.winRate)}</strong>
+                </div>
+                <div>
+                  <span>Graded staked plays</span>
+                  <strong>{summary.counted}</strong>
+                </div>
+                <div>
+                  <span>Finished staked plays</span>
+                  <strong>{summary.games}</strong>
+                </div>
+              </div>
+              <p className="inline-note">
+                Only frozen plays with a stake count here. Historical tier
+                replays stay labeled. Pushes are excluded from win rate.{" "}
+                {summary.ungraded > 0
+                  ? `${summary.ungraded} staked plays await a verified grade.`
+                  : ""}
+                {summary.review > 0
+                  ? ` ${summary.review} results need schedule review.`
+                  : ""}
+              </p>
+            </>
+          ) : (
+            <p>
+              {current?.error
+                ? "Record totals are unavailable until the selected records load."
+                : "Loading finished results…"}
             </p>
-          </>
-        ) : (
-          <p>
-            {current?.error
-              ? "Record totals are unavailable until the selected records load."
-              : "Loading finished results…"}
-          </p>
-        )}
-      </section>
+          )}
+        </section>
+      </div>
       <div className="record-history-heading">
         <h3>
           {date === "all"
