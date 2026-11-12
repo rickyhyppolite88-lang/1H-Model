@@ -8,6 +8,7 @@ import {
   recordIndexSchema,
   recordStoreSchema,
 } from "./model/predictionRecord";
+import { watchPublishedUpdates } from "./publishedUpdates";
 
 export type DailyRecordEvidence = {
   date: string;
@@ -194,10 +195,10 @@ export default function DailyRecord({
       }
     };
     void load();
-    const timer = window.setInterval(() => void load(), 5 * 60 * 1000);
+    const stopRefresh = watchPublishedUpdates(load);
     return () => {
       controller.abort();
-      window.clearInterval(timer);
+      stopRefresh();
     };
   }, [date, season, modelVersion, sportsbook, basis, onEvidence]);
   if (error?.date === date)

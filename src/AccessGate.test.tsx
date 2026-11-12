@@ -13,12 +13,14 @@ import AccessGate, {
   accessSessionKey,
   idleTimeout,
   sessionIsActive,
+  supportNoticeKey,
   useAppLock,
 } from "./AccessGate";
 
 const testPassword = "fixture-password";
 beforeEach(() => {
   localStorage.clear();
+  sessionStorage.clear();
   vi.useFakeTimers({ toFake: ["Date", "setInterval", "clearInterval"] });
   vi.setSystemTime(new Date("2026-11-04T17:00:00Z"));
   // Test the gate without publishing the real shared password in test sources.
@@ -55,7 +57,7 @@ function PrivateView() {
     </>
   );
 }
-async function signIn(password = testPassword) {
+async function signIn(password = testPassword, continueToApp = true) {
   fireEvent.change(screen.getByLabelText("Password"), {
     target: { value: password },
   });
@@ -64,11 +66,17 @@ async function signIn(password = testPassword) {
   await act(async () => {
     fireEvent.click(screen.getByRole("button", { name: "Sign in" }));
   });
-  await screen.findByText(
-    password === testPassword
-      ? "Model contents"
-      : "Incorrect password. Try again.",
-  );
+  if (password !== testPassword) {
+    await screen.findByText("Incorrect password. Try again.");
+    return;
+  }
+  await screen.findByRole("heading", {
+    name: "Support is here if you need it.",
+  });
+  if (continueToApp) {
+    fireEvent.click(screen.getByRole("button", { name: "Continue" }));
+    await screen.findByText("Model contents");
+  }
 }
 it("shows the password screen before mounting the app and rejects a wrong password", async () => {
   load.mockClear();
@@ -168,4 +176,42 @@ it("rejects expired, invalid, and future session timestamps", () => {
     </AccessGate>,
   );
   expect(screen.getByLabelText("Password")).toBeTruthy();
+});
+
+it("shows the helpline after sign-in and mounts the app only after Continue", async () => {
+  load.mockClear();
+  render(
+    <AccessGate>
+      <PrivateView />
+    </AccessGate>,
+  );
+  await signIn(testPassword, false);
+  expect(load).not.toHaveBeenCalled();
+  expect(screen.queryByText("Model contents")).toBeNull();
+  expect(
+    screen.getByRole("link", { name: /1-800-MY-RESET/ }).getAttribute("href"),
+  ).toBe("tel:+18006973738");
+  expect(screen.getByRole("main").className).toBe("gambling-support-page");
+  fireEvent.click(screen.getByRole("button", { name: "Continue" }));
+  expect(await screen.findByText("Model contents")).toBeTruthy();
+  expect(sessionStorage.getItem(supportNoticeKey)).toBe("acknowledged");
+  expect(load).toHaveBeenCalledTimes(1);
+});
+
+it("shows the support notice again after a new sign-in and does not bypass an expired session", async () => {
+  load.mockClear();
+  render(
+    <AccessGate>
+      <PrivateView />
+    </AccessGate>,
+  );
+  await signIn();
+  fireEvent.click(screen.getByRole("button", { name: "Lock app" }));
+  await signIn(testPassword, false);
+  expect(sessionStorage.getItem(supportNoticeKey)).toBeNull();
+  vi.setSystemTime(Date.now() + idleTimeout + 1);
+  fireEvent.click(screen.getByRole("button", { name: "Continue" }));
+  expect(screen.getByLabelText("Password")).toBeTruthy();
+  expect(screen.queryByText("Model contents")).toBeNull();
+  expect(load).toHaveBeenCalledTimes(1);
 });

@@ -46,6 +46,7 @@ jobs:
     outputs:
       mode: ${{ steps.policy.outputs.mode }}
       date: ${{ steps.policy.outputs.date }}
+      date_from: ${{ steps.policy.outputs.date_from }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
@@ -87,9 +88,10 @@ jobs:
         env:
           REFRESH_MODE: ${{ needs.plan.outputs.mode }}
           REFRESH_DATE: ${{ needs.plan.outputs.date }}
+          REFRESH_FROM_DATE: ${{ needs.plan.outputs.date_from || needs.plan.outputs.date }}
         run: |
           if [ "$REFRESH_MODE" = "markets" ]; then
-            python scripts/import_season_games.py --start "$REFRESH_DATE" --through "$REFRESH_DATE"
+            python scripts/import_season_games.py --start "$REFRESH_FROM_DATE" --through "$REFRESH_DATE"
           else
             python scripts/import_season_games.py
           fi

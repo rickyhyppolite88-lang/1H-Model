@@ -31,6 +31,7 @@ import { predictionRating } from "./model/ratingDisplay";
 import { predictionSignal } from "./model/signals";
 import { easternTipoff, tipoffState } from "./model/time";
 import { unitsForScore } from "./model/units";
+import { watchPublishedUpdates } from "./publishedUpdates";
 import ResponsiveDetails from "./ResponsiveDetails";
 import SignalBadge from "./SignalBadge";
 import TeamIdentity from "./TeamIdentity";
@@ -167,10 +168,10 @@ export default function Predictions() {
       void loadArchive();
     };
     refresh();
-    const interval = window.setInterval(refresh, 5 * 60 * 1000);
+    const stopRefresh = watchPublishedUpdates(refresh);
     return () => {
       controller.abort();
-      window.clearInterval(interval);
+      stopRefresh();
     };
   }, []);
   const dateRows = useMemo(
@@ -798,6 +799,7 @@ export default function Predictions() {
                     ?.capturedAt,
                   feed.entryPolicy,
                 );
+              const suggestedUnits = unitsForScore(rating.signal.score);
               return (
                 <GameCardRow
                   key={row.gameId}
@@ -886,13 +888,18 @@ export default function Predictions() {
                   >
                     <SignalBadge {...rating} />
                     {rating.source === "live" && (
-                      <small className="unit-suggestion">
-                        {unitsForScore(rating.signal.score) === null
-                          ? "No automatic stake"
-                          : awaitingTipCheck
-                            ? "Awaiting pre-tip check"
-                            : `${unitsForScore(rating.signal.score)}u suggested`}
-                      </small>
+                      <>
+                        <small className="unit-suggestion">
+                          {suggestedUnits === null
+                            ? "No automatic stake"
+                            : `${suggestedUnits}u suggested`}
+                        </small>
+                        {suggestedUnits !== null && awaitingTipCheck && (
+                          <small className="unit-check-note">
+                            Awaiting pre-tip check
+                          </small>
+                        )}
+                      </>
                     )}
                   </td>
                   <td

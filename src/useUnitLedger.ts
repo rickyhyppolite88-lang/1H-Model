@@ -5,6 +5,7 @@ import {
   unitLedgerSchema,
   unitResultsSchema,
 } from "./model/units";
+import { watchPublishedUpdates } from "./publishedUpdates";
 
 export function useUnitLedger(sportsbook?: "draftkings") {
   const [ledger, setLedger] = useState<UnitLedger | null>(null);
@@ -54,10 +55,10 @@ export function useUnitLedger(sportsbook?: "draftkings") {
       }
     };
     void load();
-    const timer = window.setInterval(() => void load(), 5 * 60_000);
+    const stopRefresh = watchPublishedUpdates(load);
     return () => {
       controller.abort();
-      window.clearInterval(timer);
+      stopRefresh();
     };
   }, [sportsbook]);
   return { ledger, plays, error };

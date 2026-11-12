@@ -23,6 +23,66 @@ beforeEach(() => localStorage.clear());
 afterEach(() => {
   cleanup();
   vi.unstubAllGlobals();
+  vi.useRealTimers();
+  vi.restoreAllMocks();
+});
+
+it("updates a finished first-half result, calendar and selected day automatically without resetting filters", async () => {
+  vi.useFakeTimers({ toFake: ["Date", "setInterval", "clearInterval"] });
+  vi.spyOn(document, "visibilityState", "get").mockReturnValue("visible");
+  const completed = fixture();
+  const before = structuredClone(completed);
+  before.store.results = before.store.results.filter(
+    (result) => result.gameId !== "tuesday",
+  );
+  before.index = buildRecordIndex(before.store);
+  completed.store.updatedAt = "2026-11-04T14:01:00Z";
+  completed.index = buildRecordIndex(completed.store);
+  let published = before;
+  vi.stubGlobal(
+    "fetch",
+    vi.fn(async (url: string) => ({
+      ok: true,
+      json: async () => {
+        const { ledger, unitResults } = unitFixture(published);
+        return structuredClone(
+          url.includes("unit-ledger")
+            ? ledger
+            : url.includes("unit-results")
+              ? unitResults
+              : url.includes("index")
+                ? published.index
+                : recordForDate(
+                    published.store,
+                    url.match(/\d{4}-\d{2}-\d{2}/)?.[0] ?? "",
+                  ),
+        );
+      },
+    })),
+  );
+  render(<PredictionRecord />);
+  await screen.findByRole("table", { name: "Recorded predictions" });
+  selectDate("2026-11-03");
+  await screen.findByText("0 / 0 / 0");
+  fireEvent.change(screen.getByLabelText("Search recorded matchups"), {
+    target: { value: "Tuesday" },
+  });
+  published = completed;
+  await act(async () => vi.advanceTimersByTime(30_000));
+  await screen.findByText("0 / 1 / 0");
+  expect(within(table()).getByText("Tuesday team")).toBeTruthy();
+  expect(
+    (screen.getByLabelText("Daily breakdown (ET)") as HTMLSelectElement).value,
+  ).toBe("2026-11-03");
+  expect(
+    (screen.getByLabelText("Search recorded matchups") as HTMLInputElement)
+      .value,
+  ).toBe("Tuesday");
+  expect(
+    screen
+      .getByRole("button", { name: "2026-11-03: -0.50u" })
+      .getAttribute("aria-pressed"),
+  ).toBe("true");
 });
 
 function fixture() {

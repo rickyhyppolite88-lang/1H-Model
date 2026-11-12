@@ -310,11 +310,55 @@ it.each([false, true])(
     const table = await screen.findByRole("table", {
       name: "Matchup predictions",
     });
-    expect(
-      within(table).getByText(
-        fresh ? "0.5u suggested" : "Awaiting pre-tip check",
-      ),
-    ).toBeTruthy();
+    expect(within(table).getByText("0.5u suggested")).toBeTruthy();
+    expect(within(table).queryByText("Awaiting pre-tip check") !== null).toBe(
+      !fresh,
+    );
+  },
+);
+
+it.each([
+  [95, 2],
+  [88, 1.5],
+  [65, 1],
+])(
+  "shows units for confidence %s (%su) while a pre-tip check is pending",
+  async (score, units) => {
+    vi.setSystemTime(new Date("2026-11-02T23:57:00Z"));
+    localStorage.removeItem(
+      `${preferencePrefix}sportsbook.draftkings-default-v1`,
+    );
+    const { feed } = recordFixture();
+    feed.generatedAt = "2026-11-02T23:57:00Z";
+    feed.defaultSportsbook = "draftkings";
+    feed.entryPolicy = {
+      method: "last-pretip-v1",
+      startedAt: "2026-11-02T23:40:00Z",
+      maxQuoteAgeMinutes: 15,
+    };
+    const row = feed.predictions[0];
+    row.markets = row.markets.map((market) => ({
+      ...market,
+      sportsbook: "draftkings",
+      capturedAt: "2026-11-02T22:00:00Z",
+    }));
+    const total = (row.markets[0].latestLine ?? 70) + (score * 8) / 100;
+    row.projectedFirstHalfTotal = total;
+    row.simpleTotal = total;
+    row.paceAdjustedTotal = total;
+    vi.stubGlobal(
+      "fetch",
+      vi.fn(async (url: string) => ({
+        ok: true,
+        json: async () => responseFor(url, feed),
+      })),
+    );
+    render(<Predictions />);
+    const table = await screen.findByRole("table", {
+      name: "Matchup predictions",
+    });
+    expect(within(table).getByText(`${units}u suggested`)).toBeTruthy();
+    expect(within(table).getByText("Awaiting pre-tip check")).toBeTruthy();
   },
 );
 
@@ -349,7 +393,7 @@ it("provides dated downloads and automatically checks for updated predictions", 
   ).toContain(latest.xlsxPath);
   await waitFor(() => expect(fetcher).toHaveBeenCalledTimes(3));
   await act(async () => {
-    vi.advanceTimersByTime(5 * 60 * 1000);
+    vi.advanceTimersByTime(30 * 1000);
   });
   await waitFor(() => expect(fetcher).toHaveBeenCalledTimes(6));
 });

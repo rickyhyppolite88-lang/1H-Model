@@ -53,6 +53,11 @@ def test_midnight_provider_date_boundary_matches_by_teams_and_time():
         markets.match_event(row, [event, event])
 
 
+@pytest.mark.parametrize("total", [0, 0.0])
+def test_zero_total_placeholder_is_an_unavailable_quote(total):
+    assert markets.quote({"total": total, "overOdds": 0, "underOdds": 0}) is None
+
+
 def test_verified_upstate_provider_alias_is_consistent():
     assert markets.normalize("USC Upstate Spartans") == markets.normalize("South Carolina Upstate Spartans")
 

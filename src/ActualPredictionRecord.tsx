@@ -11,7 +11,9 @@ import {
   finishedRecordSummary,
   mergeRecordStores,
 } from "./model/recordViews";
+import { easternTipoff } from "./model/time";
 import { actualUnitPlay, hasUnitStake } from "./model/units";
+import { watchPublishedUpdates } from "./publishedUpdates";
 import RecordTable from "./RecordTable";
 import UnitCalendar from "./UnitCalendar";
 import {
@@ -79,10 +81,10 @@ export default function PredictionRecord() {
       }
     };
     void load();
-    const timer = window.setInterval(() => void load(), 5 * 60 * 1000);
+    const stopRefresh = watchPublishedUpdates(load);
     return () => {
       controller.abort();
-      window.clearInterval(timer);
+      stopRefresh();
     };
   }, []);
   const archive = index?.archives.find((entry) => entry.date === date);
@@ -143,6 +145,7 @@ export default function PredictionRecord() {
     ) : (
       <div className="empty-state">Loading the shared prediction record…</div>
     );
+  const publishedAt = easternTipoff(index.updatedAt);
   const current = loaded?.key === loadKey ? loaded : null;
   const store = current?.store ?? null;
   const modelRecords = store?.records ?? [];
@@ -194,6 +197,10 @@ export default function PredictionRecord() {
           </p>
         </div>
       </div>
+      <output className="inline-note record-refresh-note">
+        Auto-updates every 30 seconds · Latest record update {publishedAt.date},{" "}
+        {publishedAt.time} ET.
+      </output>
       {indexError && (
         <p className="notice error" role="alert">
           {indexError}
