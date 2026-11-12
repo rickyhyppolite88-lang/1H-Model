@@ -11,6 +11,7 @@ import {
   finishedRecordSummary,
   mergeRecordStores,
 } from "./model/recordViews";
+import { easternTipoff } from "./model/time";
 import { actualUnitPlay, hasUnitStake } from "./model/units";
 import { watchPublishedUpdates } from "./publishedUpdates";
 import RecordTable from "./RecordTable";
@@ -144,6 +145,7 @@ export default function PredictionRecord() {
     ) : (
       <div className="empty-state">Loading the shared prediction record…</div>
     );
+  const publishedAt = easternTipoff(index.updatedAt);
   const current = loaded?.key === loadKey ? loaded : null;
   const store = current?.store ?? null;
   const modelRecords = store?.records ?? [];
@@ -196,8 +198,8 @@ export default function PredictionRecord() {
         </div>
       </div>
       <output className="inline-note record-refresh-note">
-        Auto-updates every 30 seconds · Latest record update{" "}
-        <GameTime startsAt={index.updatedAt} />.
+        Auto-updates every 30 seconds · Latest record update {publishedAt.date},{" "}
+        {publishedAt.time} ET.
       </output>
       {indexError && (
         <p className="notice error" role="alert">
