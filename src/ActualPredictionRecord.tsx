@@ -31,7 +31,7 @@ export default function PredictionRecord() {
     ledger: unitLedger,
     plays: calendarPlays,
     error: unitError,
-  } = useUnitLedger();
+  } = useUnitLedger("draftkings");
   const [index, setIndex] = useState<RecordIndex | null>(null);
   const [indexError, setIndexError] = useState("");
   const [date, setDate] = usePreference(
@@ -61,7 +61,7 @@ export default function PredictionRecord() {
     const load = async () => {
       try {
         const response = await fetch(
-          `${import.meta.env.BASE_URL}data/prediction-record-index.json`,
+          `${import.meta.env.BASE_URL}data/prediction-record-draftkings-index.json`,
           { signal: controller.signal, cache: "no-store" },
         );
         if (!response.ok)
@@ -104,6 +104,12 @@ export default function PredictionRecord() {
             if (!response.ok)
               throw new Error("A saved record could not be loaded.");
             const store = recordStoreSchema.parse(await response.json());
+            if (
+              store.records.some((record) => record.sportsbook !== "draftkings")
+            )
+              throw new Error(
+                "The DraftKings record contains a different sportsbook",
+              );
             if (!controller.signal.aborted)
               cache.current.set(entry.jsonPath, {
                 revision: index.updatedAt,
@@ -179,11 +185,12 @@ export default function PredictionRecord() {
       <div className="section-heading">
         <span className="step">LOG</span>
         <div>
-          <h2>Running prediction record</h2>
+          <h2>DraftKings prediction record</h2>
           <p>
-            Finished first-half plays with a recorded or replayed stake. Tap a
-            calendar day to see its picks, stakes and results. Saved confidence
-            % is the original model score, not a win probability.
+            Hits, misses and pushes against saved DraftKings 1H lines. Older
+            dates replay the original frozen projections against archived
+            pre-tip DraftKings lines; replay stakes and scores are calculated
+            later. Original records remain intact in the archives.
           </p>
         </div>
       </div>
@@ -194,9 +201,11 @@ export default function PredictionRecord() {
       )}
       <div className="record-dashboard">
         <UnitCalendar
+          combined
           plays={(calendarPlays ?? []).filter(
             (play) =>
               play.source === "actual" &&
+              play.sportsbook === "draftkings" &&
               hasUnitStake(play) &&
               play.actual !== null,
           )}
@@ -261,8 +270,9 @@ export default function PredictionRecord() {
                 </div>
               </div>
               <p className="inline-note">
-                Only frozen plays with a stake count here. Historical tier
-                replays stay labeled. Pushes are excluded from win rate.{" "}
+                DraftKings only. Recorded entries and labeled historical replays
+                use their saved lines and matching odds. Pushes are excluded
+                from win rate.{" "}
                 {summary.ungraded > 0
                   ? `${summary.ungraded} staked plays await a verified grade.`
                   : ""}
@@ -401,11 +411,12 @@ export default function PredictionRecord() {
         <details>
           <summary>How records and exclusions work</summary>
           <p>
-            Games appear once the first-half result is final. Only plays with
-            recorded or replayed stakes appear here. Future entries use the last
-            verified pre-tip line from the final 15 minutes, freezing the pick,
-            confidence and units together. Earlier entries retain their original
-            line and grade. Complete versions remain in the archive downloads.
+            Games appear once the first-half result is final. Future entries use
+            the verified pre-tip DraftKings snapshot from the final 15 minutes.
+            Older replay entries keep the original model projection and use the
+            last available archived DraftKings quote observed before tipoff.
+            That quote is not guaranteed to be the closing line. Games without
+            verified pre-tip DraftKings quotes receive no replay.
           </p>
         </details>
         <details>
@@ -418,10 +429,10 @@ export default function PredictionRecord() {
           <div className="prediction-actions">
             <a
               className="secondary-button"
-              href={`${import.meta.env.BASE_URL}data/actual-units.csv`}
-              download="1h-actual-units.csv"
+              href={`${import.meta.env.BASE_URL}data/actual-units-draftkings.csv`}
+              download="1h-draftkings-unit-plays.csv"
             >
-              All Actual unit plays CSV ↓
+              All DraftKings unit plays CSV ↓
             </a>
             <a
               className="secondary-button"

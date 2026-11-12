@@ -6,7 +6,7 @@ import {
   unitResultsSchema,
 } from "./model/units";
 
-export function useUnitLedger() {
+export function useUnitLedger(sportsbook?: "draftkings") {
   const [ledger, setLedger] = useState<UnitLedger | null>(null);
   const [plays, setPlays] = useState<UnitPlay[] | null>(null);
   const [error, setError] = useState("");
@@ -15,7 +15,10 @@ export function useUnitLedger() {
     const load = async () => {
       try {
         const [response, resultsResponse] = await Promise.all(
-          ["unit-ledger.json", "unit-results.json"].map((name) =>
+          [
+            "unit-ledger.json",
+            sportsbook ? "unit-results-draftkings.json" : "unit-results.json",
+          ].map((name) =>
             fetch(`${import.meta.env.BASE_URL}data/${name}`, {
               signal: controller.signal,
               cache: "no-store",
@@ -28,6 +31,16 @@ export function useUnitLedger() {
         const results = unitResultsSchema.parse(await resultsResponse.json());
         if (next.updatedAt !== results.updatedAt)
           throw new Error("Unit files cover different refreshes");
+        if (
+          sportsbook &&
+          results.plays.some(
+            (play) =>
+              play.source !== "actual" || play.sportsbook !== sportsbook,
+          )
+        )
+          throw new Error(
+            "The DraftKings calendar contains a different sportsbook",
+          );
         if (!controller.signal.aborted) {
           setLedger(next);
           setPlays(results.plays);
@@ -46,6 +59,6 @@ export function useUnitLedger() {
       controller.abort();
       window.clearInterval(timer);
     };
-  }, []);
+  }, [sportsbook]);
   return { ledger, plays, error };
 }

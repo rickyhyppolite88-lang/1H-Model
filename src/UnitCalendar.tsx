@@ -24,6 +24,7 @@ export default function UnitCalendar({
   available,
   error = "",
   label = "Actual",
+  combined = false,
 }: {
   plays: UnitPlay[];
   date: string;
@@ -31,6 +32,7 @@ export default function UnitCalendar({
   available: boolean;
   error?: string;
   label?: string;
+  combined?: boolean;
 }) {
   const id = useId();
   const latest =
@@ -61,7 +63,7 @@ export default function UnitCalendar({
     year: "numeric",
     timeZone: "UTC",
   });
-  const scoped = plays.filter((row) => row.mode === mode);
+  const scoped = plays.filter((row) => combined || row.mode === mode);
   const days = new Map<string, UnitPlay[]>();
   for (const row of scoped)
     days.set(row.date, [...(days.get(row.date) ?? []), row]);
@@ -82,7 +84,7 @@ export default function UnitCalendar({
     );
     const link = document.createElement("a");
     link.href = url;
-    link.download = `1h-${label.toLowerCase()}-units-${date === "all" ? month : date}-${mode}.csv`;
+    link.download = `1h-${label.toLowerCase()}-units-${date === "all" ? month : date}-${combined ? "draftkings" : mode}.csv`;
     link.click();
     URL.revokeObjectURL(url);
   }
@@ -92,9 +94,11 @@ export default function UnitCalendar({
         <div>
           <span className="unit-calendar-kicker">
             {label} ·{" "}
-            {mode === "tracked"
-              ? "Recorded model stakes"
-              : "Historical tier replay"}
+            {combined
+              ? "DraftKings · recorded + replay"
+              : mode === "tracked"
+                ? "Recorded model stakes"
+                : "Historical tier replay"}
           </span>
           <h3>{monthLabel}</h3>
         </div>
@@ -117,21 +121,25 @@ export default function UnitCalendar({
           </button>
         </div>
       </div>
-      <div className="unit-calendar-controls">
-        <label htmlFor={id}>
-          Unit accounting
-          <select
-            id={id}
-            value={mode}
-            onChange={(event) => setMode(event.target.value as UnitMode)}
-          >
-            <option value="tracked">Recorded stakes · confidence tiers</option>
-            <option value="historical">
-              Historical replay · confidence tiers
-            </option>
-          </select>
-        </label>
-      </div>
+      {!combined && (
+        <div className="unit-calendar-controls">
+          <label htmlFor={id}>
+            Unit accounting
+            <select
+              id={id}
+              value={mode}
+              onChange={(event) => setMode(event.target.value as UnitMode)}
+            >
+              <option value="tracked">
+                Recorded stakes · confidence tiers
+              </option>
+              <option value="historical">
+                Historical replay · confidence tiers
+              </option>
+            </select>
+          </label>
+        </div>
+      )}
       <div className="unit-calendar-caption">
         <span>Daily net units (u) · ET</span>
         <button
@@ -224,6 +232,13 @@ export default function UnitCalendar({
                 )}
               </strong>
               {day.unresolved > 0 && <small>+{day.unresolved} open</small>}
+              {combined && rows.some((row) => row.mode === "historical") && (
+                <small>
+                  {rows.some((row) => row.mode === "tracked")
+                    ? "Mixed"
+                    : "Replay"}
+                </small>
+              )}
             </button>
           );
         })}
@@ -258,14 +273,19 @@ export default function UnitCalendar({
           : "Loading unit results…"}
         {summary.unresolved ? ` · ${summary.unresolved} unsettled` : ""}
         {summary.unstaked ? ` · ${summary.unstaked} no stake` : ""}
+        {combined
+          ? ` · ${selected.filter((row) => row.mode === "historical").length} replay / ${selected.filter((row) => row.mode === "tracked").length} recorded`
+          : ""}
       </p>
       <div className="unit-calendar-footer">
         <details className="unit-calendar-policy">
           <summary>Unit rules & accounting</summary>
           <p className="inline-note">
-            {mode === "historical"
-              ? `Replay only: apply the same confidence tiers to the original picks before the unit plan began. ${unitPolicy.description} Older scores calculated later from frozen inputs stay labeled. No pregame stake assignment is created.`
-              : unitPolicy.description}{" "}
+            {combined
+              ? `DraftKings only. Recorded entries keep their pre-tip stakes. Older dates replay the original frozen model against the last available archived DraftKings quote observed before tipoff, using the same confidence tiers. Replay confidence and stakes are calculated later and labeled; original records remain unchanged. ${unitPolicy.description}`
+              : mode === "historical"
+                ? `Replay only: apply the same confidence tiers to the original picks before the unit plan began. ${unitPolicy.description} Older scores calculated later from frozen inputs stay labeled. No pregame stake assignment is created.`
+                : unitPolicy.description}{" "}
             One unit is the amount risked. Confidence is a model ranking, not a
             win probability.{" "}
             {summary.unresolved > 0

@@ -1,4 +1,5 @@
 import { readFile, writeFile, rename } from "node:fs/promises";
+import { saveDraftKingsRecord } from "./draftkings-record.mjs";
 
 export async function updateUnitFiles(server, actual, lab, at, directory = "public") {
   const model = await server.ssrLoadModule("/src/model/units.ts");
@@ -19,5 +20,6 @@ export async function updateUnitFiles(server, actual, lab, at, directory = "publ
     await writeFile(`${directory}/data/${name}-units.csv`, `\uFEFF${model.unitPlaysCsv(plays.filter(model.hasUnitStake))}`);
   }
   console.log(`Units: ${ledger.assignments.length} immutable pregame stake snapshots; one frozen entry per game, historical replay separate`);
+  await saveDraftKingsRecord(server, actual, ledger, at, directory);
   return ledger;
 }

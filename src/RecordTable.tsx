@@ -149,6 +149,7 @@ export default function RecordTable({
                   <small>
                     {sportsbookNames[record.sportsbook] ?? record.sportsbook}
                   </small>
+                  {record.replay && <small>Archived line · Replay</small>}
                   {lineCapturedAt && (
                     <small className="card-detail">
                       Line captured <GameTime startsAt={lineCapturedAt} />
@@ -189,6 +190,13 @@ export default function RecordTable({
                     </small>
                   )}
                   {unitPlays && <UnitResult play={unitPlays.get(record.id)} />}
+                  {record.replay && (
+                    <small className="card-detail">
+                      DraftKings replay from original{" "}
+                      {record.replay.originalSportsbook} entry; calculated
+                      later.
+                    </small>
+                  )}
                 </td>
                 <td
                   role="cell"
