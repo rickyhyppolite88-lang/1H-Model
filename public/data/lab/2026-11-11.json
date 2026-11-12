@@ -531,7 +531,7 @@
     ]
   },
   "startedAt": "2026-11-05T16:08:14.757Z",
-  "updatedAt": "2026-11-12T04:21:32.013Z",
+  "updatedAt": "2026-11-12T06:24:17.346Z",
   "forecasts": [
     {
       "id": "2026-27_enhanced-baseline-v2_401919759_v1",
@@ -79791,6 +79791,40 @@
         "city": "Irvine",
         "state": "CA"
       }
+    },
+    {
+      "id": "2026-27:401918054_result1",
+      "season": "2026-27",
+      "gameId": "401918054",
+      "observedAt": "2026-11-12T06:24:16.038Z",
+      "sourceCapturedAt": "2026-11-12T06:24:08.665847Z",
+      "startsAt": "2026-11-12T04:00:00Z",
+      "awayPoints": 39,
+      "homePoints": 30,
+      "source": "https://site.api.espn.com/apis/site/v2/sports/basketball/mens-college-basketball/scoreboard?dates=20261111&groups=50&limit=1000",
+      "participants": {
+        "away": {
+          "espnId": "30",
+          "modelId": "southern-california-trojans",
+          "name": "USC Trojans"
+        },
+        "home": {
+          "espnId": "25",
+          "modelId": "california-golden-bears",
+          "name": "California Golden Bears"
+        }
+      },
+      "context": {
+        "neutralSite": false,
+        "conferenceGame": false,
+        "matchupType": "nonconference_regular",
+        "eventLabel": null,
+        "venueId": "496",
+        "venueKey": "id:496",
+        "venueName": "Haas Pavilion",
+        "city": "Berkeley",
+        "state": "CA"
+      }
     }
   ],
   "halves": [
@@ -82337,6 +82371,44 @@
           "threeAttempted": 13,
           "turnovers": 4,
           "offensiveRebounds": 9
+        }
+      ]
+    },
+    {
+      "id": "401918054_1a38c897833139d874d208d817ae2b8e700fbc21c233c0735624ecfb6323bfe8",
+      "gameId": "401918054",
+      "season": "2026-27",
+      "startsAt": "2026-11-12T04:00:00Z",
+      "observedAt": "2026-11-12T06:24:12.413642Z",
+      "source": "https://site.api.espn.com/apis/site/v2/sports/basketball/mens-college-basketball/summary?event=401918054",
+      "sourceSha256": "99b3d192ff8f0fad0f4d137b396a68ff0732acb3dbd1fb867aba36217422cd3a",
+      "bothD1": true,
+      "teams": [
+        {
+          "espnId": "25",
+          "points": 30,
+          "fouls": 9,
+          "bonusMinutes": 4.883333333333334,
+          "fga": 33,
+          "fta": 8,
+          "freeThrowsMade": 6,
+          "threeMade": 2,
+          "threeAttempted": 14,
+          "turnovers": 5,
+          "offensiveRebounds": 6
+        },
+        {
+          "espnId": "30",
+          "points": 39,
+          "fouls": 7,
+          "bonusMinutes": 8.1,
+          "fga": 36,
+          "fta": 8,
+          "freeThrowsMade": 7,
+          "threeMade": 4,
+          "threeAttempted": 14,
+          "turnovers": 8,
+          "offensiveRebounds": 11
         }
       ]
     }
