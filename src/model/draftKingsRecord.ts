@@ -10,6 +10,7 @@ import {
 } from "./predictionRecord";
 import { compareTotal } from "./predictor";
 import { projectionSignal } from "./signals";
+import { easternTipoff } from "./time";
 
 const key = (row: ForecastRecord) =>
   `${row.season}:${row.modelVersion}:${row.gameId}`;
@@ -91,13 +92,44 @@ export function draftKingsRecord(store: RecordStore, at: string): RecordStore {
     if (!previous || row.sportsbook === "draftkings")
       preferred.set(key(row), row);
   }
+  const pastDate = easternTipoff(at).date;
+  const finished = new Set(
+    store.results
+      .filter((result) => Date.parse(result.observedAt) <= Date.parse(at))
+      .map((result) => `${result.season}:${result.gameId}`),
+  );
+  const pastReplays = new Set<string>();
+  // Past-day research can replay a frozen pregame forecast even if the final-window
+  // official entry was missed. This never becomes a recorded pre-tip stake.
+  for (const row of [...store.records].sort(
+    (a, b) =>
+      Date.parse(a.recordedAt) - Date.parse(b.recordedAt) ||
+      a.version - b.version,
+  )) {
+    if (
+      preferred.has(key(row)) ||
+      row.gameDate >= pastDate ||
+      !finished.has(`${row.season}:${row.gameId}`) ||
+      row.state !== "pregame" ||
+      row.prediction.featureKind !== "captured_pregame" ||
+      row.prediction.projectedFirstHalfTotal === null ||
+      Date.parse(row.recordedAt) >= Date.parse(row.prediction.startsAt)
+    )
+      continue;
+    preferred.set(key(row), row);
+    pastReplays.add(key(row));
+  }
   for (const original of preferred.values()) {
-    if (original.sportsbook === "draftkings") {
+    if (
+      original.sportsbook === "draftkings" &&
+      !pastReplays.has(key(original))
+    ) {
       records.push(original);
       continue;
     }
-    // No counterfactual fallback for future games lacking the required pre-tip entry.
+    // Current-day and future entries still require the official pre-tip check.
     if (
+      !pastReplays.has(key(original)) &&
       usesTipoffEntry(
         original.prediction.startsAt,
         store.entryPolicy,
@@ -161,5 +193,13 @@ export function draftKingsRecord(store: RecordStore, at: string): RecordStore {
       },
     });
   }
-  return recordStoreSchema.parse({ ...store, updatedAt: at, records });
+  // Official entries were selected above with their original policy. This
+  // derivative store also contains older archive replays, which must not be
+  // rejected a second time by the live final-15-minute entry rule.
+  return recordStoreSchema.parse({
+    ...store,
+    entryPolicy: undefined,
+    updatedAt: at,
+    records,
+  });
 }

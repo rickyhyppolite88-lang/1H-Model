@@ -416,7 +416,10 @@ export default function PredictionRecord() {
             Older replay entries keep the original model projection and use the
             last available archived DraftKings quote observed before tipoff.
             That quote is not guaranteed to be the closing line. Games without
-            verified pre-tip DraftKings quotes receive no replay.
+            verified pre-tip DraftKings quotes receive no replay. Completed
+            prior Eastern dates may replay a frozen pregame forecast even if its
+            official final-window entry was missed; these remain labeled replays
+            and receive no backdated recorded stake.
           </p>
         </details>
         <details>

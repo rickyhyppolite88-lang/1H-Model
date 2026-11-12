@@ -139,7 +139,7 @@ it("rejects source quotes captured after their observation and source boards tha
   expect(draftKingsRecord(store, at).records).toHaveLength(0);
 });
 
-it("keeps real DraftKings entries and their recorded stakes unchanged and never replays a future missing entry", () => {
+it("keeps real DraftKings entries and recorded stakes unchanged and never fills current-day missing entries", () => {
   const { store, original } = fixture();
   const future = {
     method: "last-pretip-v1" as const,
@@ -147,7 +147,9 @@ it("keeps real DraftKings entries and their recorded stakes unchanged and never 
     maxQuoteAgeMinutes: 15 as const,
   };
   store.entryPolicy = future;
-  expect(draftKingsRecord(store, at).records).toHaveLength(0);
+  expect(draftKingsRecord(store, "2026-11-03T02:00:00Z").records).toHaveLength(
+    0,
+  );
   delete store.entryPolicy;
   original.sportsbook = "draftkings";
   original.comparison = { line: 75, lean: "UNDER", signedEdge: -1 };
@@ -183,4 +185,62 @@ it("keeps real DraftKings entries and their recorded stakes unchanged and never 
     score: 80,
     price: -105,
   });
+});
+
+it("replays completed past dates with frozen inputs and DraftKings evidence even when an official final-window entry was missed", () => {
+  const { store, original } = fixture();
+  store.entryPolicy = {
+    method: "last-pretip-v1",
+    startedAt: "2026-11-02T20:00:00Z",
+    maxQuoteAgeMinutes: 15,
+  };
+  original.sportsbook = "draftkings";
+  const before = structuredClone(store);
+  const output = draftKingsRecord(store, "2026-11-03T06:00:00Z");
+  expect(output.records).toHaveLength(1);
+  expect(output.records[0].replay?.sourceRecordId).toBe(original.id);
+  expect(draftKingsRecordIndex(output).canonicalIds).toContain(
+    output.records[0].id,
+  );
+  expect(
+    actualUnitPlay(output.records[0], output.results, ledger),
+  ).toMatchObject({
+    mode: "historical",
+    assignedAt: null,
+    sportsbook: "draftkings",
+  });
+  expect(store).toEqual(before);
+  expect(ledger.assignments).toHaveLength(0);
+});
+
+it("requires a completed first half and a prior Eastern date for supplemental replays", () => {
+  const { store } = fixture();
+  store.entryPolicy = {
+    method: "last-pretip-v1",
+    startedAt: "2026-11-02T20:00:00Z",
+    maxQuoteAgeMinutes: 15,
+  };
+  // UTC November 3 is still November 2 in ET.
+  expect(draftKingsRecord(store, "2026-11-03T02:00:00Z").records).toHaveLength(
+    0,
+  );
+  store.results = [];
+  expect(draftKingsRecord(store, "2026-11-03T06:00:00Z").records).toHaveLength(
+    0,
+  );
+});
+
+it("can replay DraftKings when an older frozen model had no eligible original-book lean", () => {
+  const { store, original } = fixture();
+  original.comparison = { line: null, signedEdge: null, lean: null };
+  const output = draftKingsRecord(store, at);
+  expect(output.records).toHaveLength(1);
+  expect(output.records[0].comparison).toMatchObject({
+    line: 75,
+    lean: "UNDER",
+  });
+  expect(draftKingsRecordIndex(output).canonicalIds).toHaveLength(1);
+  expect(actualUnitPlay(output.records[0], output.results, ledger).grade).toBe(
+    "Win",
+  );
 });
