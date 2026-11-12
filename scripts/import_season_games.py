@@ -138,6 +138,9 @@ def quote(line: dict | None) -> dict | None:
     if not line or line.get("total") is None:
         return None
     total = line["total"]
+    # This provider uses zero totals/odds as placeholders for an unavailable market.
+    if total == 0:
+        return None
     if not isinstance(total, (int, float)) or not 1 <= total <= 150:
         raise ValueError("Invalid first-half total")
     return {"total": total, "overPrice": line.get("overOdds"), "underPrice": line.get("underOdds")}
@@ -170,7 +173,8 @@ def import_games(season: str, start: date, through: date, output: Path) -> dict:
             events_by_id[event["id"]] = (event, score_url)
         odds_url = f"{SBR}?date={date_string}"
         rows = parse_odds(read_url(odds_url), date_string)
-        checks[date_string] = {"date": date_string, "checkedAt": now, "source": odds_url,
+        observed_at = datetime.now(timezone.utc).isoformat().replace("+00:00", "Z")
+        checks[date_string] = {"date": date_string, "checkedAt": observed_at, "source": odds_url,
                               "boardGames": len({str(row["gameView"]["gameId"]) for row in rows}),
                               "matchedGames": set(), "books": {}}
         for row in rows:
@@ -178,7 +182,7 @@ def import_games(season: str, start: date, through: date, output: Path) -> dict:
                 if view and quote(view.get("currentLine")) is not None:
                     check = checks[date_string]["books"].setdefault(view["sportsbook"], {"source": set(), "imported": set()})
                     check["source"].add(str(row["gameView"]["gameId"]))
-        boards.extend((row, odds_url) for row in rows)
+        boards.extend((row, odds_url, observed_at) for row in rows)
         print(f"{date_string}: {len(events)} score events, {len(rows)} odds-board games")
         day += timedelta(days=1)
         time.sleep(0.3)
@@ -214,12 +218,12 @@ def import_games(season: str, start: date, through: date, output: Path) -> dict:
     for game in games.values():
         game_date = datetime.fromisoformat(game["startsAt"].replace("Z", "+00:00")).astimezone(EASTERN).date().isoformat()
         if game_date in checks:
-            game["marketCoverage"] = {"checkedAt": now, "source": checks[game_date]["source"],
+            game["marketCoverage"] = {"checkedAt": checks[game_date]["checkedAt"], "source": checks[game_date]["source"],
                                       "status": "not_matched", "books": []}
     refreshed_sources = {check["source"] for check in checks.values()}
     unmatched = [row for row in (existing or {}).get("unmatchedOdds", []) if row["source"] not in refreshed_sources]
     archived_ids = {game["oddsGameId"]: game["id"] for game in games.values() if game.get("oddsGameId")}
-    for row, source in boards:
+    for row, source, observed_at in boards:
         odds_id = str(row["gameView"]["gameId"])
         event_id = archived_ids.get(odds_id)
         if not event_id:
@@ -236,7 +240,7 @@ def import_games(season: str, start: date, through: date, output: Path) -> dict:
         check = next(check for check in checks.values() if check["source"] == source)
         check["matchedGames"].add(odds_id)
         views = {view["sportsbook"]: view for view in row.get("oddsViews") or [] if view}
-        game["marketCoverage"] = {"checkedAt": now, "source": source, "status": "matched",
+        game["marketCoverage"] = {"checkedAt": observed_at, "source": source, "status": "matched",
                                   "books": [{"sportsbook": book, "status": "available" if quote(view.get("currentLine")) is not None else "no_current_line"}
                                             for book, view in sorted(views.items())]}
         game["oddsGameId"] = odds_id
@@ -252,8 +256,8 @@ def import_games(season: str, start: date, through: date, output: Path) -> dict:
             old = by_book.get(book)
             by_book[book] = {"sportsbook": book, "opening": old["opening"] if old and old.get("opening") else opening,
                 "latest": latest if latest is not None else old.get("latest") if old else None,
-                "openingCapturedAt": old["openingCapturedAt"] if old and old.get("opening") else now,
-                "latestCapturedAt": now if latest is not None or not old else old["latestCapturedAt"],
+                "openingCapturedAt": old["openingCapturedAt"] if old and old.get("opening") else observed_at,
+                "latestCapturedAt": observed_at if latest is not None or not old else old["latestCapturedAt"],
                 "closingVerified": False, "quoteTimestamp": None, "source": source}
             if latest is not None:
                 check["books"][book]["imported"].add(odds_id)
@@ -266,12 +270,12 @@ def import_games(season: str, start: date, through: date, output: Path) -> dict:
         game["seasonDebut"] = complete_history and all(game[side]["espnId"] not in previous_ids for side in ["home", "away"])
     market_checks = {check["date"]: check for check in (existing or {}).get("marketChecks", [])}
     for day, check in checks.items():
-        market_checks[day] = {"date": day, "checkedAt": now, "source": check["source"], "boardGames": check["boardGames"],
+        market_checks[day] = {"date": day, "checkedAt": check["checkedAt"], "source": check["source"], "boardGames": check["boardGames"],
                               "matchedGames": len(check["matchedGames"]), "unmatchedGames": check["boardGames"] - len(check["matchedGames"]),
                               "books": [{"sportsbook": book, "sourceLines": len(counts["source"]), "importedLines": len(counts["imported"]),
                                          "unmatchedLines": len(counts["source"] - counts["imported"])} for book, counts in sorted(check["books"].items())]}
     return {"schemaVersion": 1, "season": season, "seasonStart": season_start.isoformat() if complete_history else None,
-        "through": through.isoformat(), "capturedAt": now, "market": "first_half_total", "games": ordered,
+        "through": through.isoformat(), "capturedAt": datetime.now(timezone.utc).isoformat().replace("+00:00", "Z"), "market": "first_half_total", "games": ordered,
         "marketChecks": sorted(market_checks.values(), key=lambda check: check["date"]),
         "unmatchedOdds": unmatched, "notes": ["Openers and latest displayed quotes are distinct. No retrieved latest quote is a verified closing line.", "ESPN first-half results are graded only after that period ends, including games still in their second half."]}
 

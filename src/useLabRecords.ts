@@ -6,6 +6,7 @@ import {
   labStoreSchema,
   mergeLabStores,
 } from "./model/lab";
+import { watchPublishedUpdates } from "./publishedUpdates";
 
 export function useLabRecords(date: string) {
   const [index, setIndex] = useState<LabIndex | null>(null);
@@ -42,10 +43,10 @@ export function useLabRecords(date: string) {
       }
     };
     void load();
-    const timer = window.setInterval(() => void load(), 5 * 60 * 1000);
+    const stopRefresh = watchPublishedUpdates(load);
     return () => {
       controller.abort();
-      window.clearInterval(timer);
+      stopRefresh();
     };
   }, [retry]);
   const key = `${index?.updatedAt ?? ""}:${date}:${retry}`;

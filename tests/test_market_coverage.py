@@ -1,6 +1,6 @@
 import importlib.util
 import json
-from datetime import date
+from datetime import date, datetime, timedelta, timezone
 from pathlib import Path
 
 import pytest
@@ -33,7 +33,7 @@ def test_conflicting_grace_identity_is_not_guessed_from_home_team_alone():
     assert not markets.identifiers({"displayName": "Grace (CA)", "fullName": " Talons"}) & markets.identifiers({"id": "134743", "displayName": "Grace University Lancers"}, espn=True)
 
 
-@pytest.mark.parametrize("mode", ["available", "no_current_line", "not_in_feed", "not_matched", "unmatched"])
+@pytest.mark.parametrize("mode", ["available", "no_current_line", "zero_placeholder", "not_in_feed", "not_matched", "unmatched"])
 def test_source_counts_and_last_known_quote_provenance(monkeypatch, tmp_path, mode):
     output = tmp_path / "ledger.json"
     old_time = "2026-11-05T10:00:00Z"
@@ -52,16 +52,36 @@ def test_source_counts_and_last_known_quote_provenance(monkeypatch, tmp_path, mo
            "oddsViews": [] if mode == "not_in_feed" else [{"sportsbook": "betmgm", "openingLine": {"total": 68.5}, "currentLine": None if mode == "no_current_line" else {"total": 70.5}}]}
     page = {"query": {"date": "2026-11-05", "league": "ncaa-basketball", "oddsType": "totals", "oddsScope": ["1st-half"]},
             "props": {"pageProps": {"oddsTables": [{"league": "NCAAB", "oddsTableModel": {"gameRows": [] if mode == "not_matched" else [row]}}]}}}
+    if mode == "zero_placeholder":
+        row["oddsViews"][0].update(openingLine={"total": 0, "overOdds": 0, "underOdds": 0},
+                                  currentLine={"total": 0, "overOdds": 0, "underOdds": 0})
+        row["oddsViews"].append({"sportsbook": "draftkings", "openingLine": {"total": 71.5}, "currentLine": {"total": 72.5}})
     directory = {"leagues": [{"id": "41", "groups": [{"id": "50", "children": [{"id": "1", "name": "Conference"}]}]}]}
-    monkeypatch.setattr(markets, "read_url", lambda url: json.dumps(directory) if "dropdown" in url else json.dumps({"events": [event]}) if "site.api.espn.com" in url else '<script id="__NEXT_DATA__">' + json.dumps(page) + '</script>')
+    observed=[datetime(2026,11,5,23,59,30,tzinfo=timezone.utc)]
+    class TestClock(datetime):
+        @classmethod
+        def now(cls,tz=None):
+            return observed[0]
+    def read_source(url):
+        if "dropdown" in url:
+            return json.dumps(directory)
+        if "site.api.espn.com" in url:
+            return json.dumps({"events":[event]})
+        observed[0] += timedelta(seconds=70)
+        return '<script id="__NEXT_DATA__">' + json.dumps(page) + '</script>'
+    monkeypatch.setattr(markets,"datetime",TestClock)
+    monkeypatch.setattr(markets, "read_url", read_source)
     monkeypatch.setattr(markets.time, "sleep", lambda _: None)
     result = markets.import_games("2026-27", date(2026, 11, 5), date(2026, 11, 5), output)
     game = result["games"][0]
     check = result["marketChecks"][0]
     assert check["date"] == "2026-11-05"  # midnight UTC is still today's ET slate
+    assert check["checkedAt"] == "2026-11-06T00:00:40Z"
+    assert result["capturedAt"] == "2026-11-06T00:00:40Z"
     assert game["quotes"][0]["opening"]["total"] == 68.5
     if mode == "available":
         assert game["quotes"][0]["latest"]["total"] == 70.5
+        assert game["quotes"][0]["latestCapturedAt"] == check["checkedAt"]
         assert check["books"] == [{"sportsbook": "betmgm", "sourceLines": 1, "importedLines": 1, "unmatchedLines": 0}]
     else:
         assert game["quotes"][0]["latest"]["total"] == 69.5
@@ -72,5 +92,9 @@ def test_source_counts_and_last_known_quote_provenance(monkeypatch, tmp_path, mo
         assert result["unmatchedOdds"][0]["booksWithLines"] == ["betmgm"]
     elif mode == "not_matched":
         assert game["marketCoverage"]["status"] == "not_matched"
-    elif mode == "no_current_line":
+    elif mode in {"no_current_line", "zero_placeholder"}:
         assert game["marketCoverage"]["books"][0]["status"] == "no_current_line"
+        if mode == "zero_placeholder":
+            assert game["quotes"][1]["sportsbook"] == "draftkings"
+            assert game["quotes"][1]["latest"]["total"] == 72.5
+            assert check["books"] == [{"sportsbook": "draftkings", "sourceLines": 1, "importedLines": 1, "unmatchedLines": 0}]

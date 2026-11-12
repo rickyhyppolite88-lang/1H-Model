@@ -35,7 +35,16 @@ def plan_refresh(ledger: dict, now: datetime, event: str, schedule: str = "", *,
     today = now.astimezone(EASTERN).date()
 
     def decision(mode: str, reason: str, near: int = 0, active: int = 0, minimum: int = MIN_REFRESH_MINUTES) -> dict:
+        date_from = today
+        if mode == "markets":
+            for game in ledger.get("games", []):
+                if game["firstHalfComplete"] or re.search(r"cancel|postpon", game["status"], re.IGNORECASE):
+                    continue
+                elapsed = now - instant(game["startsAt"])
+                if timedelta() <= elapsed <= timedelta(hours=RESULT_WINDOW_HOURS):
+                    date_from = min(date_from, instant(game["startsAt"]).astimezone(EASTERN).date())
         return {"mode": mode, "reason": reason, "date": today.isoformat(), "plannedAt": now.isoformat().replace("+00:00", "Z"),
+                "date_from": date_from.isoformat(),
                 "nearTipGames": near, "activeHalves": active, "targetMinutesBeforeTipoff": 60, "preTipWindowMinutes": PRETIP_MINUTES,
                 "minimumRefreshMinutes": minimum}
 
@@ -70,6 +79,18 @@ def plan_refresh(ledger: dict, now: datetime, event: str, schedule: str = "", *,
     )
     if closing and age >= timedelta(minutes=5):
         return decision("markets", "Final pre-tip line check in the last 15 minutes.", closing, minimum=5)
+    active_now = sum(
+        not game["firstHalfComplete"]
+        and not re.search(r"cancel|postpon", game["status"], re.IGNORECASE)
+        and -timedelta(hours=RESULT_WINDOW_HOURS) <= instant(game["startsAt"]) - now <= (
+            timedelta(hours=RESULT_WINDOW_HOURS) if re.search(r"in progress|halftime|final|suspended|overtime", game["status"], re.IGNORECASE) else timedelta()
+        )
+        for game in ledger["games"]
+    )
+    if active_now and age >= timedelta(minutes=5):
+        if through < today:
+            return decision("full", "Discover the new Eastern date and unfinished first-half results.", active=active_now, minimum=5)
+        return decision("markets", "Five-minute follow-up for completed first-half results.", active=active_now, minimum=5)
     if age < timedelta(minutes=MIN_REFRESH_MINUTES):
         return decision("skip", "A successful market refresh is less than 15 minutes old.")
     if through < today:
@@ -113,7 +134,7 @@ def main() -> None:
         args.output.write_text(json.dumps(result, indent=2) + "\n", encoding="utf-8")
     if os.environ.get("GITHUB_OUTPUT"):
         with open(os.environ["GITHUB_OUTPUT"], "a", encoding="utf-8") as output:
-            for key in ["mode", "reason", "date"]:
+            for key in ["mode", "reason", "date", "date_from"]:
                 output.write(f"{key}={result[key]}\n")
     if os.environ.get("GITHUB_STEP_SUMMARY"):
         with open(os.environ["GITHUB_STEP_SUMMARY"], "a", encoding="utf-8") as summary:

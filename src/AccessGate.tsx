@@ -8,9 +8,11 @@ import {
   useRef,
   useState,
 } from "react";
+import GamblingSupport from "./GamblingSupport";
 import ThemeToggle from "./ThemeToggle";
 
 export const accessSessionKey = "1h-model-access-v1";
+export const supportNoticeKey = "1h-model-support-notice-v1";
 export const idleTimeout = 30 * 60 * 1000;
 export const accessPasswordDigest =
   "68a242c130a1c9254dbd2bb44ab18d787c40dc13eae775b103e086ccf17ce3a3";
@@ -55,6 +57,13 @@ export default function AccessGate({ children }: { children: ReactNode }) {
   const [unlocked, setUnlocked] = useState(() =>
     sessionIsActive(readSession()),
   );
+  const [supportSeen, setSupportSeen] = useState(() => {
+    try {
+      return sessionStorage.getItem(supportNoticeKey) === "acknowledged";
+    } catch {
+      return false;
+    }
+  });
   const lastActive = useRef<number | null>(readSession());
   const lastWritten = useRef(0);
   const [password, setPassword] = useState("");
@@ -80,6 +89,12 @@ export default function AccessGate({ children }: { children: ReactNode }) {
     setPassword("");
     setError("");
     setMessage(reason);
+    setSupportSeen(false);
+    try {
+      sessionStorage.removeItem(supportNoticeKey);
+    } catch {
+      /* Clear in memory. */
+    }
     try {
       localStorage.removeItem(accessSessionKey);
     } catch {
@@ -164,6 +179,12 @@ export default function AccessGate({ children }: { children: ReactNode }) {
       lastActive.current = Date.now();
       saveSession();
       setMessage("");
+      setSupportSeen(false);
+      try {
+        sessionStorage.removeItem(supportNoticeKey);
+      } catch {
+        /* Current tab remains usable. */
+      }
       setUnlocked(true);
     } catch {
       setError(
@@ -174,6 +195,23 @@ export default function AccessGate({ children }: { children: ReactNode }) {
     }
   }
 
+  if (unlocked && !supportSeen)
+    return (
+      <GamblingSupport
+        onContinue={() => {
+          if (!sessionIsActive(lastActive.current)) {
+            lock("Your session timed out after 30 minutes of inactivity.");
+            return;
+          }
+          setSupportSeen(true);
+          try {
+            sessionStorage.setItem(supportNoticeKey, "acknowledged");
+          } catch {
+            /* Continue in memory. */
+          }
+        }}
+      />
+    );
   if (unlocked) return <LockContext value={manualLock}>{children}</LockContext>;
   return (
     <main className="access-page">

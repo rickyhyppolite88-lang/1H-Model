@@ -41,7 +41,9 @@ def test_final_fifteen_minutes_check_lines_every_five_minutes(age, mode):
 
 @pytest.mark.parametrize("status", ["Canceled", "Postponed", "In Progress", "Final"])
 def test_final_pretip_acceleration_does_not_rank_started_or_inactive_games(status):
-    assert poll(ledger(minutes=8, age=5, status=status))["mode"] == "skip"
+    result = poll(ledger(minutes=8, age=5, status=status))
+    assert result["mode"] == ("markets" if status in {"In Progress", "Final"} else "skip")
+    assert result["nearTipGames"] == 0
 
 
 @pytest.mark.parametrize("status,complete", [("Canceled", False), ("Cancelled", False), ("Postponed", False), ("Final", True), ("In Progress", True)])
@@ -82,6 +84,28 @@ def test_new_eastern_day_requires_stats_and_schedule_discovery_before_line_only_
     assert poll(data)["mode"] == "full"
     data["capturedAt"] = (NOW - timedelta(minutes=5)).isoformat()
     assert poll(data)["mode"] == "skip"
+
+
+@pytest.mark.parametrize("age,mode", [(4.99,"skip"),(5,"markets"),(10,"markets")])
+def test_active_first_half_results_are_checked_every_five_minutes(age,mode):
+    result=poll(ledger(minutes=-45,status="In Progress",age=age))
+    assert result["mode"] == mode
+    if mode == "markets":
+        assert result["activeHalves"] == 1
+        assert result["minimumRefreshMinutes"] == 5
+
+
+def test_result_refresh_includes_prior_eastern_date_for_unfinished_overnight_games():
+    now=datetime(2026,11,5,5,15,tzinfo=timezone.utc)
+    data=ledger(minutes=-60,status="In Progress",age=5)
+    data.update(through="2026-11-05",capturedAt="2026-11-05T05:10:00Z")
+    data["games"][0]["startsAt"]="2026-11-05T04:30:00Z"
+    result=poll(data,now)
+    assert result["mode"] == "markets"
+    assert result["date"] == "2026-11-05"
+    assert result["date_from"] == "2026-11-04"
+    data["games"][0]["firstHalfComplete"]=True
+    assert poll(data,now)["mode"] == "skip"
 
 
 def test_utc_midnight_is_not_an_eastern_date_rollover():
