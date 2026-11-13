@@ -531,7 +531,7 @@
     ]
   },
   "startedAt": "2026-11-05T16:08:14.757Z",
-  "updatedAt": "2026-11-13T02:00:59.468Z",
+  "updatedAt": "2026-11-13T02:21:04.904Z",
   "forecasts": [
     {
       "id": "2026-27_enhanced-baseline-v2_401920073_v1",
@@ -25392,6 +25392,158 @@
           "name": "San José State Spartans"
         }
       }
+    },
+    {
+      "id": "2026-27_enhanced-baseline-v2_401911471_v13",
+      "season": "2026-27",
+      "methodId": "enhanced-baseline-v2",
+      "gameId": "401911471",
+      "gameDate": "2026-11-12",
+      "startsAt": "2026-11-13T03:00:00Z",
+      "recordedAt": "2026-11-13T02:21:04.904Z",
+      "version": 13,
+      "revision": "140da66ee30c1f3d4fd403f3c5db09db9d06e0e7",
+      "awayTeam": "UC Riverside Highlanders",
+      "homeTeam": "San José State Spartans",
+      "sportsbook": "draftkings",
+      "line": 72.5,
+      "overPrice": -120,
+      "underPrice": -110,
+      "total": 73.1082252422942,
+      "baselineTotal": 70.30266562616038,
+      "simpleTotal": 71.31376345175025,
+      "paceTotal": 75.79991792811012,
+      "side": "OVER",
+      "signalStrength": 4,
+      "status": "watch_only",
+      "reason": "Edge below 1.5 points. Scoring and pace do not both agree with the lean.",
+      "bonusMinutes": 8.138521031831118,
+      "bonusBaselineMinutes": 8.565513626834385,
+      "inputs": {
+        "baselineModelVersion": "season-bridge-v1",
+        "baselineFeatureCapturedAt": "2026-11-12T06:24:15.602Z",
+        "statsRetrievedAt": "2026-11-12T06:24:08.355586Z",
+        "priorSnapshot": "data/input-snapshots/5d7d1cdd590b01d65ca838308bd098bc8be58fdb5d96faf922f4c44677d6d7de.json",
+        "currentSnapshot": "data/input-snapshots/a57dfd52f93d8631cff3fa0ef72cab269678c38e64644535c3e4a7feed40d2a5.json",
+        "sourceBoard": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-12",
+        "quoteCapturedAt": "2026-11-13T02:20:59.009887Z",
+        "marketCheckedAt": "2026-11-13T02:20:59.009887Z",
+        "lastSeenLine": 72.5,
+        "marketFreshness": "Source check within 45 minutes",
+        "awayCurrentWeight": 0.2,
+        "homeCurrentWeight": 0.2,
+        "away_firstHalfPoints": 32.00554520547944,
+        "away_pace": 71.72496438356164,
+        "away_offensiveEfficiency": 0.988834082191781,
+        "away_defensiveEfficiency": 1.032561095890411,
+        "home_firstHalfPoints": 35.36154520547945,
+        "home_pace": 70.08096438356165,
+        "home_offensiveEfficiency": 1.069194082191781,
+        "home_defensiveEfficiency": 1.123961095890411,
+        "baselineSimpleTotal": 67.3670904109589,
+        "baselinePaceTotal": 74.7060284489626,
+        "defenseSimpleTotal": 70.21987397260273,
+        "defenseAdjustedTotal": 72.01433576314668,
+        "defenseAdjustment": 1.7116701369862994,
+        "awayFirstHalfAllowed": 35.12032876712329,
+        "homeFirstHalfAllowed": 37.95232876712329,
+        "priorAllowedMean": 35.07260273972603,
+        "priorLeagueRegression": 0.35,
+        "historyAsOf": "2026-11-13T02:21:04.904Z",
+        "excludedHistoryGames": "401917950;401918987;401920378;401920887;401924949",
+        "contextPointsAdjustment": 1.6068632472085125,
+        "contextModel": "data/context-models/16fa445d0bd3c91ecb21e168148472bdc49c330944db2e8e80cdbc6ee6a3b44d.json",
+        "freeThrowPointsAdjustment": -0.5129737680609914,
+        "freeThrowPointsCap": 2,
+        "contextPointsCap": 4,
+        "pseudoGames": 4,
+        "bonusTreatment": "Timing tracked; no separate bonus-points adjustment stacked on FT/foul points.",
+        "minimumEdge": 1.5,
+        "outlierEdge": 8,
+        "componentAgreementRequired": "Both adjusted components must agree"
+      },
+      "context": {
+        "modelVersion": "lab-context-v1",
+        "capturedAt": "2026-11-13T02:21:04.904Z",
+        "modelFittedAt": "2026-11-13T02:21:01.301275Z",
+        "startsAt": "2026-11-13T03:00:00Z",
+        "baselineFeatureCapturedAt": "2026-11-12T06:24:15.602Z",
+        "modelPath": "data/context-models/16fa445d0bd3c91ecb21e168148472bdc49c330944db2e8e80cdbc6ee6a3b44d.json",
+        "historySha256": "b1174b1fce5e2f88daf9c5e0fc17538d08ff9b0a36fc3d43638721b487d4c45e",
+        "trainingGames": 6108,
+        "baselineTotal": 70.30266562616038,
+        "baselineSimple": 67.3670904109589,
+        "baselinePace": 74.7060284489626,
+        "total": 71.90952887336888,
+        "simple": 68.9739536581674,
+        "pace": 76.3128916961711,
+        "adjustment": 1.6068632472085125,
+        "unboundedAdjustment": 1.6068632472085125,
+        "homeAwayAdjustment": 0.7903537649891443,
+        "neutralAdjustment": 0.09607209030718489,
+        "matchupAdjustment": 0.7204373919121834,
+        "crowdAdjustment": 0,
+        "expectedAttendance": 2142.1176470588234,
+        "attendanceSamples": 17,
+        "crowdEligible": false,
+        "crowdReason": "Low historical attendance; crowd adjustment disabled.",
+        "homeLocationGames": 17,
+        "awayLocationGames": 18,
+        "context": {
+          "neutralSite": false,
+          "conferenceGame": false,
+          "matchupType": "nonconference_regular",
+          "eventLabel": null,
+          "venueId": "2192",
+          "venueKey": "id:2192",
+          "venueName": "Provident Credit Union Event Center",
+          "city": "San Jose",
+          "state": "CA"
+        },
+        "warnings": []
+      },
+      "foulExposure": {
+        "awayEspnId": "27",
+        "homeEspnId": "23",
+        "expectedAwayFouls": 6.885212402615505,
+        "expectedHomeFouls": 8.950509552049136,
+        "awaySevenFoulProbability": 0.5330489620155698,
+        "homeSevenFoulProbability": 0.7886738078642384,
+        "awayFoulLow": 4,
+        "awayFoulHigh": 10,
+        "homeFoulLow": 5,
+        "homeFoulHigh": 13,
+        "expectedAwayFTA": 9.922295736415816,
+        "expectedHomeFTA": 7.06317524573622,
+        "awayFTALow": 4,
+        "awayFTAHigh": 17,
+        "homeFTALow": 2,
+        "homeFTAHigh": 13,
+        "baselineAwayFTA": 9.795381677844109,
+        "baselineHomeFTA": 7.807717450711322,
+        "awayFTPercent": 0.5630582350839586,
+        "homeFTPercent": 0.7849572126099457,
+        "pointsAdjustment": -0.5129737680609914,
+        "unboundedPointsAdjustment": -0.5129737680609914,
+        "expectedHalfPossessions": 35.451482191780826,
+        "leagueGames": 477,
+        "awayHistoryGames": 2,
+        "homeHistoryGames": 2,
+        "ftaDispersion": 2.841558613910606,
+        "pseudoGames": 4
+      },
+      "participants": {
+        "away": {
+          "espnId": "27",
+          "modelId": "uc-riverside-highlanders",
+          "name": "UC Riverside Highlanders"
+        },
+        "home": {
+          "espnId": "23",
+          "modelId": "san-jose-st-spartans",
+          "name": "San José State Spartans"
+        }
+      }
     }
   ],
   "results": [
@@ -26141,6 +26293,74 @@
         "venueName": "Pensacola Bay Center",
         "city": "Pensacola",
         "state": "FL"
+      }
+    },
+    {
+      "id": "2026-27:401919041_result1",
+      "season": "2026-27",
+      "gameId": "401919041",
+      "observedAt": "2026-11-13T02:21:03.549Z",
+      "sourceCapturedAt": "2026-11-13T02:20:57.971350Z",
+      "startsAt": "2026-11-13T01:00:00Z",
+      "awayPoints": 37,
+      "homePoints": 50,
+      "source": "https://site.api.espn.com/apis/site/v2/sports/basketball/mens-college-basketball/scoreboard?dates=20261112&groups=50&limit=1000",
+      "participants": {
+        "away": {
+          "espnId": "197",
+          "modelId": "oklahoma-state-cowboys",
+          "name": "Oklahoma State Cowboys"
+        },
+        "home": {
+          "espnId": "245",
+          "modelId": "texas-am-aggies",
+          "name": "Texas A&M Aggies"
+        }
+      },
+      "context": {
+        "neutralSite": false,
+        "conferenceGame": false,
+        "matchupType": "nonconference_regular",
+        "eventLabel": null,
+        "venueId": "2114",
+        "venueKey": "id:2114",
+        "venueName": "Reed Arena",
+        "city": "College Station",
+        "state": "TX"
+      }
+    },
+    {
+      "id": "2026-27:401922250_result1",
+      "season": "2026-27",
+      "gameId": "401922250",
+      "observedAt": "2026-11-13T02:21:03.549Z",
+      "sourceCapturedAt": "2026-11-13T02:20:57.971350Z",
+      "startsAt": "2026-11-13T01:00:00Z",
+      "awayPoints": 32,
+      "homePoints": 44,
+      "source": "https://site.api.espn.com/apis/site/v2/sports/basketball/mens-college-basketball/scoreboard?dates=20261112&groups=50&limit=1000",
+      "participants": {
+        "away": {
+          "espnId": "2697",
+          "modelId": null,
+          "name": "West Florida Argonauts"
+        },
+        "home": {
+          "espnId": "2010",
+          "modelId": "alabama-am-bulldogs",
+          "name": "Alabama A&M Bulldogs"
+        }
+      },
+      "context": {
+        "neutralSite": false,
+        "conferenceGame": false,
+        "matchupType": "nonconference_regular",
+        "eventLabel": null,
+        "venueId": "7507",
+        "venueKey": "id:7507",
+        "venueName": "Event Center",
+        "city": "Huntsville",
+        "state": "AL"
       }
     }
   ],
@@ -26978,6 +27198,82 @@
           "threeAttempted": 13,
           "turnovers": 3,
           "offensiveRebounds": 2
+        }
+      ]
+    },
+    {
+      "id": "401919041_948b7c609dcd9d038e0e552befbad6617b2bdc52ca22ff135472354115f5893b",
+      "gameId": "401919041",
+      "season": "2026-27",
+      "startsAt": "2026-11-13T01:00:00Z",
+      "observedAt": "2026-11-13T02:21:00.105495Z",
+      "source": "https://site.api.espn.com/apis/site/v2/sports/basketball/mens-college-basketball/summary?event=401919041",
+      "sourceSha256": "ce4bac0e9f776fc4f02b66fe8eb717f540a6b5d9b9d1f81dd19d57ef046f88cf",
+      "bothD1": true,
+      "teams": [
+        {
+          "espnId": "197",
+          "points": 37,
+          "fouls": 10,
+          "bonusMinutes": 10.066666666666666,
+          "fga": 34,
+          "fta": 16,
+          "freeThrowsMade": 12,
+          "threeMade": 3,
+          "threeAttempted": 16,
+          "turnovers": 10,
+          "offensiveRebounds": 11
+        },
+        {
+          "espnId": "245",
+          "points": 50,
+          "fouls": 12,
+          "bonusMinutes": 8.416666666666666,
+          "fga": 29,
+          "fta": 14,
+          "freeThrowsMade": 9,
+          "threeMade": 7,
+          "threeAttempted": 12,
+          "turnovers": 10,
+          "offensiveRebounds": 6
+        }
+      ]
+    },
+    {
+      "id": "401922250_c39824a859c3f81dd6adcaae01192866b463fa3bd665ee8fff32599a799a5b90",
+      "gameId": "401922250",
+      "season": "2026-27",
+      "startsAt": "2026-11-13T01:00:00Z",
+      "observedAt": "2026-11-13T02:21:00.105495Z",
+      "source": "https://site.api.espn.com/apis/site/v2/sports/basketball/mens-college-basketball/summary?event=401922250",
+      "sourceSha256": "8a05acf930ed1d4eaf86966d7e56ed83da59fbc32e68f5062576f405ad2e9146",
+      "bothD1": false,
+      "teams": [
+        {
+          "espnId": "2010",
+          "points": 44,
+          "fouls": 10,
+          "bonusMinutes": 11.666666666666666,
+          "fga": 23,
+          "fta": 19,
+          "freeThrowsMade": 13,
+          "threeMade": 5,
+          "threeAttempted": 10,
+          "turnovers": 5,
+          "offensiveRebounds": 2
+        },
+        {
+          "espnId": "2697",
+          "points": 32,
+          "fouls": 15,
+          "bonusMinutes": 8.2,
+          "fga": 27,
+          "fta": 12,
+          "freeThrowsMade": 10,
+          "threeMade": 2,
+          "threeAttempted": 11,
+          "turnovers": 8,
+          "offensiveRebounds": 6
         }
       ]
     }
