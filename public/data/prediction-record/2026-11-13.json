@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-11-13T08:48:31.896Z",
+  "updatedAt": "2026-11-13T09:42:58.282Z",
   "entryPolicy": {
     "method": "last-pretip-v1",
     "startedAt": "2026-11-10T21:33:29.039Z",
@@ -11381,161 +11381,6 @@
       }
     },
     {
-      "id": "2026-27_401922211_v4",
-      "season": "2026-27",
-      "gameId": "401922211",
-      "gameDate": "2026-11-13",
-      "version": 4,
-      "recordedAt": "2026-11-13T08:48:31.896Z",
-      "signalCalculatedAt": "2026-11-13T08:48:31.896Z",
-      "origin": "batch_capture",
-      "evidence": null,
-      "inputSnapshots": {
-        "prior": "data/input-snapshots/5d7d1cdd590b01d65ca838308bd098bc8be58fdb5d96faf922f4c44677d6d7de.json",
-        "current": "data/input-snapshots/b2946969e2eff6108a90ab1103f30f77526aee3f0f8e7ce3175554c93213cffa.json",
-        "currentMatchesFrozenInputs": true
-      },
-      "modelVersion": "season-bridge-v1",
-      "source": {
-        "repository": "https://github.com/rickyhyppolite88-lang/1H-Model",
-        "projectionCode": "https://github.com/rickyhyppolite88-lang/1H-Model/blob/d6b6de434683d8651706082fffc67cea67dd1f58/src/model/predictor.ts",
-        "batchCode": "https://github.com/rickyhyppolite88-lang/1H-Model/blob/d6b6de434683d8651706082fffc67cea67dd1f58/src/model/predictions.ts",
-        "revision": "d6b6de434683d8651706082fffc67cea67dd1f58"
-      },
-      "state": "pregame",
-      "sportsbook": "draftkings",
-      "basis": "latest",
-      "comparison": {
-        "line": null,
-        "signedEdge": null,
-        "lean": null
-      },
-      "signal": {
-        "method": "model-signal-v1",
-        "score": null,
-        "label": "Unavailable",
-        "reason": "A pregame projection, both components, and the selected line are required.",
-        "fill": null
-      },
-      "prediction": {
-        "gameId": "401922211",
-        "startsAt": "2026-11-14T00:00:00Z",
-        "awayTeam": "Florida International Panthers",
-        "homeTeam": "Florida Gulf Coast Eagles",
-        "awayConference": "Conference USA",
-        "homeConference": "Atlantic Sun",
-        "awayRank": null,
-        "homeRank": null,
-        "rankingsKnown": true,
-        "status": "Scheduled",
-        "projectedFirstHalfTotal": 75.67150813056814,
-        "actualFirstHalfTotal": null,
-        "simpleTotal": 73.90840448318804,
-        "paceAdjustedTotal": 78.3161636016383,
-        "featureKind": "captured_pregame",
-        "featureCapturedAt": "2026-11-13T05:44:49.186Z",
-        "unavailableReason": null,
-        "marketCoverage": {
-          "checkedAt": "2026-11-13T08:48:27.305144Z",
-          "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-13",
-          "status": "matched",
-          "books": [
-            {
-              "sportsbook": "fanatics",
-              "status": "available"
-            }
-          ]
-        },
-        "markets": [
-          {
-            "sportsbook": "fanatics",
-            "openingLine": 73.5,
-            "latestLine": 75.5,
-            "capturedAt": "2026-11-13T08:48:27.305144Z",
-            "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-13",
-            "closingVerified": false
-          }
-        ],
-        "signal": {
-          "method": "model-signal-v1",
-          "score": null,
-          "label": "Unavailable",
-          "reason": "A pregame projection, both components, and the selected line are required.",
-          "fill": null
-        }
-      },
-      "features": {
-        "kind": "captured_pregame",
-        "capturedAt": "2026-11-13T05:44:49.186Z",
-        "priorAsOf": "2026-04-07",
-        "currentAsOf": "2026-11-13",
-        "modelVersion": "season-bridge-v1",
-        "statsRetrievedAt": "2026-11-13T05:44:40.622071Z",
-        "away": {
-          "id": "florida-international-panthers",
-          "name": "Florida Intl",
-          "firstHalfPoints": 37.66154520547945,
-          "pace": 74.06496438356164,
-          "offensiveEfficiency": 1.056634082191781,
-          "defensiveEfficiency": 1.041561095890411,
-          "currentWeight": 0.2,
-          "currentGames": 2,
-          "priorAvailable": true,
-          "strengthOfSchedule": -16.4,
-          "notes": [
-            "Roster continuity is not measured; league regression reduces reliance on last year's roster."
-          ]
-        },
-        "home": {
-          "id": "florida-gulf-coast-eagles",
-          "name": "FGCU",
-          "firstHalfPoints": 36.24685927770859,
-          "pace": 72.22996762141969,
-          "offensiveEfficiency": 1.0787946201743461,
-          "defensiveEfficiency": 1.1056555417185552,
-          "currentWeight": 0.2727272727272727,
-          "currentGames": 3,
-          "priorAvailable": true,
-          "strengthOfSchedule": -1.2,
-          "notes": [
-            "Roster continuity is not measured; league regression reduces reliance on last year's roster."
-          ]
-        }
-      },
-      "quotes": [
-        {
-          "sportsbook": "fanatics",
-          "opening": {
-            "total": 73.5,
-            "overPrice": 100,
-            "underPrice": -120
-          },
-          "latest": {
-            "total": 75.5,
-            "overPrice": -105,
-            "underPrice": -115
-          },
-          "openingCapturedAt": "2026-11-13T05:44:43.439270Z",
-          "latestCapturedAt": "2026-11-13T08:48:27.305144Z",
-          "closingVerified": false,
-          "quoteTimestamp": null,
-          "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-13"
-        }
-      ],
-      "participants": {
-        "away": {
-          "espnId": "2229",
-          "modelId": "florida-international-panthers",
-          "name": "Florida International Panthers"
-        },
-        "home": {
-          "espnId": "526",
-          "modelId": "florida-gulf-coast-eagles",
-          "name": "Florida Gulf Coast Eagles"
-        }
-      }
-    },
-    {
       "id": "2026-27_401925755_v2",
       "season": "2026-27",
       "gameId": "401925755",
@@ -11687,6 +11532,161 @@
           "espnId": "127",
           "modelId": "michigan-st-spartans",
           "name": "Michigan State Spartans"
+        }
+      }
+    },
+    {
+      "id": "2026-27_401922211_v4",
+      "season": "2026-27",
+      "gameId": "401922211",
+      "gameDate": "2026-11-13",
+      "version": 4,
+      "recordedAt": "2026-11-13T08:48:31.896Z",
+      "signalCalculatedAt": "2026-11-13T08:48:31.896Z",
+      "origin": "batch_capture",
+      "evidence": null,
+      "inputSnapshots": {
+        "prior": "data/input-snapshots/5d7d1cdd590b01d65ca838308bd098bc8be58fdb5d96faf922f4c44677d6d7de.json",
+        "current": "data/input-snapshots/b2946969e2eff6108a90ab1103f30f77526aee3f0f8e7ce3175554c93213cffa.json",
+        "currentMatchesFrozenInputs": true
+      },
+      "modelVersion": "season-bridge-v1",
+      "source": {
+        "repository": "https://github.com/rickyhyppolite88-lang/1H-Model",
+        "projectionCode": "https://github.com/rickyhyppolite88-lang/1H-Model/blob/d6b6de434683d8651706082fffc67cea67dd1f58/src/model/predictor.ts",
+        "batchCode": "https://github.com/rickyhyppolite88-lang/1H-Model/blob/d6b6de434683d8651706082fffc67cea67dd1f58/src/model/predictions.ts",
+        "revision": "d6b6de434683d8651706082fffc67cea67dd1f58"
+      },
+      "state": "pregame",
+      "sportsbook": "draftkings",
+      "basis": "latest",
+      "comparison": {
+        "line": null,
+        "signedEdge": null,
+        "lean": null
+      },
+      "signal": {
+        "method": "model-signal-v1",
+        "score": null,
+        "label": "Unavailable",
+        "reason": "A pregame projection, both components, and the selected line are required.",
+        "fill": null
+      },
+      "prediction": {
+        "gameId": "401922211",
+        "startsAt": "2026-11-14T00:00:00Z",
+        "awayTeam": "Florida International Panthers",
+        "homeTeam": "Florida Gulf Coast Eagles",
+        "awayConference": "Conference USA",
+        "homeConference": "Atlantic Sun",
+        "awayRank": null,
+        "homeRank": null,
+        "rankingsKnown": true,
+        "status": "Scheduled",
+        "projectedFirstHalfTotal": 75.67150813056814,
+        "actualFirstHalfTotal": null,
+        "simpleTotal": 73.90840448318804,
+        "paceAdjustedTotal": 78.3161636016383,
+        "featureKind": "captured_pregame",
+        "featureCapturedAt": "2026-11-13T05:44:49.186Z",
+        "unavailableReason": null,
+        "marketCoverage": {
+          "checkedAt": "2026-11-13T08:48:27.305144Z",
+          "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-13",
+          "status": "matched",
+          "books": [
+            {
+              "sportsbook": "fanatics",
+              "status": "available"
+            }
+          ]
+        },
+        "markets": [
+          {
+            "sportsbook": "fanatics",
+            "openingLine": 73.5,
+            "latestLine": 75.5,
+            "capturedAt": "2026-11-13T08:48:27.305144Z",
+            "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-13",
+            "closingVerified": false
+          }
+        ],
+        "signal": {
+          "method": "model-signal-v1",
+          "score": null,
+          "label": "Unavailable",
+          "reason": "A pregame projection, both components, and the selected line are required.",
+          "fill": null
+        }
+      },
+      "features": {
+        "kind": "captured_pregame",
+        "capturedAt": "2026-11-13T05:44:49.186Z",
+        "priorAsOf": "2026-04-07",
+        "currentAsOf": "2026-11-13",
+        "modelVersion": "season-bridge-v1",
+        "statsRetrievedAt": "2026-11-13T05:44:40.622071Z",
+        "away": {
+          "id": "florida-international-panthers",
+          "name": "Florida Intl",
+          "firstHalfPoints": 37.66154520547945,
+          "pace": 74.06496438356164,
+          "offensiveEfficiency": 1.056634082191781,
+          "defensiveEfficiency": 1.041561095890411,
+          "currentWeight": 0.2,
+          "currentGames": 2,
+          "priorAvailable": true,
+          "strengthOfSchedule": -16.4,
+          "notes": [
+            "Roster continuity is not measured; league regression reduces reliance on last year's roster."
+          ]
+        },
+        "home": {
+          "id": "florida-gulf-coast-eagles",
+          "name": "FGCU",
+          "firstHalfPoints": 36.24685927770859,
+          "pace": 72.22996762141969,
+          "offensiveEfficiency": 1.0787946201743461,
+          "defensiveEfficiency": 1.1056555417185552,
+          "currentWeight": 0.2727272727272727,
+          "currentGames": 3,
+          "priorAvailable": true,
+          "strengthOfSchedule": -1.2,
+          "notes": [
+            "Roster continuity is not measured; league regression reduces reliance on last year's roster."
+          ]
+        }
+      },
+      "quotes": [
+        {
+          "sportsbook": "fanatics",
+          "opening": {
+            "total": 73.5,
+            "overPrice": 100,
+            "underPrice": -120
+          },
+          "latest": {
+            "total": 75.5,
+            "overPrice": -105,
+            "underPrice": -115
+          },
+          "openingCapturedAt": "2026-11-13T05:44:43.439270Z",
+          "latestCapturedAt": "2026-11-13T08:48:27.305144Z",
+          "closingVerified": false,
+          "quoteTimestamp": null,
+          "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-13"
+        }
+      ],
+      "participants": {
+        "away": {
+          "espnId": "2229",
+          "modelId": "florida-international-panthers",
+          "name": "Florida International Panthers"
+        },
+        "home": {
+          "espnId": "526",
+          "modelId": "florida-gulf-coast-eagles",
+          "name": "Florida Gulf Coast Eagles"
         }
       }
     }
