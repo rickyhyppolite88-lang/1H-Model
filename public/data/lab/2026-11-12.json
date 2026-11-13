@@ -531,7 +531,7 @@
     ]
   },
   "startedAt": "2026-11-05T16:08:14.757Z",
-  "updatedAt": "2026-11-13T03:09:10.545Z",
+  "updatedAt": "2026-11-13T03:56:56.676Z",
   "forecasts": [
     {
       "id": "2026-27_enhanced-baseline-v2_401920073_v1",
@@ -26464,6 +26464,74 @@
         "city": "Provo",
         "state": "UT"
       }
+    },
+    {
+      "id": "2026-27:401911471_result1",
+      "season": "2026-27",
+      "gameId": "401911471",
+      "observedAt": "2026-11-13T03:56:55.280Z",
+      "sourceCapturedAt": "2026-11-13T03:56:50.153265Z",
+      "startsAt": "2026-11-13T03:00:00Z",
+      "awayPoints": 36,
+      "homePoints": 37,
+      "source": "https://site.api.espn.com/apis/site/v2/sports/basketball/mens-college-basketball/scoreboard?dates=20261112&groups=50&limit=1000",
+      "participants": {
+        "away": {
+          "espnId": "27",
+          "modelId": "uc-riverside-highlanders",
+          "name": "UC Riverside Highlanders"
+        },
+        "home": {
+          "espnId": "23",
+          "modelId": "san-jose-st-spartans",
+          "name": "San José State Spartans"
+        }
+      },
+      "context": {
+        "neutralSite": false,
+        "conferenceGame": false,
+        "matchupType": "nonconference_regular",
+        "eventLabel": null,
+        "venueId": "2192",
+        "venueKey": "id:2192",
+        "venueName": "Provident Credit Union Event Center",
+        "city": "San Jose",
+        "state": "CA"
+      }
+    },
+    {
+      "id": "2026-27:401920296_result1",
+      "season": "2026-27",
+      "gameId": "401920296",
+      "observedAt": "2026-11-13T03:56:55.280Z",
+      "sourceCapturedAt": "2026-11-13T03:56:50.153265Z",
+      "startsAt": "2026-11-13T03:00:00Z",
+      "awayPoints": 37,
+      "homePoints": 57,
+      "source": "https://site.api.espn.com/apis/site/v2/sports/basketball/mens-college-basketball/scoreboard?dates=20261112&groups=50&limit=1000",
+      "participants": {
+        "away": {
+          "espnId": "134743",
+          "modelId": null,
+          "name": "Grace (CA) Talons"
+        },
+        "home": {
+          "espnId": "2463",
+          "modelId": "csu-northridge-matadors",
+          "name": "Cal State Northridge Matadors"
+        }
+      },
+      "context": {
+        "neutralSite": false,
+        "conferenceGame": false,
+        "matchupType": "nonconference_regular",
+        "eventLabel": null,
+        "venueId": "586",
+        "venueKey": "id:586",
+        "venueName": "Premier America Credit Union Arena",
+        "city": "Northridge",
+        "state": "CA"
+      }
     }
   ],
   "halves": [
@@ -27490,6 +27558,82 @@
           "threeAttempted": 12,
           "turnovers": 5,
           "offensiveRebounds": 4
+        }
+      ]
+    },
+    {
+      "id": "401911471_3ec942637756b72a257376ba7a231ee5c999f3b25081b11bed009400af07fd79",
+      "gameId": "401911471",
+      "season": "2026-27",
+      "startsAt": "2026-11-13T03:00:00Z",
+      "observedAt": "2026-11-13T03:56:51.805564Z",
+      "source": "https://site.api.espn.com/apis/site/v2/sports/basketball/mens-college-basketball/summary?event=401911471",
+      "sourceSha256": "5ecaa620a0c597c84bcbe784b030f4962af1ffb55f09b2f8692c3d29dad36d29",
+      "bothD1": true,
+      "teams": [
+        {
+          "espnId": "23",
+          "points": 37,
+          "fouls": 11,
+          "bonusMinutes": 5.866666666666666,
+          "fga": 23,
+          "fta": 7,
+          "freeThrowsMade": 5,
+          "threeMade": 4,
+          "threeAttempted": 8,
+          "turnovers": 14,
+          "offensiveRebounds": 3
+        },
+        {
+          "espnId": "27",
+          "points": 36,
+          "fouls": 9,
+          "bonusMinutes": 7.1,
+          "fga": 22,
+          "fta": 9,
+          "freeThrowsMade": 4,
+          "threeMade": 6,
+          "threeAttempted": 11,
+          "turnovers": 12,
+          "offensiveRebounds": 2
+        }
+      ]
+    },
+    {
+      "id": "401920296_9e305ab276ef3a8cd8dbc31e6ea2f2f8e633e2d1c85d3c70b9fefdefeb9a9f7c",
+      "gameId": "401920296",
+      "season": "2026-27",
+      "startsAt": "2026-11-13T03:00:00Z",
+      "observedAt": "2026-11-13T03:56:51.805564Z",
+      "source": "https://site.api.espn.com/apis/site/v2/sports/basketball/mens-college-basketball/summary?event=401920296",
+      "sourceSha256": "27bb31c755d8b5ac7221c340bff168c27af8a67666ffffdff9214a2f321523e6",
+      "bothD1": false,
+      "teams": [
+        {
+          "espnId": "134743",
+          "points": 37,
+          "fouls": 5,
+          "bonusMinutes": 6.05,
+          "fga": 31,
+          "fta": 11,
+          "freeThrowsMade": 6,
+          "threeMade": 7,
+          "threeAttempted": 13,
+          "turnovers": 5,
+          "offensiveRebounds": 3
+        },
+        {
+          "espnId": "2463",
+          "points": 57,
+          "fouls": 9,
+          "bonusMinutes": 0,
+          "fga": 34,
+          "fta": 6,
+          "freeThrowsMade": 4,
+          "threeMade": 7,
+          "threeAttempted": 11,
+          "turnovers": 7,
+          "offensiveRebounds": 6
         }
       ]
     }
