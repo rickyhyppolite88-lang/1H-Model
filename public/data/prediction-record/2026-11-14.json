@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-11-14T11:42:50.721Z",
+  "updatedAt": "2026-11-14T11:58:20.793Z",
   "entryPolicy": {
     "method": "last-pretip-v1",
     "startedAt": "2026-11-10T21:33:29.039Z",
@@ -11190,436 +11190,6 @@
       }
     },
     {
-      "id": "2026-27_401912229_v3",
-      "season": "2026-27",
-      "gameId": "401912229",
-      "gameDate": "2026-11-14",
-      "version": 3,
-      "recordedAt": "2026-11-14T11:42:50.721Z",
-      "signalCalculatedAt": "2026-11-14T11:42:50.721Z",
-      "origin": "batch_capture",
-      "evidence": null,
-      "inputSnapshots": {
-        "prior": "data/input-snapshots/5d7d1cdd590b01d65ca838308bd098bc8be58fdb5d96faf922f4c44677d6d7de.json",
-        "current": "data/input-snapshots/022dd7d020cc5460c789e2307738082f4aa1055db91f22c9e5f3d0150c2b3e4b.json",
-        "currentMatchesFrozenInputs": true
-      },
-      "modelVersion": "season-bridge-v1",
-      "source": {
-        "repository": "https://github.com/rickyhyppolite88-lang/1H-Model",
-        "projectionCode": "https://github.com/rickyhyppolite88-lang/1H-Model/blob/9209e69bfd47272c3ebaaf8872fb12a5c8563baf/src/model/predictor.ts",
-        "batchCode": "https://github.com/rickyhyppolite88-lang/1H-Model/blob/9209e69bfd47272c3ebaaf8872fb12a5c8563baf/src/model/predictions.ts",
-        "revision": "9209e69bfd47272c3ebaaf8872fb12a5c8563baf"
-      },
-      "state": "pregame",
-      "sportsbook": "draftkings",
-      "basis": "latest",
-      "comparison": {
-        "line": null,
-        "signedEdge": null,
-        "lean": null
-      },
-      "signal": {
-        "method": "model-signal-v1",
-        "score": null,
-        "label": "Unavailable",
-        "reason": "A pregame projection, both components, and the selected line are required.",
-        "fill": null
-      },
-      "prediction": {
-        "gameId": "401912229",
-        "startsAt": "2026-11-14T18:00:00Z",
-        "awayTeam": "St. Thomas Tommies",
-        "homeTeam": "Army Black Knights",
-        "awayConference": "Summit League",
-        "homeConference": "Patriot League",
-        "awayRank": null,
-        "homeRank": null,
-        "rankingsKnown": true,
-        "status": "Scheduled",
-        "projectedFirstHalfTotal": 68.1487475376012,
-        "actualFirstHalfTotal": null,
-        "simpleTotal": 64.55875300954752,
-        "paceAdjustedTotal": 73.5337393296817,
-        "featureKind": "captured_pregame",
-        "featureCapturedAt": "2026-11-14T06:20:56.837Z",
-        "unavailableReason": null,
-        "marketCoverage": {
-          "checkedAt": "2026-11-14T11:42:47.508853Z",
-          "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-14",
-          "status": "matched",
-          "books": [
-            {
-              "sportsbook": "bet_rivers_co",
-              "status": "available"
-            },
-            {
-              "sportsbook": "fanatics",
-              "status": "available"
-            },
-            {
-              "sportsbook": "hardrock",
-              "status": "available"
-            }
-          ]
-        },
-        "markets": [
-          {
-            "sportsbook": "bet_rivers_co",
-            "openingLine": 68.5,
-            "latestLine": 68.5,
-            "capturedAt": "2026-11-14T11:42:47.508853Z",
-            "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-14",
-            "closingVerified": false
-          },
-          {
-            "sportsbook": "fanatics",
-            "openingLine": 71.5,
-            "latestLine": 68.5,
-            "capturedAt": "2026-11-14T11:42:47.508853Z",
-            "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-14",
-            "closingVerified": false
-          },
-          {
-            "sportsbook": "hardrock",
-            "openingLine": 68.5,
-            "latestLine": 68.5,
-            "capturedAt": "2026-11-14T11:42:47.508853Z",
-            "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-14",
-            "closingVerified": false
-          }
-        ],
-        "signal": {
-          "method": "model-signal-v1",
-          "score": null,
-          "label": "Unavailable",
-          "reason": "A pregame projection, both components, and the selected line are required.",
-          "fill": null
-        }
-      },
-      "features": {
-        "kind": "captured_pregame",
-        "capturedAt": "2026-11-14T06:20:56.837Z",
-        "priorAsOf": "2026-04-07",
-        "currentAsOf": "2026-11-14",
-        "modelVersion": "season-bridge-v1",
-        "statsRetrievedAt": "2026-11-14T06:20:47.885103Z",
-        "away": {
-          "id": "st-thomas-mn-tommies",
-          "name": "St Thomas",
-          "firstHalfPoints": 35.504621004566204,
-          "pace": 70.23747031963471,
-          "offensiveEfficiency": 1.0881284018264838,
-          "defensiveEfficiency": 1.0639342465753423,
-          "currentWeight": 0.3333333333333333,
-          "currentGames": 4,
-          "priorAvailable": true,
-          "strengthOfSchedule": -2.7,
-          "notes": [
-            "Roster continuity is not measured; league regression reduces reliance on last year's roster."
-          ]
-        },
-        "home": {
-          "id": "army-black-knights",
-          "name": "Army",
-          "firstHalfPoints": 29.054132004981312,
-          "pace": 69.59905853051059,
-          "offensiveEfficiency": 0.9569400747198007,
-          "defensiveEfficiency": 1.0978373599003732,
-          "currentWeight": 0.2727272727272727,
-          "currentGames": 3,
-          "priorAvailable": true,
-          "strengthOfSchedule": -10.1,
-          "notes": [
-            "Roster continuity is not measured; league regression reduces reliance on last year's roster."
-          ]
-        }
-      },
-      "quotes": [
-        {
-          "sportsbook": "bet_rivers_co",
-          "opening": {
-            "total": 68.5,
-            "overPrice": -113,
-            "underPrice": -121
-          },
-          "latest": {
-            "total": 68.5,
-            "overPrice": -113,
-            "underPrice": -121
-          },
-          "openingCapturedAt": "2026-11-14T11:42:47.508853Z",
-          "latestCapturedAt": "2026-11-14T11:42:47.508853Z",
-          "closingVerified": false,
-          "quoteTimestamp": null,
-          "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-14"
-        },
-        {
-          "sportsbook": "fanatics",
-          "opening": {
-            "total": 71.5,
-            "overPrice": 105,
-            "underPrice": -125
-          },
-          "latest": {
-            "total": 68.5,
-            "overPrice": -105,
-            "underPrice": -115
-          },
-          "openingCapturedAt": "2026-11-14T06:20:50.643769Z",
-          "latestCapturedAt": "2026-11-14T11:42:47.508853Z",
-          "closingVerified": false,
-          "quoteTimestamp": null,
-          "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-14"
-        },
-        {
-          "sportsbook": "hardrock",
-          "opening": {
-            "total": 68.5,
-            "overPrice": -110,
-            "underPrice": -120
-          },
-          "latest": {
-            "total": 68.5,
-            "overPrice": -110,
-            "underPrice": -120
-          },
-          "openingCapturedAt": "2026-11-14T11:42:47.508853Z",
-          "latestCapturedAt": "2026-11-14T11:42:47.508853Z",
-          "closingVerified": false,
-          "quoteTimestamp": null,
-          "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-14"
-        }
-      ],
-      "participants": {
-        "away": {
-          "espnId": "2900",
-          "modelId": "st-thomas-mn-tommies",
-          "name": "St. Thomas Tommies"
-        },
-        "home": {
-          "espnId": "349",
-          "modelId": "army-black-knights",
-          "name": "Army Black Knights"
-        }
-      }
-    },
-    {
-      "id": "2026-27_401920074_v3",
-      "season": "2026-27",
-      "gameId": "401920074",
-      "gameDate": "2026-11-14",
-      "version": 3,
-      "recordedAt": "2026-11-14T11:42:50.721Z",
-      "signalCalculatedAt": "2026-11-14T11:42:50.721Z",
-      "origin": "batch_capture",
-      "evidence": null,
-      "inputSnapshots": {
-        "prior": "data/input-snapshots/5d7d1cdd590b01d65ca838308bd098bc8be58fdb5d96faf922f4c44677d6d7de.json",
-        "current": "data/input-snapshots/022dd7d020cc5460c789e2307738082f4aa1055db91f22c9e5f3d0150c2b3e4b.json",
-        "currentMatchesFrozenInputs": true
-      },
-      "modelVersion": "season-bridge-v1",
-      "source": {
-        "repository": "https://github.com/rickyhyppolite88-lang/1H-Model",
-        "projectionCode": "https://github.com/rickyhyppolite88-lang/1H-Model/blob/9209e69bfd47272c3ebaaf8872fb12a5c8563baf/src/model/predictor.ts",
-        "batchCode": "https://github.com/rickyhyppolite88-lang/1H-Model/blob/9209e69bfd47272c3ebaaf8872fb12a5c8563baf/src/model/predictions.ts",
-        "revision": "9209e69bfd47272c3ebaaf8872fb12a5c8563baf"
-      },
-      "state": "pregame",
-      "sportsbook": "draftkings",
-      "basis": "latest",
-      "comparison": {
-        "line": null,
-        "signedEdge": null,
-        "lean": null
-      },
-      "signal": {
-        "method": "model-signal-v1",
-        "score": null,
-        "label": "Unavailable",
-        "reason": "A pregame projection, both components, and the selected line are required.",
-        "fill": null
-      },
-      "prediction": {
-        "gameId": "401920074",
-        "startsAt": "2026-11-14T18:00:00Z",
-        "awayTeam": "Bradley Braves",
-        "homeTeam": "George Mason Patriots",
-        "awayConference": "Missouri Valley",
-        "homeConference": "Atlantic 10",
-        "awayRank": null,
-        "homeRank": null,
-        "rankingsKnown": true,
-        "status": "Scheduled",
-        "projectedFirstHalfTotal": 67.6215525526039,
-        "actualFirstHalfTotal": null,
-        "simpleTotal": 66.41723785803238,
-        "paceAdjustedTotal": 69.42802459446118,
-        "featureKind": "captured_pregame",
-        "featureCapturedAt": "2026-11-14T06:20:56.837Z",
-        "unavailableReason": null,
-        "marketCoverage": {
-          "checkedAt": "2026-11-14T11:42:47.508853Z",
-          "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-14",
-          "status": "matched",
-          "books": [
-            {
-              "sportsbook": "bet_rivers_co",
-              "status": "available"
-            },
-            {
-              "sportsbook": "fanatics",
-              "status": "available"
-            },
-            {
-              "sportsbook": "hardrock",
-              "status": "available"
-            }
-          ]
-        },
-        "markets": [
-          {
-            "sportsbook": "bet_rivers_co",
-            "openingLine": 60.5,
-            "latestLine": 60.5,
-            "capturedAt": "2026-11-14T11:42:47.508853Z",
-            "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-14",
-            "closingVerified": false
-          },
-          {
-            "sportsbook": "fanatics",
-            "openingLine": 62.5,
-            "latestLine": 60.5,
-            "capturedAt": "2026-11-14T11:42:47.508853Z",
-            "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-14",
-            "closingVerified": false
-          },
-          {
-            "sportsbook": "hardrock",
-            "openingLine": 60.5,
-            "latestLine": 60.5,
-            "capturedAt": "2026-11-14T11:42:47.508853Z",
-            "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-14",
-            "closingVerified": false
-          }
-        ],
-        "signal": {
-          "method": "model-signal-v1",
-          "score": null,
-          "label": "Unavailable",
-          "reason": "A pregame projection, both components, and the selected line are required.",
-          "fill": null
-        }
-      },
-      "features": {
-        "kind": "captured_pregame",
-        "capturedAt": "2026-11-14T06:20:56.837Z",
-        "priorAsOf": "2026-04-07",
-        "currentAsOf": "2026-11-14",
-        "modelVersion": "season-bridge-v1",
-        "statsRetrievedAt": "2026-11-14T06:20:47.885103Z",
-        "away": {
-          "id": "bradley-braves",
-          "name": "Bradley",
-          "firstHalfPoints": 30.861287671232876,
-          "pace": 69.23747031963471,
-          "offensiveEfficiency": 0.9731950684931508,
-          "defensiveEfficiency": 1.0011009132420088,
-          "currentWeight": 0.3333333333333333,
-          "currentGames": 4,
-          "priorAvailable": true,
-          "strengthOfSchedule": -7.2,
-          "notes": [
-            "Roster continuity is not measured; league regression reduces reliance on last year's roster."
-          ]
-        },
-        "home": {
-          "id": "george-mason-patriots",
-          "name": "George Mason",
-          "firstHalfPoints": 35.5559501867995,
-          "pace": 68.28087671232876,
-          "offensiveEfficiency": 1.083812801992528,
-          "defensiveEfficiency": 0.9808009962640099,
-          "currentWeight": 0.2727272727272727,
-          "currentGames": 3,
-          "priorAvailable": true,
-          "strengthOfSchedule": -8.6,
-          "notes": [
-            "Roster continuity is not measured; league regression reduces reliance on last year's roster."
-          ]
-        }
-      },
-      "quotes": [
-        {
-          "sportsbook": "bet_rivers_co",
-          "opening": {
-            "total": 60.5,
-            "overPrice": -117,
-            "underPrice": -118
-          },
-          "latest": {
-            "total": 60.5,
-            "overPrice": -117,
-            "underPrice": -118
-          },
-          "openingCapturedAt": "2026-11-14T11:42:47.508853Z",
-          "latestCapturedAt": "2026-11-14T11:42:47.508853Z",
-          "closingVerified": false,
-          "quoteTimestamp": null,
-          "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-14"
-        },
-        {
-          "sportsbook": "fanatics",
-          "opening": {
-            "total": 62.5,
-            "overPrice": 105,
-            "underPrice": -125
-          },
-          "latest": {
-            "total": 60.5,
-            "overPrice": -110,
-            "underPrice": -110
-          },
-          "openingCapturedAt": "2026-11-14T06:20:50.643769Z",
-          "latestCapturedAt": "2026-11-14T11:42:47.508853Z",
-          "closingVerified": false,
-          "quoteTimestamp": null,
-          "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-14"
-        },
-        {
-          "sportsbook": "hardrock",
-          "opening": {
-            "total": 60.5,
-            "overPrice": -115,
-            "underPrice": -120
-          },
-          "latest": {
-            "total": 60.5,
-            "overPrice": -115,
-            "underPrice": -120
-          },
-          "openingCapturedAt": "2026-11-14T11:42:47.508853Z",
-          "latestCapturedAt": "2026-11-14T11:42:47.508853Z",
-          "closingVerified": false,
-          "quoteTimestamp": null,
-          "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-14"
-        }
-      ],
-      "participants": {
-        "away": {
-          "espnId": "71",
-          "modelId": "bradley-braves",
-          "name": "Bradley Braves"
-        },
-        "home": {
-          "espnId": "2244",
-          "modelId": "george-mason-patriots",
-          "name": "George Mason Patriots"
-        }
-      }
-    },
-    {
       "id": "2026-27_401920750_v2",
       "season": "2026-27",
       "gameId": "401920750",
@@ -12046,221 +11616,6 @@
           "espnId": "311",
           "modelId": "maine-black-bears",
           "name": "Maine Black Bears"
-        }
-      }
-    },
-    {
-      "id": "2026-27_401911231_v3",
-      "season": "2026-27",
-      "gameId": "401911231",
-      "gameDate": "2026-11-14",
-      "version": 3,
-      "recordedAt": "2026-11-14T11:42:50.721Z",
-      "signalCalculatedAt": "2026-11-14T11:42:50.721Z",
-      "origin": "batch_capture",
-      "evidence": null,
-      "inputSnapshots": {
-        "prior": "data/input-snapshots/5d7d1cdd590b01d65ca838308bd098bc8be58fdb5d96faf922f4c44677d6d7de.json",
-        "current": "data/input-snapshots/022dd7d020cc5460c789e2307738082f4aa1055db91f22c9e5f3d0150c2b3e4b.json",
-        "currentMatchesFrozenInputs": true
-      },
-      "modelVersion": "season-bridge-v1",
-      "source": {
-        "repository": "https://github.com/rickyhyppolite88-lang/1H-Model",
-        "projectionCode": "https://github.com/rickyhyppolite88-lang/1H-Model/blob/9209e69bfd47272c3ebaaf8872fb12a5c8563baf/src/model/predictor.ts",
-        "batchCode": "https://github.com/rickyhyppolite88-lang/1H-Model/blob/9209e69bfd47272c3ebaaf8872fb12a5c8563baf/src/model/predictions.ts",
-        "revision": "9209e69bfd47272c3ebaaf8872fb12a5c8563baf"
-      },
-      "state": "pregame",
-      "sportsbook": "draftkings",
-      "basis": "latest",
-      "comparison": {
-        "line": null,
-        "signedEdge": null,
-        "lean": null
-      },
-      "signal": {
-        "method": "model-signal-v1",
-        "score": null,
-        "label": "Unavailable",
-        "reason": "A pregame projection, both components, and the selected line are required.",
-        "fill": null
-      },
-      "prediction": {
-        "gameId": "401911231",
-        "startsAt": "2026-11-14T18:30:00Z",
-        "awayTeam": "Loyola Chicago Ramblers",
-        "homeTeam": "Colorado State Rams",
-        "awayConference": "Atlantic 10",
-        "homeConference": "Pac-12",
-        "awayRank": null,
-        "homeRank": null,
-        "rankingsKnown": true,
-        "status": "Scheduled",
-        "projectedFirstHalfTotal": 72.07156786649279,
-        "actualFirstHalfTotal": null,
-        "simpleTotal": 70.72280946450809,
-        "paceAdjustedTotal": 74.0947054694698,
-        "featureKind": "captured_pregame",
-        "featureCapturedAt": "2026-11-14T06:20:56.837Z",
-        "unavailableReason": null,
-        "marketCoverage": {
-          "checkedAt": "2026-11-14T11:42:47.508853Z",
-          "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-14",
-          "status": "matched",
-          "books": [
-            {
-              "sportsbook": "bet_rivers_co",
-              "status": "available"
-            },
-            {
-              "sportsbook": "fanatics",
-              "status": "available"
-            },
-            {
-              "sportsbook": "hardrock",
-              "status": "available"
-            }
-          ]
-        },
-        "markets": [
-          {
-            "sportsbook": "bet_rivers_co",
-            "openingLine": 71.5,
-            "latestLine": 71.5,
-            "capturedAt": "2026-11-14T11:42:47.508853Z",
-            "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-14",
-            "closingVerified": false
-          },
-          {
-            "sportsbook": "fanatics",
-            "openingLine": 73.5,
-            "latestLine": 71.5,
-            "capturedAt": "2026-11-14T11:42:47.508853Z",
-            "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-14",
-            "closingVerified": false
-          },
-          {
-            "sportsbook": "hardrock",
-            "openingLine": 70.5,
-            "latestLine": 70.5,
-            "capturedAt": "2026-11-14T11:42:47.508853Z",
-            "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-14",
-            "closingVerified": false
-          }
-        ],
-        "signal": {
-          "method": "model-signal-v1",
-          "score": null,
-          "label": "Unavailable",
-          "reason": "A pregame projection, both components, and the selected line are required.",
-          "fill": null
-        }
-      },
-      "features": {
-        "kind": "captured_pregame",
-        "capturedAt": "2026-11-14T06:20:56.837Z",
-        "priorAsOf": "2026-04-07",
-        "currentAsOf": "2026-11-14",
-        "modelVersion": "season-bridge-v1",
-        "statsRetrievedAt": "2026-11-14T06:20:47.885103Z",
-        "away": {
-          "id": "loyola-chicago-ramblers",
-          "name": "Loyola Chi",
-          "firstHalfPoints": 34.33776836861768,
-          "pace": 69.9172403486924,
-          "offensiveEfficiency": 1.0411037110834371,
-          "defensiveEfficiency": 1.0624737235367372,
-          "currentWeight": 0.2727272727272727,
-          "currentGames": 3,
-          "priorAvailable": true,
-          "strengthOfSchedule": -8.3,
-          "notes": [
-            "Roster continuity is not measured; league regression reduces reliance on last year's roster."
-          ]
-        },
-        "home": {
-          "id": "colorado-st-rams",
-          "name": "Colorado St",
-          "firstHalfPoints": 36.38504109589041,
-          "pace": 68.65905853051059,
-          "offensiveEfficiency": 1.1214673474470735,
-          "defensiveEfficiency": 1.0524373599003733,
-          "currentWeight": 0.2727272727272727,
-          "currentGames": 3,
-          "priorAvailable": true,
-          "strengthOfSchedule": -3.9,
-          "notes": [
-            "Roster continuity is not measured; league regression reduces reliance on last year's roster."
-          ]
-        }
-      },
-      "quotes": [
-        {
-          "sportsbook": "bet_rivers_co",
-          "opening": {
-            "total": 71.5,
-            "overPrice": -109,
-            "underPrice": -124
-          },
-          "latest": {
-            "total": 71.5,
-            "overPrice": -109,
-            "underPrice": -124
-          },
-          "openingCapturedAt": "2026-11-14T11:42:47.508853Z",
-          "latestCapturedAt": "2026-11-14T11:42:47.508853Z",
-          "closingVerified": false,
-          "quoteTimestamp": null,
-          "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-14"
-        },
-        {
-          "sportsbook": "fanatics",
-          "opening": {
-            "total": 73.5,
-            "overPrice": 100,
-            "underPrice": -120
-          },
-          "latest": {
-            "total": 71.5,
-            "overPrice": -105,
-            "underPrice": -115
-          },
-          "openingCapturedAt": "2026-11-14T06:20:50.643769Z",
-          "latestCapturedAt": "2026-11-14T11:42:47.508853Z",
-          "closingVerified": false,
-          "quoteTimestamp": null,
-          "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-14"
-        },
-        {
-          "sportsbook": "hardrock",
-          "opening": {
-            "total": 70.5,
-            "overPrice": -125,
-            "underPrice": -110
-          },
-          "latest": {
-            "total": 70.5,
-            "overPrice": -125,
-            "underPrice": -110
-          },
-          "openingCapturedAt": "2026-11-14T11:42:47.508853Z",
-          "latestCapturedAt": "2026-11-14T11:42:47.508853Z",
-          "closingVerified": false,
-          "quoteTimestamp": null,
-          "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-14"
-        }
-      ],
-      "participants": {
-        "away": {
-          "espnId": "2350",
-          "modelId": "loyola-chicago-ramblers",
-          "name": "Loyola Chicago Ramblers"
-        },
-        "home": {
-          "espnId": "36",
-          "modelId": "colorado-st-rams",
-          "name": "Colorado State Rams"
         }
       }
     },
@@ -13706,6 +13061,2706 @@
           "espnId": "2511",
           "modelId": "queens-university-of-charlotte-royals",
           "name": "Queens University Royals"
+        }
+      }
+    },
+    {
+      "id": "2026-27_401912229_v3",
+      "season": "2026-27",
+      "gameId": "401912229",
+      "gameDate": "2026-11-14",
+      "version": 3,
+      "recordedAt": "2026-11-14T11:42:50.721Z",
+      "signalCalculatedAt": "2026-11-14T11:42:50.721Z",
+      "origin": "batch_capture",
+      "evidence": null,
+      "inputSnapshots": {
+        "prior": "data/input-snapshots/5d7d1cdd590b01d65ca838308bd098bc8be58fdb5d96faf922f4c44677d6d7de.json",
+        "current": "data/input-snapshots/022dd7d020cc5460c789e2307738082f4aa1055db91f22c9e5f3d0150c2b3e4b.json",
+        "currentMatchesFrozenInputs": true
+      },
+      "modelVersion": "season-bridge-v1",
+      "source": {
+        "repository": "https://github.com/rickyhyppolite88-lang/1H-Model",
+        "projectionCode": "https://github.com/rickyhyppolite88-lang/1H-Model/blob/9209e69bfd47272c3ebaaf8872fb12a5c8563baf/src/model/predictor.ts",
+        "batchCode": "https://github.com/rickyhyppolite88-lang/1H-Model/blob/9209e69bfd47272c3ebaaf8872fb12a5c8563baf/src/model/predictions.ts",
+        "revision": "9209e69bfd47272c3ebaaf8872fb12a5c8563baf"
+      },
+      "state": "pregame",
+      "sportsbook": "draftkings",
+      "basis": "latest",
+      "comparison": {
+        "line": null,
+        "signedEdge": null,
+        "lean": null
+      },
+      "signal": {
+        "method": "model-signal-v1",
+        "score": null,
+        "label": "Unavailable",
+        "reason": "A pregame projection, both components, and the selected line are required.",
+        "fill": null
+      },
+      "prediction": {
+        "gameId": "401912229",
+        "startsAt": "2026-11-14T18:00:00Z",
+        "awayTeam": "St. Thomas Tommies",
+        "homeTeam": "Army Black Knights",
+        "awayConference": "Summit League",
+        "homeConference": "Patriot League",
+        "awayRank": null,
+        "homeRank": null,
+        "rankingsKnown": true,
+        "status": "Scheduled",
+        "projectedFirstHalfTotal": 68.1487475376012,
+        "actualFirstHalfTotal": null,
+        "simpleTotal": 64.55875300954752,
+        "paceAdjustedTotal": 73.5337393296817,
+        "featureKind": "captured_pregame",
+        "featureCapturedAt": "2026-11-14T06:20:56.837Z",
+        "unavailableReason": null,
+        "marketCoverage": {
+          "checkedAt": "2026-11-14T11:42:47.508853Z",
+          "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-14",
+          "status": "matched",
+          "books": [
+            {
+              "sportsbook": "bet_rivers_co",
+              "status": "available"
+            },
+            {
+              "sportsbook": "fanatics",
+              "status": "available"
+            },
+            {
+              "sportsbook": "hardrock",
+              "status": "available"
+            }
+          ]
+        },
+        "markets": [
+          {
+            "sportsbook": "bet_rivers_co",
+            "openingLine": 68.5,
+            "latestLine": 68.5,
+            "capturedAt": "2026-11-14T11:42:47.508853Z",
+            "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-14",
+            "closingVerified": false
+          },
+          {
+            "sportsbook": "fanatics",
+            "openingLine": 71.5,
+            "latestLine": 68.5,
+            "capturedAt": "2026-11-14T11:42:47.508853Z",
+            "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-14",
+            "closingVerified": false
+          },
+          {
+            "sportsbook": "hardrock",
+            "openingLine": 68.5,
+            "latestLine": 68.5,
+            "capturedAt": "2026-11-14T11:42:47.508853Z",
+            "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-14",
+            "closingVerified": false
+          }
+        ],
+        "signal": {
+          "method": "model-signal-v1",
+          "score": null,
+          "label": "Unavailable",
+          "reason": "A pregame projection, both components, and the selected line are required.",
+          "fill": null
+        }
+      },
+      "features": {
+        "kind": "captured_pregame",
+        "capturedAt": "2026-11-14T06:20:56.837Z",
+        "priorAsOf": "2026-04-07",
+        "currentAsOf": "2026-11-14",
+        "modelVersion": "season-bridge-v1",
+        "statsRetrievedAt": "2026-11-14T06:20:47.885103Z",
+        "away": {
+          "id": "st-thomas-mn-tommies",
+          "name": "St Thomas",
+          "firstHalfPoints": 35.504621004566204,
+          "pace": 70.23747031963471,
+          "offensiveEfficiency": 1.0881284018264838,
+          "defensiveEfficiency": 1.0639342465753423,
+          "currentWeight": 0.3333333333333333,
+          "currentGames": 4,
+          "priorAvailable": true,
+          "strengthOfSchedule": -2.7,
+          "notes": [
+            "Roster continuity is not measured; league regression reduces reliance on last year's roster."
+          ]
+        },
+        "home": {
+          "id": "army-black-knights",
+          "name": "Army",
+          "firstHalfPoints": 29.054132004981312,
+          "pace": 69.59905853051059,
+          "offensiveEfficiency": 0.9569400747198007,
+          "defensiveEfficiency": 1.0978373599003732,
+          "currentWeight": 0.2727272727272727,
+          "currentGames": 3,
+          "priorAvailable": true,
+          "strengthOfSchedule": -10.1,
+          "notes": [
+            "Roster continuity is not measured; league regression reduces reliance on last year's roster."
+          ]
+        }
+      },
+      "quotes": [
+        {
+          "sportsbook": "bet_rivers_co",
+          "opening": {
+            "total": 68.5,
+            "overPrice": -113,
+            "underPrice": -121
+          },
+          "latest": {
+            "total": 68.5,
+            "overPrice": -113,
+            "underPrice": -121
+          },
+          "openingCapturedAt": "2026-11-14T11:42:47.508853Z",
+          "latestCapturedAt": "2026-11-14T11:42:47.508853Z",
+          "closingVerified": false,
+          "quoteTimestamp": null,
+          "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-14"
+        },
+        {
+          "sportsbook": "fanatics",
+          "opening": {
+            "total": 71.5,
+            "overPrice": 105,
+            "underPrice": -125
+          },
+          "latest": {
+            "total": 68.5,
+            "overPrice": -105,
+            "underPrice": -115
+          },
+          "openingCapturedAt": "2026-11-14T06:20:50.643769Z",
+          "latestCapturedAt": "2026-11-14T11:42:47.508853Z",
+          "closingVerified": false,
+          "quoteTimestamp": null,
+          "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-14"
+        },
+        {
+          "sportsbook": "hardrock",
+          "opening": {
+            "total": 68.5,
+            "overPrice": -110,
+            "underPrice": -120
+          },
+          "latest": {
+            "total": 68.5,
+            "overPrice": -110,
+            "underPrice": -120
+          },
+          "openingCapturedAt": "2026-11-14T11:42:47.508853Z",
+          "latestCapturedAt": "2026-11-14T11:42:47.508853Z",
+          "closingVerified": false,
+          "quoteTimestamp": null,
+          "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-14"
+        }
+      ],
+      "participants": {
+        "away": {
+          "espnId": "2900",
+          "modelId": "st-thomas-mn-tommies",
+          "name": "St. Thomas Tommies"
+        },
+        "home": {
+          "espnId": "349",
+          "modelId": "army-black-knights",
+          "name": "Army Black Knights"
+        }
+      }
+    },
+    {
+      "id": "2026-27_401920074_v3",
+      "season": "2026-27",
+      "gameId": "401920074",
+      "gameDate": "2026-11-14",
+      "version": 3,
+      "recordedAt": "2026-11-14T11:42:50.721Z",
+      "signalCalculatedAt": "2026-11-14T11:42:50.721Z",
+      "origin": "batch_capture",
+      "evidence": null,
+      "inputSnapshots": {
+        "prior": "data/input-snapshots/5d7d1cdd590b01d65ca838308bd098bc8be58fdb5d96faf922f4c44677d6d7de.json",
+        "current": "data/input-snapshots/022dd7d020cc5460c789e2307738082f4aa1055db91f22c9e5f3d0150c2b3e4b.json",
+        "currentMatchesFrozenInputs": true
+      },
+      "modelVersion": "season-bridge-v1",
+      "source": {
+        "repository": "https://github.com/rickyhyppolite88-lang/1H-Model",
+        "projectionCode": "https://github.com/rickyhyppolite88-lang/1H-Model/blob/9209e69bfd47272c3ebaaf8872fb12a5c8563baf/src/model/predictor.ts",
+        "batchCode": "https://github.com/rickyhyppolite88-lang/1H-Model/blob/9209e69bfd47272c3ebaaf8872fb12a5c8563baf/src/model/predictions.ts",
+        "revision": "9209e69bfd47272c3ebaaf8872fb12a5c8563baf"
+      },
+      "state": "pregame",
+      "sportsbook": "draftkings",
+      "basis": "latest",
+      "comparison": {
+        "line": null,
+        "signedEdge": null,
+        "lean": null
+      },
+      "signal": {
+        "method": "model-signal-v1",
+        "score": null,
+        "label": "Unavailable",
+        "reason": "A pregame projection, both components, and the selected line are required.",
+        "fill": null
+      },
+      "prediction": {
+        "gameId": "401920074",
+        "startsAt": "2026-11-14T18:00:00Z",
+        "awayTeam": "Bradley Braves",
+        "homeTeam": "George Mason Patriots",
+        "awayConference": "Missouri Valley",
+        "homeConference": "Atlantic 10",
+        "awayRank": null,
+        "homeRank": null,
+        "rankingsKnown": true,
+        "status": "Scheduled",
+        "projectedFirstHalfTotal": 67.6215525526039,
+        "actualFirstHalfTotal": null,
+        "simpleTotal": 66.41723785803238,
+        "paceAdjustedTotal": 69.42802459446118,
+        "featureKind": "captured_pregame",
+        "featureCapturedAt": "2026-11-14T06:20:56.837Z",
+        "unavailableReason": null,
+        "marketCoverage": {
+          "checkedAt": "2026-11-14T11:42:47.508853Z",
+          "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-14",
+          "status": "matched",
+          "books": [
+            {
+              "sportsbook": "bet_rivers_co",
+              "status": "available"
+            },
+            {
+              "sportsbook": "fanatics",
+              "status": "available"
+            },
+            {
+              "sportsbook": "hardrock",
+              "status": "available"
+            }
+          ]
+        },
+        "markets": [
+          {
+            "sportsbook": "bet_rivers_co",
+            "openingLine": 60.5,
+            "latestLine": 60.5,
+            "capturedAt": "2026-11-14T11:42:47.508853Z",
+            "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-14",
+            "closingVerified": false
+          },
+          {
+            "sportsbook": "fanatics",
+            "openingLine": 62.5,
+            "latestLine": 60.5,
+            "capturedAt": "2026-11-14T11:42:47.508853Z",
+            "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-14",
+            "closingVerified": false
+          },
+          {
+            "sportsbook": "hardrock",
+            "openingLine": 60.5,
+            "latestLine": 60.5,
+            "capturedAt": "2026-11-14T11:42:47.508853Z",
+            "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-14",
+            "closingVerified": false
+          }
+        ],
+        "signal": {
+          "method": "model-signal-v1",
+          "score": null,
+          "label": "Unavailable",
+          "reason": "A pregame projection, both components, and the selected line are required.",
+          "fill": null
+        }
+      },
+      "features": {
+        "kind": "captured_pregame",
+        "capturedAt": "2026-11-14T06:20:56.837Z",
+        "priorAsOf": "2026-04-07",
+        "currentAsOf": "2026-11-14",
+        "modelVersion": "season-bridge-v1",
+        "statsRetrievedAt": "2026-11-14T06:20:47.885103Z",
+        "away": {
+          "id": "bradley-braves",
+          "name": "Bradley",
+          "firstHalfPoints": 30.861287671232876,
+          "pace": 69.23747031963471,
+          "offensiveEfficiency": 0.9731950684931508,
+          "defensiveEfficiency": 1.0011009132420088,
+          "currentWeight": 0.3333333333333333,
+          "currentGames": 4,
+          "priorAvailable": true,
+          "strengthOfSchedule": -7.2,
+          "notes": [
+            "Roster continuity is not measured; league regression reduces reliance on last year's roster."
+          ]
+        },
+        "home": {
+          "id": "george-mason-patriots",
+          "name": "George Mason",
+          "firstHalfPoints": 35.5559501867995,
+          "pace": 68.28087671232876,
+          "offensiveEfficiency": 1.083812801992528,
+          "defensiveEfficiency": 0.9808009962640099,
+          "currentWeight": 0.2727272727272727,
+          "currentGames": 3,
+          "priorAvailable": true,
+          "strengthOfSchedule": -8.6,
+          "notes": [
+            "Roster continuity is not measured; league regression reduces reliance on last year's roster."
+          ]
+        }
+      },
+      "quotes": [
+        {
+          "sportsbook": "bet_rivers_co",
+          "opening": {
+            "total": 60.5,
+            "overPrice": -117,
+            "underPrice": -118
+          },
+          "latest": {
+            "total": 60.5,
+            "overPrice": -117,
+            "underPrice": -118
+          },
+          "openingCapturedAt": "2026-11-14T11:42:47.508853Z",
+          "latestCapturedAt": "2026-11-14T11:42:47.508853Z",
+          "closingVerified": false,
+          "quoteTimestamp": null,
+          "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-14"
+        },
+        {
+          "sportsbook": "fanatics",
+          "opening": {
+            "total": 62.5,
+            "overPrice": 105,
+            "underPrice": -125
+          },
+          "latest": {
+            "total": 60.5,
+            "overPrice": -110,
+            "underPrice": -110
+          },
+          "openingCapturedAt": "2026-11-14T06:20:50.643769Z",
+          "latestCapturedAt": "2026-11-14T11:42:47.508853Z",
+          "closingVerified": false,
+          "quoteTimestamp": null,
+          "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-14"
+        },
+        {
+          "sportsbook": "hardrock",
+          "opening": {
+            "total": 60.5,
+            "overPrice": -115,
+            "underPrice": -120
+          },
+          "latest": {
+            "total": 60.5,
+            "overPrice": -115,
+            "underPrice": -120
+          },
+          "openingCapturedAt": "2026-11-14T11:42:47.508853Z",
+          "latestCapturedAt": "2026-11-14T11:42:47.508853Z",
+          "closingVerified": false,
+          "quoteTimestamp": null,
+          "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-14"
+        }
+      ],
+      "participants": {
+        "away": {
+          "espnId": "71",
+          "modelId": "bradley-braves",
+          "name": "Bradley Braves"
+        },
+        "home": {
+          "espnId": "2244",
+          "modelId": "george-mason-patriots",
+          "name": "George Mason Patriots"
+        }
+      }
+    },
+    {
+      "id": "2026-27_401911231_v3",
+      "season": "2026-27",
+      "gameId": "401911231",
+      "gameDate": "2026-11-14",
+      "version": 3,
+      "recordedAt": "2026-11-14T11:42:50.721Z",
+      "signalCalculatedAt": "2026-11-14T11:42:50.721Z",
+      "origin": "batch_capture",
+      "evidence": null,
+      "inputSnapshots": {
+        "prior": "data/input-snapshots/5d7d1cdd590b01d65ca838308bd098bc8be58fdb5d96faf922f4c44677d6d7de.json",
+        "current": "data/input-snapshots/022dd7d020cc5460c789e2307738082f4aa1055db91f22c9e5f3d0150c2b3e4b.json",
+        "currentMatchesFrozenInputs": true
+      },
+      "modelVersion": "season-bridge-v1",
+      "source": {
+        "repository": "https://github.com/rickyhyppolite88-lang/1H-Model",
+        "projectionCode": "https://github.com/rickyhyppolite88-lang/1H-Model/blob/9209e69bfd47272c3ebaaf8872fb12a5c8563baf/src/model/predictor.ts",
+        "batchCode": "https://github.com/rickyhyppolite88-lang/1H-Model/blob/9209e69bfd47272c3ebaaf8872fb12a5c8563baf/src/model/predictions.ts",
+        "revision": "9209e69bfd47272c3ebaaf8872fb12a5c8563baf"
+      },
+      "state": "pregame",
+      "sportsbook": "draftkings",
+      "basis": "latest",
+      "comparison": {
+        "line": null,
+        "signedEdge": null,
+        "lean": null
+      },
+      "signal": {
+        "method": "model-signal-v1",
+        "score": null,
+        "label": "Unavailable",
+        "reason": "A pregame projection, both components, and the selected line are required.",
+        "fill": null
+      },
+      "prediction": {
+        "gameId": "401911231",
+        "startsAt": "2026-11-14T18:30:00Z",
+        "awayTeam": "Loyola Chicago Ramblers",
+        "homeTeam": "Colorado State Rams",
+        "awayConference": "Atlantic 10",
+        "homeConference": "Pac-12",
+        "awayRank": null,
+        "homeRank": null,
+        "rankingsKnown": true,
+        "status": "Scheduled",
+        "projectedFirstHalfTotal": 72.07156786649279,
+        "actualFirstHalfTotal": null,
+        "simpleTotal": 70.72280946450809,
+        "paceAdjustedTotal": 74.0947054694698,
+        "featureKind": "captured_pregame",
+        "featureCapturedAt": "2026-11-14T06:20:56.837Z",
+        "unavailableReason": null,
+        "marketCoverage": {
+          "checkedAt": "2026-11-14T11:42:47.508853Z",
+          "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-14",
+          "status": "matched",
+          "books": [
+            {
+              "sportsbook": "bet_rivers_co",
+              "status": "available"
+            },
+            {
+              "sportsbook": "fanatics",
+              "status": "available"
+            },
+            {
+              "sportsbook": "hardrock",
+              "status": "available"
+            }
+          ]
+        },
+        "markets": [
+          {
+            "sportsbook": "bet_rivers_co",
+            "openingLine": 71.5,
+            "latestLine": 71.5,
+            "capturedAt": "2026-11-14T11:42:47.508853Z",
+            "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-14",
+            "closingVerified": false
+          },
+          {
+            "sportsbook": "fanatics",
+            "openingLine": 73.5,
+            "latestLine": 71.5,
+            "capturedAt": "2026-11-14T11:42:47.508853Z",
+            "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-14",
+            "closingVerified": false
+          },
+          {
+            "sportsbook": "hardrock",
+            "openingLine": 70.5,
+            "latestLine": 70.5,
+            "capturedAt": "2026-11-14T11:42:47.508853Z",
+            "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-14",
+            "closingVerified": false
+          }
+        ],
+        "signal": {
+          "method": "model-signal-v1",
+          "score": null,
+          "label": "Unavailable",
+          "reason": "A pregame projection, both components, and the selected line are required.",
+          "fill": null
+        }
+      },
+      "features": {
+        "kind": "captured_pregame",
+        "capturedAt": "2026-11-14T06:20:56.837Z",
+        "priorAsOf": "2026-04-07",
+        "currentAsOf": "2026-11-14",
+        "modelVersion": "season-bridge-v1",
+        "statsRetrievedAt": "2026-11-14T06:20:47.885103Z",
+        "away": {
+          "id": "loyola-chicago-ramblers",
+          "name": "Loyola Chi",
+          "firstHalfPoints": 34.33776836861768,
+          "pace": 69.9172403486924,
+          "offensiveEfficiency": 1.0411037110834371,
+          "defensiveEfficiency": 1.0624737235367372,
+          "currentWeight": 0.2727272727272727,
+          "currentGames": 3,
+          "priorAvailable": true,
+          "strengthOfSchedule": -8.3,
+          "notes": [
+            "Roster continuity is not measured; league regression reduces reliance on last year's roster."
+          ]
+        },
+        "home": {
+          "id": "colorado-st-rams",
+          "name": "Colorado St",
+          "firstHalfPoints": 36.38504109589041,
+          "pace": 68.65905853051059,
+          "offensiveEfficiency": 1.1214673474470735,
+          "defensiveEfficiency": 1.0524373599003733,
+          "currentWeight": 0.2727272727272727,
+          "currentGames": 3,
+          "priorAvailable": true,
+          "strengthOfSchedule": -3.9,
+          "notes": [
+            "Roster continuity is not measured; league regression reduces reliance on last year's roster."
+          ]
+        }
+      },
+      "quotes": [
+        {
+          "sportsbook": "bet_rivers_co",
+          "opening": {
+            "total": 71.5,
+            "overPrice": -109,
+            "underPrice": -124
+          },
+          "latest": {
+            "total": 71.5,
+            "overPrice": -109,
+            "underPrice": -124
+          },
+          "openingCapturedAt": "2026-11-14T11:42:47.508853Z",
+          "latestCapturedAt": "2026-11-14T11:42:47.508853Z",
+          "closingVerified": false,
+          "quoteTimestamp": null,
+          "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-14"
+        },
+        {
+          "sportsbook": "fanatics",
+          "opening": {
+            "total": 73.5,
+            "overPrice": 100,
+            "underPrice": -120
+          },
+          "latest": {
+            "total": 71.5,
+            "overPrice": -105,
+            "underPrice": -115
+          },
+          "openingCapturedAt": "2026-11-14T06:20:50.643769Z",
+          "latestCapturedAt": "2026-11-14T11:42:47.508853Z",
+          "closingVerified": false,
+          "quoteTimestamp": null,
+          "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-14"
+        },
+        {
+          "sportsbook": "hardrock",
+          "opening": {
+            "total": 70.5,
+            "overPrice": -125,
+            "underPrice": -110
+          },
+          "latest": {
+            "total": 70.5,
+            "overPrice": -125,
+            "underPrice": -110
+          },
+          "openingCapturedAt": "2026-11-14T11:42:47.508853Z",
+          "latestCapturedAt": "2026-11-14T11:42:47.508853Z",
+          "closingVerified": false,
+          "quoteTimestamp": null,
+          "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-14"
+        }
+      ],
+      "participants": {
+        "away": {
+          "espnId": "2350",
+          "modelId": "loyola-chicago-ramblers",
+          "name": "Loyola Chicago Ramblers"
+        },
+        "home": {
+          "espnId": "36",
+          "modelId": "colorado-st-rams",
+          "name": "Colorado State Rams"
+        }
+      }
+    },
+    {
+      "id": "2026-27_401919004_v3",
+      "season": "2026-27",
+      "gameId": "401919004",
+      "gameDate": "2026-11-14",
+      "version": 3,
+      "recordedAt": "2026-11-14T11:58:20.793Z",
+      "signalCalculatedAt": "2026-11-14T11:58:20.793Z",
+      "origin": "batch_capture",
+      "evidence": null,
+      "inputSnapshots": {
+        "prior": "data/input-snapshots/5d7d1cdd590b01d65ca838308bd098bc8be58fdb5d96faf922f4c44677d6d7de.json",
+        "current": "data/input-snapshots/4552c98f89c6ed4340294e8707b825c0946a56800daae1cfff1768613b1584c8.json",
+        "currentMatchesFrozenInputs": false
+      },
+      "modelVersion": "season-bridge-v1",
+      "source": {
+        "repository": "https://github.com/rickyhyppolite88-lang/1H-Model",
+        "projectionCode": "https://github.com/rickyhyppolite88-lang/1H-Model/blob/a3fb1abdbfef721068238b8ee1bce731c4a9c577/src/model/predictor.ts",
+        "batchCode": "https://github.com/rickyhyppolite88-lang/1H-Model/blob/a3fb1abdbfef721068238b8ee1bce731c4a9c577/src/model/predictions.ts",
+        "revision": "a3fb1abdbfef721068238b8ee1bce731c4a9c577"
+      },
+      "state": "pregame",
+      "sportsbook": "draftkings",
+      "basis": "latest",
+      "comparison": {
+        "line": null,
+        "signedEdge": null,
+        "lean": null
+      },
+      "signal": {
+        "method": "model-signal-v1",
+        "score": null,
+        "label": "Unavailable",
+        "reason": "A pregame projection, both components, and the selected line are required.",
+        "fill": null
+      },
+      "prediction": {
+        "gameId": "401919004",
+        "startsAt": "2026-11-14T17:00:00Z",
+        "awayTeam": "Tulane Green Wave",
+        "homeTeam": "Akron Zips",
+        "awayConference": "American",
+        "homeConference": "Mid-American",
+        "awayRank": null,
+        "homeRank": null,
+        "rankingsKnown": true,
+        "status": "Scheduled",
+        "projectedFirstHalfTotal": 75.95534675350234,
+        "actualFirstHalfTotal": null,
+        "simpleTotal": 75.45894993773351,
+        "paceAdjustedTotal": 76.69994197715558,
+        "featureKind": "captured_pregame",
+        "featureCapturedAt": "2026-11-14T06:20:56.837Z",
+        "unavailableReason": null,
+        "marketCoverage": {
+          "checkedAt": "2026-11-14T11:58:13.926581Z",
+          "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-14",
+          "status": "matched",
+          "books": [
+            {
+              "sportsbook": "bet_rivers_co",
+              "status": "available"
+            },
+            {
+              "sportsbook": "fanduel",
+              "status": "available"
+            },
+            {
+              "sportsbook": "hardrock",
+              "status": "available"
+            }
+          ]
+        },
+        "markets": [
+          {
+            "sportsbook": "bet_rivers_co",
+            "openingLine": 73.5,
+            "latestLine": 73.5,
+            "capturedAt": "2026-11-14T11:58:13.926581Z",
+            "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-14",
+            "closingVerified": false
+          },
+          {
+            "sportsbook": "fanduel",
+            "openingLine": 73.5,
+            "latestLine": 73.5,
+            "capturedAt": "2026-11-14T11:58:13.926581Z",
+            "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-14",
+            "closingVerified": false
+          },
+          {
+            "sportsbook": "hardrock",
+            "openingLine": 73.5,
+            "latestLine": 73.5,
+            "capturedAt": "2026-11-14T11:58:13.926581Z",
+            "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-14",
+            "closingVerified": false
+          }
+        ],
+        "signal": {
+          "method": "model-signal-v1",
+          "score": null,
+          "label": "Unavailable",
+          "reason": "A pregame projection, both components, and the selected line are required.",
+          "fill": null
+        }
+      },
+      "features": {
+        "kind": "captured_pregame",
+        "capturedAt": "2026-11-14T06:20:56.837Z",
+        "priorAsOf": "2026-04-07",
+        "currentAsOf": "2026-11-14",
+        "modelVersion": "season-bridge-v1",
+        "statsRetrievedAt": "2026-11-14T06:20:47.885103Z",
+        "away": {
+          "id": "tulane-green-wave",
+          "name": "Tulane",
+          "firstHalfPoints": 34.70140473225405,
+          "pace": 72.61178580323786,
+          "offensiveEfficiency": 1.0557400747198007,
+          "defensiveEfficiency": 1.065473723536737,
+          "currentWeight": 0.2727272727272727,
+          "currentGames": 3,
+          "priorAvailable": true,
+          "strengthOfSchedule": -9.8,
+          "notes": [
+            "Roster continuity is not measured; league regression reduces reliance on last year's roster."
+          ]
+        },
+        "home": {
+          "id": "akron-zips",
+          "name": "Akron",
+          "firstHalfPoints": 40.75754520547945,
+          "pace": 71.39696438356165,
+          "offensiveEfficiency": 1.130154082191781,
+          "defensiveEfficiency": 1.0094810958904108,
+          "currentWeight": 0.2,
+          "currentGames": 2,
+          "priorAvailable": true,
+          "strengthOfSchedule": -7,
+          "notes": [
+            "Roster continuity is not measured; league regression reduces reliance on last year's roster."
+          ]
+        }
+      },
+      "quotes": [
+        {
+          "sportsbook": "bet_rivers_co",
+          "opening": {
+            "total": 73.5,
+            "overPrice": -112,
+            "underPrice": -122
+          },
+          "latest": {
+            "total": 73.5,
+            "overPrice": -112,
+            "underPrice": -122
+          },
+          "openingCapturedAt": "2026-11-14T11:58:13.926581Z",
+          "latestCapturedAt": "2026-11-14T11:58:13.926581Z",
+          "closingVerified": false,
+          "quoteTimestamp": null,
+          "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-14"
+        },
+        {
+          "sportsbook": "fanduel",
+          "opening": {
+            "total": 73.5,
+            "overPrice": -108,
+            "underPrice": -118
+          },
+          "latest": {
+            "total": 73.5,
+            "overPrice": -108,
+            "underPrice": -118
+          },
+          "openingCapturedAt": "2026-11-14T11:42:47.508853Z",
+          "latestCapturedAt": "2026-11-14T11:58:13.926581Z",
+          "closingVerified": false,
+          "quoteTimestamp": null,
+          "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-14"
+        },
+        {
+          "sportsbook": "hardrock",
+          "opening": {
+            "total": 73.5,
+            "overPrice": -110,
+            "underPrice": -120
+          },
+          "latest": {
+            "total": 73.5,
+            "overPrice": -110,
+            "underPrice": -120
+          },
+          "openingCapturedAt": "2026-11-14T11:58:13.926581Z",
+          "latestCapturedAt": "2026-11-14T11:58:13.926581Z",
+          "closingVerified": false,
+          "quoteTimestamp": null,
+          "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-14"
+        }
+      ],
+      "participants": {
+        "away": {
+          "espnId": "2655",
+          "modelId": "tulane-green-wave",
+          "name": "Tulane Green Wave"
+        },
+        "home": {
+          "espnId": "2006",
+          "modelId": "akron-zips",
+          "name": "Akron Zips"
+        }
+      }
+    },
+    {
+      "id": "2026-27_401912229_v4",
+      "season": "2026-27",
+      "gameId": "401912229",
+      "gameDate": "2026-11-14",
+      "version": 4,
+      "recordedAt": "2026-11-14T11:58:20.793Z",
+      "signalCalculatedAt": "2026-11-14T11:58:20.793Z",
+      "origin": "batch_capture",
+      "evidence": null,
+      "inputSnapshots": {
+        "prior": "data/input-snapshots/5d7d1cdd590b01d65ca838308bd098bc8be58fdb5d96faf922f4c44677d6d7de.json",
+        "current": "data/input-snapshots/4552c98f89c6ed4340294e8707b825c0946a56800daae1cfff1768613b1584c8.json",
+        "currentMatchesFrozenInputs": false
+      },
+      "modelVersion": "season-bridge-v1",
+      "source": {
+        "repository": "https://github.com/rickyhyppolite88-lang/1H-Model",
+        "projectionCode": "https://github.com/rickyhyppolite88-lang/1H-Model/blob/a3fb1abdbfef721068238b8ee1bce731c4a9c577/src/model/predictor.ts",
+        "batchCode": "https://github.com/rickyhyppolite88-lang/1H-Model/blob/a3fb1abdbfef721068238b8ee1bce731c4a9c577/src/model/predictions.ts",
+        "revision": "a3fb1abdbfef721068238b8ee1bce731c4a9c577"
+      },
+      "state": "pregame",
+      "sportsbook": "draftkings",
+      "basis": "latest",
+      "comparison": {
+        "line": null,
+        "signedEdge": null,
+        "lean": null
+      },
+      "signal": {
+        "method": "model-signal-v1",
+        "score": null,
+        "label": "Unavailable",
+        "reason": "A pregame projection, both components, and the selected line are required.",
+        "fill": null
+      },
+      "prediction": {
+        "gameId": "401912229",
+        "startsAt": "2026-11-14T18:00:00Z",
+        "awayTeam": "St. Thomas Tommies",
+        "homeTeam": "Army Black Knights",
+        "awayConference": "Summit League",
+        "homeConference": "Patriot League",
+        "awayRank": null,
+        "homeRank": null,
+        "rankingsKnown": true,
+        "status": "Scheduled",
+        "projectedFirstHalfTotal": 68.1487475376012,
+        "actualFirstHalfTotal": null,
+        "simpleTotal": 64.55875300954752,
+        "paceAdjustedTotal": 73.5337393296817,
+        "featureKind": "captured_pregame",
+        "featureCapturedAt": "2026-11-14T06:20:56.837Z",
+        "unavailableReason": null,
+        "marketCoverage": {
+          "checkedAt": "2026-11-14T11:58:13.926581Z",
+          "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-14",
+          "status": "matched",
+          "books": [
+            {
+              "sportsbook": "bet_rivers_co",
+              "status": "available"
+            },
+            {
+              "sportsbook": "fanatics",
+              "status": "available"
+            },
+            {
+              "sportsbook": "fanduel",
+              "status": "available"
+            },
+            {
+              "sportsbook": "hardrock",
+              "status": "available"
+            }
+          ]
+        },
+        "markets": [
+          {
+            "sportsbook": "bet_rivers_co",
+            "openingLine": 68.5,
+            "latestLine": 68.5,
+            "capturedAt": "2026-11-14T11:58:13.926581Z",
+            "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-14",
+            "closingVerified": false
+          },
+          {
+            "sportsbook": "fanatics",
+            "openingLine": 71.5,
+            "latestLine": 69.5,
+            "capturedAt": "2026-11-14T11:58:13.926581Z",
+            "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-14",
+            "closingVerified": false
+          },
+          {
+            "sportsbook": "fanduel",
+            "openingLine": 69.5,
+            "latestLine": 69.5,
+            "capturedAt": "2026-11-14T11:58:13.926581Z",
+            "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-14",
+            "closingVerified": false
+          },
+          {
+            "sportsbook": "hardrock",
+            "openingLine": 68.5,
+            "latestLine": 68.5,
+            "capturedAt": "2026-11-14T11:58:13.926581Z",
+            "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-14",
+            "closingVerified": false
+          }
+        ],
+        "signal": {
+          "method": "model-signal-v1",
+          "score": null,
+          "label": "Unavailable",
+          "reason": "A pregame projection, both components, and the selected line are required.",
+          "fill": null
+        }
+      },
+      "features": {
+        "kind": "captured_pregame",
+        "capturedAt": "2026-11-14T06:20:56.837Z",
+        "priorAsOf": "2026-04-07",
+        "currentAsOf": "2026-11-14",
+        "modelVersion": "season-bridge-v1",
+        "statsRetrievedAt": "2026-11-14T06:20:47.885103Z",
+        "away": {
+          "id": "st-thomas-mn-tommies",
+          "name": "St Thomas",
+          "firstHalfPoints": 35.504621004566204,
+          "pace": 70.23747031963471,
+          "offensiveEfficiency": 1.0881284018264838,
+          "defensiveEfficiency": 1.0639342465753423,
+          "currentWeight": 0.3333333333333333,
+          "currentGames": 4,
+          "priorAvailable": true,
+          "strengthOfSchedule": -2.7,
+          "notes": [
+            "Roster continuity is not measured; league regression reduces reliance on last year's roster."
+          ]
+        },
+        "home": {
+          "id": "army-black-knights",
+          "name": "Army",
+          "firstHalfPoints": 29.054132004981312,
+          "pace": 69.59905853051059,
+          "offensiveEfficiency": 0.9569400747198007,
+          "defensiveEfficiency": 1.0978373599003732,
+          "currentWeight": 0.2727272727272727,
+          "currentGames": 3,
+          "priorAvailable": true,
+          "strengthOfSchedule": -10.1,
+          "notes": [
+            "Roster continuity is not measured; league regression reduces reliance on last year's roster."
+          ]
+        }
+      },
+      "quotes": [
+        {
+          "sportsbook": "bet_rivers_co",
+          "opening": {
+            "total": 68.5,
+            "overPrice": -113,
+            "underPrice": -121
+          },
+          "latest": {
+            "total": 68.5,
+            "overPrice": -113,
+            "underPrice": -121
+          },
+          "openingCapturedAt": "2026-11-14T11:42:47.508853Z",
+          "latestCapturedAt": "2026-11-14T11:58:13.926581Z",
+          "closingVerified": false,
+          "quoteTimestamp": null,
+          "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-14"
+        },
+        {
+          "sportsbook": "fanatics",
+          "opening": {
+            "total": 71.5,
+            "overPrice": 105,
+            "underPrice": -125
+          },
+          "latest": {
+            "total": 69.5,
+            "overPrice": -105,
+            "underPrice": -115
+          },
+          "openingCapturedAt": "2026-11-14T06:20:50.643769Z",
+          "latestCapturedAt": "2026-11-14T11:58:13.926581Z",
+          "closingVerified": false,
+          "quoteTimestamp": null,
+          "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-14"
+        },
+        {
+          "sportsbook": "fanduel",
+          "opening": {
+            "total": 69.5,
+            "overPrice": -113,
+            "underPrice": -113
+          },
+          "latest": {
+            "total": 69.5,
+            "overPrice": -113,
+            "underPrice": -113
+          },
+          "openingCapturedAt": "2026-11-14T11:58:13.926581Z",
+          "latestCapturedAt": "2026-11-14T11:58:13.926581Z",
+          "closingVerified": false,
+          "quoteTimestamp": null,
+          "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-14"
+        },
+        {
+          "sportsbook": "hardrock",
+          "opening": {
+            "total": 68.5,
+            "overPrice": -110,
+            "underPrice": -120
+          },
+          "latest": {
+            "total": 68.5,
+            "overPrice": -110,
+            "underPrice": -120
+          },
+          "openingCapturedAt": "2026-11-14T11:42:47.508853Z",
+          "latestCapturedAt": "2026-11-14T11:58:13.926581Z",
+          "closingVerified": false,
+          "quoteTimestamp": null,
+          "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-14"
+        }
+      ],
+      "participants": {
+        "away": {
+          "espnId": "2900",
+          "modelId": "st-thomas-mn-tommies",
+          "name": "St. Thomas Tommies"
+        },
+        "home": {
+          "espnId": "349",
+          "modelId": "army-black-knights",
+          "name": "Army Black Knights"
+        }
+      }
+    },
+    {
+      "id": "2026-27_401919847_v2",
+      "season": "2026-27",
+      "gameId": "401919847",
+      "gameDate": "2026-11-14",
+      "version": 2,
+      "recordedAt": "2026-11-14T11:58:20.793Z",
+      "signalCalculatedAt": "2026-11-14T11:58:20.793Z",
+      "origin": "batch_capture",
+      "evidence": null,
+      "inputSnapshots": {
+        "prior": "data/input-snapshots/5d7d1cdd590b01d65ca838308bd098bc8be58fdb5d96faf922f4c44677d6d7de.json",
+        "current": "data/input-snapshots/4552c98f89c6ed4340294e8707b825c0946a56800daae1cfff1768613b1584c8.json",
+        "currentMatchesFrozenInputs": false
+      },
+      "modelVersion": "season-bridge-v1",
+      "source": {
+        "repository": "https://github.com/rickyhyppolite88-lang/1H-Model",
+        "projectionCode": "https://github.com/rickyhyppolite88-lang/1H-Model/blob/a3fb1abdbfef721068238b8ee1bce731c4a9c577/src/model/predictor.ts",
+        "batchCode": "https://github.com/rickyhyppolite88-lang/1H-Model/blob/a3fb1abdbfef721068238b8ee1bce731c4a9c577/src/model/predictions.ts",
+        "revision": "a3fb1abdbfef721068238b8ee1bce731c4a9c577"
+      },
+      "state": "pregame",
+      "sportsbook": "draftkings",
+      "basis": "latest",
+      "comparison": {
+        "line": null,
+        "signedEdge": null,
+        "lean": null
+      },
+      "signal": {
+        "method": "model-signal-v1",
+        "score": null,
+        "label": "Unavailable",
+        "reason": "A pregame projection, both components, and the selected line are required.",
+        "fill": null
+      },
+      "prediction": {
+        "gameId": "401919847",
+        "startsAt": "2026-11-14T18:00:00Z",
+        "awayTeam": "Stonehill Skyhawks",
+        "homeTeam": "Texas Tech Red Raiders",
+        "awayConference": "Northeast",
+        "homeConference": "Big 12",
+        "awayRank": null,
+        "homeRank": 16,
+        "rankingsKnown": true,
+        "status": "Scheduled",
+        "projectedFirstHalfTotal": 71.52406228331154,
+        "actualFirstHalfTotal": null,
+        "simpleTotal": 71.35371855541719,
+        "paceAdjustedTotal": 71.77957787515304,
+        "featureKind": "captured_pregame",
+        "featureCapturedAt": "2026-11-14T06:20:56.837Z",
+        "unavailableReason": null,
+        "marketCoverage": {
+          "checkedAt": "2026-11-14T11:58:13.926581Z",
+          "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-14",
+          "status": "matched",
+          "books": [
+            {
+              "sportsbook": "bet_rivers_co",
+              "status": "available"
+            },
+            {
+              "sportsbook": "fanatics",
+              "status": "available"
+            },
+            {
+              "sportsbook": "fanduel",
+              "status": "available"
+            },
+            {
+              "sportsbook": "hardrock",
+              "status": "available"
+            }
+          ]
+        },
+        "markets": [
+          {
+            "sportsbook": "bet_rivers_co",
+            "openingLine": 67.5,
+            "latestLine": 69.5,
+            "capturedAt": "2026-11-14T11:58:13.926581Z",
+            "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-14",
+            "closingVerified": false
+          },
+          {
+            "sportsbook": "fanatics",
+            "openingLine": 68.5,
+            "latestLine": 70.5,
+            "capturedAt": "2026-11-14T11:58:13.926581Z",
+            "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-14",
+            "closingVerified": false
+          },
+          {
+            "sportsbook": "fanduel",
+            "openingLine": 70.5,
+            "latestLine": 70.5,
+            "capturedAt": "2026-11-14T11:58:13.926581Z",
+            "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-14",
+            "closingVerified": false
+          },
+          {
+            "sportsbook": "hardrock",
+            "openingLine": 69.5,
+            "latestLine": 69.5,
+            "capturedAt": "2026-11-14T11:58:13.926581Z",
+            "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-14",
+            "closingVerified": false
+          }
+        ],
+        "signal": {
+          "method": "model-signal-v1",
+          "score": null,
+          "label": "Unavailable",
+          "reason": "A pregame projection, both components, and the selected line are required.",
+          "fill": null
+        }
+      },
+      "features": {
+        "kind": "captured_pregame",
+        "capturedAt": "2026-11-14T06:20:56.837Z",
+        "priorAsOf": "2026-04-07",
+        "currentAsOf": "2026-11-14",
+        "modelVersion": "season-bridge-v1",
+        "statsRetrievedAt": "2026-11-14T06:20:47.885103Z",
+        "away": {
+          "id": "stonehill-skyhawks",
+          "name": "Stonehill",
+          "firstHalfPoints": 31.590495641344955,
+          "pace": 69.45360398505605,
+          "offensiveEfficiency": 0.9412128019925281,
+          "defensiveEfficiency": 1.0577464508094643,
+          "currentWeight": 0.2727272727272727,
+          "currentGames": 3,
+          "priorAvailable": true,
+          "strengthOfSchedule": -10.3,
+          "notes": [
+            "Roster continuity is not measured; league regression reduces reliance on last year's roster."
+          ]
+        },
+        "home": {
+          "id": "texas-tech-red-raiders",
+          "name": "Texas Tech",
+          "firstHalfPoints": 39.76322291407223,
+          "pace": 70.84269489414694,
+          "offensiveEfficiency": 1.1067582565379825,
+          "defensiveEfficiency": 0.9873100871731008,
+          "currentWeight": 0.2727272727272727,
+          "currentGames": 3,
+          "priorAvailable": true,
+          "strengthOfSchedule": 10.5,
+          "notes": [
+            "Roster continuity is not measured; league regression reduces reliance on last year's roster."
+          ]
+        }
+      },
+      "quotes": [
+        {
+          "sportsbook": "bet_rivers_co",
+          "opening": {
+            "total": 67.5,
+            "overPrice": -122,
+            "underPrice": -112
+          },
+          "latest": {
+            "total": 69.5,
+            "overPrice": -120,
+            "underPrice": -114
+          },
+          "openingCapturedAt": "2026-11-14T11:58:13.926581Z",
+          "latestCapturedAt": "2026-11-14T11:58:13.926581Z",
+          "closingVerified": false,
+          "quoteTimestamp": null,
+          "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-14"
+        },
+        {
+          "sportsbook": "fanatics",
+          "opening": {
+            "total": 68.5,
+            "overPrice": 100,
+            "underPrice": -120
+          },
+          "latest": {
+            "total": 70.5,
+            "overPrice": -110,
+            "underPrice": -110
+          },
+          "openingCapturedAt": "2026-11-14T06:20:50.643769Z",
+          "latestCapturedAt": "2026-11-14T11:58:13.926581Z",
+          "closingVerified": false,
+          "quoteTimestamp": null,
+          "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-14"
+        },
+        {
+          "sportsbook": "fanduel",
+          "opening": {
+            "total": 70.5,
+            "overPrice": -115,
+            "underPrice": -111
+          },
+          "latest": {
+            "total": 70.5,
+            "overPrice": -115,
+            "underPrice": -111
+          },
+          "openingCapturedAt": "2026-11-14T11:58:13.926581Z",
+          "latestCapturedAt": "2026-11-14T11:58:13.926581Z",
+          "closingVerified": false,
+          "quoteTimestamp": null,
+          "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-14"
+        },
+        {
+          "sportsbook": "hardrock",
+          "opening": {
+            "total": 69.5,
+            "overPrice": -120,
+            "underPrice": -115
+          },
+          "latest": {
+            "total": 69.5,
+            "overPrice": -120,
+            "underPrice": -115
+          },
+          "openingCapturedAt": "2026-11-14T11:58:13.926581Z",
+          "latestCapturedAt": "2026-11-14T11:58:13.926581Z",
+          "closingVerified": false,
+          "quoteTimestamp": null,
+          "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-14"
+        }
+      ],
+      "participants": {
+        "away": {
+          "espnId": "284",
+          "modelId": "stonehill-skyhawks",
+          "name": "Stonehill Skyhawks"
+        },
+        "home": {
+          "espnId": "2641",
+          "modelId": "texas-tech-red-raiders",
+          "name": "Texas Tech Red Raiders"
+        }
+      }
+    },
+    {
+      "id": "2026-27_401920074_v4",
+      "season": "2026-27",
+      "gameId": "401920074",
+      "gameDate": "2026-11-14",
+      "version": 4,
+      "recordedAt": "2026-11-14T11:58:20.793Z",
+      "signalCalculatedAt": "2026-11-14T11:58:20.793Z",
+      "origin": "batch_capture",
+      "evidence": null,
+      "inputSnapshots": {
+        "prior": "data/input-snapshots/5d7d1cdd590b01d65ca838308bd098bc8be58fdb5d96faf922f4c44677d6d7de.json",
+        "current": "data/input-snapshots/4552c98f89c6ed4340294e8707b825c0946a56800daae1cfff1768613b1584c8.json",
+        "currentMatchesFrozenInputs": false
+      },
+      "modelVersion": "season-bridge-v1",
+      "source": {
+        "repository": "https://github.com/rickyhyppolite88-lang/1H-Model",
+        "projectionCode": "https://github.com/rickyhyppolite88-lang/1H-Model/blob/a3fb1abdbfef721068238b8ee1bce731c4a9c577/src/model/predictor.ts",
+        "batchCode": "https://github.com/rickyhyppolite88-lang/1H-Model/blob/a3fb1abdbfef721068238b8ee1bce731c4a9c577/src/model/predictions.ts",
+        "revision": "a3fb1abdbfef721068238b8ee1bce731c4a9c577"
+      },
+      "state": "pregame",
+      "sportsbook": "draftkings",
+      "basis": "latest",
+      "comparison": {
+        "line": null,
+        "signedEdge": null,
+        "lean": null
+      },
+      "signal": {
+        "method": "model-signal-v1",
+        "score": null,
+        "label": "Unavailable",
+        "reason": "A pregame projection, both components, and the selected line are required.",
+        "fill": null
+      },
+      "prediction": {
+        "gameId": "401920074",
+        "startsAt": "2026-11-14T18:00:00Z",
+        "awayTeam": "Bradley Braves",
+        "homeTeam": "George Mason Patriots",
+        "awayConference": "Missouri Valley",
+        "homeConference": "Atlantic 10",
+        "awayRank": null,
+        "homeRank": null,
+        "rankingsKnown": true,
+        "status": "Scheduled",
+        "projectedFirstHalfTotal": 67.6215525526039,
+        "actualFirstHalfTotal": null,
+        "simpleTotal": 66.41723785803238,
+        "paceAdjustedTotal": 69.42802459446118,
+        "featureKind": "captured_pregame",
+        "featureCapturedAt": "2026-11-14T06:20:56.837Z",
+        "unavailableReason": null,
+        "marketCoverage": {
+          "checkedAt": "2026-11-14T11:58:13.926581Z",
+          "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-14",
+          "status": "matched",
+          "books": [
+            {
+              "sportsbook": "bet_rivers_co",
+              "status": "available"
+            },
+            {
+              "sportsbook": "fanatics",
+              "status": "available"
+            },
+            {
+              "sportsbook": "hardrock",
+              "status": "available"
+            }
+          ]
+        },
+        "markets": [
+          {
+            "sportsbook": "bet_rivers_co",
+            "openingLine": 60.5,
+            "latestLine": 60.5,
+            "capturedAt": "2026-11-14T11:58:13.926581Z",
+            "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-14",
+            "closingVerified": false
+          },
+          {
+            "sportsbook": "fanatics",
+            "openingLine": 62.5,
+            "latestLine": 60.5,
+            "capturedAt": "2026-11-14T11:58:13.926581Z",
+            "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-14",
+            "closingVerified": false
+          },
+          {
+            "sportsbook": "hardrock",
+            "openingLine": 60.5,
+            "latestLine": 60.5,
+            "capturedAt": "2026-11-14T11:58:13.926581Z",
+            "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-14",
+            "closingVerified": false
+          }
+        ],
+        "signal": {
+          "method": "model-signal-v1",
+          "score": null,
+          "label": "Unavailable",
+          "reason": "A pregame projection, both components, and the selected line are required.",
+          "fill": null
+        }
+      },
+      "features": {
+        "kind": "captured_pregame",
+        "capturedAt": "2026-11-14T06:20:56.837Z",
+        "priorAsOf": "2026-04-07",
+        "currentAsOf": "2026-11-14",
+        "modelVersion": "season-bridge-v1",
+        "statsRetrievedAt": "2026-11-14T06:20:47.885103Z",
+        "away": {
+          "id": "bradley-braves",
+          "name": "Bradley",
+          "firstHalfPoints": 30.861287671232876,
+          "pace": 69.23747031963471,
+          "offensiveEfficiency": 0.9731950684931508,
+          "defensiveEfficiency": 1.0011009132420088,
+          "currentWeight": 0.3333333333333333,
+          "currentGames": 4,
+          "priorAvailable": true,
+          "strengthOfSchedule": -7.2,
+          "notes": [
+            "Roster continuity is not measured; league regression reduces reliance on last year's roster."
+          ]
+        },
+        "home": {
+          "id": "george-mason-patriots",
+          "name": "George Mason",
+          "firstHalfPoints": 35.5559501867995,
+          "pace": 68.28087671232876,
+          "offensiveEfficiency": 1.083812801992528,
+          "defensiveEfficiency": 0.9808009962640099,
+          "currentWeight": 0.2727272727272727,
+          "currentGames": 3,
+          "priorAvailable": true,
+          "strengthOfSchedule": -8.6,
+          "notes": [
+            "Roster continuity is not measured; league regression reduces reliance on last year's roster."
+          ]
+        }
+      },
+      "quotes": [
+        {
+          "sportsbook": "bet_rivers_co",
+          "opening": {
+            "total": 60.5,
+            "overPrice": -117,
+            "underPrice": -118
+          },
+          "latest": {
+            "total": 60.5,
+            "overPrice": -117,
+            "underPrice": -118
+          },
+          "openingCapturedAt": "2026-11-14T11:42:47.508853Z",
+          "latestCapturedAt": "2026-11-14T11:58:13.926581Z",
+          "closingVerified": false,
+          "quoteTimestamp": null,
+          "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-14"
+        },
+        {
+          "sportsbook": "fanatics",
+          "opening": {
+            "total": 62.5,
+            "overPrice": 105,
+            "underPrice": -125
+          },
+          "latest": {
+            "total": 60.5,
+            "overPrice": -105,
+            "underPrice": -115
+          },
+          "openingCapturedAt": "2026-11-14T06:20:50.643769Z",
+          "latestCapturedAt": "2026-11-14T11:58:13.926581Z",
+          "closingVerified": false,
+          "quoteTimestamp": null,
+          "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-14"
+        },
+        {
+          "sportsbook": "hardrock",
+          "opening": {
+            "total": 60.5,
+            "overPrice": -115,
+            "underPrice": -120
+          },
+          "latest": {
+            "total": 60.5,
+            "overPrice": -115,
+            "underPrice": -120
+          },
+          "openingCapturedAt": "2026-11-14T11:42:47.508853Z",
+          "latestCapturedAt": "2026-11-14T11:58:13.926581Z",
+          "closingVerified": false,
+          "quoteTimestamp": null,
+          "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-14"
+        }
+      ],
+      "participants": {
+        "away": {
+          "espnId": "71",
+          "modelId": "bradley-braves",
+          "name": "Bradley Braves"
+        },
+        "home": {
+          "espnId": "2244",
+          "modelId": "george-mason-patriots",
+          "name": "George Mason Patriots"
+        }
+      }
+    },
+    {
+      "id": "2026-27_401920750_v3",
+      "season": "2026-27",
+      "gameId": "401920750",
+      "gameDate": "2026-11-14",
+      "version": 3,
+      "recordedAt": "2026-11-14T11:58:20.793Z",
+      "signalCalculatedAt": "2026-11-14T11:58:20.793Z",
+      "origin": "batch_capture",
+      "evidence": null,
+      "inputSnapshots": {
+        "prior": "data/input-snapshots/5d7d1cdd590b01d65ca838308bd098bc8be58fdb5d96faf922f4c44677d6d7de.json",
+        "current": "data/input-snapshots/4552c98f89c6ed4340294e8707b825c0946a56800daae1cfff1768613b1584c8.json",
+        "currentMatchesFrozenInputs": false
+      },
+      "modelVersion": "season-bridge-v1",
+      "source": {
+        "repository": "https://github.com/rickyhyppolite88-lang/1H-Model",
+        "projectionCode": "https://github.com/rickyhyppolite88-lang/1H-Model/blob/a3fb1abdbfef721068238b8ee1bce731c4a9c577/src/model/predictor.ts",
+        "batchCode": "https://github.com/rickyhyppolite88-lang/1H-Model/blob/a3fb1abdbfef721068238b8ee1bce731c4a9c577/src/model/predictions.ts",
+        "revision": "a3fb1abdbfef721068238b8ee1bce731c4a9c577"
+      },
+      "state": "pregame",
+      "sportsbook": "draftkings",
+      "basis": "latest",
+      "comparison": {
+        "line": null,
+        "signedEdge": null,
+        "lean": null
+      },
+      "signal": {
+        "method": "model-signal-v1",
+        "score": null,
+        "label": "Unavailable",
+        "reason": "A pregame projection, both components, and the selected line are required.",
+        "fill": null
+      },
+      "prediction": {
+        "gameId": "401920750",
+        "startsAt": "2026-11-14T18:00:00Z",
+        "awayTeam": "Marshall Thundering Herd",
+        "homeTeam": "Youngstown State Penguins",
+        "awayConference": "Sun Belt",
+        "homeConference": "Horizon",
+        "awayRank": null,
+        "homeRank": null,
+        "rankingsKnown": true,
+        "status": "Scheduled",
+        "projectedFirstHalfTotal": 73.31924224985517,
+        "actualFirstHalfTotal": null,
+        "simpleTotal": 70.80826400996263,
+        "paceAdjustedTotal": 77.08570960969398,
+        "featureKind": "captured_pregame",
+        "featureCapturedAt": "2026-11-14T06:20:56.837Z",
+        "unavailableReason": null,
+        "marketCoverage": {
+          "checkedAt": "2026-11-14T11:58:13.926581Z",
+          "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-14",
+          "status": "matched",
+          "books": [
+            {
+              "sportsbook": "bet_rivers_co",
+              "status": "available"
+            },
+            {
+              "sportsbook": "fanatics",
+              "status": "available"
+            },
+            {
+              "sportsbook": "fanduel",
+              "status": "available"
+            },
+            {
+              "sportsbook": "hardrock",
+              "status": "available"
+            }
+          ]
+        },
+        "markets": [
+          {
+            "sportsbook": "bet_rivers_co",
+            "openingLine": 77.5,
+            "latestLine": 77.5,
+            "capturedAt": "2026-11-14T11:58:13.926581Z",
+            "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-14",
+            "closingVerified": false
+          },
+          {
+            "sportsbook": "fanatics",
+            "openingLine": 76.5,
+            "latestLine": 75.5,
+            "capturedAt": "2026-11-14T11:58:13.926581Z",
+            "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-14",
+            "closingVerified": false
+          },
+          {
+            "sportsbook": "fanduel",
+            "openingLine": 74.5,
+            "latestLine": 74.5,
+            "capturedAt": "2026-11-14T11:58:13.926581Z",
+            "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-14",
+            "closingVerified": false
+          },
+          {
+            "sportsbook": "hardrock",
+            "openingLine": 77.5,
+            "latestLine": 77.5,
+            "capturedAt": "2026-11-14T11:58:13.926581Z",
+            "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-14",
+            "closingVerified": false
+          }
+        ],
+        "signal": {
+          "method": "model-signal-v1",
+          "score": null,
+          "label": "Unavailable",
+          "reason": "A pregame projection, both components, and the selected line are required.",
+          "fill": null
+        }
+      },
+      "features": {
+        "kind": "captured_pregame",
+        "capturedAt": "2026-11-14T06:20:56.837Z",
+        "priorAsOf": "2026-04-07",
+        "currentAsOf": "2026-11-14",
+        "modelVersion": "season-bridge-v1",
+        "statsRetrievedAt": "2026-11-14T06:20:47.885103Z",
+        "away": {
+          "id": "marshall-thundering-herd",
+          "name": "Marshall",
+          "firstHalfPoints": 36.003222914072225,
+          "pace": 73.51542216687423,
+          "offensiveEfficiency": 1.075121892901619,
+          "defensiveEfficiency": 1.0520555417185553,
+          "currentWeight": 0.2727272727272727,
+          "currentGames": 3,
+          "priorAvailable": true,
+          "strengthOfSchedule": -0.5,
+          "notes": [
+            "Roster continuity is not measured; league regression reduces reliance on last year's roster."
+          ]
+        },
+        "home": {
+          "id": "youngstown-st-penguins",
+          "name": "Youngstown St",
+          "firstHalfPoints": 34.8050410958904,
+          "pace": 71.25542216687423,
+          "offensiveEfficiency": 1.0485037110834372,
+          "defensiveEfficiency": 1.0840555417185551,
+          "currentWeight": 0.2727272727272727,
+          "currentGames": 3,
+          "priorAvailable": true,
+          "strengthOfSchedule": 3.5,
+          "notes": [
+            "Roster continuity is not measured; league regression reduces reliance on last year's roster."
+          ]
+        }
+      },
+      "quotes": [
+        {
+          "sportsbook": "bet_rivers_co",
+          "opening": {
+            "total": 77.5,
+            "overPrice": -114,
+            "underPrice": -120
+          },
+          "latest": {
+            "total": 77.5,
+            "overPrice": -114,
+            "underPrice": -120
+          },
+          "openingCapturedAt": "2026-11-14T11:42:47.508853Z",
+          "latestCapturedAt": "2026-11-14T11:58:13.926581Z",
+          "closingVerified": false,
+          "quoteTimestamp": null,
+          "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-14"
+        },
+        {
+          "sportsbook": "fanatics",
+          "opening": {
+            "total": 76.5,
+            "overPrice": -110,
+            "underPrice": -110
+          },
+          "latest": {
+            "total": 75.5,
+            "overPrice": -105,
+            "underPrice": -115
+          },
+          "openingCapturedAt": "2026-11-14T06:20:50.643769Z",
+          "latestCapturedAt": "2026-11-14T11:58:13.926581Z",
+          "closingVerified": false,
+          "quoteTimestamp": null,
+          "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-14"
+        },
+        {
+          "sportsbook": "fanduel",
+          "opening": {
+            "total": 74.5,
+            "overPrice": -113,
+            "underPrice": -113
+          },
+          "latest": {
+            "total": 74.5,
+            "overPrice": -113,
+            "underPrice": -113
+          },
+          "openingCapturedAt": "2026-11-14T11:58:13.926581Z",
+          "latestCapturedAt": "2026-11-14T11:58:13.926581Z",
+          "closingVerified": false,
+          "quoteTimestamp": null,
+          "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-14"
+        },
+        {
+          "sportsbook": "hardrock",
+          "opening": {
+            "total": 77.5,
+            "overPrice": -115,
+            "underPrice": -120
+          },
+          "latest": {
+            "total": 77.5,
+            "overPrice": -115,
+            "underPrice": -120
+          },
+          "openingCapturedAt": "2026-11-14T11:42:47.508853Z",
+          "latestCapturedAt": "2026-11-14T11:58:13.926581Z",
+          "closingVerified": false,
+          "quoteTimestamp": null,
+          "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-14"
+        }
+      ],
+      "participants": {
+        "away": {
+          "espnId": "276",
+          "modelId": "marshall-thundering-herd",
+          "name": "Marshall Thundering Herd"
+        },
+        "home": {
+          "espnId": "2754",
+          "modelId": "youngstown-st-penguins",
+          "name": "Youngstown State Penguins"
+        }
+      }
+    },
+    {
+      "id": "2026-27_401911231_v4",
+      "season": "2026-27",
+      "gameId": "401911231",
+      "gameDate": "2026-11-14",
+      "version": 4,
+      "recordedAt": "2026-11-14T11:58:20.793Z",
+      "signalCalculatedAt": "2026-11-14T11:58:20.793Z",
+      "origin": "batch_capture",
+      "evidence": null,
+      "inputSnapshots": {
+        "prior": "data/input-snapshots/5d7d1cdd590b01d65ca838308bd098bc8be58fdb5d96faf922f4c44677d6d7de.json",
+        "current": "data/input-snapshots/4552c98f89c6ed4340294e8707b825c0946a56800daae1cfff1768613b1584c8.json",
+        "currentMatchesFrozenInputs": false
+      },
+      "modelVersion": "season-bridge-v1",
+      "source": {
+        "repository": "https://github.com/rickyhyppolite88-lang/1H-Model",
+        "projectionCode": "https://github.com/rickyhyppolite88-lang/1H-Model/blob/a3fb1abdbfef721068238b8ee1bce731c4a9c577/src/model/predictor.ts",
+        "batchCode": "https://github.com/rickyhyppolite88-lang/1H-Model/blob/a3fb1abdbfef721068238b8ee1bce731c4a9c577/src/model/predictions.ts",
+        "revision": "a3fb1abdbfef721068238b8ee1bce731c4a9c577"
+      },
+      "state": "pregame",
+      "sportsbook": "draftkings",
+      "basis": "latest",
+      "comparison": {
+        "line": null,
+        "signedEdge": null,
+        "lean": null
+      },
+      "signal": {
+        "method": "model-signal-v1",
+        "score": null,
+        "label": "Unavailable",
+        "reason": "A pregame projection, both components, and the selected line are required.",
+        "fill": null
+      },
+      "prediction": {
+        "gameId": "401911231",
+        "startsAt": "2026-11-14T18:30:00Z",
+        "awayTeam": "Loyola Chicago Ramblers",
+        "homeTeam": "Colorado State Rams",
+        "awayConference": "Atlantic 10",
+        "homeConference": "Pac-12",
+        "awayRank": null,
+        "homeRank": null,
+        "rankingsKnown": true,
+        "status": "Scheduled",
+        "projectedFirstHalfTotal": 72.07156786649279,
+        "actualFirstHalfTotal": null,
+        "simpleTotal": 70.72280946450809,
+        "paceAdjustedTotal": 74.0947054694698,
+        "featureKind": "captured_pregame",
+        "featureCapturedAt": "2026-11-14T06:20:56.837Z",
+        "unavailableReason": null,
+        "marketCoverage": {
+          "checkedAt": "2026-11-14T11:58:13.926581Z",
+          "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-14",
+          "status": "matched",
+          "books": [
+            {
+              "sportsbook": "bet_rivers_co",
+              "status": "available"
+            },
+            {
+              "sportsbook": "fanatics",
+              "status": "available"
+            },
+            {
+              "sportsbook": "fanduel",
+              "status": "available"
+            },
+            {
+              "sportsbook": "hardrock",
+              "status": "available"
+            }
+          ]
+        },
+        "markets": [
+          {
+            "sportsbook": "bet_rivers_co",
+            "openingLine": 71.5,
+            "latestLine": 71.5,
+            "capturedAt": "2026-11-14T11:58:13.926581Z",
+            "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-14",
+            "closingVerified": false
+          },
+          {
+            "sportsbook": "fanatics",
+            "openingLine": 73.5,
+            "latestLine": 71.5,
+            "capturedAt": "2026-11-14T11:58:13.926581Z",
+            "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-14",
+            "closingVerified": false
+          },
+          {
+            "sportsbook": "fanduel",
+            "openingLine": 71.5,
+            "latestLine": 71.5,
+            "capturedAt": "2026-11-14T11:58:13.926581Z",
+            "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-14",
+            "closingVerified": false
+          },
+          {
+            "sportsbook": "hardrock",
+            "openingLine": 70.5,
+            "latestLine": 70.5,
+            "capturedAt": "2026-11-14T11:58:13.926581Z",
+            "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-14",
+            "closingVerified": false
+          }
+        ],
+        "signal": {
+          "method": "model-signal-v1",
+          "score": null,
+          "label": "Unavailable",
+          "reason": "A pregame projection, both components, and the selected line are required.",
+          "fill": null
+        }
+      },
+      "features": {
+        "kind": "captured_pregame",
+        "capturedAt": "2026-11-14T06:20:56.837Z",
+        "priorAsOf": "2026-04-07",
+        "currentAsOf": "2026-11-14",
+        "modelVersion": "season-bridge-v1",
+        "statsRetrievedAt": "2026-11-14T06:20:47.885103Z",
+        "away": {
+          "id": "loyola-chicago-ramblers",
+          "name": "Loyola Chi",
+          "firstHalfPoints": 34.33776836861768,
+          "pace": 69.9172403486924,
+          "offensiveEfficiency": 1.0411037110834371,
+          "defensiveEfficiency": 1.0624737235367372,
+          "currentWeight": 0.2727272727272727,
+          "currentGames": 3,
+          "priorAvailable": true,
+          "strengthOfSchedule": -8.3,
+          "notes": [
+            "Roster continuity is not measured; league regression reduces reliance on last year's roster."
+          ]
+        },
+        "home": {
+          "id": "colorado-st-rams",
+          "name": "Colorado St",
+          "firstHalfPoints": 36.38504109589041,
+          "pace": 68.65905853051059,
+          "offensiveEfficiency": 1.1214673474470735,
+          "defensiveEfficiency": 1.0524373599003733,
+          "currentWeight": 0.2727272727272727,
+          "currentGames": 3,
+          "priorAvailable": true,
+          "strengthOfSchedule": -3.9,
+          "notes": [
+            "Roster continuity is not measured; league regression reduces reliance on last year's roster."
+          ]
+        }
+      },
+      "quotes": [
+        {
+          "sportsbook": "bet_rivers_co",
+          "opening": {
+            "total": 71.5,
+            "overPrice": -109,
+            "underPrice": -124
+          },
+          "latest": {
+            "total": 71.5,
+            "overPrice": -109,
+            "underPrice": -124
+          },
+          "openingCapturedAt": "2026-11-14T11:42:47.508853Z",
+          "latestCapturedAt": "2026-11-14T11:58:13.926581Z",
+          "closingVerified": false,
+          "quoteTimestamp": null,
+          "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-14"
+        },
+        {
+          "sportsbook": "fanatics",
+          "opening": {
+            "total": 73.5,
+            "overPrice": 100,
+            "underPrice": -120
+          },
+          "latest": {
+            "total": 71.5,
+            "overPrice": -110,
+            "underPrice": -110
+          },
+          "openingCapturedAt": "2026-11-14T06:20:50.643769Z",
+          "latestCapturedAt": "2026-11-14T11:58:13.926581Z",
+          "closingVerified": false,
+          "quoteTimestamp": null,
+          "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-14"
+        },
+        {
+          "sportsbook": "fanduel",
+          "opening": {
+            "total": 71.5,
+            "overPrice": -111,
+            "underPrice": -115
+          },
+          "latest": {
+            "total": 71.5,
+            "overPrice": -111,
+            "underPrice": -115
+          },
+          "openingCapturedAt": "2026-11-14T11:58:13.926581Z",
+          "latestCapturedAt": "2026-11-14T11:58:13.926581Z",
+          "closingVerified": false,
+          "quoteTimestamp": null,
+          "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-14"
+        },
+        {
+          "sportsbook": "hardrock",
+          "opening": {
+            "total": 70.5,
+            "overPrice": -125,
+            "underPrice": -110
+          },
+          "latest": {
+            "total": 70.5,
+            "overPrice": -125,
+            "underPrice": -110
+          },
+          "openingCapturedAt": "2026-11-14T11:42:47.508853Z",
+          "latestCapturedAt": "2026-11-14T11:58:13.926581Z",
+          "closingVerified": false,
+          "quoteTimestamp": null,
+          "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-14"
+        }
+      ],
+      "participants": {
+        "away": {
+          "espnId": "2350",
+          "modelId": "loyola-chicago-ramblers",
+          "name": "Loyola Chicago Ramblers"
+        },
+        "home": {
+          "espnId": "36",
+          "modelId": "colorado-st-rams",
+          "name": "Colorado State Rams"
+        }
+      }
+    },
+    {
+      "id": "2026-27_401918993_v3",
+      "season": "2026-27",
+      "gameId": "401918993",
+      "gameDate": "2026-11-14",
+      "version": 3,
+      "recordedAt": "2026-11-14T11:58:20.793Z",
+      "signalCalculatedAt": "2026-11-14T11:58:20.793Z",
+      "origin": "batch_capture",
+      "evidence": null,
+      "inputSnapshots": {
+        "prior": "data/input-snapshots/5d7d1cdd590b01d65ca838308bd098bc8be58fdb5d96faf922f4c44677d6d7de.json",
+        "current": "data/input-snapshots/4552c98f89c6ed4340294e8707b825c0946a56800daae1cfff1768613b1584c8.json",
+        "currentMatchesFrozenInputs": false
+      },
+      "modelVersion": "season-bridge-v1",
+      "source": {
+        "repository": "https://github.com/rickyhyppolite88-lang/1H-Model",
+        "projectionCode": "https://github.com/rickyhyppolite88-lang/1H-Model/blob/a3fb1abdbfef721068238b8ee1bce731c4a9c577/src/model/predictor.ts",
+        "batchCode": "https://github.com/rickyhyppolite88-lang/1H-Model/blob/a3fb1abdbfef721068238b8ee1bce731c4a9c577/src/model/predictions.ts",
+        "revision": "a3fb1abdbfef721068238b8ee1bce731c4a9c577"
+      },
+      "state": "pregame",
+      "sportsbook": "draftkings",
+      "basis": "latest",
+      "comparison": {
+        "line": null,
+        "signedEdge": null,
+        "lean": null
+      },
+      "signal": {
+        "method": "model-signal-v1",
+        "score": null,
+        "label": "Unavailable",
+        "reason": "A pregame projection, both components, and the selected line are required.",
+        "fill": null
+      },
+      "prediction": {
+        "gameId": "401918993",
+        "startsAt": "2026-11-14T19:00:00Z",
+        "awayTeam": "Coppin State Eagles",
+        "homeTeam": "South Florida Bulls",
+        "awayConference": "MEAC",
+        "homeConference": "American",
+        "awayRank": null,
+        "homeRank": null,
+        "rankingsKnown": true,
+        "status": "Scheduled",
+        "projectedFirstHalfTotal": 70.89796761224,
+        "actualFirstHalfTotal": null,
+        "simpleTotal": 68.38663179742632,
+        "paceAdjustedTotal": 74.6649713344605,
+        "featureKind": "captured_pregame",
+        "featureCapturedAt": "2026-11-14T06:20:56.837Z",
+        "unavailableReason": null,
+        "marketCoverage": {
+          "checkedAt": "2026-11-14T11:58:13.926581Z",
+          "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-14",
+          "status": "matched",
+          "books": [
+            {
+              "sportsbook": "bet_rivers_co",
+              "status": "available"
+            },
+            {
+              "sportsbook": "fanatics",
+              "status": "available"
+            },
+            {
+              "sportsbook": "fanduel",
+              "status": "available"
+            },
+            {
+              "sportsbook": "hardrock",
+              "status": "available"
+            }
+          ]
+        },
+        "markets": [
+          {
+            "sportsbook": "bet_rivers_co",
+            "openingLine": 71.5,
+            "latestLine": 71.5,
+            "capturedAt": "2026-11-14T11:58:13.926581Z",
+            "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-14",
+            "closingVerified": false
+          },
+          {
+            "sportsbook": "fanatics",
+            "openingLine": 71.5,
+            "latestLine": 71.5,
+            "capturedAt": "2026-11-14T11:58:13.926581Z",
+            "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-14",
+            "closingVerified": false
+          },
+          {
+            "sportsbook": "fanduel",
+            "openingLine": 71.5,
+            "latestLine": 71.5,
+            "capturedAt": "2026-11-14T11:58:13.926581Z",
+            "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-14",
+            "closingVerified": false
+          },
+          {
+            "sportsbook": "hardrock",
+            "openingLine": 71.5,
+            "latestLine": 71.5,
+            "capturedAt": "2026-11-14T11:58:13.926581Z",
+            "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-14",
+            "closingVerified": false
+          }
+        ],
+        "signal": {
+          "method": "model-signal-v1",
+          "score": null,
+          "label": "Unavailable",
+          "reason": "A pregame projection, both components, and the selected line are required.",
+          "fill": null
+        }
+      },
+      "features": {
+        "kind": "captured_pregame",
+        "capturedAt": "2026-11-14T06:20:56.837Z",
+        "priorAsOf": "2026-04-07",
+        "currentAsOf": "2026-11-14",
+        "modelVersion": "season-bridge-v1",
+        "statsRetrievedAt": "2026-11-14T06:20:47.885103Z",
+        "away": {
+          "id": "coppin-st-eagles",
+          "name": "Coppin St",
+          "firstHalfPoints": 29.99795433789954,
+          "pace": 70.19413698630137,
+          "offensiveEfficiency": 0.8948284018264842,
+          "defensiveEfficiency": 1.083900913242009,
+          "currentWeight": 0.3333333333333333,
+          "currentGames": 4,
+          "priorAvailable": true,
+          "strengthOfSchedule": -8.8,
+          "notes": [
+            "Roster continuity is not measured; league regression reduces reliance on last year's roster."
+          ]
+        },
+        "home": {
+          "id": "south-florida-bulls",
+          "name": "S Florida",
+          "firstHalfPoints": 38.388677459526775,
+          "pace": 75.24087671232877,
+          "offensiveEfficiency": 1.108103711083437,
+          "defensiveEfficiency": 1.0202919053549189,
+          "currentWeight": 0.2727272727272727,
+          "currentGames": 3,
+          "priorAvailable": true,
+          "strengthOfSchedule": 3.9,
+          "notes": [
+            "Roster continuity is not measured; league regression reduces reliance on last year's roster."
+          ]
+        }
+      },
+      "quotes": [
+        {
+          "sportsbook": "bet_rivers_co",
+          "opening": {
+            "total": 71.5,
+            "overPrice": -124,
+            "underPrice": -110
+          },
+          "latest": {
+            "total": 71.5,
+            "overPrice": -124,
+            "underPrice": -109
+          },
+          "openingCapturedAt": "2026-11-14T11:42:47.508853Z",
+          "latestCapturedAt": "2026-11-14T11:58:13.926581Z",
+          "closingVerified": false,
+          "quoteTimestamp": null,
+          "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-14"
+        },
+        {
+          "sportsbook": "fanatics",
+          "opening": {
+            "total": 71.5,
+            "overPrice": -105,
+            "underPrice": -115
+          },
+          "latest": {
+            "total": 71.5,
+            "overPrice": -110,
+            "underPrice": -110
+          },
+          "openingCapturedAt": "2026-11-14T06:20:50.643769Z",
+          "latestCapturedAt": "2026-11-14T11:58:13.926581Z",
+          "closingVerified": false,
+          "quoteTimestamp": null,
+          "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-14"
+        },
+        {
+          "sportsbook": "fanduel",
+          "opening": {
+            "total": 71.5,
+            "overPrice": -113,
+            "underPrice": -113
+          },
+          "latest": {
+            "total": 71.5,
+            "overPrice": -113,
+            "underPrice": -113
+          },
+          "openingCapturedAt": "2026-11-14T11:58:13.926581Z",
+          "latestCapturedAt": "2026-11-14T11:58:13.926581Z",
+          "closingVerified": false,
+          "quoteTimestamp": null,
+          "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-14"
+        },
+        {
+          "sportsbook": "hardrock",
+          "opening": {
+            "total": 71.5,
+            "overPrice": -125,
+            "underPrice": -110
+          },
+          "latest": {
+            "total": 71.5,
+            "overPrice": -125,
+            "underPrice": -110
+          },
+          "openingCapturedAt": "2026-11-14T11:42:47.508853Z",
+          "latestCapturedAt": "2026-11-14T11:58:13.926581Z",
+          "closingVerified": false,
+          "quoteTimestamp": null,
+          "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-14"
+        }
+      ],
+      "participants": {
+        "away": {
+          "espnId": "2154",
+          "modelId": "coppin-st-eagles",
+          "name": "Coppin State Eagles"
+        },
+        "home": {
+          "espnId": "58",
+          "modelId": "south-florida-bulls",
+          "name": "South Florida Bulls"
+        }
+      }
+    },
+    {
+      "id": "2026-27_401921689_v2",
+      "season": "2026-27",
+      "gameId": "401921689",
+      "gameDate": "2026-11-14",
+      "version": 2,
+      "recordedAt": "2026-11-14T11:58:20.793Z",
+      "signalCalculatedAt": "2026-11-14T11:58:20.793Z",
+      "origin": "batch_capture",
+      "evidence": null,
+      "inputSnapshots": {
+        "prior": "data/input-snapshots/5d7d1cdd590b01d65ca838308bd098bc8be58fdb5d96faf922f4c44677d6d7de.json",
+        "current": "data/input-snapshots/4552c98f89c6ed4340294e8707b825c0946a56800daae1cfff1768613b1584c8.json",
+        "currentMatchesFrozenInputs": false
+      },
+      "modelVersion": "season-bridge-v1",
+      "source": {
+        "repository": "https://github.com/rickyhyppolite88-lang/1H-Model",
+        "projectionCode": "https://github.com/rickyhyppolite88-lang/1H-Model/blob/a3fb1abdbfef721068238b8ee1bce731c4a9c577/src/model/predictor.ts",
+        "batchCode": "https://github.com/rickyhyppolite88-lang/1H-Model/blob/a3fb1abdbfef721068238b8ee1bce731c4a9c577/src/model/predictions.ts",
+        "revision": "a3fb1abdbfef721068238b8ee1bce731c4a9c577"
+      },
+      "state": "pregame",
+      "sportsbook": "draftkings",
+      "basis": "latest",
+      "comparison": {
+        "line": null,
+        "signedEdge": null,
+        "lean": null
+      },
+      "signal": {
+        "method": "model-signal-v1",
+        "score": null,
+        "label": "Unavailable",
+        "reason": "A pregame projection, both components, and the selected line are required.",
+        "fill": null
+      },
+      "prediction": {
+        "gameId": "401921689",
+        "startsAt": "2026-11-14T20:30:00Z",
+        "awayTeam": "LSU Tigers",
+        "homeTeam": "Gonzaga Bulldogs",
+        "awayConference": "SEC",
+        "homeConference": "Pac-12",
+        "awayRank": null,
+        "homeRank": 14,
+        "rankingsKnown": true,
+        "status": "Scheduled",
+        "projectedFirstHalfTotal": 78.40953828283314,
+        "actualFirstHalfTotal": null,
+        "simpleTotal": 79.53676811955167,
+        "paceAdjustedTotal": 76.71869352775536,
+        "featureKind": "captured_pregame",
+        "featureCapturedAt": "2026-11-14T06:20:56.837Z",
+        "unavailableReason": null,
+        "marketCoverage": {
+          "checkedAt": "2026-11-14T11:58:13.926581Z",
+          "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-14",
+          "status": "matched",
+          "books": [
+            {
+              "sportsbook": "bet_rivers_co",
+              "status": "available"
+            },
+            {
+              "sportsbook": "fanatics",
+              "status": "available"
+            },
+            {
+              "sportsbook": "fanduel",
+              "status": "available"
+            },
+            {
+              "sportsbook": "hardrock",
+              "status": "available"
+            }
+          ]
+        },
+        "markets": [
+          {
+            "sportsbook": "bet_rivers_co",
+            "openingLine": 75.5,
+            "latestLine": 75.5,
+            "capturedAt": "2026-11-14T11:58:13.926581Z",
+            "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-14",
+            "closingVerified": false
+          },
+          {
+            "sportsbook": "fanatics",
+            "openingLine": 78.5,
+            "latestLine": 76.5,
+            "capturedAt": "2026-11-14T11:58:13.926581Z",
+            "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-14",
+            "closingVerified": false
+          },
+          {
+            "sportsbook": "fanduel",
+            "openingLine": 75.5,
+            "latestLine": 75.5,
+            "capturedAt": "2026-11-14T11:58:13.926581Z",
+            "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-14",
+            "closingVerified": false
+          },
+          {
+            "sportsbook": "hardrock",
+            "openingLine": 75.5,
+            "latestLine": 75.5,
+            "capturedAt": "2026-11-14T11:58:13.926581Z",
+            "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-14",
+            "closingVerified": false
+          }
+        ],
+        "signal": {
+          "method": "model-signal-v1",
+          "score": null,
+          "label": "Unavailable",
+          "reason": "A pregame projection, both components, and the selected line are required.",
+          "fill": null
+        }
+      },
+      "features": {
+        "kind": "captured_pregame",
+        "capturedAt": "2026-11-14T06:20:56.837Z",
+        "priorAsOf": "2026-04-07",
+        "currentAsOf": "2026-11-14",
+        "modelVersion": "season-bridge-v1",
+        "statsRetrievedAt": "2026-11-14T06:20:47.885103Z",
+        "away": {
+          "id": "louisiana-state-tigers",
+          "name": "LSU",
+          "firstHalfPoints": 40.30322291407222,
+          "pace": 73.40269489414695,
+          "offensiveEfficiency": 1.12983098381071,
+          "defensiveEfficiency": 0.9682373599003735,
+          "currentWeight": 0.2727272727272727,
+          "currentGames": 3,
+          "priorAvailable": true,
+          "strengthOfSchedule": -8.4,
+          "notes": [
+            "Roster continuity is not measured; league regression reduces reliance on last year's roster."
+          ]
+        },
+        "home": {
+          "id": "gonzaga-bulldogs",
+          "name": "Gonzaga",
+          "firstHalfPoints": 39.233545205479444,
+          "pace": 71.41296438356164,
+          "offensiveEfficiency": 1.1677140821917809,
+          "defensiveEfficiency": 0.972361095890411,
+          "currentWeight": 0.2,
+          "currentGames": 2,
+          "priorAvailable": true,
+          "strengthOfSchedule": 10.1,
+          "notes": [
+            "Roster continuity is not measured; league regression reduces reliance on last year's roster."
+          ]
+        }
+      },
+      "quotes": [
+        {
+          "sportsbook": "bet_rivers_co",
+          "opening": {
+            "total": 75.5,
+            "overPrice": -118,
+            "underPrice": -115
+          },
+          "latest": {
+            "total": 75.5,
+            "overPrice": -118,
+            "underPrice": -115
+          },
+          "openingCapturedAt": "2026-11-14T11:58:13.926581Z",
+          "latestCapturedAt": "2026-11-14T11:58:13.926581Z",
+          "closingVerified": false,
+          "quoteTimestamp": null,
+          "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-14"
+        },
+        {
+          "sportsbook": "fanatics",
+          "opening": {
+            "total": 78.5,
+            "overPrice": -105,
+            "underPrice": -115
+          },
+          "latest": {
+            "total": 76.5,
+            "overPrice": 100,
+            "underPrice": -120
+          },
+          "openingCapturedAt": "2026-11-14T06:20:50.643769Z",
+          "latestCapturedAt": "2026-11-14T11:58:13.926581Z",
+          "closingVerified": false,
+          "quoteTimestamp": null,
+          "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-14"
+        },
+        {
+          "sportsbook": "fanduel",
+          "opening": {
+            "total": 75.5,
+            "overPrice": -120,
+            "underPrice": -106
+          },
+          "latest": {
+            "total": 75.5,
+            "overPrice": -120,
+            "underPrice": -106
+          },
+          "openingCapturedAt": "2026-11-14T11:58:13.926581Z",
+          "latestCapturedAt": "2026-11-14T11:58:13.926581Z",
+          "closingVerified": false,
+          "quoteTimestamp": null,
+          "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-14"
+        },
+        {
+          "sportsbook": "hardrock",
+          "opening": {
+            "total": 75.5,
+            "overPrice": -120,
+            "underPrice": -115
+          },
+          "latest": {
+            "total": 75.5,
+            "overPrice": -120,
+            "underPrice": -115
+          },
+          "openingCapturedAt": "2026-11-14T11:58:13.926581Z",
+          "latestCapturedAt": "2026-11-14T11:58:13.926581Z",
+          "closingVerified": false,
+          "quoteTimestamp": null,
+          "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-14"
+        }
+      ],
+      "participants": {
+        "away": {
+          "espnId": "99",
+          "modelId": "louisiana-state-tigers",
+          "name": "LSU Tigers"
+        },
+        "home": {
+          "espnId": "2250",
+          "modelId": "gonzaga-bulldogs",
+          "name": "Gonzaga Bulldogs"
+        }
+      }
+    },
+    {
+      "id": "2026-27_401909534_v2",
+      "season": "2026-27",
+      "gameId": "401909534",
+      "gameDate": "2026-11-14",
+      "version": 2,
+      "recordedAt": "2026-11-14T11:58:20.793Z",
+      "signalCalculatedAt": "2026-11-14T11:58:20.793Z",
+      "origin": "batch_capture",
+      "evidence": null,
+      "inputSnapshots": {
+        "prior": "data/input-snapshots/5d7d1cdd590b01d65ca838308bd098bc8be58fdb5d96faf922f4c44677d6d7de.json",
+        "current": "data/input-snapshots/4552c98f89c6ed4340294e8707b825c0946a56800daae1cfff1768613b1584c8.json",
+        "currentMatchesFrozenInputs": false
+      },
+      "modelVersion": "season-bridge-v1",
+      "source": {
+        "repository": "https://github.com/rickyhyppolite88-lang/1H-Model",
+        "projectionCode": "https://github.com/rickyhyppolite88-lang/1H-Model/blob/a3fb1abdbfef721068238b8ee1bce731c4a9c577/src/model/predictor.ts",
+        "batchCode": "https://github.com/rickyhyppolite88-lang/1H-Model/blob/a3fb1abdbfef721068238b8ee1bce731c4a9c577/src/model/predictions.ts",
+        "revision": "a3fb1abdbfef721068238b8ee1bce731c4a9c577"
+      },
+      "state": "pregame",
+      "sportsbook": "draftkings",
+      "basis": "latest",
+      "comparison": {
+        "line": null,
+        "signedEdge": null,
+        "lean": null
+      },
+      "signal": {
+        "method": "model-signal-v1",
+        "score": null,
+        "label": "Unavailable",
+        "reason": "A pregame projection, both components, and the selected line are required.",
+        "fill": null
+      },
+      "prediction": {
+        "gameId": "401909534",
+        "startsAt": "2026-11-14T23:00:00Z",
+        "awayTeam": "Colorado Buffaloes",
+        "homeTeam": "Providence Friars",
+        "awayConference": "Big 12",
+        "homeConference": "Big East",
+        "awayRank": null,
+        "homeRank": null,
+        "rankingsKnown": true,
+        "status": "Scheduled",
+        "projectedFirstHalfTotal": 72.89767234979857,
+        "actualFirstHalfTotal": null,
+        "simpleTotal": 70.03008219178082,
+        "paceAdjustedTotal": 77.19905758682518,
+        "featureKind": "captured_pregame",
+        "featureCapturedAt": "2026-11-14T06:20:56.837Z",
+        "unavailableReason": null,
+        "marketCoverage": {
+          "checkedAt": "2026-11-14T11:58:13.926581Z",
+          "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-14",
+          "status": "matched",
+          "books": [
+            {
+              "sportsbook": "fanduel",
+              "status": "available"
+            }
+          ]
+        },
+        "markets": [
+          {
+            "sportsbook": "fanduel",
+            "openingLine": 73.5,
+            "latestLine": 73.5,
+            "capturedAt": "2026-11-14T11:58:13.926581Z",
+            "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-14",
+            "closingVerified": false
+          }
+        ],
+        "signal": {
+          "method": "model-signal-v1",
+          "score": null,
+          "label": "Unavailable",
+          "reason": "A pregame projection, both components, and the selected line are required.",
+          "fill": null
+        }
+      },
+      "features": {
+        "kind": "captured_pregame",
+        "capturedAt": "2026-11-14T06:20:56.837Z",
+        "priorAsOf": "2026-04-07",
+        "currentAsOf": "2026-11-14",
+        "modelVersion": "season-bridge-v1",
+        "statsRetrievedAt": "2026-11-14T06:20:47.885103Z",
+        "away": {
+          "id": "colorado-buffaloes",
+          "name": "Colorado",
+          "firstHalfPoints": 34.23413200498132,
+          "pace": 72.06996762141968,
+          "offensiveEfficiency": 1.094849165628892,
+          "defensiveEfficiency": 1.053164632627646,
+          "currentWeight": 0.2727272727272727,
+          "currentGames": 3,
+          "priorAvailable": true,
+          "strengthOfSchedule": 0.9,
+          "notes": [
+            "Roster continuity is not measured; league regression reduces reliance on last year's roster."
+          ]
+        },
+        "home": {
+          "id": "providence-friars",
+          "name": "Providence",
+          "firstHalfPoints": 35.795950186799494,
+          "pace": 73.94269489414694,
+          "offensiveEfficiency": 1.0696128019925282,
+          "defensiveEfficiency": 1.012091905354919,
+          "currentWeight": 0.2727272727272727,
+          "currentGames": 3,
+          "priorAvailable": true,
+          "strengthOfSchedule": 6.5,
+          "notes": [
+            "Roster continuity is not measured; league regression reduces reliance on last year's roster."
+          ]
+        }
+      },
+      "quotes": [
+        {
+          "sportsbook": "fanduel",
+          "opening": {
+            "total": 73.5,
+            "overPrice": -120,
+            "underPrice": -106
+          },
+          "latest": {
+            "total": 73.5,
+            "overPrice": -120,
+            "underPrice": -106
+          },
+          "openingCapturedAt": "2026-11-14T11:58:13.926581Z",
+          "latestCapturedAt": "2026-11-14T11:58:13.926581Z",
+          "closingVerified": false,
+          "quoteTimestamp": null,
+          "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-14"
+        }
+      ],
+      "participants": {
+        "away": {
+          "espnId": "38",
+          "modelId": "colorado-buffaloes",
+          "name": "Colorado Buffaloes"
+        },
+        "home": {
+          "espnId": "2507",
+          "modelId": "providence-friars",
+          "name": "Providence Friars"
         }
       }
     }
