@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-11-14T09:50:22.720Z",
+  "updatedAt": "2026-11-14T10:26:28.527Z",
   "entryPolicy": {
     "method": "last-pretip-v1",
     "startedAt": "2026-11-10T21:33:29.039Z",
@@ -10566,6 +10566,316 @@
           "espnId": "2541",
           "modelId": "santa-clara-broncos",
           "name": "Santa Clara Broncos"
+        }
+      }
+    },
+    {
+      "id": "2026-27_401912229_v2",
+      "season": "2026-27",
+      "gameId": "401912229",
+      "gameDate": "2026-11-14",
+      "version": 2,
+      "recordedAt": "2026-11-14T10:26:28.527Z",
+      "signalCalculatedAt": "2026-11-14T10:26:28.527Z",
+      "origin": "batch_capture",
+      "evidence": null,
+      "inputSnapshots": {
+        "prior": "data/input-snapshots/5d7d1cdd590b01d65ca838308bd098bc8be58fdb5d96faf922f4c44677d6d7de.json",
+        "current": "data/input-snapshots/022dd7d020cc5460c789e2307738082f4aa1055db91f22c9e5f3d0150c2b3e4b.json",
+        "currentMatchesFrozenInputs": true
+      },
+      "modelVersion": "season-bridge-v1",
+      "source": {
+        "repository": "https://github.com/rickyhyppolite88-lang/1H-Model",
+        "projectionCode": "https://github.com/rickyhyppolite88-lang/1H-Model/blob/8daa83155d1d53f5bc718cba916fdf8be8b464d5/src/model/predictor.ts",
+        "batchCode": "https://github.com/rickyhyppolite88-lang/1H-Model/blob/8daa83155d1d53f5bc718cba916fdf8be8b464d5/src/model/predictions.ts",
+        "revision": "8daa83155d1d53f5bc718cba916fdf8be8b464d5"
+      },
+      "state": "pregame",
+      "sportsbook": "draftkings",
+      "basis": "latest",
+      "comparison": {
+        "line": null,
+        "signedEdge": null,
+        "lean": null
+      },
+      "signal": {
+        "method": "model-signal-v1",
+        "score": null,
+        "label": "Unavailable",
+        "reason": "A pregame projection, both components, and the selected line are required.",
+        "fill": null
+      },
+      "prediction": {
+        "gameId": "401912229",
+        "startsAt": "2026-11-14T18:00:00Z",
+        "awayTeam": "St. Thomas Tommies",
+        "homeTeam": "Army Black Knights",
+        "awayConference": "Summit League",
+        "homeConference": "Patriot League",
+        "awayRank": null,
+        "homeRank": null,
+        "rankingsKnown": true,
+        "status": "Scheduled",
+        "projectedFirstHalfTotal": 68.1487475376012,
+        "actualFirstHalfTotal": null,
+        "simpleTotal": 64.55875300954752,
+        "paceAdjustedTotal": 73.5337393296817,
+        "featureKind": "captured_pregame",
+        "featureCapturedAt": "2026-11-14T06:20:56.837Z",
+        "unavailableReason": null,
+        "marketCoverage": {
+          "checkedAt": "2026-11-14T10:26:24.089956Z",
+          "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-14",
+          "status": "matched",
+          "books": [
+            {
+              "sportsbook": "fanatics",
+              "status": "available"
+            }
+          ]
+        },
+        "markets": [
+          {
+            "sportsbook": "fanatics",
+            "openingLine": 71.5,
+            "latestLine": 70.5,
+            "capturedAt": "2026-11-14T10:26:24.089956Z",
+            "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-14",
+            "closingVerified": false
+          }
+        ],
+        "signal": {
+          "method": "model-signal-v1",
+          "score": null,
+          "label": "Unavailable",
+          "reason": "A pregame projection, both components, and the selected line are required.",
+          "fill": null
+        }
+      },
+      "features": {
+        "kind": "captured_pregame",
+        "capturedAt": "2026-11-14T06:20:56.837Z",
+        "priorAsOf": "2026-04-07",
+        "currentAsOf": "2026-11-14",
+        "modelVersion": "season-bridge-v1",
+        "statsRetrievedAt": "2026-11-14T06:20:47.885103Z",
+        "away": {
+          "id": "st-thomas-mn-tommies",
+          "name": "St Thomas",
+          "firstHalfPoints": 35.504621004566204,
+          "pace": 70.23747031963471,
+          "offensiveEfficiency": 1.0881284018264838,
+          "defensiveEfficiency": 1.0639342465753423,
+          "currentWeight": 0.3333333333333333,
+          "currentGames": 4,
+          "priorAvailable": true,
+          "strengthOfSchedule": -2.7,
+          "notes": [
+            "Roster continuity is not measured; league regression reduces reliance on last year's roster."
+          ]
+        },
+        "home": {
+          "id": "army-black-knights",
+          "name": "Army",
+          "firstHalfPoints": 29.054132004981312,
+          "pace": 69.59905853051059,
+          "offensiveEfficiency": 0.9569400747198007,
+          "defensiveEfficiency": 1.0978373599003732,
+          "currentWeight": 0.2727272727272727,
+          "currentGames": 3,
+          "priorAvailable": true,
+          "strengthOfSchedule": -10.1,
+          "notes": [
+            "Roster continuity is not measured; league regression reduces reliance on last year's roster."
+          ]
+        }
+      },
+      "quotes": [
+        {
+          "sportsbook": "fanatics",
+          "opening": {
+            "total": 71.5,
+            "overPrice": 105,
+            "underPrice": -125
+          },
+          "latest": {
+            "total": 70.5,
+            "overPrice": -115,
+            "underPrice": -105
+          },
+          "openingCapturedAt": "2026-11-14T06:20:50.643769Z",
+          "latestCapturedAt": "2026-11-14T10:26:24.089956Z",
+          "closingVerified": false,
+          "quoteTimestamp": null,
+          "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-14"
+        }
+      ],
+      "participants": {
+        "away": {
+          "espnId": "2900",
+          "modelId": "st-thomas-mn-tommies",
+          "name": "St. Thomas Tommies"
+        },
+        "home": {
+          "espnId": "349",
+          "modelId": "army-black-knights",
+          "name": "Army Black Knights"
+        }
+      }
+    },
+    {
+      "id": "2026-27_401920074_v2",
+      "season": "2026-27",
+      "gameId": "401920074",
+      "gameDate": "2026-11-14",
+      "version": 2,
+      "recordedAt": "2026-11-14T10:26:28.527Z",
+      "signalCalculatedAt": "2026-11-14T10:26:28.527Z",
+      "origin": "batch_capture",
+      "evidence": null,
+      "inputSnapshots": {
+        "prior": "data/input-snapshots/5d7d1cdd590b01d65ca838308bd098bc8be58fdb5d96faf922f4c44677d6d7de.json",
+        "current": "data/input-snapshots/022dd7d020cc5460c789e2307738082f4aa1055db91f22c9e5f3d0150c2b3e4b.json",
+        "currentMatchesFrozenInputs": true
+      },
+      "modelVersion": "season-bridge-v1",
+      "source": {
+        "repository": "https://github.com/rickyhyppolite88-lang/1H-Model",
+        "projectionCode": "https://github.com/rickyhyppolite88-lang/1H-Model/blob/8daa83155d1d53f5bc718cba916fdf8be8b464d5/src/model/predictor.ts",
+        "batchCode": "https://github.com/rickyhyppolite88-lang/1H-Model/blob/8daa83155d1d53f5bc718cba916fdf8be8b464d5/src/model/predictions.ts",
+        "revision": "8daa83155d1d53f5bc718cba916fdf8be8b464d5"
+      },
+      "state": "pregame",
+      "sportsbook": "draftkings",
+      "basis": "latest",
+      "comparison": {
+        "line": null,
+        "signedEdge": null,
+        "lean": null
+      },
+      "signal": {
+        "method": "model-signal-v1",
+        "score": null,
+        "label": "Unavailable",
+        "reason": "A pregame projection, both components, and the selected line are required.",
+        "fill": null
+      },
+      "prediction": {
+        "gameId": "401920074",
+        "startsAt": "2026-11-14T18:00:00Z",
+        "awayTeam": "Bradley Braves",
+        "homeTeam": "George Mason Patriots",
+        "awayConference": "Missouri Valley",
+        "homeConference": "Atlantic 10",
+        "awayRank": null,
+        "homeRank": null,
+        "rankingsKnown": true,
+        "status": "Scheduled",
+        "projectedFirstHalfTotal": 67.6215525526039,
+        "actualFirstHalfTotal": null,
+        "simpleTotal": 66.41723785803238,
+        "paceAdjustedTotal": 69.42802459446118,
+        "featureKind": "captured_pregame",
+        "featureCapturedAt": "2026-11-14T06:20:56.837Z",
+        "unavailableReason": null,
+        "marketCoverage": {
+          "checkedAt": "2026-11-14T10:26:24.089956Z",
+          "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-14",
+          "status": "matched",
+          "books": [
+            {
+              "sportsbook": "fanatics",
+              "status": "available"
+            }
+          ]
+        },
+        "markets": [
+          {
+            "sportsbook": "fanatics",
+            "openingLine": 62.5,
+            "latestLine": 61.5,
+            "capturedAt": "2026-11-14T10:26:24.089956Z",
+            "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-14",
+            "closingVerified": false
+          }
+        ],
+        "signal": {
+          "method": "model-signal-v1",
+          "score": null,
+          "label": "Unavailable",
+          "reason": "A pregame projection, both components, and the selected line are required.",
+          "fill": null
+        }
+      },
+      "features": {
+        "kind": "captured_pregame",
+        "capturedAt": "2026-11-14T06:20:56.837Z",
+        "priorAsOf": "2026-04-07",
+        "currentAsOf": "2026-11-14",
+        "modelVersion": "season-bridge-v1",
+        "statsRetrievedAt": "2026-11-14T06:20:47.885103Z",
+        "away": {
+          "id": "bradley-braves",
+          "name": "Bradley",
+          "firstHalfPoints": 30.861287671232876,
+          "pace": 69.23747031963471,
+          "offensiveEfficiency": 0.9731950684931508,
+          "defensiveEfficiency": 1.0011009132420088,
+          "currentWeight": 0.3333333333333333,
+          "currentGames": 4,
+          "priorAvailable": true,
+          "strengthOfSchedule": -7.2,
+          "notes": [
+            "Roster continuity is not measured; league regression reduces reliance on last year's roster."
+          ]
+        },
+        "home": {
+          "id": "george-mason-patriots",
+          "name": "George Mason",
+          "firstHalfPoints": 35.5559501867995,
+          "pace": 68.28087671232876,
+          "offensiveEfficiency": 1.083812801992528,
+          "defensiveEfficiency": 0.9808009962640099,
+          "currentWeight": 0.2727272727272727,
+          "currentGames": 3,
+          "priorAvailable": true,
+          "strengthOfSchedule": -8.6,
+          "notes": [
+            "Roster continuity is not measured; league regression reduces reliance on last year's roster."
+          ]
+        }
+      },
+      "quotes": [
+        {
+          "sportsbook": "fanatics",
+          "opening": {
+            "total": 62.5,
+            "overPrice": 105,
+            "underPrice": -125
+          },
+          "latest": {
+            "total": 61.5,
+            "overPrice": -110,
+            "underPrice": -110
+          },
+          "openingCapturedAt": "2026-11-14T06:20:50.643769Z",
+          "latestCapturedAt": "2026-11-14T10:26:24.089956Z",
+          "closingVerified": false,
+          "quoteTimestamp": null,
+          "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-14"
+        }
+      ],
+      "participants": {
+        "away": {
+          "espnId": "71",
+          "modelId": "bradley-braves",
+          "name": "Bradley Braves"
+        },
+        "home": {
+          "espnId": "2244",
+          "modelId": "george-mason-patriots",
+          "name": "George Mason Patriots"
         }
       }
     }
