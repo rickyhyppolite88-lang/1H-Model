@@ -531,7 +531,7 @@
     ]
   },
   "startedAt": "2026-11-05T16:08:14.757Z",
-  "updatedAt": "2026-11-14T03:57:03.290Z",
+  "updatedAt": "2026-11-14T04:42:27.640Z",
   "forecasts": [
     {
       "id": "2026-27_enhanced-baseline-v2_401928807_v1",
@@ -107016,6 +107016,74 @@
         "city": "Portland",
         "state": "OR"
       }
+    },
+    {
+      "id": "2026-27:401920372_result1",
+      "season": "2026-27",
+      "gameId": "401920372",
+      "observedAt": "2026-11-14T04:42:26.374Z",
+      "sourceCapturedAt": "2026-11-14T04:42:19.819616Z",
+      "startsAt": "2026-11-14T03:00:00Z",
+      "awayPoints": 34,
+      "homePoints": 73,
+      "source": "https://site.api.espn.com/apis/site/v2/sports/basketball/mens-college-basketball/scoreboard?dates=20261113&groups=50&limit=1000",
+      "participants": {
+        "away": {
+          "espnId": "28",
+          "modelId": "uc-san-diego-tritons",
+          "name": "UC San Diego Tritons"
+        },
+        "home": {
+          "espnId": "328",
+          "modelId": "utah-st-aggies",
+          "name": "Utah State Aggies"
+        }
+      },
+      "context": {
+        "neutralSite": false,
+        "conferenceGame": false,
+        "matchupType": "nonconference_regular",
+        "eventLabel": null,
+        "venueId": "2128",
+        "venueKey": "id:2128",
+        "venueName": "Dee Glen Smith Spectrum",
+        "city": "Logan",
+        "state": "UT"
+      }
+    },
+    {
+      "id": "2026-27:401920345_result1",
+      "season": "2026-27",
+      "gameId": "401920345",
+      "observedAt": "2026-11-14T04:42:26.374Z",
+      "sourceCapturedAt": "2026-11-14T04:42:19.819616Z",
+      "startsAt": "2026-11-14T03:30:00Z",
+      "awayPoints": 27,
+      "homePoints": 33,
+      "source": "https://site.api.espn.com/apis/site/v2/sports/basketball/mens-college-basketball/scoreboard?dates=20261113&groups=50&limit=1000",
+      "participants": {
+        "away": {
+          "espnId": "2029",
+          "modelId": "arkansas-pine-bluff-golden-lions",
+          "name": "Arkansas-Pine Bluff Golden Lions"
+        },
+        "home": {
+          "espnId": "2856",
+          "modelId": "california-baptist-lancers",
+          "name": "California Baptist Lancers"
+        }
+      },
+      "context": {
+        "neutralSite": false,
+        "conferenceGame": false,
+        "matchupType": "nonconference_regular",
+        "eventLabel": null,
+        "venueId": "5994",
+        "venueKey": "id:5994",
+        "venueName": "Dale E. and Sarah Ann Fowler Events Center",
+        "city": "Riverside",
+        "state": "CA"
+      }
     }
   ],
   "halves": [
@@ -109258,6 +109326,82 @@
           "threeAttempted": 9,
           "turnovers": 11,
           "offensiveRebounds": 4
+        }
+      ]
+    },
+    {
+      "id": "401920345_f3c7a18e179fb3df53f6e9036605e575a7a789ecd0e18ff9f76f713e9fb3c6fc",
+      "gameId": "401920345",
+      "season": "2026-27",
+      "startsAt": "2026-11-14T03:30:00Z",
+      "observedAt": "2026-11-14T04:42:22.321288Z",
+      "source": "https://site.api.espn.com/apis/site/v2/sports/basketball/mens-college-basketball/summary?event=401920345",
+      "sourceSha256": "08c79534dccc3b223e018f7eff78c5f01b87b6d1ddc384f14e791aa7ecbc810d",
+      "bothD1": true,
+      "teams": [
+        {
+          "espnId": "2029",
+          "points": 27,
+          "fouls": 8,
+          "bonusMinutes": 0,
+          "fga": 26,
+          "fta": 5,
+          "freeThrowsMade": 5,
+          "threeMade": 2,
+          "threeAttempted": 6,
+          "turnovers": 8,
+          "offensiveRebounds": 7
+        },
+        {
+          "espnId": "2856",
+          "points": 33,
+          "fouls": 6,
+          "bonusMinutes": 1.5333333333333334,
+          "fga": 30,
+          "fta": 9,
+          "freeThrowsMade": 9,
+          "threeMade": 2,
+          "threeAttempted": 12,
+          "turnovers": 1,
+          "offensiveRebounds": 5
+        }
+      ]
+    },
+    {
+      "id": "401920372_ceb78d1e011190451703c054a8d139a7b0d598da9e9ace154519283a8d10a22b",
+      "gameId": "401920372",
+      "season": "2026-27",
+      "startsAt": "2026-11-14T03:00:00Z",
+      "observedAt": "2026-11-14T04:42:22.321288Z",
+      "source": "https://site.api.espn.com/apis/site/v2/sports/basketball/mens-college-basketball/summary?event=401920372",
+      "sourceSha256": "fbf6ded932d3c99ecc03562d54765a8f6ad47038ab6dafa9b15b78424f547dca",
+      "bothD1": true,
+      "teams": [
+        {
+          "espnId": "28",
+          "points": 34,
+          "fouls": 6,
+          "bonusMinutes": 0,
+          "fga": 33,
+          "fta": 4,
+          "freeThrowsMade": 4,
+          "threeMade": 6,
+          "threeAttempted": 18,
+          "turnovers": 8,
+          "offensiveRebounds": 4
+        },
+        {
+          "espnId": "328",
+          "points": 73,
+          "fouls": 5,
+          "bonusMinutes": 0,
+          "fga": 34,
+          "fta": 8,
+          "freeThrowsMade": 8,
+          "threeMade": 15,
+          "threeAttempted": 21,
+          "turnovers": 4,
+          "offensiveRebounds": 2
         }
       ]
     }
