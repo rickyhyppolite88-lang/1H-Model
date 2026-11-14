@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-11-14T10:26:28.527Z",
+  "updatedAt": "2026-11-14T11:08:08.859Z",
   "entryPolicy": {
     "method": "last-pretip-v1",
     "startedAt": "2026-11-10T21:33:29.039Z",
@@ -10876,6 +10876,161 @@
           "espnId": "2244",
           "modelId": "george-mason-patriots",
           "name": "George Mason Patriots"
+        }
+      }
+    },
+    {
+      "id": "2026-27_401911231_v2",
+      "season": "2026-27",
+      "gameId": "401911231",
+      "gameDate": "2026-11-14",
+      "version": 2,
+      "recordedAt": "2026-11-14T11:08:08.859Z",
+      "signalCalculatedAt": "2026-11-14T11:08:08.859Z",
+      "origin": "batch_capture",
+      "evidence": null,
+      "inputSnapshots": {
+        "prior": "data/input-snapshots/5d7d1cdd590b01d65ca838308bd098bc8be58fdb5d96faf922f4c44677d6d7de.json",
+        "current": "data/input-snapshots/022dd7d020cc5460c789e2307738082f4aa1055db91f22c9e5f3d0150c2b3e4b.json",
+        "currentMatchesFrozenInputs": true
+      },
+      "modelVersion": "season-bridge-v1",
+      "source": {
+        "repository": "https://github.com/rickyhyppolite88-lang/1H-Model",
+        "projectionCode": "https://github.com/rickyhyppolite88-lang/1H-Model/blob/c2d1f07cb311f2f1c937cf02e89cad56699bf87a/src/model/predictor.ts",
+        "batchCode": "https://github.com/rickyhyppolite88-lang/1H-Model/blob/c2d1f07cb311f2f1c937cf02e89cad56699bf87a/src/model/predictions.ts",
+        "revision": "c2d1f07cb311f2f1c937cf02e89cad56699bf87a"
+      },
+      "state": "pregame",
+      "sportsbook": "draftkings",
+      "basis": "latest",
+      "comparison": {
+        "line": null,
+        "signedEdge": null,
+        "lean": null
+      },
+      "signal": {
+        "method": "model-signal-v1",
+        "score": null,
+        "label": "Unavailable",
+        "reason": "A pregame projection, both components, and the selected line are required.",
+        "fill": null
+      },
+      "prediction": {
+        "gameId": "401911231",
+        "startsAt": "2026-11-14T18:30:00Z",
+        "awayTeam": "Loyola Chicago Ramblers",
+        "homeTeam": "Colorado State Rams",
+        "awayConference": "Atlantic 10",
+        "homeConference": "Pac-12",
+        "awayRank": null,
+        "homeRank": null,
+        "rankingsKnown": true,
+        "status": "Scheduled",
+        "projectedFirstHalfTotal": 72.07156786649279,
+        "actualFirstHalfTotal": null,
+        "simpleTotal": 70.72280946450809,
+        "paceAdjustedTotal": 74.0947054694698,
+        "featureKind": "captured_pregame",
+        "featureCapturedAt": "2026-11-14T06:20:56.837Z",
+        "unavailableReason": null,
+        "marketCoverage": {
+          "checkedAt": "2026-11-14T11:08:05.248568Z",
+          "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-14",
+          "status": "matched",
+          "books": [
+            {
+              "sportsbook": "fanatics",
+              "status": "available"
+            }
+          ]
+        },
+        "markets": [
+          {
+            "sportsbook": "fanatics",
+            "openingLine": 73.5,
+            "latestLine": 72.5,
+            "capturedAt": "2026-11-14T11:08:05.248568Z",
+            "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-14",
+            "closingVerified": false
+          }
+        ],
+        "signal": {
+          "method": "model-signal-v1",
+          "score": null,
+          "label": "Unavailable",
+          "reason": "A pregame projection, both components, and the selected line are required.",
+          "fill": null
+        }
+      },
+      "features": {
+        "kind": "captured_pregame",
+        "capturedAt": "2026-11-14T06:20:56.837Z",
+        "priorAsOf": "2026-04-07",
+        "currentAsOf": "2026-11-14",
+        "modelVersion": "season-bridge-v1",
+        "statsRetrievedAt": "2026-11-14T06:20:47.885103Z",
+        "away": {
+          "id": "loyola-chicago-ramblers",
+          "name": "Loyola Chi",
+          "firstHalfPoints": 34.33776836861768,
+          "pace": 69.9172403486924,
+          "offensiveEfficiency": 1.0411037110834371,
+          "defensiveEfficiency": 1.0624737235367372,
+          "currentWeight": 0.2727272727272727,
+          "currentGames": 3,
+          "priorAvailable": true,
+          "strengthOfSchedule": -8.3,
+          "notes": [
+            "Roster continuity is not measured; league regression reduces reliance on last year's roster."
+          ]
+        },
+        "home": {
+          "id": "colorado-st-rams",
+          "name": "Colorado St",
+          "firstHalfPoints": 36.38504109589041,
+          "pace": 68.65905853051059,
+          "offensiveEfficiency": 1.1214673474470735,
+          "defensiveEfficiency": 1.0524373599003733,
+          "currentWeight": 0.2727272727272727,
+          "currentGames": 3,
+          "priorAvailable": true,
+          "strengthOfSchedule": -3.9,
+          "notes": [
+            "Roster continuity is not measured; league regression reduces reliance on last year's roster."
+          ]
+        }
+      },
+      "quotes": [
+        {
+          "sportsbook": "fanatics",
+          "opening": {
+            "total": 73.5,
+            "overPrice": 100,
+            "underPrice": -120
+          },
+          "latest": {
+            "total": 72.5,
+            "overPrice": -115,
+            "underPrice": -105
+          },
+          "openingCapturedAt": "2026-11-14T06:20:50.643769Z",
+          "latestCapturedAt": "2026-11-14T11:08:05.248568Z",
+          "closingVerified": false,
+          "quoteTimestamp": null,
+          "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-14"
+        }
+      ],
+      "participants": {
+        "away": {
+          "espnId": "2350",
+          "modelId": "loyola-chicago-ramblers",
+          "name": "Loyola Chicago Ramblers"
+        },
+        "home": {
+          "espnId": "36",
+          "modelId": "colorado-st-rams",
+          "name": "Colorado State Rams"
         }
       }
     }
