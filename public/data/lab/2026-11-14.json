@@ -531,7 +531,7 @@
     ]
   },
   "startedAt": "2026-11-05T16:08:14.757Z",
-  "updatedAt": "2026-11-15T03:25:24.202Z",
+  "updatedAt": "2026-11-15T04:21:39.095Z",
   "forecasts": [
     {
       "id": "2026-27_enhanced-baseline-v2_401919004_v1",
@@ -111298,6 +111298,74 @@
         "city": "Grand Forks",
         "state": "ND"
       }
+    },
+    {
+      "id": "2026-27:401911455_result1",
+      "season": "2026-27",
+      "gameId": "401911455",
+      "observedAt": "2026-11-15T04:21:37.653Z",
+      "sourceCapturedAt": "2026-11-15T04:21:30.970606Z",
+      "startsAt": "2026-11-15T03:00:00Z",
+      "awayPoints": 34,
+      "homePoints": 28,
+      "source": "https://site.api.espn.com/apis/site/v2/sports/basketball/mens-college-basketball/scoreboard?dates=20261114&groups=50&limit=1000",
+      "participants": {
+        "away": {
+          "espnId": "3084",
+          "modelId": "utah-valley-wolverines",
+          "name": "Utah Valley Wolverines"
+        },
+        "home": {
+          "espnId": "2440",
+          "modelId": "nevada-wolf-pack",
+          "name": "Nevada Wolf Pack"
+        }
+      },
+      "context": {
+        "neutralSite": false,
+        "conferenceGame": false,
+        "matchupType": "nonconference_regular",
+        "eventLabel": null,
+        "venueId": "461",
+        "venueKey": "id:461",
+        "venueName": "Lawlor Events Center",
+        "city": "Reno",
+        "state": "NV"
+      }
+    },
+    {
+      "id": "2026-27:401917530_result1",
+      "season": "2026-27",
+      "gameId": "401917530",
+      "observedAt": "2026-11-15T04:21:37.653Z",
+      "sourceCapturedAt": "2026-11-15T04:21:30.970606Z",
+      "startsAt": "2026-11-15T03:00:00Z",
+      "awayPoints": 33,
+      "homePoints": 51,
+      "source": "https://site.api.espn.com/apis/site/v2/sports/basketball/mens-college-basketball/scoreboard?dates=20261114&groups=50&limit=1000",
+      "participants": {
+        "away": {
+          "espnId": "167",
+          "modelId": "new-mexico-lobos",
+          "name": "New Mexico Lobos"
+        },
+        "home": {
+          "espnId": "2541",
+          "modelId": "santa-clara-broncos",
+          "name": "Santa Clara Broncos"
+        }
+      },
+      "context": {
+        "neutralSite": false,
+        "conferenceGame": false,
+        "matchupType": "nonconference_regular",
+        "eventLabel": null,
+        "venueId": "544",
+        "venueKey": "id:544",
+        "venueName": "Leavey Center",
+        "city": "Santa Clara",
+        "state": "CA"
+      }
     }
   ],
   "halves": [
@@ -113919,6 +113987,82 @@
           "threeMade": 8,
           "threeAttempted": 18,
           "turnovers": 5,
+          "offensiveRebounds": 3
+        }
+      ]
+    },
+    {
+      "id": "401911455_0f1e79d3aa5b8b4799a9b325fa2eec98f3768bd9a78e583e9abfc0262c1d7ab0",
+      "gameId": "401911455",
+      "season": "2026-27",
+      "startsAt": "2026-11-15T03:00:00Z",
+      "observedAt": "2026-11-15T04:21:33.385229Z",
+      "source": "https://site.api.espn.com/apis/site/v2/sports/basketball/mens-college-basketball/summary?event=401911455",
+      "sourceSha256": "8866a453cdac358408b4f748313f6f53e81e7f41a44c30448bc312ce860164e2",
+      "bothD1": true,
+      "teams": [
+        {
+          "espnId": "2440",
+          "points": 28,
+          "fouls": 6,
+          "bonusMinutes": 4.233333333333333,
+          "fga": 34,
+          "fta": 12,
+          "freeThrowsMade": 9,
+          "threeMade": 1,
+          "threeAttempted": 14,
+          "turnovers": 8,
+          "offensiveRebounds": 18
+        },
+        {
+          "espnId": "3084",
+          "points": 34,
+          "fouls": 11,
+          "bonusMinutes": 0,
+          "fga": 28,
+          "fta": 7,
+          "freeThrowsMade": 6,
+          "threeMade": 2,
+          "threeAttempted": 4,
+          "turnovers": 8,
+          "offensiveRebounds": 7
+        }
+      ]
+    },
+    {
+      "id": "401917530_6d24ce86ebaf6bab7c01009bf8d081d780e26c71fe6bc7a525b4082478428ba2",
+      "gameId": "401917530",
+      "season": "2026-27",
+      "startsAt": "2026-11-15T03:00:00Z",
+      "observedAt": "2026-11-15T04:21:33.385229Z",
+      "source": "https://site.api.espn.com/apis/site/v2/sports/basketball/mens-college-basketball/summary?event=401917530",
+      "sourceSha256": "9813547d27b9d7ade0a0a86a4ab524afa867bc6e7630238535abe59333161b60",
+      "bothD1": true,
+      "teams": [
+        {
+          "espnId": "167",
+          "points": 33,
+          "fouls": 10,
+          "bonusMinutes": 9.116666666666667,
+          "fga": 30,
+          "fta": 18,
+          "freeThrowsMade": 11,
+          "threeMade": 2,
+          "threeAttempted": 15,
+          "turnovers": 5,
+          "offensiveRebounds": 10
+        },
+        {
+          "espnId": "2541",
+          "points": 51,
+          "fouls": 13,
+          "bonusMinutes": 3.683333333333333,
+          "fga": 31,
+          "fta": 6,
+          "freeThrowsMade": 3,
+          "threeMade": 12,
+          "threeAttempted": 18,
+          "turnovers": 4,
           "offensiveRebounds": 3
         }
       ]
