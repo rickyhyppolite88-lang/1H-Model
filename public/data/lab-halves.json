@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-11-15T17:39:01.312118Z",
+  "updatedAt": "2026-11-15T17:55:16.072216Z",
   "halves": [
     {
       "gameId": "401902275",
@@ -40223,6 +40223,44 @@
       "observedAt": "2026-11-15T08:06:24.468855Z",
       "source": "https://site.api.espn.com/apis/site/v2/sports/basketball/mens-college-basketball/summary?event=401911376",
       "sourceSha256": "e0f671b231a08d39d902fdb62c7046afd2601c12737b722c394d4cdc79d306fa"
+    },
+    {
+      "gameId": "401929458",
+      "season": "2026-27",
+      "startsAt": "2026-11-15T17:00:00Z",
+      "bothD1": false,
+      "teams": [
+        {
+          "espnId": "134875",
+          "points": 17,
+          "fouls": 7,
+          "bonusMinutes": 3.05,
+          "fga": 28,
+          "fta": 7,
+          "freeThrowsMade": 4,
+          "threeMade": 1,
+          "threeAttempted": 6,
+          "turnovers": 5,
+          "offensiveRebounds": 3
+        },
+        {
+          "espnId": "526",
+          "points": 48,
+          "fouls": 8,
+          "bonusMinutes": 1.75,
+          "fga": 33,
+          "fta": 8,
+          "freeThrowsMade": 7,
+          "threeMade": 7,
+          "threeAttempted": 21,
+          "turnovers": 0,
+          "offensiveRebounds": 5
+        }
+      ],
+      "id": "401929458_cb9723834ff388e9a890fd77fa13b6c3eeebc13596af0122a48c94b4fbea0ab8",
+      "observedAt": "2026-11-15T17:55:16.072216Z",
+      "source": "https://site.api.espn.com/apis/site/v2/sports/basketball/mens-college-basketball/summary?event=401929458",
+      "sourceSha256": "f4c1a38e1f9c0e9e6c5a9f1ad6093090325036dceb3086303c6aa4d5cfec4c54"
     }
   ],
   "checks": [
@@ -43439,6 +43477,10 @@
       "checkedAt": "2026-11-11T22:05:19.192960Z"
     },
     {
+      "gameId": "401929458",
+      "checkedAt": "2026-11-15T17:55:16.072216Z"
+    },
+    {
       "gameId": "401929624",
       "checkedAt": "2026-11-05T22:49:25.335891Z"
     },
@@ -43486,6 +43528,10 @@
     },
     {
       "gameId": "401920887",
+      "reason": "First-half scoring does not reconcile to provider and ledger"
+    },
+    {
+      "gameId": "401924858",
       "reason": "First-half scoring does not reconcile to provider and ledger"
     },
     {
