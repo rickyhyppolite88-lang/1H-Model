@@ -531,7 +531,7 @@
     ]
   },
   "startedAt": "2026-11-05T16:08:14.757Z",
-  "updatedAt": "2026-11-16T02:05:27.902Z",
+  "updatedAt": "2026-11-16T02:57:06.113Z",
   "forecasts": [
     {
       "id": "2026-27_enhanced-baseline-v2_401924858_v1",
@@ -58770,6 +58770,40 @@
         "city": "San Antonio",
         "state": "TX"
       }
+    },
+    {
+      "id": "2026-27:401911472_result1",
+      "season": "2026-27",
+      "gameId": "401911472",
+      "observedAt": "2026-11-16T02:57:04.271Z",
+      "sourceCapturedAt": "2026-11-16T02:56:57.618891Z",
+      "startsAt": "2026-11-16T02:00:00Z",
+      "awayPoints": 29,
+      "homePoints": 35,
+      "source": "https://site.api.espn.com/apis/site/v2/sports/basketball/mens-college-basketball/scoreboard?dates=20261115&groups=50&limit=1000",
+      "participants": {
+        "away": {
+          "espnId": "2011",
+          "modelId": "alabama-st-hornets",
+          "name": "Alabama State Hornets"
+        },
+        "home": {
+          "espnId": "23",
+          "modelId": "san-jose-st-spartans",
+          "name": "San José State Spartans"
+        }
+      },
+      "context": {
+        "neutralSite": false,
+        "conferenceGame": false,
+        "matchupType": "nonconference_regular",
+        "eventLabel": null,
+        "venueId": "2192",
+        "venueKey": "id:2192",
+        "venueName": "Provident Credit Union Event Center",
+        "city": "San Jose",
+        "state": "CA"
+      }
     }
   ],
   "halves": [
@@ -60366,6 +60400,44 @@
           "threeAttempted": 11,
           "turnovers": 6,
           "offensiveRebounds": 6
+        }
+      ]
+    },
+    {
+      "id": "401911472_3ae71f077922d0f840008f1f8bb435ed264c58b94e94377c165a7717a033aee4",
+      "gameId": "401911472",
+      "season": "2026-27",
+      "startsAt": "2026-11-16T02:00:00Z",
+      "observedAt": "2026-11-16T02:56:59.773640Z",
+      "source": "https://site.api.espn.com/apis/site/v2/sports/basketball/mens-college-basketball/summary?event=401911472",
+      "sourceSha256": "c46c037d2e073711ceee5549a5d27a3412970c60f0adaa8ed3b2672c4a7a953b",
+      "bothD1": true,
+      "teams": [
+        {
+          "espnId": "2011",
+          "points": 29,
+          "fouls": 14,
+          "bonusMinutes": 0,
+          "fga": 29,
+          "fta": 2,
+          "freeThrowsMade": 2,
+          "threeMade": 3,
+          "threeAttempted": 11,
+          "turnovers": 4,
+          "offensiveRebounds": 4
+        },
+        {
+          "espnId": "23",
+          "points": 35,
+          "fouls": 4,
+          "bonusMinutes": 12,
+          "fga": 24,
+          "fta": 15,
+          "freeThrowsMade": 10,
+          "threeMade": 3,
+          "threeAttempted": 9,
+          "turnovers": 4,
+          "offensiveRebounds": 7
         }
       ]
     }
