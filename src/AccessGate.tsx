@@ -11,7 +11,7 @@ import {
 import GamblingSupport from "./GamblingSupport";
 import ThemeToggle from "./ThemeToggle";
 
-export const accessSessionKey = "1h-model-access-v1";
+export const accessSessionKey = "1h-model-admin-access-v2";
 export const supportNoticeKey = "1h-model-support-notice-v1";
 export const idleTimeout = 30 * 60 * 1000;
 export const accessPasswordDigest =
