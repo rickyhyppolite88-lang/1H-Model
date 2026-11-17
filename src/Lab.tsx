@@ -569,17 +569,19 @@ export default function Lab({ recordOnly = false }: { recordOnly?: boolean }) {
           )}
           {!bonus && (
             <details className="lab-calibration">
-              <summary>Signal strength check</summary>
+              <summary>Confidence check</summary>
               <p>
-                Strength is an uncalibrated ranking, not a fitted probability.
+                {paper
+                  ? "V3/V4 confidence is a fitted research estimate whose calibration has not been validated."
+                  : "Earlier-version confidence is an uncalibrated ranking, not a fitted probability."}{" "}
                 These observed outcomes cannot be read as the chance that the
                 next forecast wins.
               </p>
               <div className="table-wrap">
-                <table aria-label="Lab signal strength results">
+                <table aria-label="Lab confidence results">
                   <thead>
                     <tr>
-                      <th scope="col">Strength / 100</th>
+                      <th scope="col">Confidence %</th>
                       <th scope="col">Wins</th>
                       <th scope="col">Losses</th>
                       <th scope="col">Observed hit rate</th>
@@ -606,7 +608,7 @@ export default function Lab({ recordOnly = false }: { recordOnly?: boolean }) {
                       return (
                         <tr key={low}>
                           <th scope="row">
-                            {low}–{low === 75 ? 100 : low + 24}
+                            {low}–{low === 75 ? "100" : `<${low + 25}`}
                           </th>
                           <td>{w}</td>
                           <td>{l}</td>
