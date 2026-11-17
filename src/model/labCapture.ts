@@ -20,10 +20,12 @@ import {
   labForecastSchema,
   latestHalves,
 } from "./lab";
+import { captureResearchForecast, type ResearchModel } from "./labResearch";
 import { sportsbookNames } from "./marketCoverage";
 import type { PredictionFeed, PredictionRow } from "./predictions";
 import { predictionComparison } from "./predictions";
 import { compareTotal } from "./predictor";
+import type { RefereeStore } from "./referees";
 import type { SeasonDataset } from "./schema";
 import { predictionSignal } from "./signals";
 import { easternTipoff, tipoffState } from "./time";
@@ -36,6 +38,9 @@ export type LabInputs = {
   excludedHistoryGames?: string[];
   contextModel?: ContextModel;
   contextModelPath?: string;
+  researchModel?: ResearchModel;
+  researchModelPath?: string;
+  referees?: RefereeStore;
 };
 
 function allowedInputs(
@@ -272,6 +277,45 @@ export function captureLab(
       (entry) => entry.sportsbook === sportsbook,
     )?.latest;
     for (const method of config.methods.filter((entry) => entry.enabled)) {
+      if (method.id === "market-core-v3" || method.id === "referee-core-v4") {
+        const candidate = captureResearchForecast(
+          method.id,
+          row,
+          game,
+          feed,
+          inputs.researchModel,
+          inputs.researchModelPath,
+          inputs.halves,
+          inputs.referees,
+          at,
+        );
+        const previous = forecasts
+          .filter(
+            (entry) =>
+              entry.season === feed.season &&
+              entry.gameId === row.gameId &&
+              entry.methodId === method.id,
+          )
+          .at(-1);
+        const signature = (entry: LabForecast) =>
+          JSON.stringify({
+            ...entry,
+            id: undefined,
+            version: undefined,
+            recordedAt: undefined,
+            revision: undefined,
+          });
+        if (previous && signature(previous) === signature(candidate)) continue;
+        const version = (previous?.version ?? 0) + 1;
+        forecasts.push(
+          labForecastSchema.parse({
+            ...candidate,
+            version,
+            id: `${feed.season}_${method.id}_${row.gameId}_v${version}`,
+          }),
+        );
+        continue;
+      }
       let total = baselineValid ? row.projectedFirstHalfTotal : null;
       let simple = row.simpleTotal;
       let pace = row.paceAdjustedTotal;

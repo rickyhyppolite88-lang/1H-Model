@@ -18,7 +18,7 @@ on:
         description: Lab collection method to change (optional)
         type: choice
         default: none
-        options: [none, enhanced-baseline-v2, enhanced-baseline-v1, baseline-control-v1, qualified-baseline-v1, first-half-defense-v1, bonus-exposure-v1]
+        options: [none, market-core-v3, referee-core-v4, enhanced-baseline-v2, enhanced-baseline-v1, baseline-control-v1, qualified-baseline-v1, first-half-defense-v1, bonus-exposure-v1]
       lab_action:
         description: Shared Lab collection action; previous records are retained
         type: choice
@@ -104,6 +104,9 @@ jobs:
       - name: Collect reconciled first-half measurements for the Lab
         if: github.event_name != 'pull_request' && (needs.plan.outputs.mode == 'full' || needs.plan.outputs.mode == 'markets' || hashFiles('public/data/lab-halves.json') == '')
         run: python scripts/import_lab_halves.py
+      - name: Collect verified crews and first-half referee measurements
+        if: github.event_name != 'pull_request' && (needs.plan.outputs.mode == 'full' || needs.plan.outputs.mode == 'markets' || hashFiles('public/data/referees.json') == '')
+        run: python scripts/import_referees.py
       # Context fits change only when observed outcome history changes.
       - name: Refresh venue and first-half context history
         if: github.event_name != 'pull_request' && (needs.plan.outputs.mode == 'full' || needs.plan.outputs.mode == 'markets')
@@ -134,7 +137,6 @@ jobs:
             git push origin HEAD:main
           fi
       - name: Upload site
-        if: github.event_name != 'pull_request' && github.ref == format('refs/heads/{0}', github.event.repository.default_branch)
         uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5
         with:
           path: dist

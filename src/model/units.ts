@@ -10,6 +10,7 @@ import {
   type LabForecast,
   type LabStore,
 } from "./lab";
+import { isPaperLabMethod, paperLabPolicy } from "./labVersions";
 import {
   canonicalRecords,
   type ForecastRecord,
@@ -51,7 +52,7 @@ export const unitAssignmentSchema = z
     gameDate: z.iso.date(),
     assignedAt: z.iso.datetime(),
     startsAt: z.iso.datetime(),
-    policy: z.literal("confidence-units-v1"),
+    policy: z.enum(["confidence-units-v1", "lab-flat-paper-v1"]),
     score: z.number().min(0).max(100),
     units: z.union([
       z.literal(0.5),
@@ -68,6 +69,12 @@ export const unitAssignmentSchema = z
   .refine(
     (row) => Date.parse(row.assignedAt) < Date.parse(row.startsAt),
     "Stakes must be assigned before tipoff",
+  )
+  .refine(
+    (row) =>
+      row.policy !== paperLabPolicy ||
+      (row.source === "lab" && isPaperLabMethod(row.method) && row.units === 1),
+    "Paper Lab stakes must be one unit for a paper method",
   );
 export const unitLedgerSchema = z
   .object({
@@ -207,7 +214,8 @@ export function updateUnitLedger(
   const add = (
     row: Omit<UnitAssignment, "assignedAt" | "policy" | "units">,
   ) => {
-    const units = unitsForScore(row.score);
+    const paper = row.source === "lab" && isPaperLabMethod(row.method);
+    const units = paper ? 1 : unitsForScore(row.score);
     if (
       known.has(row.id) ||
       units === null ||
@@ -218,7 +226,7 @@ export function updateUnitLedger(
       unitAssignmentSchema.parse({
         ...row,
         assignedAt: at,
-        policy: unitPolicy.id,
+        policy: paper ? paperLabPolicy : unitPolicy.id,
         units,
       }),
     );
@@ -426,9 +434,19 @@ export function labUnitPlay(
 ): UnitPlay {
   const result = gradeLab(row, store);
   const rating = labRating(row);
+  const paper = isPaperLabMethod(row.methodId);
+  const recordedPaper = ledger?.assignments.find(
+    (entry) => entry.id === `lab:${row.id}`,
+  );
   const stake =
     row.status === "qualified"
-      ? accounting(ledger, "lab", row.id, row.startsAt, rating.signal.score)
+      ? paper
+        ? {
+            units: recordedPaper?.units ?? null,
+            mode: recordedPaper ? ("tracked" as const) : null,
+            saved: recordedPaper ?? null,
+          }
+        : accounting(ledger, "lab", row.id, row.startsAt, rating.signal.score)
       : { units: null, mode: null, saved: null };
   const replay = stake.mode === "historical";
   const score =

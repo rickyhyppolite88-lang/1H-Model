@@ -11,8 +11,10 @@ import {
   labSummary,
   labToCsv,
 } from "./model/lab";
+import { isPaperLabMethod } from "./model/labVersions";
 import { easternTipoff, tipoffState } from "./model/time";
 import { hasUnitStake, labUnitPlay } from "./model/units";
+import RefereeResearch from "./RefereeResearch";
 import UnitCalendar from "./UnitCalendar";
 import { useLabRecords } from "./useLabRecords";
 import { preferencePage, preferenceText, usePreference } from "./usePreference";
@@ -34,9 +36,9 @@ export default function Lab({ recordOnly = false }: { recordOnly?: boolean }) {
     error: unitError,
   } = useUnitLedger();
   const [chosenMethod, setMethod] = usePreference(
-    "lab.method.v3",
+    "lab.method.v4",
     labMethodIdSchema,
-    "enhanced-baseline-v2",
+    "market-core-v3",
   );
   const method =
     recordOnly && chosenMethod === "bonus-exposure-v1"
@@ -67,8 +69,12 @@ export default function Lab({ recordOnly = false }: { recordOnly?: boolean }) {
     labMethods.find((entry) => entry.id === method) ?? labMethods[0];
   const methodStartedAt =
     index?.methodStartedAt?.[method] ??
-    (method.startsWith("enhanced-baseline-") ? undefined : index?.startedAt);
+    store?.forecasts
+      .filter((row) => row.methodId === method)
+      .map((row) => row.recordedAt)
+      .sort()[0];
   const bonus = definition.kind === "bonus";
+  const paper = isPaperLabMethod(method);
   const enabled =
     index?.config.methods.find((entry) => entry.id === method)?.enabled ??
     false;
@@ -188,12 +194,33 @@ export default function Lab({ recordOnly = false }: { recordOnly?: boolean }) {
         <div>
           <h2>{recordOnly ? "Lab prediction record" : "The Lab"}</h2>
           <p>
-            The Actual algorithm plus first-half defense, venue/matchup context,
-            meaningful crowd proxies and joint foul/free-throw research; signal
-            strength is not a win probability.
+            Separate versioned experiments with frozen pregame inputs.
+            Confidence in earlier versions is a model score; v3/v4 probabilities
+            are unvalidated research estimates. Qualified v3/v4 plays use flat
+            1u paper stakes.
           </p>
         </div>
       </div>
+      <fieldset className="lab-version-tabs" aria-label="Lab versions">
+        {[
+          ["market-core-v3", "Lab v3", "Market benchmark"],
+          ["referee-core-v4", "Lab v4", "Referee research"],
+          ["enhanced-baseline-v2", "Lab v2", "Venue & fouls"],
+        ].map(([id, title, description]) => (
+          <button
+            type="button"
+            key={id}
+            aria-pressed={method === id}
+            onClick={() => {
+              setMethod(labMethodIdSchema.parse(id));
+              setPage(0);
+            }}
+          >
+            <strong>{title}</strong>
+            <small>{description}</small>
+          </button>
+        ))}
+      </fieldset>
       <div className="lab-controls">
         <details className="lab-version-control">
           <summary>Lab version & history</summary>
@@ -211,7 +238,8 @@ export default function Lab({ recordOnly = false }: { recordOnly?: boolean }) {
                 .map((entry) => (
                   <option key={entry.id} value={entry.id}>
                     {entry.name}
-                    {entry.id === "enhanced-baseline-v2"
+                    {isPaperLabMethod(entry.id) ||
+                    entry.id === "enhanced-baseline-v2"
                       ? ""
                       : " (previous experiment)"}
                   </option>
@@ -307,9 +335,9 @@ export default function Lab({ recordOnly = false }: { recordOnly?: boolean }) {
             setting.
           </p>
           <p>
-            Sources: archived TeamRankings inputs, captured BetMGM first-half
-            totals, and reconciled ESPN first-half results. Bonus measurements
-            use logged nontechnical fouls and remain approximate.
+            Sources: archived TeamRankings inputs, captured sportsbook
+            first-half totals, and reconciled ESPN first-half results. Bonus
+            measurements use logged nontechnical fouls and remain approximate.
           </p>
           <p>
             {index?.rawCoverage.games ?? "—"} reconciled raw first halves ·{" "}
@@ -324,6 +352,7 @@ export default function Lab({ recordOnly = false }: { recordOnly?: boolean }) {
           </p>
         </details>
       </details>
+      {method === "referee-core-v4" && <RefereeResearch />}
       {error && (
         <div className="notice error" role="alert">
           {error}
@@ -350,7 +379,15 @@ export default function Lab({ recordOnly = false }: { recordOnly?: boolean }) {
       <div className={recordOnly ? "record-dashboard" : undefined}>
         {recordOnly && !bonus && (
           <UnitCalendar
-            label="Lab"
+            label={
+              paper
+                ? method === "market-core-v3"
+                  ? "Lab v3"
+                  : "Lab v4"
+                : "Lab"
+            }
+            paper={paper}
+            combined={paper}
             plays={(calendarPlays ?? []).filter(
               (play) =>
                 play.source === "lab" &&
@@ -365,90 +402,105 @@ export default function Lab({ recordOnly = false }: { recordOnly?: boolean }) {
           />
         )}
         {summary && (
-          <section className="record-overview" aria-label="Lab record summary">
-            <div className="record-overview-top">
-              <div>
-                <h3>
-                  {recordOnly ? "Finished Lab results" : "Research performance"}
-                </h3>
-                <p>
-                  {date === "all" ? "All saved dates" : `${date} · ET`} ·{" "}
-                  {definition.name}
-                </p>
-              </div>
-            </div>
-            <div className="audit-metrics">
-              <div>
-                <span>
-                  {bonus ? "Measured first halves" : "Wins / losses / pushes"}
-                </span>
-                <strong>
-                  {bonus
-                    ? summary.measured
-                    : `${summary.wins} / ${summary.losses} / ${summary.pushes}`}
-                </strong>
-              </div>
-              <div>
-                <span>{bonus ? "Bonus timing MAE" : "Observed hit rate"}</span>
-                <strong>
-                  {bonus
-                    ? show(summary.bonusMae, " min")
-                    : summary.winRate === null
-                      ? "—"
-                      : `${(summary.winRate * 100).toFixed(1)}%`}
-                </strong>
-              </div>
-              <div>
-                <span>
-                  {bonus
-                    ? "League baseline MAE"
-                    : recordOnly
-                      ? "Staked plays"
-                      : "Qualified / control forecasts"}
-                </span>
-                <strong>
-                  {bonus
-                    ? show(summary.bonusBaselineMae, " min")
-                    : recordOnly
-                      ? summary.games
-                      : `${summary.qualified} / ${summary.games}`}
-                </strong>
-              </div>
-              <div>
-                <span>
-                  {bonus
-                    ? "Missing measurement inputs"
-                    : recordOnly
-                      ? "Results to review"
-                      : "Watch-only / data gaps"}
-                </span>
-                <strong>
-                  {bonus
-                    ? summary.gaps
-                    : recordOnly
-                      ? summary.pending
-                      : `${summary.watchOnly} / ${summary.gaps}`}
-                </strong>
-              </div>
-            </div>
-            {!bonus && (
-              <p className="inline-note">
-                Matched baseline on the same saved lines: {summary.baselineWins}
-                –{summary.baselineLosses}. Point MAE on settled
-                qualified/control games: Lab {show(summary.matchedMae)} ·
-                baseline {show(summary.matchedBaselineMae)}. Watch-only
-                forecasts do not enter this win rate; pushes are excluded. All
-                projected games MAE: {show(summary.mae)}.
-              </p>
-            )}
-            <p className="inline-note">
-              These samples are experimental and do not change the Actual
-              record.{" "}
+          <details className="lab-performance" open={recordOnly}>
+            <summary>
               {recordOnly
-                ? "Only completed first halves with a recorded or replayed stake appear below."
-                : "The table shows the latest saved pregame observations. Future records freeze the last pre-tip decision; earlier games keep their original entry. Watch-only decisions remain research and receive no stake."}
-            </p>
-          </section>
+                ? "Finished Lab record"
+                : "Research performance & comparison"}
+            </summary>
+            <section
+              className="record-overview"
+              aria-label="Lab record summary"
+            >
+              <div className="record-overview-top">
+                <div>
+                  <h3>
+                    {recordOnly
+                      ? "Finished Lab results"
+                      : "Research performance"}
+                  </h3>
+                  <p>
+                    {date === "all" ? "All saved dates" : `${date} · ET`} ·{" "}
+                    {definition.name}
+                  </p>
+                </div>
+              </div>
+              <div className="audit-metrics">
+                <div>
+                  <span>
+                    {bonus ? "Measured first halves" : "Wins / losses / pushes"}
+                  </span>
+                  <strong>
+                    {bonus
+                      ? summary.measured
+                      : `${summary.wins} / ${summary.losses} / ${summary.pushes}`}
+                  </strong>
+                </div>
+                <div>
+                  <span>
+                    {bonus ? "Bonus timing MAE" : "Observed hit rate"}
+                  </span>
+                  <strong>
+                    {bonus
+                      ? show(summary.bonusMae, " min")
+                      : summary.winRate === null
+                        ? "—"
+                        : `${(summary.winRate * 100).toFixed(1)}%`}
+                  </strong>
+                </div>
+                <div>
+                  <span>
+                    {bonus
+                      ? "League baseline MAE"
+                      : recordOnly
+                        ? "Staked plays"
+                        : "Qualified / control forecasts"}
+                  </span>
+                  <strong>
+                    {bonus
+                      ? show(summary.bonusBaselineMae, " min")
+                      : recordOnly
+                        ? summary.games
+                        : `${summary.qualified} / ${summary.games}`}
+                  </strong>
+                </div>
+                <div>
+                  <span>
+                    {bonus
+                      ? "Missing measurement inputs"
+                      : recordOnly
+                        ? "Results to review"
+                        : "Watch-only / data gaps"}
+                  </span>
+                  <strong>
+                    {bonus
+                      ? summary.gaps
+                      : recordOnly
+                        ? summary.pending
+                        : `${summary.watchOnly} / ${summary.gaps}`}
+                  </strong>
+                </div>
+              </div>
+              {!bonus && (
+                <p className="inline-note">
+                  Matched baseline on the same saved lines:{" "}
+                  {summary.baselineWins}–{summary.baselineLosses}. Point MAE on
+                  settled qualified/control games: Lab{" "}
+                  {show(summary.matchedMae)} · baseline{" "}
+                  {show(summary.matchedBaselineMae)}. Watch-only forecasts do
+                  not enter this win rate; pushes are excluded. All projected
+                  games MAE: {show(summary.mae)}.
+                </p>
+              )}
+              <p className="inline-note">
+                These samples are experimental and do not change the Actual
+                record.{" "}
+                {recordOnly
+                  ? "Only completed first halves with a recorded or replayed stake appear below."
+                  : "The table shows the latest saved pregame observations. Future records freeze the last pre-tip decision; earlier games keep their original entry. Watch-only decisions remain research and receive no stake."}
+              </p>
+            </section>
+          </details>
         )}
       </div>
       {store && (!recordOnly || unitLedger) ? (
@@ -517,17 +569,19 @@ export default function Lab({ recordOnly = false }: { recordOnly?: boolean }) {
           )}
           {!bonus && (
             <details className="lab-calibration">
-              <summary>Signal strength check</summary>
+              <summary>Confidence check</summary>
               <p>
-                Strength is an uncalibrated ranking, not a fitted probability.
+                {paper
+                  ? "V3/V4 confidence is a fitted research estimate whose calibration has not been validated."
+                  : "Earlier-version confidence is an uncalibrated ranking, not a fitted probability."}{" "}
                 These observed outcomes cannot be read as the chance that the
                 next forecast wins.
               </p>
               <div className="table-wrap">
-                <table aria-label="Lab signal strength results">
+                <table aria-label="Lab confidence results">
                   <thead>
                     <tr>
-                      <th scope="col">Strength / 100</th>
+                      <th scope="col">Confidence %</th>
                       <th scope="col">Wins</th>
                       <th scope="col">Losses</th>
                       <th scope="col">Observed hit rate</th>
@@ -554,7 +608,7 @@ export default function Lab({ recordOnly = false }: { recordOnly?: boolean }) {
                       return (
                         <tr key={low}>
                           <th scope="row">
-                            {low}–{low === 75 ? 100 : low + 24}
+                            {low}–{low === 75 ? "100" : `<${low + 25}`}
                           </th>
                           <td>{w}</td>
                           <td>{l}</td>

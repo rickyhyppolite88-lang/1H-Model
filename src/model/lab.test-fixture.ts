@@ -7,6 +7,7 @@ import {
   labMethods,
 } from "./lab";
 import type { LabInputs } from "./labCapture";
+import { isPaperLabMethod } from "./labVersions";
 import { recordFixture } from "./record.test-fixture";
 import { datasetSchema } from "./schema";
 
@@ -68,7 +69,9 @@ export function labFixture() {
     schemaVersion: 1,
     methods: labMethods.map((method) => ({
       id: method.id,
-      enabled: !method.id.startsWith("enhanced-baseline-"),
+      enabled:
+        !method.id.startsWith("enhanced-baseline-") &&
+        !isPaperLabMethod(method.id),
     })),
   });
   const empty: LabStore = {

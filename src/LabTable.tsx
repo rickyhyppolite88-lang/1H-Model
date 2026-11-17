@@ -7,6 +7,7 @@ import GameCardRow from "./GameCardRow";
 import GameTime from "./GameTime";
 import { usesTipoffEntry, verifiedTipoffQuote } from "./model/entryPolicy";
 import { gradeLab, type LabForecast, type LabStore } from "./model/lab";
+import { isPaperLabMethod } from "./model/labVersions";
 import { sportsbookNames } from "./model/marketCoverage";
 import { labRating } from "./model/ratingDisplay";
 import { scheduleMessages } from "./model/scheduleReview";
@@ -39,7 +40,7 @@ export default function LabTable({
               bonus ? "Expected bonus minutes" : "Lab total",
               bonus ? "League bonus baseline" : "Saved 1H line",
               "Research decision",
-              bonus ? "Bet forecast" : "Signal strength / 100",
+              bonus ? "Bet forecast" : "Confidence & units",
               bonus ? "Actual bonus / 1H total" : "Actual 1H",
               "Lab result",
               "Research details",
@@ -123,7 +124,7 @@ export default function LabTable({
                 >
                   {point(bonus ? row.bonusBaselineMinutes : row.line)}
                   {!bonus && (
-                    <small>
+                    <small className="card-detail">
                       {sportsbookNames[row.sportsbook] ?? row.sportsbook}
                     </small>
                   )}
@@ -153,7 +154,7 @@ export default function LabTable({
                 <td
                   role="cell"
                   className="card-confidence"
-                  data-label="Strength / 100"
+                  data-label="Confidence"
                 >
                   {bonus ? (
                     <div className="signal-badge">
@@ -161,15 +162,42 @@ export default function LabTable({
                       <strong>None</strong>
                     </div>
                   ) : (
-                    <SignalBadge {...rating} scoreUnit="points" />
+                    <SignalBadge {...rating} />
+                  )}
+                  {!bonus && isPaperLabMethod(row.methodId) && (
+                    <small className="unit-suggestion">
+                      {row.status === "qualified" ? "1u paper" : "0u · Watch"}
+                    </small>
+                  )}
+                  {!bonus && !isPaperLabMethod(row.methodId) && (
+                    <small className="unit-suggestion">
+                      {unitPlays?.get(row.id)?.units != null
+                        ? `${unitPlays.get(row.id)?.units}u recorded`
+                        : row.status === "qualified" &&
+                            unitsForScore(row.signalStrength) !== null
+                          ? `${unitsForScore(row.signalStrength)}u suggested`
+                          : "0u · Watch"}
+                    </small>
+                  )}
+                  {row.research && row.status !== "qualified" && (
+                    <small className="unit-check-note card-detail">
+                      {row.reason.includes("15 minutes")
+                        ? "Awaiting pre-tip check"
+                        : row.methodId === "referee-core-v4" &&
+                            row.research.probability === null
+                          ? "Referee inputs pending"
+                          : row.status === "data_gap"
+                            ? "Inputs pending"
+                            : "Below qualification threshold"}
+                    </small>
                   )}
                   {!unitPlays &&
+                    !isPaperLabMethod(row.methodId) &&
+                    awaitingTipCheck &&
                     row.status === "qualified" &&
                     unitsForScore(row.signalStrength) !== null && (
-                      <small className="unit-suggestion">
-                        {awaitingTipCheck
-                          ? "Awaiting pre-tip check"
-                          : `${unitsForScore(row.signalStrength)}u suggested`}
+                      <small className="unit-check-note">
+                        Awaiting pre-tip check
                       </small>
                     )}
                 </td>
@@ -209,6 +237,55 @@ export default function LabTable({
                   data-label="Research details"
                 >
                   <p>{row.reason}</p>
+                  {row.research && (
+                    <div className="research-forecast-details">
+                      <p>
+                        Estimated return:{" "}
+                        {row.research.expectedReturn === null
+                          ? "Pending"
+                          : `${(row.research.expectedReturn * 100).toFixed(1)}%`}{" "}
+                        · Training sample: {row.research.trainingGames} earlier
+                        games · Stake: {row.research.paperUnits}u paper.
+                      </p>
+                      <p>
+                        The unchanged Actual total and direction are retained.
+                        Confidence is an unvalidated probability estimate,
+                        distinct from the earlier Lab signal score.
+                      </p>
+                      {row.methodId === "referee-core-v4" && (
+                        <>
+                          <p>
+                            Crew:{" "}
+                            {row.research.crew.length
+                              ? row.research.crew
+                                  .map(
+                                    (r) =>
+                                      `${r.name} (${r.pricedGames} priced prior halves)`,
+                                  )
+                                  .join("; ")
+                              : "Awaiting verified pregame assignment"}
+                            .
+                          </p>
+                          <p>
+                            Referee scoring association:{" "}
+                            {point(row.research.refereePointsEquivalent)} points
+                            equivalent. Officials are averaged; effects are not
+                            added three times. Individual caller attribution is
+                            unavailable.
+                          </p>
+                          {row.research.refereeBaselineProbability !== null && (
+                            <p>
+                              V3 reference confidence before referee inputs:{" "}
+                              {(
+                                row.research.refereeBaselineProbability * 100
+                              ).toFixed(1)}
+                              %.
+                            </p>
+                          )}
+                        </>
+                      )}
+                    </div>
+                  )}
                   {row.methodId === "enhanced-baseline-v2" && (
                     <p>
                       Actual {point(row.baselineTotal)} → 1H defense{" "}

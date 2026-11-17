@@ -25,6 +25,7 @@ export default function UnitCalendar({
   error = "",
   label = "Actual",
   combined = false,
+  paper = false,
 }: {
   plays: UnitPlay[];
   date: string;
@@ -33,6 +34,7 @@ export default function UnitCalendar({
   error?: string;
   label?: string;
   combined?: boolean;
+  paper?: boolean;
 }) {
   const id = useId();
   const latest =
@@ -94,11 +96,13 @@ export default function UnitCalendar({
         <div>
           <span className="unit-calendar-kicker">
             {label} ·{" "}
-            {combined
-              ? "DraftKings · recorded + replay"
-              : mode === "tracked"
-                ? "Recorded model stakes"
-                : "Historical tier replay"}
+            {paper
+              ? "Flat 1u paper research"
+              : combined
+                ? "DraftKings · recorded + replay"
+                : mode === "tracked"
+                  ? "Recorded model stakes"
+                  : "Historical tier replay"}
           </span>
           <h3>{monthLabel}</h3>
         </div>
@@ -281,13 +285,17 @@ export default function UnitCalendar({
         <details className="unit-calendar-policy">
           <summary>Unit rules & accounting</summary>
           <p className="inline-note">
-            {combined
-              ? `DraftKings only. Recorded entries keep their pre-tip stakes. Older dates replay the original frozen model against the last available archived DraftKings quote observed before tipoff, using the same confidence tiers. Replay confidence and stakes are calculated later and labeled; original records remain unchanged. ${unitPolicy.description}`
-              : mode === "historical"
-                ? `Replay only: apply the same confidence tiers to the original picks before the unit plan began. ${unitPolicy.description} Older scores calculated later from frozen inputs stay labeled. No pregame stake assignment is created.`
-                : unitPolicy.description}{" "}
-            One unit is the amount risked. Confidence is a model ranking, not a
-            win probability.{" "}
+            {paper
+              ? "Prospective flat 1u paper research. Only qualified entries with a saved pre-tip paper stake count. No historical stakes are invented. Estimates remain unvalidated."
+              : combined
+                ? `DraftKings only. Recorded entries keep their pre-tip stakes. Older dates replay the original frozen model against the last available archived DraftKings quote observed before tipoff, using the same confidence tiers. Replay confidence and stakes are calculated later and labeled; original records remain unchanged. ${unitPolicy.description}`
+                : mode === "historical"
+                  ? `Replay only: apply the same confidence tiers to the original picks before the unit plan began. ${unitPolicy.description} Older scores calculated later from frozen inputs stay labeled. No pregame stake assignment is created.`
+                  : unitPolicy.description}{" "}
+            One unit is the amount risked.{" "}
+            {paper
+              ? "Probabilities remain unvalidated research estimates."
+              : "Confidence is a model ranking, not a win probability."}{" "}
             {summary.unresolved > 0
               ? `${summary.unresolved} plays are excluded from net units until results and matching saved odds are available.`
               : ""}

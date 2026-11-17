@@ -16,6 +16,8 @@ import {
 } from "./model/lab";
 import { currentLabFixture } from "./model/lab.test-fixture";
 import { captureLab } from "./model/labCapture";
+import { captureResearchForecast } from "./model/labResearch";
+import { researchFixture } from "./model/labResearch.test-fixture";
 import { labUnitPlay, type UnitLedger } from "./model/units";
 import PredictionRecord from "./PredictionRecord";
 
@@ -131,6 +133,13 @@ function labResponse(url: string, index: LabIndex, store: LabStore) {
 
 beforeEach(() => {
   localStorage.clear();
+  localStorage.setItem(
+    "1h-model-view-v1:lab.method.v4",
+    JSON.stringify({
+      value: "enhanced-baseline-v2",
+      savedAt: Date.parse("2026-11-02T22:00:00Z"),
+    }),
+  );
   vi.useFakeTimers({ toFake: ["Date"] });
   vi.setSystemTime(new Date("2026-11-02T22:00:00Z"));
 });
@@ -155,15 +164,16 @@ it("shows upcoming research and explicit method descriptions without probability
   expect(within(table).getByText("Team A")).toBeTruthy();
   expect(within(table).queryByText("Finished team")).toBeNull();
   expect(screen.getByText(/1.5 ≤ absolute edge < 8/)).toBeTruthy();
-  expect(
-    screen.getByText(/signal strength is not a win probability/),
-  ).toBeTruthy();
+  expect(screen.getByText(/earlier versions is a model score/)).toBeTruthy();
   expect(
     screen
       .getByRole("link", { name: /Pause \/ resume shared collection/ })
       .getAttribute("href"),
   ).toContain("actions/workflows/pages.yml");
-  expect(within(table).queryByText(/48%/)).toBeNull();
+  expect(within(table).getByText("Confidence")).toBeTruthy();
+  expect(table.querySelector(".signal-badge strong")?.textContent).toMatch(
+    /\d+%/,
+  );
   const comparison = screen.getByRole("table", {
     name: "Lab component comparison",
   });
@@ -261,7 +271,7 @@ it("lists qualified Lab research before watch-only forecasts and earlier data ga
 
 it("shows completed staked Lab plays while excluding watch-only and upcoming games", async () => {
   localStorage.setItem(
-    "1h-model-view-v1:lab.method.v3",
+    "1h-model-view-v1:lab.method.v4",
     JSON.stringify({ savedAt: Date.now(), value: "bonus-exposure-v1" }),
   );
   const { store, index } = uiFixture();
@@ -352,4 +362,57 @@ it("does not display a partial Lab record if an archive fails", async () => {
   render(<Lab recordOnly />);
   expect(await screen.findByText(/No partial record is shown/)).toBeTruthy();
   expect(screen.queryByRole("table", { name: "Lab forecasts" })).toBeNull();
+});
+
+it("switches separate visible Lab versions and shows confidence with paper units", async () => {
+  const { store, index } = uiFixture();
+  const f = researchFixture();
+  for (const method of ["market-core-v3", "referee-core-v4"] as const) {
+    store.forecasts.push({
+      ...captureResearchForecast(
+        method,
+        f.row,
+        f.game,
+        f.feed,
+        f.model,
+        f.modelPath,
+        f.halves,
+        f.refs,
+        f.at,
+      ),
+      id: method,
+      awayTeam:
+        method === "market-core-v3" ? "V3 research team" : "V4 research team",
+    });
+    const configuration = index.config.methods.find(
+      (entry) => entry.id === method,
+    );
+    if (configuration) configuration.enabled = true;
+  }
+  vi.stubGlobal(
+    "fetch",
+    vi.fn(async (url: string) => ({
+      ok: true,
+      json: async () => structuredClone(labResponse(url, index, store)),
+    })),
+  );
+  render(<Lab />);
+  await screen.findByRole("table", { name: "Lab forecasts" });
+  const tabs = screen.getByRole("group", { name: "Lab versions" });
+  fireEvent.click(within(tabs).getByRole("button", { name: /Lab v3/ }));
+  let table = await screen.findByRole("table", { name: "Lab forecasts" });
+  expect(within(table).getByText("V3 research team")).toBeTruthy();
+  expect(within(table).queryByText("V4 research team")).toBeNull();
+  expect(within(table).getByText("1u paper")).toBeTruthy();
+  expect(within(table).getByText("Confidence")).toBeTruthy();
+  expect(within(table).queryByText(/Saved strength/)).toBeNull();
+  fireEvent.click(within(tabs).getByRole("button", { name: /Lab v4/ }));
+  table = await screen.findByRole("table", { name: "Lab forecasts" });
+  expect(within(table).getByText("V4 research team")).toBeTruthy();
+  expect(within(table).queryByText("V3 research team")).toBeNull();
+  expect(
+    screen.getByText("Referee research & first-half measurements"),
+  ).toBeTruthy();
+  fireEvent.click(within(tabs).getByRole("button", { name: /Lab v2/ }));
+  expect(await screen.findByText("Team A")).toBeTruthy();
 });

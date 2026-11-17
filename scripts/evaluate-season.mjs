@@ -49,7 +49,7 @@ try {
   await writeFile("public/data/predictions.csv", `\uFEFF${predictionsToCsv(predictions.predictions,predictions.defaultSportsbook,predictions.defaultLineBasis,predictions.generatedAt)}`);
   const record = recordModel.updatePredictionRecord(oldRecord,predictions,enriched,predictions.generatedAt,{entryPolicy,inputSnapshots:{prior:priorArchive,current:currentArchive,currentRetrievedAt:current.retrievedAt}});
   const recordOutput = await savePredictionRecord(recordModel,record);
-  const labOutput = await updateLabFiles(server,{feed:predictions,ledger:enriched,prior,priorPath:priorArchive,results:record.results,entryPolicy:record.entryPolicy});
+  const labOutput = await updateLabFiles(server,{feed:predictions,ledger:enriched,prior,priorPath:priorArchive,results:record.results,record,entryPolicy:record.entryPolicy});
   await updateUnitFiles(server, record, labOutput.store, new Date().toISOString());
   await mkdir(".cache/workbooks", { recursive: true });
   const workbook = async (feed, name, destination, builder = "scripts/build_prediction_workbook.py") => {
