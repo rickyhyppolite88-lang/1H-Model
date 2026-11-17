@@ -124,7 +124,7 @@ export default function LabTable({
                 >
                   {point(bonus ? row.bonusBaselineMinutes : row.line)}
                   {!bonus && (
-                    <small>
+                    <small className="card-detail">
                       {sportsbookNames[row.sportsbook] ?? row.sportsbook}
                     </small>
                   )}
@@ -180,7 +180,7 @@ export default function LabTable({
                     </small>
                   )}
                   {row.research && row.status !== "qualified" && (
-                    <small className="unit-check-note">
+                    <small className="unit-check-note card-detail">
                       {row.reason.includes("15 minutes")
                         ? "Awaiting pre-tip check"
                         : row.methodId === "referee-core-v4" &&
