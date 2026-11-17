@@ -3991,6 +3991,120 @@ h1 em {
   font-size: 9px;
   line-height: 1.3;
 }
+.construction-page {
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+  padding: 24px clamp(20px, 5vw, 80px);
+  color: var(--text-primary);
+  background: var(--page);
+}
+.construction-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  width: min(100%, 1320px);
+  margin-inline: auto;
+}
+.construction-brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 20px;
+  letter-spacing: 0.08em;
+}
+.construction-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  width: min(100%, 680px);
+  margin-inline: auto;
+  padding-block: 36px;
+}
+.construction-illustration {
+  width: min(280px, 75vw);
+  margin-bottom: 24px;
+}
+.construction-illustration svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+.construction-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  border: 1px solid var(--border);
+  border-radius: 100px;
+  color: var(--text-secondary);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+}
+.construction-status > span {
+  width: 6px;
+  height: 6px;
+  background: #f2c14e;
+  border-radius: 50%;
+}
+.construction-content h1 {
+  margin: 20px 0 12px;
+  font-size: clamp(30px, 5vw, 56px);
+  line-height: 1.12;
+  letter-spacing: -0.045em;
+  color: var(--text-primary);
+}
+.construction-content p {
+  margin: 0;
+  color: var(--text-secondary);
+  font-size: clamp(14px, 1.5vw, 17px);
+  line-height: 1.7;
+}
+.construction-progress {
+  width: min(220px, 70%);
+  height: 4px;
+  margin: 32px 0 16px;
+  border-radius: 4px;
+  overflow: hidden;
+  background: var(--surface-raised);
+}
+.construction-progress > span {
+  display: block;
+  width: 36%;
+  height: 100%;
+  border-radius: inherit;
+  background: var(--accent);
+}
+.construction-content > small,
+.construction-footer {
+  color: var(--text-secondary);
+  font-size: 11px;
+}
+.construction-footer {
+  padding-block: 12px;
+  text-align: center;
+  letter-spacing: 0.09em;
+}
+@media (max-width: 600px) {
+  .construction-page {
+    padding: 18px 20px;
+  }
+  .construction-content {
+    padding-block: 28px;
+  }
+  .construction-illustration {
+    width: min(230px, 65vw);
+    margin-bottom: 16px;
+  }
+  .construction-brand {
+    font-size: 16px;
+  }
+}
 .gambling-support-page {
   display: grid;
   place-items: center;
