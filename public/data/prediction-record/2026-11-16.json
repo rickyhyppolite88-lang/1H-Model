@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-11-17T01:44:34.117Z",
+  "updatedAt": "2026-11-17T01:57:21.787Z",
   "entryPolicy": {
     "method": "last-pretip-v1",
     "startedAt": "2026-11-10T21:33:29.039Z",
@@ -65880,6 +65880,341 @@
           "name": "Saint Mary's Gaels"
         }
       }
+    },
+    {
+      "id": "2026-27_401929192_v8",
+      "season": "2026-27",
+      "gameId": "401929192",
+      "gameDate": "2026-11-16",
+      "version": 8,
+      "recordedAt": "2026-11-17T01:57:21.787Z",
+      "signalCalculatedAt": "2026-11-17T01:57:21.787Z",
+      "origin": "batch_capture",
+      "evidence": null,
+      "inputSnapshots": {
+        "prior": "data/input-snapshots/5d7d1cdd590b01d65ca838308bd098bc8be58fdb5d96faf922f4c44677d6d7de.json",
+        "current": "data/input-snapshots/64a270dfcf463a957fdee51cb4f1ad245a262ca1cf61adf806f4415ff9bec41e.json",
+        "currentMatchesFrozenInputs": false
+      },
+      "modelVersion": "season-bridge-v1",
+      "source": {
+        "repository": "https://github.com/rickyhyppolite88-lang/1H-Model",
+        "projectionCode": "https://github.com/rickyhyppolite88-lang/1H-Model/blob/1188aa5ff4550e13191dc47c293d655161a3abc0/src/model/predictor.ts",
+        "batchCode": "https://github.com/rickyhyppolite88-lang/1H-Model/blob/1188aa5ff4550e13191dc47c293d655161a3abc0/src/model/predictions.ts",
+        "revision": "1188aa5ff4550e13191dc47c293d655161a3abc0"
+      },
+      "state": "pregame",
+      "sportsbook": "draftkings",
+      "basis": "latest",
+      "comparison": {
+        "line": 73.5,
+        "signedEdge": -1.1121797186367246,
+        "lean": "UNDER"
+      },
+      "signal": {
+        "method": "model-signal-v1",
+        "score": 7,
+        "label": "Mixed",
+        "reason": "1.11-point gap; components do not both agree. Research score, not a hit percentage.",
+        "fill": "#f0f7ea"
+      },
+      "prediction": {
+        "gameId": "401929192",
+        "startsAt": "2026-11-17T02:30:00Z",
+        "awayTeam": "East Texas A&M Lions",
+        "homeTeam": "Oregon State Beavers",
+        "awayConference": "Southland",
+        "homeConference": "Pac-12",
+        "awayRank": null,
+        "homeRank": null,
+        "rankingsKnown": true,
+        "status": "Scheduled",
+        "projectedFirstHalfTotal": 72.38782028136328,
+        "actualFirstHalfTotal": null,
+        "simpleTotal": 70.62924200913241,
+        "paceAdjustedTotal": 75.02568768970956,
+        "featureKind": "captured_pregame",
+        "featureCapturedAt": "2026-11-16T05:21:32.172Z",
+        "unavailableReason": null,
+        "marketCoverage": {
+          "checkedAt": "2026-11-17T01:57:16.144628Z",
+          "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-16",
+          "status": "matched",
+          "books": [
+            {
+              "sportsbook": "bet365",
+              "status": "available"
+            },
+            {
+              "sportsbook": "bet_rivers_co",
+              "status": "available"
+            },
+            {
+              "sportsbook": "betmgm",
+              "status": "available"
+            },
+            {
+              "sportsbook": "caesars",
+              "status": "available"
+            },
+            {
+              "sportsbook": "draftkings",
+              "status": "available"
+            },
+            {
+              "sportsbook": "fanatics",
+              "status": "available"
+            },
+            {
+              "sportsbook": "hardrock",
+              "status": "available"
+            }
+          ]
+        },
+        "markets": [
+          {
+            "sportsbook": "bet365",
+            "openingLine": 73.5,
+            "latestLine": 73.5,
+            "capturedAt": "2026-11-17T01:57:16.144628Z",
+            "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-16",
+            "closingVerified": false
+          },
+          {
+            "sportsbook": "bet_rivers_co",
+            "openingLine": 73.5,
+            "latestLine": 73.5,
+            "capturedAt": "2026-11-17T01:57:16.144628Z",
+            "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-16",
+            "closingVerified": false
+          },
+          {
+            "sportsbook": "betmgm",
+            "openingLine": 73.5,
+            "latestLine": 73.5,
+            "capturedAt": "2026-11-17T01:57:16.144628Z",
+            "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-16",
+            "closingVerified": false
+          },
+          {
+            "sportsbook": "caesars",
+            "openingLine": 72.5,
+            "latestLine": 73.5,
+            "capturedAt": "2026-11-17T01:57:16.144628Z",
+            "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-16",
+            "closingVerified": false
+          },
+          {
+            "sportsbook": "draftkings",
+            "openingLine": 73.5,
+            "latestLine": 73.5,
+            "capturedAt": "2026-11-17T01:57:16.144628Z",
+            "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-16",
+            "closingVerified": false
+          },
+          {
+            "sportsbook": "fanatics",
+            "openingLine": 73.5,
+            "latestLine": 73.5,
+            "capturedAt": "2026-11-17T01:57:16.144628Z",
+            "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-16",
+            "closingVerified": false
+          },
+          {
+            "sportsbook": "hardrock",
+            "openingLine": 73.5,
+            "latestLine": 72.5,
+            "capturedAt": "2026-11-17T01:57:16.144628Z",
+            "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-16",
+            "closingVerified": false
+          }
+        ],
+        "signal": {
+          "method": "model-signal-v1",
+          "score": 7,
+          "label": "Mixed",
+          "reason": "1.11-point gap; components do not both agree. Research score, not a hit percentage.",
+          "fill": "#f0f7ea"
+        }
+      },
+      "features": {
+        "kind": "captured_pregame",
+        "capturedAt": "2026-11-16T05:21:32.172Z",
+        "priorAsOf": "2026-04-07",
+        "currentAsOf": "2026-11-16",
+        "modelVersion": "season-bridge-v1",
+        "statsRetrievedAt": "2026-11-16T05:21:23.760847Z",
+        "away": {
+          "id": "east-texas-am-lions",
+          "name": "E Texas A&M",
+          "firstHalfPoints": 33.30462100456621,
+          "pace": 72.06080365296805,
+          "offensiveEfficiency": 1.0028950684931508,
+          "defensiveEfficiency": 1.0518342465753423,
+          "currentWeight": 0.3333333333333333,
+          "currentGames": 4,
+          "priorAvailable": true,
+          "strengthOfSchedule": -2.5,
+          "notes": [
+            "Roster continuity is not measured; league regression reduces reliance on last year's roster."
+          ]
+        },
+        "home": {
+          "id": "oregon-st-beavers",
+          "name": "Oregon St",
+          "firstHalfPoints": 37.32462100456621,
+          "pace": 71.22080365296804,
+          "offensiveEfficiency": 1.1096950684931508,
+          "defensiveEfficiency": 1.0245675799086755,
+          "currentWeight": 0.3333333333333333,
+          "currentGames": 4,
+          "priorAvailable": true,
+          "strengthOfSchedule": -8.8,
+          "notes": [
+            "Roster continuity is not measured; league regression reduces reliance on last year's roster."
+          ]
+        }
+      },
+      "quotes": [
+        {
+          "sportsbook": "bet365",
+          "opening": {
+            "total": 73.5,
+            "overPrice": -105,
+            "underPrice": -125
+          },
+          "latest": {
+            "total": 73.5,
+            "overPrice": -105,
+            "underPrice": -125
+          },
+          "openingCapturedAt": "2026-11-16T14:38:05.276235Z",
+          "latestCapturedAt": "2026-11-17T01:57:16.144628Z",
+          "closingVerified": false,
+          "quoteTimestamp": null,
+          "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-16"
+        },
+        {
+          "sportsbook": "bet_rivers_co",
+          "opening": {
+            "total": 73.5,
+            "overPrice": -112,
+            "underPrice": -122
+          },
+          "latest": {
+            "total": 73.5,
+            "overPrice": -109,
+            "underPrice": -125
+          },
+          "openingCapturedAt": "2026-11-16T14:38:05.276235Z",
+          "latestCapturedAt": "2026-11-17T01:57:16.144628Z",
+          "closingVerified": false,
+          "quoteTimestamp": null,
+          "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-16"
+        },
+        {
+          "sportsbook": "betmgm",
+          "opening": {
+            "total": 73.5,
+            "overPrice": -120,
+            "underPrice": -110
+          },
+          "latest": {
+            "total": 73.5,
+            "overPrice": -110,
+            "underPrice": -120
+          },
+          "openingCapturedAt": "2026-11-16T16:24:32.890785Z",
+          "latestCapturedAt": "2026-11-17T01:57:16.144628Z",
+          "closingVerified": false,
+          "quoteTimestamp": null,
+          "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-16"
+        },
+        {
+          "sportsbook": "caesars",
+          "opening": {
+            "total": 72.5,
+            "overPrice": -120,
+            "underPrice": -110
+          },
+          "latest": {
+            "total": 73.5,
+            "overPrice": -110,
+            "underPrice": -120
+          },
+          "openingCapturedAt": "2026-11-16T14:38:05.276235Z",
+          "latestCapturedAt": "2026-11-17T01:57:16.144628Z",
+          "closingVerified": false,
+          "quoteTimestamp": null,
+          "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-16"
+        },
+        {
+          "sportsbook": "draftkings",
+          "opening": {
+            "total": 73.5,
+            "overPrice": -110,
+            "underPrice": -120
+          },
+          "latest": {
+            "total": 73.5,
+            "overPrice": -110,
+            "underPrice": -120
+          },
+          "openingCapturedAt": "2026-11-16T14:38:05.276235Z",
+          "latestCapturedAt": "2026-11-17T01:57:16.144628Z",
+          "closingVerified": false,
+          "quoteTimestamp": null,
+          "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-16"
+        },
+        {
+          "sportsbook": "fanatics",
+          "opening": {
+            "total": 73.5,
+            "overPrice": 100,
+            "underPrice": -120
+          },
+          "latest": {
+            "total": 73.5,
+            "overPrice": -105,
+            "underPrice": -115
+          },
+          "openingCapturedAt": "2026-11-16T05:21:26.440942Z",
+          "latestCapturedAt": "2026-11-17T01:57:16.144628Z",
+          "closingVerified": false,
+          "quoteTimestamp": null,
+          "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-16"
+        },
+        {
+          "sportsbook": "hardrock",
+          "opening": {
+            "total": 73.5,
+            "overPrice": -110,
+            "underPrice": -120
+          },
+          "latest": {
+            "total": 72.5,
+            "overPrice": -125,
+            "underPrice": -110
+          },
+          "openingCapturedAt": "2026-11-16T14:38:05.276235Z",
+          "latestCapturedAt": "2026-11-17T01:57:16.144628Z",
+          "closingVerified": false,
+          "quoteTimestamp": null,
+          "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-16"
+        }
+      ],
+      "participants": {
+        "away": {
+          "espnId": "2837",
+          "modelId": "east-texas-am-lions",
+          "name": "East Texas A&M Lions"
+        },
+        "home": {
+          "espnId": "204",
+          "modelId": "oregon-st-beavers",
+          "name": "Oregon State Beavers"
+        }
+      }
     }
   ],
   "results": [
@@ -66527,6 +66862,244 @@
         "venueName": "Knapp Center",
         "city": "Des Moines",
         "state": "IA"
+      }
+    },
+    {
+      "id": "2026-27:401909798_result1",
+      "season": "2026-27",
+      "gameId": "401909798",
+      "observedAt": "2026-11-17T01:57:21.787Z",
+      "sourceCapturedAt": "2026-11-17T01:57:14.083263Z",
+      "startsAt": "2026-11-17T01:00:00Z",
+      "awayPoints": 22,
+      "homePoints": 40,
+      "source": "https://site.api.espn.com/apis/site/v2/sports/basketball/mens-college-basketball/scoreboard?dates=20261116&groups=50&limit=1000",
+      "participants": {
+        "away": {
+          "espnId": "149",
+          "modelId": "montana-grizzlies",
+          "name": "Montana Grizzlies"
+        },
+        "home": {
+          "espnId": "2306",
+          "modelId": "kansas-state-wildcats",
+          "name": "Kansas State Wildcats"
+        }
+      },
+      "context": {
+        "neutralSite": false,
+        "conferenceGame": false,
+        "matchupType": "nonconference_regular",
+        "eventLabel": null,
+        "venueId": "2131",
+        "venueKey": "id:2131",
+        "venueName": "Bramlage Coliseum",
+        "city": "Manhattan",
+        "state": "KS"
+      }
+    },
+    {
+      "id": "2026-27:401916307_result1",
+      "season": "2026-27",
+      "gameId": "401916307",
+      "observedAt": "2026-11-17T01:57:21.787Z",
+      "sourceCapturedAt": "2026-11-17T01:57:14.083263Z",
+      "startsAt": "2026-11-17T01:00:00Z",
+      "awayPoints": 27,
+      "homePoints": 54,
+      "source": "https://site.api.espn.com/apis/site/v2/sports/basketball/mens-college-basketball/scoreboard?dates=20261116&groups=50&limit=1000",
+      "participants": {
+        "away": {
+          "espnId": "2710",
+          "modelId": "western-illinois-leathernecks",
+          "name": "Western Illinois Leathernecks"
+        },
+        "home": {
+          "espnId": "135",
+          "modelId": "minnesota-golden-gophers",
+          "name": "Minnesota Golden Gophers"
+        }
+      },
+      "context": {
+        "neutralSite": false,
+        "conferenceGame": false,
+        "matchupType": "nonconference_regular",
+        "eventLabel": null,
+        "venueId": "2094",
+        "venueKey": "id:2094",
+        "venueName": "The Barn by Blue Cross and Blue Shield of Minnesota",
+        "city": "Minneapolis",
+        "state": "MN"
+      }
+    },
+    {
+      "id": "2026-27:401917917_result1",
+      "season": "2026-27",
+      "gameId": "401917917",
+      "observedAt": "2026-11-17T01:57:21.787Z",
+      "sourceCapturedAt": "2026-11-17T01:57:14.083263Z",
+      "startsAt": "2026-11-17T01:00:00Z",
+      "awayPoints": 35,
+      "homePoints": 49,
+      "source": "https://site.api.espn.com/apis/site/v2/sports/basketball/mens-college-basketball/scoreboard?dates=20261116&groups=50&limit=1000",
+      "participants": {
+        "away": {
+          "espnId": "2110",
+          "modelId": "central-arkansas-bears",
+          "name": "Central Arkansas Bears"
+        },
+        "home": {
+          "espnId": "197",
+          "modelId": "oklahoma-state-cowboys",
+          "name": "Oklahoma State Cowboys"
+        }
+      },
+      "context": {
+        "neutralSite": false,
+        "conferenceGame": false,
+        "matchupType": "nonconference_regular",
+        "eventLabel": null,
+        "venueId": "1992",
+        "venueKey": "id:1992",
+        "venueName": "Gallagher-Iba Arena",
+        "city": "Stillwater",
+        "state": "OK"
+      }
+    },
+    {
+      "id": "2026-27:401917964_result1",
+      "season": "2026-27",
+      "gameId": "401917964",
+      "observedAt": "2026-11-17T01:57:21.787Z",
+      "sourceCapturedAt": "2026-11-17T01:57:14.083263Z",
+      "startsAt": "2026-11-17T01:00:00Z",
+      "awayPoints": 24,
+      "homePoints": 31,
+      "source": "https://site.api.espn.com/apis/site/v2/sports/basketball/mens-college-basketball/scoreboard?dates=20261116&groups=50&limit=1000",
+      "participants": {
+        "away": {
+          "espnId": "2000",
+          "modelId": "abilene-christian-wildcats",
+          "name": "Abilene Christian Wildcats"
+        },
+        "home": {
+          "espnId": "2623",
+          "modelId": "missouri-st-bears",
+          "name": "Missouri State Bears"
+        }
+      },
+      "context": {
+        "neutralSite": false,
+        "conferenceGame": false,
+        "matchupType": "nonconference_regular",
+        "eventLabel": null,
+        "venueId": "1966",
+        "venueKey": "id:1966",
+        "venueName": "Great Southern Bank Arena",
+        "city": "Springfield",
+        "state": "MO"
+      }
+    },
+    {
+      "id": "2026-27:401920735_result1",
+      "season": "2026-27",
+      "gameId": "401920735",
+      "observedAt": "2026-11-17T01:57:21.787Z",
+      "sourceCapturedAt": "2026-11-17T01:57:14.083263Z",
+      "startsAt": "2026-11-17T01:00:00Z",
+      "awayPoints": 28,
+      "homePoints": 19,
+      "source": "https://site.api.espn.com/apis/site/v2/sports/basketball/mens-college-basketball/scoreboard?dates=20261116&groups=50&limit=1000",
+      "participants": {
+        "away": {
+          "espnId": "171",
+          "modelId": "columbia-lions",
+          "name": "Columbia Lions"
+        },
+        "home": {
+          "espnId": "77",
+          "modelId": "northwestern-wildcats",
+          "name": "Northwestern Wildcats"
+        }
+      },
+      "context": {
+        "neutralSite": false,
+        "conferenceGame": false,
+        "matchupType": "nonconference_regular",
+        "eventLabel": null,
+        "venueId": "1990",
+        "venueKey": "id:1990",
+        "venueName": "Welsh-Ryan Arena",
+        "city": "Evanston",
+        "state": "IL"
+      }
+    },
+    {
+      "id": "2026-27:401928997_result1",
+      "season": "2026-27",
+      "gameId": "401928997",
+      "observedAt": "2026-11-17T01:57:21.787Z",
+      "sourceCapturedAt": "2026-11-17T01:57:14.083263Z",
+      "startsAt": "2026-11-17T01:00:00Z",
+      "awayPoints": 20,
+      "homePoints": 52,
+      "source": "https://site.api.espn.com/apis/site/v2/sports/basketball/mens-college-basketball/scoreboard?dates=20261116&groups=50&limit=1000",
+      "participants": {
+        "away": {
+          "espnId": "502",
+          "modelId": null,
+          "name": "Calumet St. Joseph Crimson Wave"
+        },
+        "home": {
+          "espnId": "2674",
+          "modelId": "valparaiso-beacons",
+          "name": "Valparaiso Beacons"
+        }
+      },
+      "context": {
+        "neutralSite": false,
+        "conferenceGame": false,
+        "matchupType": "nonconference_regular",
+        "eventLabel": null,
+        "venueId": "2159",
+        "venueKey": "id:2159",
+        "venueName": "Athletics-Recreation Center",
+        "city": "Valparaiso",
+        "state": "IN"
+      }
+    },
+    {
+      "id": "2026-27:401929411_result1",
+      "season": "2026-27",
+      "gameId": "401929411",
+      "observedAt": "2026-11-17T01:57:21.787Z",
+      "sourceCapturedAt": "2026-11-17T01:57:14.083263Z",
+      "startsAt": "2026-11-17T01:00:00Z",
+      "awayPoints": 32,
+      "homePoints": 48,
+      "source": "https://site.api.espn.com/apis/site/v2/sports/basketball/mens-college-basketball/scoreboard?dates=20261116&groups=50&limit=1000",
+      "participants": {
+        "away": {
+          "espnId": "561",
+          "modelId": null,
+          "name": "Mayville State Comets"
+        },
+        "home": {
+          "espnId": "2571",
+          "modelId": "south-dakota-state-jackrabbits",
+          "name": "South Dakota State Jackrabbits"
+        }
+      },
+      "context": {
+        "neutralSite": false,
+        "conferenceGame": false,
+        "matchupType": "nonconference_regular",
+        "eventLabel": null,
+        "venueId": "10796",
+        "venueKey": "id:10796",
+        "venueName": "First Bank & Trust Arena",
+        "city": "Brookings",
+        "state": "SD"
       }
     }
   ]
