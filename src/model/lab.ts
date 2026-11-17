@@ -7,6 +7,8 @@ import {
 } from "./entryPolicy";
 import { foulExposureSchema } from "./foulExposure";
 import { contextForecastSchema } from "./gameContext";
+import { researchForecastSchema } from "./labResearch";
+import { isPaperLabMethod } from "./labVersions";
 import { resultEventSchema } from "./predictionRecord";
 import { csvCell } from "./predictions";
 import { labRating, ratingFallback } from "./ratingDisplay";
@@ -14,6 +16,28 @@ import { participantsSchema, reviewSchedule } from "./scheduleReview";
 import { easternTipoff } from "./time";
 
 export const labMethods = [
+  {
+    id: "market-core-v3",
+    name: "Lab v3 · market benchmark",
+    kind: "total",
+    description:
+      "Actual's unchanged projection and direction with a market-based qualification test using pregame first-half shot opportunities.",
+    formula:
+      "DraftKings fair probability + regularized Actual-gap and turnover/rebound signals. Qualify Actual's side at ≥5% estimated return and a verified final-15-minute quote; flat 1u paper.",
+    limits:
+      "Research estimates are not validated win probabilities. No forced plays. Integer lines await push modeling. Fits freeze daily using earlier completed games; older versions and Actual remain unchanged.",
+  },
+  {
+    id: "referee-core-v4",
+    name: "Lab v4 · referee research",
+    kind: "total",
+    description:
+      "Lab v3 plus a bounded, shrunk crew association measured against saved first-half market lines. Every verified official is tracked through the first-half games they worked.",
+    formula:
+      "V3 probability + crew scoring association (±2-point equivalent cap). Require a verified pregame crew, 3 priced prior halves per official and 20 matched study games; flat 1u paper only when qualified.",
+    limits:
+      "Individual callers are unavailable in this feed. Foul types, FT sequences and bonus timing contain explicit proxies and missing values. Crew associations are observational; the model averages officials rather than stacking three effects.",
+  },
   {
     id: "enhanced-baseline-v2",
     name: "Combined Lab · venue & fouls",
@@ -81,6 +105,8 @@ export const labMethods = [
   },
 ] as const;
 export const labMethodIds = [
+  "market-core-v3",
+  "referee-core-v4",
   "enhanced-baseline-v2",
   "enhanced-baseline-v1",
   "baseline-control-v1",
@@ -147,46 +173,91 @@ export const labHalfStoreSchema = z.object({
 });
 export type LabHalf = z.infer<typeof labHalfSchema>;
 
-export const labForecastSchema = z.object({
-  id: z.string(),
-  season: z.string(),
-  methodId: labMethodIdSchema,
-  gameId: z.string(),
-  gameDate: z.iso.date(),
-  startsAt: z.iso.datetime(),
-  recordedAt: z.iso.datetime(),
-  version: z.number().int().positive(),
-  revision: z.string(),
-  awayTeam: z.string(),
-  homeTeam: z.string(),
-  sportsbook: z.enum(["betmgm", "draftkings"]),
-  line: z.number().positive().nullable(),
-  overPrice: z.number().nullable(),
-  underPrice: z.number().nullable(),
-  total: z.number().min(0).nullable(),
-  baselineTotal: z.number().min(0).nullable(),
-  simpleTotal: z.number().nullable(),
-  paceTotal: z.number().nullable(),
-  side: z.enum(["OVER", "UNDER", "PUSH"]).nullable(),
-  signalStrength: z.number().min(0).max(100).nullable(),
-  status: z.enum([
-    "control",
-    "qualified",
-    "watch_only",
-    "data_gap",
-    "measurement",
-  ]),
-  reason: z.string(),
-  bonusMinutes: z.number().min(0).max(40).nullable(),
-  bonusBaselineMinutes: z.number().min(0).max(40).nullable(),
-  inputs: z.record(
-    z.string(),
-    z.union([z.string(), z.number().finite(), z.null()]),
-  ),
-  context: contextForecastSchema.optional(),
-  foulExposure: foulExposureSchema.optional(),
-  participants: participantsSchema.optional(),
-});
+export const labForecastSchema = z
+  .object({
+    id: z.string(),
+    season: z.string(),
+    methodId: labMethodIdSchema,
+    gameId: z.string(),
+    gameDate: z.iso.date(),
+    startsAt: z.iso.datetime(),
+    recordedAt: z.iso.datetime(),
+    version: z.number().int().positive(),
+    revision: z.string(),
+    awayTeam: z.string(),
+    homeTeam: z.string(),
+    sportsbook: z.enum(["betmgm", "draftkings"]),
+    line: z.number().positive().nullable(),
+    overPrice: z.number().nullable(),
+    underPrice: z.number().nullable(),
+    total: z.number().min(0).nullable(),
+    baselineTotal: z.number().min(0).nullable(),
+    simpleTotal: z.number().nullable(),
+    paceTotal: z.number().nullable(),
+    side: z.enum(["OVER", "UNDER", "PUSH"]).nullable(),
+    signalStrength: z.number().min(0).max(100).nullable(),
+    status: z.enum([
+      "control",
+      "qualified",
+      "watch_only",
+      "data_gap",
+      "measurement",
+    ]),
+    reason: z.string(),
+    bonusMinutes: z.number().min(0).max(40).nullable(),
+    bonusBaselineMinutes: z.number().min(0).max(40).nullable(),
+    inputs: z.record(
+      z.string(),
+      z.union([z.string(), z.number().finite(), z.null()]),
+    ),
+    context: contextForecastSchema.optional(),
+    foulExposure: foulExposureSchema.optional(),
+    research: researchForecastSchema.optional(),
+    participants: participantsSchema.optional(),
+  })
+  .superRefine((row, ctx) => {
+    if (!isPaperLabMethod(row.methodId)) return;
+    const research = row.research;
+    if (
+      !research ||
+      research.paperUnits !== (row.status === "qualified" ? 1 : 0)
+    )
+      ctx.addIssue({
+        code: "custom",
+        message:
+          "Paper methods require frozen research metadata and matching units",
+      });
+    if (
+      row.status === "qualified" &&
+      (!research ||
+        research.probability === null ||
+        research.expectedReturn === null ||
+        research.expectedReturn < 0.05 ||
+        !research.modelPath ||
+        row.sportsbook !== "draftkings" ||
+        row.line === null ||
+        Number.isInteger(row.line) ||
+        (row.side !== "OVER" && row.side !== "UNDER"))
+    )
+      ctx.addIssue({
+        code: "custom",
+        message:
+          "Qualified paper forecasts require a priced eligible research estimate",
+      });
+    if (
+      row.status === "qualified" &&
+      row.methodId === "referee-core-v4" &&
+      (!research ||
+        research.crew.length !== 3 ||
+        !research.crewAssignmentId ||
+        !research.crewObservedAt ||
+        Date.parse(research.crewObservedAt) >= Date.parse(row.startsAt))
+    )
+      ctx.addIssue({
+        code: "custom",
+        message: "Qualified V4 forecasts require a verified pregame crew",
+      });
+  });
 export type LabForecast = z.infer<typeof labForecastSchema>;
 export const labStoreSchema = z.object({
   schemaVersion: z.literal(1),
@@ -274,12 +345,14 @@ export function canonicalLabForecasts(
 ) {
   const futureGames = new Set(
     forecasts
-      .filter((row) =>
-        usesTipoffEntry(
-          row.startsAt,
-          entryPolicy,
-          `${row.season}:${row.gameId}`,
-        ),
+      .filter(
+        (row) =>
+          isPaperLabMethod(row.methodId) ||
+          usesTipoffEntry(
+            row.startsAt,
+            entryPolicy,
+            `${row.season}:${row.gameId}`,
+          ),
       )
       .map((row) => `${row.season}:${row.methodId}:${row.gameId}`),
   );
@@ -572,6 +645,11 @@ export function labToCsv(store: LabStore) {
     "display_rating",
     "display_score_source",
     "display_score_reason",
+    "research_win_probability_UNVALIDATED",
+    "research_expected_return",
+    "paper_units",
+    "research_model_path",
+    "frozen_research_json",
   ];
   return `${[
     header,
@@ -635,6 +713,11 @@ export function labToCsv(store: LabStore) {
         rating.signal.score ?? ratingFallback(rating.signal),
         rating.source,
         rating.signal.reason,
+        row.research?.probability ?? null,
+        row.research?.expectedReturn ?? null,
+        row.research?.paperUnits ?? null,
+        row.research?.modelPath ?? null,
+        row.research ? JSON.stringify(row.research) : null,
       ];
     }),
   ]

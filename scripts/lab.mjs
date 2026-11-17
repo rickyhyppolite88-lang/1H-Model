@@ -1,7 +1,8 @@
 import { readFile, writeFile, mkdir, readdir, rename } from "node:fs/promises";
 import {createHash} from "node:crypto";
+import { prepareLabResearch, publishRefereeOutcomes } from "./lab-research.mjs";
 
-export async function updateLabFiles(server, { feed, ledger, prior, priorPath, results, entryPolicy, directory = "public" }) {
+export async function updateLabFiles(server, { feed, ledger, prior, priorPath, results, record, entryPolicy, directory = "public" }) {
   const model = await server.ssrLoadModule("/src/model/lab.ts");
   const { labComponentsToCsv } = await server.ssrLoadModule("/src/model/labComponents.ts");
   const { captureLab } = await server.ssrLoadModule("/src/model/labCapture.ts");
@@ -49,10 +50,12 @@ export async function updateLabFiles(server, { feed, ledger, prior, priorPath, r
     const path = `data/input-snapshots/${file}`;
     snapshots.push({ path, data: datasetSchema.parse(await read(path)) });
   }
-  let store = captureLab(old, config, feed, ledger, { prior, priorPath, snapshots, halves: raw.halves, excludedHistoryGames: raw.errors.map((error) => error.gameId), contextModel,contextModelPath }, at, entryPolicy);
+  const research = record ? await prepareLabResearch(server, { record, ledger, halves: raw.halves, directory, at }) : {};
+  let store = captureLab(old, config, feed, ledger, { prior, priorPath, snapshots, halves: raw.halves, excludedHistoryGames: raw.errors.map((error) => error.gameId), contextModel,contextModelPath, ...research }, at, entryPolicy);
   const ids = new Set(store.forecasts.map((row) => row.gameId));
   const merge = { ...store, forecasts: [], results: results.filter((result) => ids.has(result.gameId)), halves: raw.halves.filter((half) => ids.has(half.gameId)) };
   store = model.mergeLabStores([store, merge], store.startedAt, at);
+  await publishRefereeOutcomes(server, store, directory);
   await mkdir(`${directory}/data/lab`, { recursive: true });
   const archives = [];
   for (const date of [...new Set(store.forecasts.map((row) => row.gameDate))].sort().reverse()) {

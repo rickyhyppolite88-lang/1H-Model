@@ -11,13 +11,15 @@ export default function UnitResult({ play }: { play?: UnitPlay }) {
     <span
       className="unit-result"
       title={
-        play.mode === "historical"
-          ? "Historical confidence-tier replay; no pregame stake was assigned"
-          : "Model stake locked before tipoff; not a confirmed wager"
+        play.policy === "lab-flat-paper-v1"
+          ? "Flat 1u paper research, frozen before tipoff; not a confirmed wager"
+          : play.mode === "historical"
+            ? "Historical confidence-tier replay; no pregame stake was assigned"
+            : "Model stake locked before tipoff; not a confirmed wager"
       }
     >
       <strong>
-        {play.units}u{" "}
+        {play.units}u{play.policy === "lab-flat-paper-v1" ? " paper" : ""}{" "}
         <span
           className={
             play.net !== null && play.net > 0
@@ -32,7 +34,11 @@ export default function UnitResult({ play }: { play?: UnitPlay }) {
       </strong>
       <small>
         {formatPrice(play.price)} ·{" "}
-        {play.mode === "historical" ? "Replay" : "Recorded"}
+        {play.policy === "lab-flat-paper-v1"
+          ? "Paper record"
+          : play.mode === "historical"
+            ? "Replay"
+            : "Recorded"}
       </small>
       {play.scoreSource === "derived_saved_inputs" && (
         <small>Score calculated later</small>

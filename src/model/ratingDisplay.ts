@@ -18,6 +18,7 @@ export type RatingDisplay = {
     | "historical_estimate";
   label: string;
   provenance?: string;
+  meaning?: "score" | "probability";
 };
 
 export function ratingFallback(signal: ModelSignal) {
@@ -122,11 +123,32 @@ export function labRating(row: LabForecast): RatingDisplay {
     },
     row.line,
   );
+  if (row.research)
+    return {
+      signal: {
+        ...calculated,
+        score:
+          row.research.probability === null
+            ? null
+            : Math.round(row.research.probability * 1000) / 10,
+        label:
+          row.research.probability === null
+            ? "Unavailable"
+            : row.status === "qualified"
+              ? "Aligned"
+              : "Mixed",
+        reason: row.reason,
+      },
+      source: "saved",
+      label: "Confidence",
+      provenance: "Research estimate",
+      meaning: "probability",
+    };
   if (
     row.signalStrength === null &&
     (calculated.label === "Unavailable" || calculated.label === "No lean")
   )
-    return { signal: calculated, source: "saved", label: "Strength / 100" };
+    return { signal: calculated, source: "saved", label: "Confidence" };
   if (row.signalStrength !== null)
     return {
       signal: {
@@ -135,17 +157,18 @@ export function labRating(row: LabForecast): RatingDisplay {
         reason: `Original saved Lab strength. ${row.reason}`,
       },
       source: "saved",
-      label: "Saved strength / 100",
+      label: "Confidence",
+      provenance: "Saved model score",
     };
   if (calculated.label === "Outlier review")
-    return { signal: calculated, source: "saved", label: "Strength / 100" };
+    return { signal: calculated, source: "saved", label: "Confidence" };
   return {
     signal: {
       ...calculated,
       reason: `Calculated later using only the frozen Lab total, components and entry line; the stored strength is unchanged. ${calculated.reason}`,
     },
     source: "derived_saved_inputs",
-    label: "Derived strength / 100",
+    label: "Confidence",
     provenance: "Calculated later",
   };
 }

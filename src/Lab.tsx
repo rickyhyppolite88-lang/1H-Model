@@ -11,8 +11,10 @@ import {
   labSummary,
   labToCsv,
 } from "./model/lab";
+import { isPaperLabMethod } from "./model/labVersions";
 import { easternTipoff, tipoffState } from "./model/time";
 import { hasUnitStake, labUnitPlay } from "./model/units";
+import RefereeResearch from "./RefereeResearch";
 import UnitCalendar from "./UnitCalendar";
 import { useLabRecords } from "./useLabRecords";
 import { preferencePage, preferenceText, usePreference } from "./usePreference";
@@ -34,9 +36,9 @@ export default function Lab({ recordOnly = false }: { recordOnly?: boolean }) {
     error: unitError,
   } = useUnitLedger();
   const [chosenMethod, setMethod] = usePreference(
-    "lab.method.v3",
+    "lab.method.v4",
     labMethodIdSchema,
-    "enhanced-baseline-v2",
+    "market-core-v3",
   );
   const method =
     recordOnly && chosenMethod === "bonus-exposure-v1"
@@ -67,8 +69,12 @@ export default function Lab({ recordOnly = false }: { recordOnly?: boolean }) {
     labMethods.find((entry) => entry.id === method) ?? labMethods[0];
   const methodStartedAt =
     index?.methodStartedAt?.[method] ??
-    (method.startsWith("enhanced-baseline-") ? undefined : index?.startedAt);
+    store?.forecasts
+      .filter((row) => row.methodId === method)
+      .map((row) => row.recordedAt)
+      .sort()[0];
   const bonus = definition.kind === "bonus";
+  const paper = isPaperLabMethod(method);
   const enabled =
     index?.config.methods.find((entry) => entry.id === method)?.enabled ??
     false;
@@ -188,12 +194,33 @@ export default function Lab({ recordOnly = false }: { recordOnly?: boolean }) {
         <div>
           <h2>{recordOnly ? "Lab prediction record" : "The Lab"}</h2>
           <p>
-            The Actual algorithm plus first-half defense, venue/matchup context,
-            meaningful crowd proxies and joint foul/free-throw research; signal
-            strength is not a win probability.
+            Separate versioned experiments with frozen pregame inputs.
+            Confidence in earlier versions is a model score; v3/v4 probabilities
+            are unvalidated research estimates. Qualified v3/v4 plays use flat
+            1u paper stakes.
           </p>
         </div>
       </div>
+      <fieldset className="lab-version-tabs" aria-label="Lab versions">
+        {[
+          ["market-core-v3", "Lab v3", "Market benchmark"],
+          ["referee-core-v4", "Lab v4", "Referee research"],
+          ["enhanced-baseline-v2", "Lab v2", "Venue & fouls"],
+        ].map(([id, title, description]) => (
+          <button
+            type="button"
+            key={id}
+            aria-pressed={method === id}
+            onClick={() => {
+              setMethod(labMethodIdSchema.parse(id));
+              setPage(0);
+            }}
+          >
+            <strong>{title}</strong>
+            <small>{description}</small>
+          </button>
+        ))}
+      </fieldset>
       <div className="lab-controls">
         <details className="lab-version-control">
           <summary>Lab version & history</summary>
@@ -211,7 +238,8 @@ export default function Lab({ recordOnly = false }: { recordOnly?: boolean }) {
                 .map((entry) => (
                   <option key={entry.id} value={entry.id}>
                     {entry.name}
-                    {entry.id === "enhanced-baseline-v2"
+                    {isPaperLabMethod(entry.id) ||
+                    entry.id === "enhanced-baseline-v2"
                       ? ""
                       : " (previous experiment)"}
                   </option>
@@ -307,9 +335,9 @@ export default function Lab({ recordOnly = false }: { recordOnly?: boolean }) {
             setting.
           </p>
           <p>
-            Sources: archived TeamRankings inputs, captured BetMGM first-half
-            totals, and reconciled ESPN first-half results. Bonus measurements
-            use logged nontechnical fouls and remain approximate.
+            Sources: archived TeamRankings inputs, captured sportsbook
+            first-half totals, and reconciled ESPN first-half results. Bonus
+            measurements use logged nontechnical fouls and remain approximate.
           </p>
           <p>
             {index?.rawCoverage.games ?? "—"} reconciled raw first halves ·{" "}
@@ -324,6 +352,7 @@ export default function Lab({ recordOnly = false }: { recordOnly?: boolean }) {
           </p>
         </details>
       </details>
+      {method === "referee-core-v4" && <RefereeResearch />}
       {error && (
         <div className="notice error" role="alert">
           {error}
@@ -350,7 +379,15 @@ export default function Lab({ recordOnly = false }: { recordOnly?: boolean }) {
       <div className={recordOnly ? "record-dashboard" : undefined}>
         {recordOnly && !bonus && (
           <UnitCalendar
-            label="Lab"
+            label={
+              paper
+                ? method === "market-core-v3"
+                  ? "Lab v3"
+                  : "Lab v4"
+                : "Lab"
+            }
+            paper={paper}
+            combined={paper}
             plays={(calendarPlays ?? []).filter(
               (play) =>
                 play.source === "lab" &&
