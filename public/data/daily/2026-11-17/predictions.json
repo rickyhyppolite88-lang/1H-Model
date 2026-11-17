@@ -4,8 +4,8 @@
   "gameDate": "2026-11-17",
   "season": "2026-27",
   "through": "2026-11-17",
-  "generatedAt": "2026-11-17T11:28:04.216Z",
-  "marketCapturedAt": "2026-11-17T11:28:00.189130Z",
+  "generatedAt": "2026-11-17T12:08:39.421Z",
+  "marketCapturedAt": "2026-11-17T12:08:35.934900Z",
   "modelVersion": "season-bridge-v1",
   "mode": "regular_season_research",
   "defaultSportsbook": "draftkings",
@@ -542,9 +542,9 @@
   "defaultLineBasis": "latest",
   "source": {
     "repository": "https://github.com/rickyhyppolite88-lang/1H-Model",
-    "projectionCode": "https://github.com/rickyhyppolite88-lang/1H-Model/blob/5ac7dff09285160378447eb6f1b4983186fb5f20/src/model/predictor.ts",
-    "batchCode": "https://github.com/rickyhyppolite88-lang/1H-Model/blob/5ac7dff09285160378447eb6f1b4983186fb5f20/src/model/predictions.ts",
-    "revision": "5ac7dff09285160378447eb6f1b4983186fb5f20"
+    "projectionCode": "https://github.com/rickyhyppolite88-lang/1H-Model/blob/4e3fed610e6b7e9b98998686b9b90183770c1d8c/src/model/predictor.ts",
+    "batchCode": "https://github.com/rickyhyppolite88-lang/1H-Model/blob/4e3fed610e6b7e9b98998686b9b90183770c1d8c/src/model/predictions.ts",
+    "revision": "4e3fed610e6b7e9b98998686b9b90183770c1d8c"
   },
   "counts": {
     "matchups": 68,
@@ -571,7 +571,7 @@
       "featureCapturedAt": null,
       "unavailableReason": "One or both teams are outside the model's team-stat coverage.",
       "marketCoverage": {
-        "checkedAt": "2026-11-17T11:27:59.153448Z",
+        "checkedAt": "2026-11-17T12:08:34.799036Z",
         "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-17",
         "status": "not_matched",
         "books": []
@@ -604,12 +604,26 @@
       "featureCapturedAt": "2026-11-17T07:50:19.620Z",
       "unavailableReason": null,
       "marketCoverage": {
-        "checkedAt": "2026-11-17T11:27:59.153448Z",
+        "checkedAt": "2026-11-17T12:08:34.799036Z",
         "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-17",
         "status": "matched",
-        "books": []
+        "books": [
+          {
+            "sportsbook": "fanduel",
+            "status": "available"
+          }
+        ]
       },
-      "markets": [],
+      "markets": [
+        {
+          "sportsbook": "fanduel",
+          "openingLine": 69.5,
+          "latestLine": 69.5,
+          "capturedAt": "2026-11-17T12:08:34.799036Z",
+          "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-17",
+          "closingVerified": false
+        }
+      ],
       "signal": {
         "method": "model-signal-v1",
         "score": null,
@@ -637,7 +651,7 @@
       "featureCapturedAt": null,
       "unavailableReason": "One or both teams are outside the model's team-stat coverage.",
       "marketCoverage": {
-        "checkedAt": "2026-11-17T11:27:59.153448Z",
+        "checkedAt": "2026-11-17T12:08:34.799036Z",
         "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-17",
         "status": "matched",
         "books": []
@@ -670,22 +684,58 @@
       "featureCapturedAt": "2026-11-17T07:50:19.620Z",
       "unavailableReason": null,
       "marketCoverage": {
-        "checkedAt": "2026-11-17T11:27:59.153448Z",
+        "checkedAt": "2026-11-17T12:08:34.799036Z",
         "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-17",
         "status": "matched",
         "books": [
           {
+            "sportsbook": "bet_rivers_co",
+            "status": "available"
+          },
+          {
             "sportsbook": "fanatics",
+            "status": "available"
+          },
+          {
+            "sportsbook": "fanduel",
+            "status": "available"
+          },
+          {
+            "sportsbook": "hardrock",
             "status": "available"
           }
         ]
       },
       "markets": [
         {
+          "sportsbook": "bet_rivers_co",
+          "openingLine": 67.5,
+          "latestLine": 67.5,
+          "capturedAt": "2026-11-17T12:08:34.799036Z",
+          "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-17",
+          "closingVerified": false
+        },
+        {
           "sportsbook": "fanatics",
           "openingLine": 68.5,
           "latestLine": 67.5,
-          "capturedAt": "2026-11-17T11:27:59.153448Z",
+          "capturedAt": "2026-11-17T12:08:34.799036Z",
+          "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-17",
+          "closingVerified": false
+        },
+        {
+          "sportsbook": "fanduel",
+          "openingLine": 67.5,
+          "latestLine": 67.5,
+          "capturedAt": "2026-11-17T12:08:34.799036Z",
+          "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-17",
+          "closingVerified": false
+        },
+        {
+          "sportsbook": "hardrock",
+          "openingLine": 67.5,
+          "latestLine": 67.5,
+          "capturedAt": "2026-11-17T12:08:34.799036Z",
           "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-17",
           "closingVerified": false
         }
@@ -717,22 +767,58 @@
       "featureCapturedAt": "2026-11-17T07:50:19.620Z",
       "unavailableReason": null,
       "marketCoverage": {
-        "checkedAt": "2026-11-17T11:27:59.153448Z",
+        "checkedAt": "2026-11-17T12:08:34.799036Z",
         "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-17",
         "status": "matched",
         "books": [
           {
+            "sportsbook": "bet_rivers_co",
+            "status": "available"
+          },
+          {
             "sportsbook": "fanatics",
+            "status": "available"
+          },
+          {
+            "sportsbook": "fanduel",
+            "status": "available"
+          },
+          {
+            "sportsbook": "hardrock",
             "status": "available"
           }
         ]
       },
       "markets": [
         {
+          "sportsbook": "bet_rivers_co",
+          "openingLine": 70.5,
+          "latestLine": 70.5,
+          "capturedAt": "2026-11-17T12:08:34.799036Z",
+          "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-17",
+          "closingVerified": false
+        },
+        {
           "sportsbook": "fanatics",
           "openingLine": 72.5,
           "latestLine": 71.5,
-          "capturedAt": "2026-11-17T11:27:59.153448Z",
+          "capturedAt": "2026-11-17T12:08:34.799036Z",
+          "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-17",
+          "closingVerified": false
+        },
+        {
+          "sportsbook": "fanduel",
+          "openingLine": 70.5,
+          "latestLine": 70.5,
+          "capturedAt": "2026-11-17T12:08:34.799036Z",
+          "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-17",
+          "closingVerified": false
+        },
+        {
+          "sportsbook": "hardrock",
+          "openingLine": 70.5,
+          "latestLine": 70.5,
+          "capturedAt": "2026-11-17T12:08:34.799036Z",
           "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-17",
           "closingVerified": false
         }
@@ -764,12 +850,20 @@
       "featureCapturedAt": "2026-11-17T07:50:19.620Z",
       "unavailableReason": null,
       "marketCoverage": {
-        "checkedAt": "2026-11-17T11:27:59.153448Z",
+        "checkedAt": "2026-11-17T12:08:34.799036Z",
         "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-17",
         "status": "matched",
         "books": [
           {
             "sportsbook": "fanatics",
+            "status": "available"
+          },
+          {
+            "sportsbook": "fanduel",
+            "status": "available"
+          },
+          {
+            "sportsbook": "hardrock",
             "status": "available"
           }
         ]
@@ -778,8 +872,24 @@
         {
           "sportsbook": "fanatics",
           "openingLine": 62.5,
-          "latestLine": 64.5,
-          "capturedAt": "2026-11-17T11:27:59.153448Z",
+          "latestLine": 61.5,
+          "capturedAt": "2026-11-17T12:08:34.799036Z",
+          "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-17",
+          "closingVerified": false
+        },
+        {
+          "sportsbook": "fanduel",
+          "openingLine": 61.5,
+          "latestLine": 61.5,
+          "capturedAt": "2026-11-17T12:08:34.799036Z",
+          "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-17",
+          "closingVerified": false
+        },
+        {
+          "sportsbook": "hardrock",
+          "openingLine": 62.5,
+          "latestLine": 62.5,
+          "capturedAt": "2026-11-17T12:08:34.799036Z",
           "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-17",
           "closingVerified": false
         }
@@ -811,12 +921,16 @@
       "featureCapturedAt": "2026-11-17T07:50:19.620Z",
       "unavailableReason": null,
       "marketCoverage": {
-        "checkedAt": "2026-11-17T11:27:59.153448Z",
+        "checkedAt": "2026-11-17T12:08:34.799036Z",
         "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-17",
         "status": "matched",
         "books": [
           {
             "sportsbook": "fanatics",
+            "status": "available"
+          },
+          {
+            "sportsbook": "fanduel",
             "status": "available"
           }
         ]
@@ -826,7 +940,15 @@
           "sportsbook": "fanatics",
           "openingLine": 69.5,
           "latestLine": 68.5,
-          "capturedAt": "2026-11-17T11:27:59.153448Z",
+          "capturedAt": "2026-11-17T12:08:34.799036Z",
+          "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-17",
+          "closingVerified": false
+        },
+        {
+          "sportsbook": "fanduel",
+          "openingLine": 66.5,
+          "latestLine": 66.5,
+          "capturedAt": "2026-11-17T12:08:34.799036Z",
           "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-17",
           "closingVerified": false
         }
@@ -858,7 +980,7 @@
       "featureCapturedAt": "2026-11-17T07:50:19.620Z",
       "unavailableReason": null,
       "marketCoverage": {
-        "checkedAt": "2026-11-17T11:27:59.153448Z",
+        "checkedAt": "2026-11-17T12:08:34.799036Z",
         "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-17",
         "status": "matched",
         "books": [
@@ -873,7 +995,7 @@
           "sportsbook": "fanatics",
           "openingLine": 62.5,
           "latestLine": 62.5,
-          "capturedAt": "2026-11-17T11:27:59.153448Z",
+          "capturedAt": "2026-11-17T12:08:34.799036Z",
           "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-17",
           "closingVerified": false
         }
@@ -905,7 +1027,7 @@
       "featureCapturedAt": null,
       "unavailableReason": "One or both teams are outside the model's team-stat coverage.",
       "marketCoverage": {
-        "checkedAt": "2026-11-17T11:27:59.153448Z",
+        "checkedAt": "2026-11-17T12:08:34.799036Z",
         "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-17",
         "status": "matched",
         "books": []
@@ -938,7 +1060,7 @@
       "featureCapturedAt": "2026-11-17T07:50:19.620Z",
       "unavailableReason": null,
       "marketCoverage": {
-        "checkedAt": "2026-11-17T11:27:59.153448Z",
+        "checkedAt": "2026-11-17T12:08:34.799036Z",
         "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-17",
         "status": "matched",
         "books": [
@@ -953,7 +1075,7 @@
           "sportsbook": "fanatics",
           "openingLine": 70.5,
           "latestLine": 70.5,
-          "capturedAt": "2026-11-17T11:27:59.153448Z",
+          "capturedAt": "2026-11-17T12:08:34.799036Z",
           "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-17",
           "closingVerified": false
         }
@@ -985,7 +1107,7 @@
       "featureCapturedAt": null,
       "unavailableReason": "One or both teams are outside the model's team-stat coverage.",
       "marketCoverage": {
-        "checkedAt": "2026-11-17T11:27:59.153448Z",
+        "checkedAt": "2026-11-17T12:08:34.799036Z",
         "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-17",
         "status": "matched",
         "books": []
@@ -1018,7 +1140,7 @@
       "featureCapturedAt": "2026-11-17T07:50:19.620Z",
       "unavailableReason": null,
       "marketCoverage": {
-        "checkedAt": "2026-11-17T11:27:59.153448Z",
+        "checkedAt": "2026-11-17T12:08:34.799036Z",
         "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-17",
         "status": "matched",
         "books": [
@@ -1033,7 +1155,7 @@
           "sportsbook": "fanatics",
           "openingLine": 77.5,
           "latestLine": 77.5,
-          "capturedAt": "2026-11-17T11:27:59.153448Z",
+          "capturedAt": "2026-11-17T12:08:34.799036Z",
           "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-17",
           "closingVerified": false
         }
@@ -1065,7 +1187,7 @@
       "featureCapturedAt": "2026-11-17T07:50:19.620Z",
       "unavailableReason": null,
       "marketCoverage": {
-        "checkedAt": "2026-11-17T11:27:59.153448Z",
+        "checkedAt": "2026-11-17T12:08:34.799036Z",
         "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-17",
         "status": "matched",
         "books": []
@@ -1098,7 +1220,7 @@
       "featureCapturedAt": "2026-11-17T07:50:19.620Z",
       "unavailableReason": null,
       "marketCoverage": {
-        "checkedAt": "2026-11-17T11:27:59.153448Z",
+        "checkedAt": "2026-11-17T12:08:34.799036Z",
         "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-17",
         "status": "matched",
         "books": [
@@ -1113,7 +1235,7 @@
           "sportsbook": "fanatics",
           "openingLine": 77.5,
           "latestLine": 77.5,
-          "capturedAt": "2026-11-17T11:27:59.153448Z",
+          "capturedAt": "2026-11-17T12:08:34.799036Z",
           "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-17",
           "closingVerified": false
         }
@@ -1145,12 +1267,16 @@
       "featureCapturedAt": "2026-11-17T07:50:19.620Z",
       "unavailableReason": null,
       "marketCoverage": {
-        "checkedAt": "2026-11-17T11:27:59.153448Z",
+        "checkedAt": "2026-11-17T12:08:34.799036Z",
         "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-17",
         "status": "matched",
         "books": [
           {
             "sportsbook": "bet365",
+            "status": "available"
+          },
+          {
+            "sportsbook": "bet_rivers_co",
             "status": "available"
           },
           {
@@ -1164,6 +1290,10 @@
           {
             "sportsbook": "fanduel",
             "status": "available"
+          },
+          {
+            "sportsbook": "hardrock",
+            "status": "available"
           }
         ]
       },
@@ -1172,7 +1302,15 @@
           "sportsbook": "bet365",
           "openingLine": 76.5,
           "latestLine": 76.5,
-          "capturedAt": "2026-11-17T11:27:59.153448Z",
+          "capturedAt": "2026-11-17T12:08:34.799036Z",
+          "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-17",
+          "closingVerified": false
+        },
+        {
+          "sportsbook": "bet_rivers_co",
+          "openingLine": 77.5,
+          "latestLine": 77.5,
+          "capturedAt": "2026-11-17T12:08:34.799036Z",
           "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-17",
           "closingVerified": false
         },
@@ -1180,7 +1318,7 @@
           "sportsbook": "caesars",
           "openingLine": 76.5,
           "latestLine": 76.5,
-          "capturedAt": "2026-11-17T11:27:59.153448Z",
+          "capturedAt": "2026-11-17T12:08:34.799036Z",
           "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-17",
           "closingVerified": false
         },
@@ -1188,7 +1326,7 @@
           "sportsbook": "draftkings",
           "openingLine": 76.5,
           "latestLine": 76.5,
-          "capturedAt": "2026-11-17T11:27:59.153448Z",
+          "capturedAt": "2026-11-17T12:08:34.799036Z",
           "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-17",
           "closingVerified": false
         },
@@ -1196,7 +1334,15 @@
           "sportsbook": "fanduel",
           "openingLine": 76.5,
           "latestLine": 76.5,
-          "capturedAt": "2026-11-17T11:27:59.153448Z",
+          "capturedAt": "2026-11-17T12:08:34.799036Z",
+          "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-17",
+          "closingVerified": false
+        },
+        {
+          "sportsbook": "hardrock",
+          "openingLine": 77.5,
+          "latestLine": 77.5,
+          "capturedAt": "2026-11-17T12:08:34.799036Z",
           "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-17",
           "closingVerified": false
         }
@@ -1228,7 +1374,7 @@
       "featureCapturedAt": "2026-11-17T07:50:19.620Z",
       "unavailableReason": null,
       "marketCoverage": {
-        "checkedAt": "2026-11-17T11:27:59.153448Z",
+        "checkedAt": "2026-11-17T12:08:34.799036Z",
         "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-17",
         "status": "matched",
         "books": [
@@ -1243,7 +1389,7 @@
           "sportsbook": "fanatics",
           "openingLine": 72.5,
           "latestLine": 72.5,
-          "capturedAt": "2026-11-17T11:27:59.153448Z",
+          "capturedAt": "2026-11-17T12:08:34.799036Z",
           "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-17",
           "closingVerified": false
         }
@@ -1275,7 +1421,7 @@
       "featureCapturedAt": "2026-11-17T07:50:19.620Z",
       "unavailableReason": null,
       "marketCoverage": {
-        "checkedAt": "2026-11-17T11:27:59.153448Z",
+        "checkedAt": "2026-11-17T12:08:34.799036Z",
         "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-17",
         "status": "matched",
         "books": [
@@ -1290,7 +1436,7 @@
           "sportsbook": "fanatics",
           "openingLine": 69.5,
           "latestLine": 70.5,
-          "capturedAt": "2026-11-17T11:27:59.153448Z",
+          "capturedAt": "2026-11-17T12:08:34.799036Z",
           "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-17",
           "closingVerified": false
         }
@@ -1322,7 +1468,7 @@
       "featureCapturedAt": "2026-11-17T07:50:19.620Z",
       "unavailableReason": null,
       "marketCoverage": {
-        "checkedAt": "2026-11-17T11:27:59.153448Z",
+        "checkedAt": "2026-11-17T12:08:34.799036Z",
         "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-17",
         "status": "matched",
         "books": [
@@ -1337,7 +1483,7 @@
           "sportsbook": "fanatics",
           "openingLine": 69.5,
           "latestLine": 69.5,
-          "capturedAt": "2026-11-17T11:27:59.153448Z",
+          "capturedAt": "2026-11-17T12:08:34.799036Z",
           "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-17",
           "closingVerified": false
         }
@@ -1369,7 +1515,7 @@
       "featureCapturedAt": "2026-11-17T07:50:19.620Z",
       "unavailableReason": null,
       "marketCoverage": {
-        "checkedAt": "2026-11-17T11:27:59.153448Z",
+        "checkedAt": "2026-11-17T12:08:34.799036Z",
         "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-17",
         "status": "matched",
         "books": [
@@ -1384,7 +1530,7 @@
           "sportsbook": "fanatics",
           "openingLine": 81.5,
           "latestLine": 81.5,
-          "capturedAt": "2026-11-17T11:27:59.153448Z",
+          "capturedAt": "2026-11-17T12:08:34.799036Z",
           "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-17",
           "closingVerified": false
         }
@@ -1416,7 +1562,7 @@
       "featureCapturedAt": "2026-11-17T07:50:19.620Z",
       "unavailableReason": null,
       "marketCoverage": {
-        "checkedAt": "2026-11-17T11:27:59.153448Z",
+        "checkedAt": "2026-11-17T12:08:34.799036Z",
         "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-17",
         "status": "matched",
         "books": [
@@ -1431,7 +1577,7 @@
           "sportsbook": "fanatics",
           "openingLine": 70.5,
           "latestLine": 70.5,
-          "capturedAt": "2026-11-17T11:27:59.153448Z",
+          "capturedAt": "2026-11-17T12:08:34.799036Z",
           "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-17",
           "closingVerified": false
         }
@@ -1463,7 +1609,7 @@
       "featureCapturedAt": "2026-11-17T07:50:19.620Z",
       "unavailableReason": null,
       "marketCoverage": {
-        "checkedAt": "2026-11-17T11:27:59.153448Z",
+        "checkedAt": "2026-11-17T12:08:34.799036Z",
         "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-17",
         "status": "matched",
         "books": [
@@ -1478,7 +1624,7 @@
           "sportsbook": "fanatics",
           "openingLine": 67.5,
           "latestLine": 68.5,
-          "capturedAt": "2026-11-17T11:27:59.153448Z",
+          "capturedAt": "2026-11-17T12:08:34.799036Z",
           "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-17",
           "closingVerified": false
         }
@@ -1510,7 +1656,7 @@
       "featureCapturedAt": "2026-11-17T07:50:19.620Z",
       "unavailableReason": null,
       "marketCoverage": {
-        "checkedAt": "2026-11-17T11:27:59.153448Z",
+        "checkedAt": "2026-11-17T12:08:34.799036Z",
         "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-17",
         "status": "matched",
         "books": [
@@ -1525,7 +1671,7 @@
           "sportsbook": "fanatics",
           "openingLine": 78.5,
           "latestLine": 78.5,
-          "capturedAt": "2026-11-17T11:27:59.153448Z",
+          "capturedAt": "2026-11-17T12:08:34.799036Z",
           "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-17",
           "closingVerified": false
         }
@@ -1557,7 +1703,7 @@
       "featureCapturedAt": "2026-11-17T07:50:19.620Z",
       "unavailableReason": null,
       "marketCoverage": {
-        "checkedAt": "2026-11-17T11:27:59.153448Z",
+        "checkedAt": "2026-11-17T12:08:34.799036Z",
         "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-17",
         "status": "matched",
         "books": [
@@ -1572,7 +1718,7 @@
           "sportsbook": "fanatics",
           "openingLine": 66.5,
           "latestLine": 66.5,
-          "capturedAt": "2026-11-17T11:27:59.153448Z",
+          "capturedAt": "2026-11-17T12:08:34.799036Z",
           "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-17",
           "closingVerified": false
         }
@@ -1604,7 +1750,7 @@
       "featureCapturedAt": "2026-11-17T07:50:19.620Z",
       "unavailableReason": null,
       "marketCoverage": {
-        "checkedAt": "2026-11-17T11:27:59.153448Z",
+        "checkedAt": "2026-11-17T12:08:34.799036Z",
         "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-17",
         "status": "matched",
         "books": [
@@ -1619,7 +1765,7 @@
           "sportsbook": "fanatics",
           "openingLine": 69.5,
           "latestLine": 70.5,
-          "capturedAt": "2026-11-17T11:27:59.153448Z",
+          "capturedAt": "2026-11-17T12:08:34.799036Z",
           "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-17",
           "closingVerified": false
         }
@@ -1651,7 +1797,7 @@
       "featureCapturedAt": "2026-11-17T07:50:19.620Z",
       "unavailableReason": null,
       "marketCoverage": {
-        "checkedAt": "2026-11-17T11:27:59.153448Z",
+        "checkedAt": "2026-11-17T12:08:34.799036Z",
         "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-17",
         "status": "matched",
         "books": [
@@ -1666,7 +1812,7 @@
           "sportsbook": "fanatics",
           "openingLine": 76.5,
           "latestLine": 73.5,
-          "capturedAt": "2026-11-17T11:27:59.153448Z",
+          "capturedAt": "2026-11-17T12:08:34.799036Z",
           "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-17",
           "closingVerified": false
         }
@@ -1698,7 +1844,7 @@
       "featureCapturedAt": "2026-11-17T07:50:19.620Z",
       "unavailableReason": null,
       "marketCoverage": {
-        "checkedAt": "2026-11-17T11:27:59.153448Z",
+        "checkedAt": "2026-11-17T12:08:34.799036Z",
         "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-17",
         "status": "matched",
         "books": [
@@ -1713,7 +1859,7 @@
           "sportsbook": "fanatics",
           "openingLine": 69.5,
           "latestLine": 69.5,
-          "capturedAt": "2026-11-17T11:27:59.153448Z",
+          "capturedAt": "2026-11-17T12:08:34.799036Z",
           "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-17",
           "closingVerified": false
         }
@@ -1745,7 +1891,7 @@
       "featureCapturedAt": "2026-11-17T07:50:19.620Z",
       "unavailableReason": null,
       "marketCoverage": {
-        "checkedAt": "2026-11-17T11:27:59.153448Z",
+        "checkedAt": "2026-11-17T12:08:34.799036Z",
         "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-17",
         "status": "matched",
         "books": [
@@ -1760,7 +1906,7 @@
           "sportsbook": "fanatics",
           "openingLine": 65.5,
           "latestLine": 65.5,
-          "capturedAt": "2026-11-17T11:27:59.153448Z",
+          "capturedAt": "2026-11-17T12:08:34.799036Z",
           "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-17",
           "closingVerified": false
         }
@@ -1792,7 +1938,7 @@
       "featureCapturedAt": "2026-11-17T07:50:19.620Z",
       "unavailableReason": null,
       "marketCoverage": {
-        "checkedAt": "2026-11-17T11:27:59.153448Z",
+        "checkedAt": "2026-11-17T12:08:34.799036Z",
         "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-17",
         "status": "matched",
         "books": [
@@ -1807,7 +1953,7 @@
           "sportsbook": "fanatics",
           "openingLine": 72.5,
           "latestLine": 72.5,
-          "capturedAt": "2026-11-17T11:27:59.153448Z",
+          "capturedAt": "2026-11-17T12:08:34.799036Z",
           "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-17",
           "closingVerified": false
         }
@@ -1839,7 +1985,7 @@
       "featureCapturedAt": "2026-11-17T07:50:19.620Z",
       "unavailableReason": null,
       "marketCoverage": {
-        "checkedAt": "2026-11-17T11:27:59.153448Z",
+        "checkedAt": "2026-11-17T12:08:34.799036Z",
         "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-17",
         "status": "matched",
         "books": [
@@ -1854,7 +2000,7 @@
           "sportsbook": "fanatics",
           "openingLine": 73.5,
           "latestLine": 73.5,
-          "capturedAt": "2026-11-17T11:27:59.153448Z",
+          "capturedAt": "2026-11-17T12:08:34.799036Z",
           "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-17",
           "closingVerified": false
         }
@@ -1886,7 +2032,7 @@
       "featureCapturedAt": null,
       "unavailableReason": "One or both teams are outside the model's team-stat coverage.",
       "marketCoverage": {
-        "checkedAt": "2026-11-17T11:27:59.153448Z",
+        "checkedAt": "2026-11-17T12:08:34.799036Z",
         "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-17",
         "status": "matched",
         "books": []
@@ -1919,7 +2065,7 @@
       "featureCapturedAt": null,
       "unavailableReason": "One or both teams are outside the model's team-stat coverage.",
       "marketCoverage": {
-        "checkedAt": "2026-11-17T11:27:59.153448Z",
+        "checkedAt": "2026-11-17T12:08:34.799036Z",
         "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-17",
         "status": "matched",
         "books": []
@@ -1952,7 +2098,7 @@
       "featureCapturedAt": "2026-11-17T07:50:19.620Z",
       "unavailableReason": null,
       "marketCoverage": {
-        "checkedAt": "2026-11-17T11:27:59.153448Z",
+        "checkedAt": "2026-11-17T12:08:34.799036Z",
         "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-17",
         "status": "matched",
         "books": [
@@ -1967,7 +2113,7 @@
           "sportsbook": "fanatics",
           "openingLine": 69.5,
           "latestLine": 69.5,
-          "capturedAt": "2026-11-17T11:27:59.153448Z",
+          "capturedAt": "2026-11-17T12:08:34.799036Z",
           "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-17",
           "closingVerified": false
         }
@@ -1999,7 +2145,7 @@
       "featureCapturedAt": null,
       "unavailableReason": "One or both teams are outside the model's team-stat coverage.",
       "marketCoverage": {
-        "checkedAt": "2026-11-17T11:27:59.153448Z",
+        "checkedAt": "2026-11-17T12:08:34.799036Z",
         "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-17",
         "status": "matched",
         "books": []
@@ -2032,7 +2178,7 @@
       "featureCapturedAt": "2026-11-17T07:50:19.620Z",
       "unavailableReason": null,
       "marketCoverage": {
-        "checkedAt": "2026-11-17T11:27:59.153448Z",
+        "checkedAt": "2026-11-17T12:08:34.799036Z",
         "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-17",
         "status": "matched",
         "books": [
@@ -2047,7 +2193,7 @@
           "sportsbook": "fanatics",
           "openingLine": 63.5,
           "latestLine": 63.5,
-          "capturedAt": "2026-11-17T11:27:59.153448Z",
+          "capturedAt": "2026-11-17T12:08:34.799036Z",
           "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-17",
           "closingVerified": false
         }
@@ -2079,7 +2225,7 @@
       "featureCapturedAt": null,
       "unavailableReason": "One or both teams are outside the model's team-stat coverage.",
       "marketCoverage": {
-        "checkedAt": "2026-11-17T11:27:59.153448Z",
+        "checkedAt": "2026-11-17T12:08:34.799036Z",
         "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-17",
         "status": "matched",
         "books": []
@@ -2112,7 +2258,7 @@
       "featureCapturedAt": "2026-11-17T07:50:19.620Z",
       "unavailableReason": null,
       "marketCoverage": {
-        "checkedAt": "2026-11-17T11:27:59.153448Z",
+        "checkedAt": "2026-11-17T12:08:34.799036Z",
         "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-17",
         "status": "matched",
         "books": [
@@ -2127,7 +2273,7 @@
           "sportsbook": "fanatics",
           "openingLine": 83.5,
           "latestLine": 83.5,
-          "capturedAt": "2026-11-17T11:27:59.153448Z",
+          "capturedAt": "2026-11-17T12:08:34.799036Z",
           "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-17",
           "closingVerified": false
         }
@@ -2159,7 +2305,7 @@
       "featureCapturedAt": "2026-11-17T07:50:19.620Z",
       "unavailableReason": null,
       "marketCoverage": {
-        "checkedAt": "2026-11-17T11:27:59.153448Z",
+        "checkedAt": "2026-11-17T12:08:34.799036Z",
         "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-17",
         "status": "matched",
         "books": [
@@ -2174,7 +2320,7 @@
           "sportsbook": "fanatics",
           "openingLine": 65.5,
           "latestLine": 67.5,
-          "capturedAt": "2026-11-17T11:27:59.153448Z",
+          "capturedAt": "2026-11-17T12:08:34.799036Z",
           "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-17",
           "closingVerified": false
         }
@@ -2206,22 +2352,58 @@
       "featureCapturedAt": "2026-11-17T07:50:19.620Z",
       "unavailableReason": null,
       "marketCoverage": {
-        "checkedAt": "2026-11-17T11:27:59.153448Z",
+        "checkedAt": "2026-11-17T12:08:34.799036Z",
         "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-17",
         "status": "matched",
         "books": [
           {
+            "sportsbook": "bet_rivers_co",
+            "status": "available"
+          },
+          {
             "sportsbook": "fanatics",
+            "status": "available"
+          },
+          {
+            "sportsbook": "fanduel",
+            "status": "available"
+          },
+          {
+            "sportsbook": "hardrock",
             "status": "available"
           }
         ]
       },
       "markets": [
         {
+          "sportsbook": "bet_rivers_co",
+          "openingLine": 73.5,
+          "latestLine": 73.5,
+          "capturedAt": "2026-11-17T12:08:34.799036Z",
+          "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-17",
+          "closingVerified": false
+        },
+        {
           "sportsbook": "fanatics",
           "openingLine": 73.5,
           "latestLine": 73.5,
-          "capturedAt": "2026-11-17T11:27:59.153448Z",
+          "capturedAt": "2026-11-17T12:08:34.799036Z",
+          "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-17",
+          "closingVerified": false
+        },
+        {
+          "sportsbook": "fanduel",
+          "openingLine": 72.5,
+          "latestLine": 72.5,
+          "capturedAt": "2026-11-17T12:08:34.799036Z",
+          "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-17",
+          "closingVerified": false
+        },
+        {
+          "sportsbook": "hardrock",
+          "openingLine": 73.5,
+          "latestLine": 73.5,
+          "capturedAt": "2026-11-17T12:08:34.799036Z",
           "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-17",
           "closingVerified": false
         }
@@ -2253,7 +2435,7 @@
       "featureCapturedAt": "2026-11-17T07:50:19.620Z",
       "unavailableReason": null,
       "marketCoverage": {
-        "checkedAt": "2026-11-17T11:27:59.153448Z",
+        "checkedAt": "2026-11-17T12:08:34.799036Z",
         "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-17",
         "status": "matched",
         "books": [
@@ -2268,7 +2450,7 @@
           "sportsbook": "fanatics",
           "openingLine": 78.5,
           "latestLine": 79.5,
-          "capturedAt": "2026-11-17T11:27:59.153448Z",
+          "capturedAt": "2026-11-17T12:08:34.799036Z",
           "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-17",
           "closingVerified": false
         }
@@ -2300,7 +2482,7 @@
       "featureCapturedAt": "2026-11-17T07:50:19.620Z",
       "unavailableReason": null,
       "marketCoverage": {
-        "checkedAt": "2026-11-17T11:27:59.153448Z",
+        "checkedAt": "2026-11-17T12:08:34.799036Z",
         "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-17",
         "status": "matched",
         "books": [
@@ -2315,7 +2497,7 @@
           "sportsbook": "fanatics",
           "openingLine": 64.5,
           "latestLine": 63.5,
-          "capturedAt": "2026-11-17T11:27:59.153448Z",
+          "capturedAt": "2026-11-17T12:08:34.799036Z",
           "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-17",
           "closingVerified": false
         }
@@ -2347,7 +2529,7 @@
       "featureCapturedAt": "2026-11-17T07:50:19.620Z",
       "unavailableReason": null,
       "marketCoverage": {
-        "checkedAt": "2026-11-17T11:27:59.153448Z",
+        "checkedAt": "2026-11-17T12:08:34.799036Z",
         "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-17",
         "status": "matched",
         "books": [
@@ -2362,7 +2544,7 @@
           "sportsbook": "fanatics",
           "openingLine": 62.5,
           "latestLine": 62.5,
-          "capturedAt": "2026-11-17T11:27:59.153448Z",
+          "capturedAt": "2026-11-17T12:08:34.799036Z",
           "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-17",
           "closingVerified": false
         }
@@ -2394,7 +2576,7 @@
       "featureCapturedAt": null,
       "unavailableReason": "One or both teams are outside the model's team-stat coverage.",
       "marketCoverage": {
-        "checkedAt": "2026-11-17T11:27:59.153448Z",
+        "checkedAt": "2026-11-17T12:08:34.799036Z",
         "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-17",
         "status": "matched",
         "books": []
@@ -2427,7 +2609,7 @@
       "featureCapturedAt": "2026-11-17T07:50:19.620Z",
       "unavailableReason": null,
       "marketCoverage": {
-        "checkedAt": "2026-11-17T11:27:59.153448Z",
+        "checkedAt": "2026-11-17T12:08:34.799036Z",
         "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-17",
         "status": "matched",
         "books": [
@@ -2442,7 +2624,7 @@
           "sportsbook": "fanatics",
           "openingLine": 76.5,
           "latestLine": 76.5,
-          "capturedAt": "2026-11-17T11:27:59.153448Z",
+          "capturedAt": "2026-11-17T12:08:34.799036Z",
           "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-17",
           "closingVerified": false
         }
@@ -2474,7 +2656,7 @@
       "featureCapturedAt": "2026-11-17T07:50:19.620Z",
       "unavailableReason": null,
       "marketCoverage": {
-        "checkedAt": "2026-11-17T11:27:59.153448Z",
+        "checkedAt": "2026-11-17T12:08:34.799036Z",
         "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-17",
         "status": "matched",
         "books": []
@@ -2507,7 +2689,7 @@
       "featureCapturedAt": null,
       "unavailableReason": "One or both teams are outside the model's team-stat coverage.",
       "marketCoverage": {
-        "checkedAt": "2026-11-17T11:27:59.153448Z",
+        "checkedAt": "2026-11-17T12:08:34.799036Z",
         "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-17",
         "status": "matched",
         "books": []
@@ -2540,7 +2722,7 @@
       "featureCapturedAt": "2026-11-17T07:50:19.620Z",
       "unavailableReason": null,
       "marketCoverage": {
-        "checkedAt": "2026-11-17T11:27:59.153448Z",
+        "checkedAt": "2026-11-17T12:08:34.799036Z",
         "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-17",
         "status": "matched",
         "books": [
@@ -2555,7 +2737,7 @@
           "sportsbook": "fanatics",
           "openingLine": 73.5,
           "latestLine": 73.5,
-          "capturedAt": "2026-11-17T11:27:59.153448Z",
+          "capturedAt": "2026-11-17T12:08:34.799036Z",
           "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-17",
           "closingVerified": false
         }
@@ -2587,7 +2769,7 @@
       "featureCapturedAt": "2026-11-17T07:50:19.620Z",
       "unavailableReason": null,
       "marketCoverage": {
-        "checkedAt": "2026-11-17T11:27:59.153448Z",
+        "checkedAt": "2026-11-17T12:08:34.799036Z",
         "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-17",
         "status": "matched",
         "books": [
@@ -2602,7 +2784,7 @@
           "sportsbook": "fanatics",
           "openingLine": 67.5,
           "latestLine": 67.5,
-          "capturedAt": "2026-11-17T11:27:59.153448Z",
+          "capturedAt": "2026-11-17T12:08:34.799036Z",
           "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-17",
           "closingVerified": false
         }
@@ -2634,7 +2816,7 @@
       "featureCapturedAt": "2026-11-17T07:50:19.620Z",
       "unavailableReason": null,
       "marketCoverage": {
-        "checkedAt": "2026-11-17T11:27:59.153448Z",
+        "checkedAt": "2026-11-17T12:08:34.799036Z",
         "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-17",
         "status": "matched",
         "books": [
@@ -2649,7 +2831,7 @@
           "sportsbook": "fanatics",
           "openingLine": 70.5,
           "latestLine": 70.5,
-          "capturedAt": "2026-11-17T11:27:59.153448Z",
+          "capturedAt": "2026-11-17T12:08:34.799036Z",
           "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-17",
           "closingVerified": false
         }
@@ -2681,7 +2863,7 @@
       "featureCapturedAt": "2026-11-17T07:50:19.620Z",
       "unavailableReason": null,
       "marketCoverage": {
-        "checkedAt": "2026-11-17T11:27:59.153448Z",
+        "checkedAt": "2026-11-17T12:08:34.799036Z",
         "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-17",
         "status": "matched",
         "books": [
@@ -2696,7 +2878,7 @@
           "sportsbook": "fanatics",
           "openingLine": 69.5,
           "latestLine": 70.5,
-          "capturedAt": "2026-11-17T11:27:59.153448Z",
+          "capturedAt": "2026-11-17T12:08:34.799036Z",
           "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-17",
           "closingVerified": false
         }
@@ -2728,7 +2910,7 @@
       "featureCapturedAt": "2026-11-17T07:50:19.620Z",
       "unavailableReason": null,
       "marketCoverage": {
-        "checkedAt": "2026-11-17T11:27:59.153448Z",
+        "checkedAt": "2026-11-17T12:08:34.799036Z",
         "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-17",
         "status": "matched",
         "books": []
@@ -2761,7 +2943,7 @@
       "featureCapturedAt": "2026-11-17T07:50:19.620Z",
       "unavailableReason": null,
       "marketCoverage": {
-        "checkedAt": "2026-11-17T11:27:59.153448Z",
+        "checkedAt": "2026-11-17T12:08:34.799036Z",
         "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-17",
         "status": "matched",
         "books": [
@@ -2776,7 +2958,7 @@
           "sportsbook": "fanatics",
           "openingLine": 71.5,
           "latestLine": 71.5,
-          "capturedAt": "2026-11-17T11:27:59.153448Z",
+          "capturedAt": "2026-11-17T12:08:34.799036Z",
           "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-17",
           "closingVerified": false
         }
@@ -2808,7 +2990,7 @@
       "featureCapturedAt": "2026-11-17T07:50:19.620Z",
       "unavailableReason": null,
       "marketCoverage": {
-        "checkedAt": "2026-11-17T11:27:59.153448Z",
+        "checkedAt": "2026-11-17T12:08:34.799036Z",
         "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-17",
         "status": "matched",
         "books": [
@@ -2823,7 +3005,7 @@
           "sportsbook": "fanatics",
           "openingLine": 73.5,
           "latestLine": 73.5,
-          "capturedAt": "2026-11-17T11:27:59.153448Z",
+          "capturedAt": "2026-11-17T12:08:34.799036Z",
           "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-17",
           "closingVerified": false
         }
@@ -2855,7 +3037,7 @@
       "featureCapturedAt": null,
       "unavailableReason": "One or both teams are outside the model's team-stat coverage.",
       "marketCoverage": {
-        "checkedAt": "2026-11-17T11:27:59.153448Z",
+        "checkedAt": "2026-11-17T12:08:34.799036Z",
         "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-17",
         "status": "not_matched",
         "books": []
@@ -2888,7 +3070,7 @@
       "featureCapturedAt": "2026-11-17T07:50:19.620Z",
       "unavailableReason": null,
       "marketCoverage": {
-        "checkedAt": "2026-11-17T11:27:59.153448Z",
+        "checkedAt": "2026-11-17T12:08:34.799036Z",
         "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-17",
         "status": "matched",
         "books": [
@@ -2903,7 +3085,7 @@
           "sportsbook": "fanatics",
           "openingLine": 70.5,
           "latestLine": 70.5,
-          "capturedAt": "2026-11-17T11:27:59.153448Z",
+          "capturedAt": "2026-11-17T12:08:34.799036Z",
           "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-17",
           "closingVerified": false
         }
@@ -2935,7 +3117,7 @@
       "featureCapturedAt": null,
       "unavailableReason": "One or both teams are outside the model's team-stat coverage.",
       "marketCoverage": {
-        "checkedAt": "2026-11-17T11:27:59.153448Z",
+        "checkedAt": "2026-11-17T12:08:34.799036Z",
         "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-17",
         "status": "matched",
         "books": []
@@ -2968,7 +3150,7 @@
       "featureCapturedAt": "2026-11-17T07:50:19.620Z",
       "unavailableReason": null,
       "marketCoverage": {
-        "checkedAt": "2026-11-17T11:27:59.153448Z",
+        "checkedAt": "2026-11-17T12:08:34.799036Z",
         "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-17",
         "status": "matched",
         "books": [
@@ -2983,7 +3165,7 @@
           "sportsbook": "fanatics",
           "openingLine": 69.5,
           "latestLine": 68.5,
-          "capturedAt": "2026-11-17T11:27:59.153448Z",
+          "capturedAt": "2026-11-17T12:08:34.799036Z",
           "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-17",
           "closingVerified": false
         }
@@ -3015,7 +3197,7 @@
       "featureCapturedAt": "2026-11-17T07:50:19.620Z",
       "unavailableReason": null,
       "marketCoverage": {
-        "checkedAt": "2026-11-17T11:27:59.153448Z",
+        "checkedAt": "2026-11-17T12:08:34.799036Z",
         "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-17",
         "status": "matched",
         "books": []
@@ -3048,7 +3230,7 @@
       "featureCapturedAt": "2026-11-17T07:50:19.620Z",
       "unavailableReason": null,
       "marketCoverage": {
-        "checkedAt": "2026-11-17T11:27:59.153448Z",
+        "checkedAt": "2026-11-17T12:08:34.799036Z",
         "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-17",
         "status": "matched",
         "books": [
@@ -3063,7 +3245,7 @@
           "sportsbook": "fanatics",
           "openingLine": 72.5,
           "latestLine": 71.5,
-          "capturedAt": "2026-11-17T11:27:59.153448Z",
+          "capturedAt": "2026-11-17T12:08:34.799036Z",
           "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-17",
           "closingVerified": false
         }
@@ -3095,7 +3277,7 @@
       "featureCapturedAt": "2026-11-17T07:50:19.620Z",
       "unavailableReason": null,
       "marketCoverage": {
-        "checkedAt": "2026-11-17T11:27:59.153448Z",
+        "checkedAt": "2026-11-17T12:08:34.799036Z",
         "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-17",
         "status": "matched",
         "books": [
@@ -3110,7 +3292,7 @@
           "sportsbook": "fanatics",
           "openingLine": 71.5,
           "latestLine": 71.5,
-          "capturedAt": "2026-11-17T11:27:59.153448Z",
+          "capturedAt": "2026-11-17T12:08:34.799036Z",
           "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-17",
           "closingVerified": false
         }
@@ -3142,7 +3324,7 @@
       "featureCapturedAt": "2026-11-17T07:50:19.620Z",
       "unavailableReason": null,
       "marketCoverage": {
-        "checkedAt": "2026-11-17T11:27:59.153448Z",
+        "checkedAt": "2026-11-17T12:08:34.799036Z",
         "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-17",
         "status": "matched",
         "books": [
@@ -3157,7 +3339,7 @@
           "sportsbook": "fanatics",
           "openingLine": 75.5,
           "latestLine": 70.5,
-          "capturedAt": "2026-11-17T11:27:59.153448Z",
+          "capturedAt": "2026-11-17T12:08:34.799036Z",
           "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-17",
           "closingVerified": false
         }
@@ -3189,7 +3371,7 @@
       "featureCapturedAt": "2026-11-17T07:50:19.620Z",
       "unavailableReason": null,
       "marketCoverage": {
-        "checkedAt": "2026-11-17T11:27:59.153448Z",
+        "checkedAt": "2026-11-17T12:08:34.799036Z",
         "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-17",
         "status": "matched",
         "books": [
@@ -3204,7 +3386,7 @@
           "sportsbook": "fanatics",
           "openingLine": 72.5,
           "latestLine": 72.5,
-          "capturedAt": "2026-11-17T11:27:59.153448Z",
+          "capturedAt": "2026-11-17T12:08:34.799036Z",
           "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-17",
           "closingVerified": false
         }
@@ -3236,7 +3418,7 @@
       "featureCapturedAt": "2026-11-17T07:50:19.620Z",
       "unavailableReason": null,
       "marketCoverage": {
-        "checkedAt": "2026-11-17T11:27:59.153448Z",
+        "checkedAt": "2026-11-17T12:08:34.799036Z",
         "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-17",
         "status": "matched",
         "books": [
@@ -3251,7 +3433,7 @@
           "sportsbook": "fanatics",
           "openingLine": 75.5,
           "latestLine": 74.5,
-          "capturedAt": "2026-11-17T11:27:59.153448Z",
+          "capturedAt": "2026-11-17T12:08:34.799036Z",
           "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-17",
           "closingVerified": false
         }
@@ -3283,7 +3465,7 @@
       "featureCapturedAt": "2026-11-17T07:50:19.620Z",
       "unavailableReason": null,
       "marketCoverage": {
-        "checkedAt": "2026-11-17T11:27:59.153448Z",
+        "checkedAt": "2026-11-17T12:08:34.799036Z",
         "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-17",
         "status": "matched",
         "books": [
@@ -3298,7 +3480,7 @@
           "sportsbook": "fanatics",
           "openingLine": 64.5,
           "latestLine": 64.5,
-          "capturedAt": "2026-11-17T11:27:59.153448Z",
+          "capturedAt": "2026-11-17T12:08:34.799036Z",
           "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-17",
           "closingVerified": false
         }
@@ -3330,7 +3512,7 @@
       "featureCapturedAt": null,
       "unavailableReason": "One or both teams are outside the model's team-stat coverage.",
       "marketCoverage": {
-        "checkedAt": "2026-11-17T11:27:59.153448Z",
+        "checkedAt": "2026-11-17T12:08:34.799036Z",
         "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-17",
         "status": "matched",
         "books": []
@@ -3363,7 +3545,7 @@
       "featureCapturedAt": "2026-11-17T07:50:19.620Z",
       "unavailableReason": null,
       "marketCoverage": {
-        "checkedAt": "2026-11-17T11:27:59.153448Z",
+        "checkedAt": "2026-11-17T12:08:34.799036Z",
         "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-17",
         "status": "matched",
         "books": [
@@ -3378,7 +3560,7 @@
           "sportsbook": "fanatics",
           "openingLine": 70.5,
           "latestLine": 69.5,
-          "capturedAt": "2026-11-17T11:27:59.153448Z",
+          "capturedAt": "2026-11-17T12:08:34.799036Z",
           "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-17",
           "closingVerified": false
         }
@@ -3410,7 +3592,7 @@
       "featureCapturedAt": null,
       "unavailableReason": "One or both teams are outside the model's team-stat coverage.",
       "marketCoverage": {
-        "checkedAt": "2026-11-17T11:27:59.153448Z",
+        "checkedAt": "2026-11-17T12:08:34.799036Z",
         "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-17",
         "status": "matched",
         "books": []
@@ -3443,7 +3625,7 @@
       "featureCapturedAt": "2026-11-17T07:50:19.620Z",
       "unavailableReason": null,
       "marketCoverage": {
-        "checkedAt": "2026-11-17T11:27:59.153448Z",
+        "checkedAt": "2026-11-17T12:08:34.799036Z",
         "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-17",
         "status": "matched",
         "books": [
@@ -3458,7 +3640,7 @@
           "sportsbook": "fanatics",
           "openingLine": 73.5,
           "latestLine": 73.5,
-          "capturedAt": "2026-11-17T11:27:59.153448Z",
+          "capturedAt": "2026-11-17T12:08:34.799036Z",
           "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-17",
           "closingVerified": false
         }
@@ -3490,7 +3672,7 @@
       "featureCapturedAt": "2026-11-17T07:50:19.620Z",
       "unavailableReason": null,
       "marketCoverage": {
-        "checkedAt": "2026-11-17T11:27:59.153448Z",
+        "checkedAt": "2026-11-17T12:08:34.799036Z",
         "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-17",
         "status": "not_matched",
         "books": []
@@ -4155,7 +4337,7 @@
     },
     {
       "date": "2026-11-16",
-      "checkedAt": "2026-11-17T07:50:11.869803Z",
+      "checkedAt": "2026-11-17T12:08:34.029437Z",
       "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-16",
       "boardGames": 33,
       "matchedGames": 33,
@@ -4213,7 +4395,7 @@
     },
     {
       "date": "2026-11-17",
-      "checkedAt": "2026-11-17T11:27:59.153448Z",
+      "checkedAt": "2026-11-17T12:08:34.799036Z",
       "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-17",
       "boardGames": 67,
       "matchedGames": 65,
@@ -4223,6 +4405,12 @@
           "sportsbook": "bet365",
           "sourceLines": 1,
           "importedLines": 1,
+          "unmatchedLines": 0
+        },
+        {
+          "sportsbook": "bet_rivers_co",
+          "sourceLines": 4,
+          "importedLines": 4,
           "unmatchedLines": 0
         },
         {
@@ -4245,8 +4433,14 @@
         },
         {
           "sportsbook": "fanduel",
-          "sourceLines": 1,
-          "importedLines": 1,
+          "sourceLines": 7,
+          "importedLines": 7,
+          "unmatchedLines": 0
+        },
+        {
+          "sportsbook": "hardrock",
+          "sourceLines": 5,
+          "importedLines": 5,
           "unmatchedLines": 0
         }
       ]
