@@ -1,5 +1,6 @@
 import { readFile, writeFile, mkdir, readdir, rename } from "node:fs/promises";
 import {createHash} from "node:crypto";
+import { prepareFeatureResearch } from "./lab-features.mjs";
 import { prepareLabResearch, publishRefereeOutcomes } from "./lab-research.mjs";
 
 export async function updateLabFiles(server, { feed, ledger, prior, priorPath, results, record, entryPolicy, directory = "public" }) {
@@ -51,7 +52,8 @@ export async function updateLabFiles(server, { feed, ledger, prior, priorPath, r
     snapshots.push({ path, data: datasetSchema.parse(await read(path)) });
   }
   const research = record ? await prepareLabResearch(server, { record, ledger, halves: raw.halves, directory, at }) : {};
-  let store = captureLab(old, config, feed, ledger, { prior, priorPath, snapshots, halves: raw.halves, excludedHistoryGames: raw.errors.map((error) => error.gameId), contextModel,contextModelPath, ...research }, at, entryPolicy);
+  const featureResearch = record ? await prepareFeatureResearch(server, { record, ledger, halves: raw.halves, excluded: raw.errors.map(error=>error.gameId), directory, at }) : {};
+  let store = captureLab(old, config, feed, ledger, { prior, priorPath, snapshots, halves: raw.halves, excludedHistoryGames: raw.errors.map((error) => error.gameId), contextModel,contextModelPath, ...research, ...featureResearch }, at, entryPolicy);
   const ids = new Set(store.forecasts.map((row) => row.gameId));
   const merge = { ...store, forecasts: [], results: results.filter((result) => ids.has(result.gameId)), halves: raw.halves.filter((half) => ids.has(half.gameId)) };
   store = model.mergeLabStores([store, merge], store.startedAt, at);

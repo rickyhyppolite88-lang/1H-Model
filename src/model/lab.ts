@@ -7,9 +7,11 @@ import {
 } from "./entryPolicy";
 import { foulExposureSchema } from "./foulExposure";
 import { contextForecastSchema } from "./gameContext";
+import { featureForecastSchema } from "./labFeatureSchema";
 import { researchForecastSchema } from "./labResearch";
 import {
   isAllForecastPaperMethod,
+  isFeaturePaperMethod,
   isPaperLabMethod,
   isRefereeLabMethod,
   isStakedLabStatus,
@@ -21,6 +23,28 @@ import { participantsSchema, reviewSchedule } from "./scheduleReview";
 import { easternTipoff } from "./time";
 
 export const labMethods = [
+  {
+    id: "opponent-paper-v5",
+    name: "Lab v5 · opponent strength",
+    kind: "total",
+    description:
+      "Actual plus an isolated correction for the strength of previously faced first-half defenses, with flat 1u paper entries.",
+    formula:
+      "Earlier-day D1 efficiency, jointly adjusted for opponents with four prior halves of shrinkage. Correct only the current-season share of Actual's 60% scoring branch; cap the total change at ±3 points.",
+    limits:
+      "Separate prospective research. At least 30 earlier league halves and one for each team, a current DraftKings quote and both side prices are required. 8+ point gaps remain review-only. Confidence is an uncalibrated model score. No venue, foul or referee effects are stacked.",
+  },
+  {
+    id: "shooting-paper-v6",
+    name: "Lab v6 · shooting regression",
+    kind: "total",
+    description:
+      "Actual plus an isolated test of unusually hot or cold three-point conversion, retaining shot volume and using flat 1u paper entries.",
+    formula:
+      "Shrink each team's observed 1H three-point percentage toward the earlier league rate with 50 prior attempts. Normalize volume for expected possessions; correct only the current-season share of the 60% scoring branch, capped at ±3 points.",
+    limits:
+      "Separate prospective research, not a measured shot-quality model. Fresh two-sided DraftKings prices and earlier team history are required. 8+ point gaps remain review-only. Confidence is a model score, not a win probability. No opponent, venue or referee correction is stacked.",
+  },
   {
     id: "market-paper-v3",
     name: "Lab v3 · all-forecast paper trial",
@@ -132,6 +156,8 @@ export const labMethods = [
   },
 ] as const;
 export const labMethodIds = [
+  "opponent-paper-v5",
+  "shooting-paper-v6",
   "market-paper-v3",
   "referee-paper-v4",
   "market-core-v3",
@@ -243,6 +269,7 @@ export const labForecastSchema = z
     context: contextForecastSchema.optional(),
     foulExposure: foulExposureSchema.optional(),
     research: researchForecastSchema.optional(),
+    feature: featureForecastSchema.optional(),
     participants: participantsSchema.optional(),
   })
   .superRefine((row, ctx) => {
@@ -251,6 +278,57 @@ export const labForecastSchema = z
         code: "custom",
         message: "Paper trial status requires a separate trial method",
       });
+    if (isFeaturePaperMethod(row.methodId)) {
+      const feature = row.feature;
+      if (
+        row.status === "qualified" ||
+        (feature &&
+          feature.paperUnits !== (row.status === "paper_test" ? 1 : 0))
+      )
+        ctx.addIssue({
+          code: "custom",
+          message:
+            "Component trials require paper labels and matching flat units",
+        });
+      if (
+        feature &&
+        (Date.parse(feature.fittedAt) > Date.parse(row.recordedAt) ||
+          (row.total !== null &&
+            row.baselineTotal !== null &&
+            Math.abs(row.total - row.baselineTotal - feature.adjustment) >
+              1e-6))
+      )
+        ctx.addIssue({
+          code: "custom",
+          message:
+            "Component adjustments must match the frozen total and predate capture",
+        });
+      if (
+        row.status === "paper_test" &&
+        (!feature ||
+          row.sportsbook !== "draftkings" ||
+          row.line === null ||
+          row.signalStrength === null ||
+          row.total === null ||
+          (row.side !== "OVER" && row.side !== "UNDER") ||
+          row.side !==
+            (row.total > row.line
+              ? "OVER"
+              : row.total < row.line
+                ? "UNDER"
+                : "PUSH") ||
+          [row.overPrice, row.underPrice].some(
+            (n) => n === null || !Number.isFinite(n) || Math.abs(n) < 100,
+          ) ||
+          Date.parse(row.recordedAt) >= Date.parse(row.startsAt))
+      )
+        ctx.addIssue({
+          code: "custom",
+          message:
+            "Component paper entries require frozen inputs, two valid prices, a numeric score and a prospective lean",
+        });
+      return;
+    }
     if (!isPaperLabMethod(row.methodId)) return;
     const research = row.research;
     if (

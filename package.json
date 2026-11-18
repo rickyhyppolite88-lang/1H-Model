@@ -14,7 +14,8 @@
     "markets:refresh": "python scripts/import_season_games.py && node scripts/evaluate-season.mjs",
     "audit:season": "node scripts/evaluate-season.mjs",
     "predictions:all": "node scripts/evaluate-season.mjs",
-    "predictions:refresh": "npm run data:refresh && npm run markets:refresh"
+    "predictions:refresh": "npm run data:refresh && npm run markets:refresh",
+    "lab:backtest": "node scripts/backtest-lab-features.mjs"
   },
   "dependencies": {
     "react": "^19.2.0",

@@ -1,4 +1,12 @@
+export const featurePaperMethods = [
+  "opponent-paper-v5",
+  "shooting-paper-v6",
+] as const;
+export type FeaturePaperMethod = (typeof featurePaperMethods)[number];
+export const isFeaturePaperMethod = (id: string): id is FeaturePaperMethod =>
+  featurePaperMethods.some((method) => method === id);
 export const allForecastPaperMethods = [
+  ...featurePaperMethods,
   "market-paper-v3",
   "referee-paper-v4",
 ] as const;

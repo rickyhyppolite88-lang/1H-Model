@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { z } from "zod";
+import FeatureResearch from "./FeatureResearch";
 import LabComponents from "./LabComponents";
 import LabTable from "./LabTable";
 import {
@@ -12,6 +13,7 @@ import {
 } from "./model/lab";
 import {
   isAllForecastPaperMethod,
+  isFeaturePaperMethod,
   isPaperLabMethod,
   isRefereeLabMethod,
 } from "./model/labVersions";
@@ -186,13 +188,16 @@ export default function Lab({ recordOnly = false }: { recordOnly?: boolean }) {
         <div>
           <h2>{recordOnly ? "Lab prediction record" : "The Lab"}</h2>
           <p>
-            V3/V4 test usable pregame forecasts at 1u paper each. These are
-            research trials, not qualified bets. Confidence is unvalidated.
+            Each paper version tests one approach at 1u per usable pregame
+            forecast. These are research trials, not qualified bets. Confidence
+            is unvalidated.
           </p>
         </div>
       </div>
       <fieldset className="lab-version-tabs" aria-label="Lab versions">
         {[
+          ["opponent-paper-v5", "Lab v5", "Opponent strength"],
+          ["shooting-paper-v6", "Lab v6", "Shooting regression"],
           ["market-paper-v3", "Lab v3", "1u paper trial"],
           ["referee-paper-v4", "Lab v4", "Referee paper trial"],
           ["enhanced-baseline-v2", "Lab v2", "Venue & fouls"],
@@ -200,6 +205,7 @@ export default function Lab({ recordOnly = false }: { recordOnly?: boolean }) {
           <button
             type="button"
             key={id}
+            aria-label={`${title} ${description}`}
             aria-pressed={method === id}
             onClick={() => {
               setMethod(labMethodIdSchema.parse(id));
@@ -246,6 +252,7 @@ export default function Lab({ recordOnly = false }: { recordOnly?: boolean }) {
       </div>
 
       {isRefereeLabMethod(method) && <RefereeResearch />}
+      {isFeaturePaperMethod(method) && <FeatureResearch method={method} />}
       {error && (
         <div className="notice error" role="alert">
           {error}
@@ -272,9 +279,7 @@ export default function Lab({ recordOnly = false }: { recordOnly?: boolean }) {
       <div className={recordOnly ? "record-dashboard" : undefined}>
         {recordOnly && !bonus && (
           <UnitCalendar
-            label={
-              paper ? (isRefereeLabMethod(method) ? "Lab v4" : "Lab v3") : "Lab"
-            }
+            label={paper ? definition.name.split(" · ")[0] : "Lab"}
             paper={paper}
             combined={paper}
             plays={(calendarPlays ?? []).filter(
