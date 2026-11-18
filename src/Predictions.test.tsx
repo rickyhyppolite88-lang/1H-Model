@@ -1,6 +1,5 @@
 // @vitest-environment jsdom
 
-import { Blob as NodeBlob } from "node:buffer";
 import {
   act,
   cleanup,
@@ -377,19 +376,9 @@ it("provides dated downloads and automatically checks for updated predictions", 
     name: "First-half lines & predictions",
   });
   const latest = archive.archives[0];
+  expect(screen.queryByRole("link", { name: /CSV|JSON/ })).toBeNull();
   expect(
-    screen.getByRole("link", { name: "Daily CSV ↓" }).getAttribute("href"),
-  ).toContain(latest.csvPath);
-  expect(
-    screen.getByRole("link", { name: "Daily JSON ↓" }).getAttribute("href"),
-  ).toContain(latest.jsonPath);
-  expect(
-    screen
-      .getByRole("link", { name: "Daily team review Excel ↓" })
-      .getAttribute("href"),
-  ).toContain(latest.teamXlsxPath);
-  expect(
-    screen.getByRole("link", { name: "Daily Excel ↓" }).getAttribute("href"),
+    screen.getByRole("link", { name: "Excel workbook ↓" }).getAttribute("href"),
   ).toContain(latest.xlsxPath);
   await waitFor(() => expect(fetcher).toHaveBeenCalledTimes(3));
   await act(async () => {
@@ -398,7 +387,7 @@ it("provides dated downloads and automatically checks for updated predictions", 
   await waitFor(() => expect(fetcher).toHaveBeenCalledTimes(6));
 });
 
-it("ranks Top 10 edges after date/tipoff filters, updates for the book, exports and restores the view", async () => {
+it("ranks Top 10 edges after date/tipoff filters, updates for the book and restores the view", async () => {
   const feed = todayFixture();
   const base = feed.predictions[0];
   feed.predictions = Array.from({ length: 12 }, (_, index) => {
@@ -444,19 +433,6 @@ it("ranks Top 10 edges after date/tipoff filters, updates for the book, exports 
       json: async () => responseFor(url, feed),
     })),
   );
-  let exported: NodeBlob | undefined;
-  vi.stubGlobal("Blob", NodeBlob);
-  vi.stubGlobal(
-    "URL",
-    class extends URL {
-      static createObjectURL(blob: Blob | MediaSource) {
-        exported = blob as unknown as NodeBlob;
-        return "blob:top10";
-      }
-      static revokeObjectURL = vi.fn();
-    },
-  );
-  vi.spyOn(HTMLAnchorElement.prototype, "click").mockImplementation(() => {});
   const view = render(<Predictions />);
   let table = await screen.findByRole("table", { name: "Matchup predictions" });
   const names = () =>
@@ -476,13 +452,7 @@ it("ranks Top 10 edges after date/tipoff filters, updates for the book, exports 
   expect(names()[0]).toContain("Edge 12");
   expect(within(table).getByText("Edge 3")).toBeTruthy();
   expect(within(table).queryByText("Started outlier")).toBeNull();
-  fireEvent.click(
-    screen.getByRole("button", { name: /Download filtered 10 rows/ }),
-  );
-  const csv = await exported?.text();
-  expect(csv?.trim().split("\r\n")).toHaveLength(11);
-  expect(csv?.split("\r\n")[1]).toContain("edge-12,");
-  expect(csv).not.toContain("started,");
+  expect(screen.queryByRole("button", { name: /CSV/ })).toBeNull();
   fireEvent.change(screen.getByLabelText("Sportsbook"), {
     target: { value: "draftkings" },
   });
@@ -513,7 +483,7 @@ it("ranks Top 10 edges after date/tipoff filters, updates for the book, exports 
   ).toBe(false);
 });
 
-it("combines Top 25 with a conference and exports matching rows beyond the first page", async () => {
+it("combines Top 25 with a conference and preserves the daily workbook", async () => {
   const feed = todayFixture();
   const base = feed.predictions[0];
   feed.predictions = Array.from({ length: 30 }, (_, index) => ({
@@ -544,20 +514,6 @@ it("combines Top 25 with a conference and exports matching rows beyond the first
       json: async () => responseFor(url, feed),
     })),
   );
-  let exported: NodeBlob | undefined;
-  const revoke = vi.fn();
-  vi.stubGlobal("Blob", NodeBlob);
-  vi.stubGlobal(
-    "URL",
-    class extends URL {
-      static createObjectURL(blob: Blob | MediaSource) {
-        exported = blob as unknown as NodeBlob;
-        return "blob:test";
-      }
-      static revokeObjectURL = revoke;
-    },
-  );
-  vi.spyOn(HTMLAnchorElement.prototype, "click").mockImplementation(() => {});
   render(<Predictions />);
   await screen.findByRole("heading", {
     name: "First-half lines & predictions",
@@ -578,20 +534,13 @@ it("combines Top 25 with a conference and exports matching rows beyond the first
   expect(
     screen.getAllByTitle("Eastern Time (EST)")[0].getAttribute("datetime"),
   ).toBe("2026-11-04T00:00:00Z");
-  fireEvent.click(
-    screen.getByRole("button", { name: /Download filtered 30 rows/ }),
-  );
-  const csv = await exported?.text();
-  expect(csv?.trim().split("\r\n")).toHaveLength(31);
-  expect(csv).toContain("ranked-29");
-  expect(csv).not.toContain("unranked");
-  expect(revoke).toHaveBeenCalledWith("blob:test");
+  expect(screen.queryByRole("button", { name: /CSV/ })).toBeNull();
   expect(
     screen.getByRole("link", { name: "Excel workbook ↓" }).getAttribute("href"),
   ).toContain("data/daily/2026-11-03/predictions.xlsx");
 });
 
-it("lists projections, provides code/feed links, and keeps the complete CSV available while filtering", async () => {
+it("keeps projection filters available without raw feed and CSV controls", async () => {
   const feed = todayFixture();
   vi.stubGlobal(
     "fetch",
@@ -605,21 +554,12 @@ it("lists projections, provides code/feed links, and keeps the complete CSV avai
     name: "First-half lines & predictions",
   });
   expect(
-    screen
-      .getByRole("link", { name: /Projection formula/ })
-      .getAttribute("href"),
-  ).toBe(feed.source.projectionCode);
-  expect(
-    screen.getByRole("link", { name: /JSON feed/ }).getAttribute("href"),
-  ).toContain("predictions.json");
+    screen.queryByRole("link", { name: /Projection formula|JSON feed/ }),
+  ).toBeNull();
   fireEvent.change(screen.getByLabelText("Projection coverage"), {
     target: { value: "unavailable" },
   });
-  expect(
-    screen.getByRole("button", {
-      name: `Download ${feed.counts.matchups} games for 2026-11-03 · CSV ↓`,
-    }),
-  ).toBeTruthy();
+  expect(screen.queryByRole("button", { name: /CSV/ })).toBeNull();
   expect(
     screen.getByText(new RegExp(`of ${feed.counts.unavailable} matches`)),
   ).toBeTruthy();
@@ -663,7 +603,7 @@ it("defaults to today's Eastern slate and changes the table and downloads togeth
     (screen.getByLabelText("Game date (ET)") as HTMLSelectElement).value,
   ).toBe("today");
   expect(
-    screen.getByRole("link", { name: "Daily Excel ↓" }).getAttribute("href"),
+    screen.getByRole("link", { name: "Excel workbook ↓" }).getAttribute("href"),
   ).toContain("/2026-11-03/");
   fireEvent.change(screen.getByLabelText("Game date (ET)"), {
     target: { value: "2026-11-02" },
@@ -674,7 +614,7 @@ it("defaults to today's Eastern slate and changes the table and downloads togeth
   expect(screen.getByText("Yesterday team")).toBeTruthy();
   expect(screen.queryByText("Early team")).toBeNull();
   expect(
-    screen.getByRole("link", { name: "Daily Excel ↓" }).getAttribute("href"),
+    screen.getByRole("link", { name: "Excel workbook ↓" }).getAttribute("href"),
   ).toContain("/2026-11-02/");
   expect(
     screen.getByRole("link", { name: "Excel workbook ↓" }).getAttribute("href"),
@@ -684,7 +624,7 @@ it("defaults to today's Eastern slate and changes the table and downloads togeth
   expect(screen.queryByText("Yesterday team")).toBeNull();
 });
 
-it("toggles tipoff groups and exports only the selected date and group", async () => {
+it("toggles tipoff groups without redundant export controls", async () => {
   vi.setSystemTime(new Date("2026-11-03T23:30:00Z"));
   const feed = todayFixture();
   feed.predictions.push({
@@ -700,24 +640,6 @@ it("toggles tipoff groups and exports only the selected date and group", async (
       json: async () => responseFor(url, feed),
     })),
   );
-  let exported: NodeBlob | undefined;
-  vi.stubGlobal("Blob", NodeBlob);
-  vi.stubGlobal(
-    "URL",
-    class extends URL {
-      static createObjectURL(blob: Blob | MediaSource) {
-        exported = blob as unknown as NodeBlob;
-        return "blob:test";
-      }
-      static revokeObjectURL() {}
-    },
-  );
-  let filename: string | undefined;
-  vi.spyOn(HTMLAnchorElement.prototype, "click").mockImplementation(function (
-    this: HTMLAnchorElement,
-  ) {
-    filename = this.download;
-  });
   render(<Predictions />);
   await screen.findByRole("heading", { name: "Today’s 1H lines" });
   expect(screen.getByRole("button", { name: "All games 3" })).toBeTruthy();
@@ -728,13 +650,7 @@ it("toggles tipoff groups and exports only the selected date and group", async (
   expect(screen.getByText("No feed line")).toBeTruthy();
   expect(screen.queryByText("Early team")).toBeNull();
   expect(screen.queryByText("Postponed team")).toBeNull();
-  fireEvent.click(
-    screen.getByRole("button", { name: /Download filtered 1 rows/ }),
-  );
-  const csv = await exported?.text();
-  expect(csv).toContain("today-late");
-  expect(csv).not.toContain("today-early");
-  expect(filename).toContain("2026-11-03-upcoming");
+  expect(screen.queryByRole("button", { name: /CSV/ })).toBeNull();
   fireEvent.click(screen.getByRole("button", { name: "Tipped off 1" }));
   expect(screen.getByText("Early team")).toBeTruthy();
   expect(screen.queryByText("Late team")).toBeNull();
@@ -784,18 +700,14 @@ it("follows Eastern midnight and never falls back to an earlier day's games or f
     vi.advanceTimersByTime(60 * 1000);
   });
   expect(screen.queryByText("Early team")).toBeNull();
-  expect(screen.queryByRole("link", { name: "Daily Excel ↓" })).toBeNull();
+  expect(screen.queryByRole("link", { name: "Excel workbook ↓" })).toBeNull();
   expect(
     screen.getByText(/No dated downloads are available for 2026-11-04/),
   ).toBeTruthy();
   expect(screen.getByRole("status").textContent).toContain(
     "Today’s schedule has not been published yet",
   );
-  expect(
-    screen.getByRole("button", {
-      name: "Download 0 games for 2026-11-04 · CSV ↓",
-    }),
-  ).toBeTruthy();
+  expect(screen.queryByRole("button", { name: /CSV/ })).toBeNull();
 });
 
 it("changes the displayed record with the game date and explains data gaps", async () => {

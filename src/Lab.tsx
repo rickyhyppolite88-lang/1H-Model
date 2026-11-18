@@ -9,9 +9,12 @@ import {
   labMethodIdSchema,
   labMethods,
   labSummary,
-  labToCsv,
 } from "./model/lab";
-import { isPaperLabMethod } from "./model/labVersions";
+import {
+  isAllForecastPaperMethod,
+  isPaperLabMethod,
+  isRefereeLabMethod,
+} from "./model/labVersions";
 import { easternTipoff, tipoffState } from "./model/time";
 import { hasUnitStake, labUnitPlay } from "./model/units";
 import RefereeResearch from "./RefereeResearch";
@@ -36,9 +39,9 @@ export default function Lab({ recordOnly = false }: { recordOnly?: boolean }) {
     error: unitError,
   } = useUnitLedger();
   const [chosenMethod, setMethod] = usePreference(
-    "lab.method.v4",
+    "lab.method.v5",
     labMethodIdSchema,
-    "market-core-v3",
+    "market-paper-v3",
   );
   const method =
     recordOnly && chosenMethod === "bonus-exposure-v1"
@@ -75,6 +78,7 @@ export default function Lab({ recordOnly = false }: { recordOnly?: boolean }) {
       .sort()[0];
   const bonus = definition.kind === "bonus";
   const paper = isPaperLabMethod(method);
+  const trial = isAllForecastPaperMethod(method);
   const enabled =
     index?.config.methods.find((entry) => entry.id === method)?.enabled ??
     false;
@@ -126,7 +130,9 @@ export default function Lab({ recordOnly = false }: { recordOnly?: boolean }) {
     .sort((a, b) => {
       if (!recordOnly) {
         const priority = (row: LabForecast) =>
-          row.status === "qualified" || row.status === "control"
+          row.status === "qualified" ||
+          row.status === "control" ||
+          row.status === "paper_test"
             ? 0
             : row.status === "watch_only"
               ? 1
@@ -150,7 +156,17 @@ export default function Lab({ recordOnly = false }: { recordOnly?: boolean }) {
     store && (!recordOnly || unitLedger)
       ? labSummary(summaryRows, store)
       : null;
-  const pages = Math.max(1, Math.ceil(rows.length / 25));
+  const displayRows = recordOnly
+    ? rows
+    : rows.filter((row) =>
+        ["paper_test", "qualified", "control"].includes(row.status),
+      );
+  const blockedRows = recordOnly
+    ? []
+    : rows.filter(
+        (row) => !["paper_test", "qualified", "control"].includes(row.status),
+      );
+  const pages = Math.max(1, Math.ceil(displayRows.length / 25));
   const safePage = Math.min(page, pages - 1);
   const dates = [
     ...new Set([
@@ -161,30 +177,6 @@ export default function Lab({ recordOnly = false }: { recordOnly?: boolean }) {
   ]
     .sort()
     .reverse();
-  const exportCsv = () => {
-    if (!store) return;
-    const url = URL.createObjectURL(
-      new Blob(
-        [
-          "\uFEFF",
-          labToCsv({
-            ...store,
-            forecasts: (recordOnly ? summaryRows : forecasts).filter(
-              (row) => date === "all" || row.gameDate === date,
-            ),
-          }),
-        ],
-        {
-          type: "text/csv;charset=utf-8",
-        },
-      ),
-    );
-    const link = document.createElement("a");
-    link.href = url;
-    link.download = `1h-lab-${method}-${date}.csv`;
-    link.click();
-    URL.revokeObjectURL(url);
-  };
   return (
     <section
       className={`panel lab-panel${recordOnly ? " lab-record-panel" : ""}`}
@@ -194,17 +186,15 @@ export default function Lab({ recordOnly = false }: { recordOnly?: boolean }) {
         <div>
           <h2>{recordOnly ? "Lab prediction record" : "The Lab"}</h2>
           <p>
-            Separate versioned experiments with frozen pregame inputs.
-            Confidence in earlier versions is a model score; v3/v4 probabilities
-            are unvalidated research estimates. Qualified v3/v4 plays use flat
-            1u paper stakes.
+            V3/V4 test usable pregame forecasts at 1u paper each. These are
+            research trials, not qualified bets. Confidence is unvalidated.
           </p>
         </div>
       </div>
       <fieldset className="lab-version-tabs" aria-label="Lab versions">
         {[
-          ["market-core-v3", "Lab v3", "Market benchmark"],
-          ["referee-core-v4", "Lab v4", "Referee research"],
+          ["market-paper-v3", "Lab v3", "1u paper trial"],
+          ["referee-paper-v4", "Lab v4", "Referee paper trial"],
           ["enhanced-baseline-v2", "Lab v2", "Venue & fouls"],
         ].map(([id, title, description]) => (
           <button
@@ -222,31 +212,6 @@ export default function Lab({ recordOnly = false }: { recordOnly?: boolean }) {
         ))}
       </fieldset>
       <div className="lab-controls">
-        <details className="lab-version-control">
-          <summary>Lab version & history</summary>
-          <label>
-            Lab version
-            <select
-              value={method}
-              onChange={(event) => {
-                setMethod(labMethodIdSchema.parse(event.target.value));
-                setPage(0);
-              }}
-            >
-              {labMethods
-                .filter((entry) => !recordOnly || entry.kind !== "bonus")
-                .map((entry) => (
-                  <option key={entry.id} value={entry.id}>
-                    {entry.name}
-                    {isPaperLabMethod(entry.id) ||
-                    entry.id === "enhanced-baseline-v2"
-                      ? ""
-                      : " (previous experiment)"}
-                  </option>
-                ))}
-            </select>
-          </label>
-        </details>
         <label>
           {recordOnly ? "Lab daily breakdown (ET)" : "Lab game date (ET)"}
           <select
@@ -278,81 +243,9 @@ export default function Lab({ recordOnly = false }: { recordOnly?: boolean }) {
             }}
           />
         </label>
-        <button
-          type="button"
-          className="secondary-button"
-          onClick={exportCsv}
-          disabled={!store}
-        >
-          Download Lab CSV ↓
-        </button>
-        {recordOnly && (
-          <a
-            className="secondary-button"
-            href={`${import.meta.env.BASE_URL}data/lab-units.csv`}
-            download="1h-lab-units.csv"
-          >
-            All Lab unit plays CSV ↓
-          </a>
-        )}
       </div>
-      <details
-        className="lab-method-card"
-        aria-label="Research method description"
-      >
-        <summary className="lab-method-heading">
-          <h3>{definition.name}</h3>
-          <span>
-            {index
-              ? enabled
-                ? "Collecting"
-                : "Collection paused"
-              : "Loading status…"}
-          </span>
-          <small>Method details ▾</small>
-        </summary>
-        <p>{definition.description}</p>
-        <p>
-          <strong>Method:</strong> {definition.formula}
-        </p>
-        <p>{definition.limits}</p>
-        <details>
-          <summary>Method controls & data sources</summary>
-          <p>
-            Pausing stops new forecasts for this method. Previously saved
-            forecasts and their results remain available and continue to grade.
-          </p>
-          <a
-            href="https://github.com/rickyhyppolite88-lang/1H-Model/actions/workflows/pages.yml"
-            target="_blank"
-            rel="noreferrer"
-          >
-            Pause / resume shared collection (owner) ↗
-          </a>
-          <p>
-            Use Run workflow, select this method in lab_method and enable or
-            disable in lab_action. The completed run publishes the shared
-            setting.
-          </p>
-          <p>
-            Sources: archived TeamRankings inputs, captured sportsbook
-            first-half totals, and reconciled ESPN first-half results. Bonus
-            measurements use logged nontechnical fouls and remain approximate.
-          </p>
-          <p>
-            {index?.rawCoverage.games ?? "—"} reconciled raw first halves ·{" "}
-            {index?.rawCoverage.errors ?? "—"} raw data gaps.{" "}
-            <a
-              href={`${import.meta.env.BASE_URL}data/lab-halves.json`}
-              target="_blank"
-              rel="noreferrer"
-            >
-              Raw measurements & gaps ↗
-            </a>
-          </p>
-        </details>
-      </details>
-      {method === "referee-core-v4" && <RefereeResearch />}
+
+      {isRefereeLabMethod(method) && <RefereeResearch />}
       {error && (
         <div className="notice error" role="alert">
           {error}
@@ -380,11 +273,7 @@ export default function Lab({ recordOnly = false }: { recordOnly?: boolean }) {
         {recordOnly && !bonus && (
           <UnitCalendar
             label={
-              paper
-                ? method === "market-core-v3"
-                  ? "Lab v3"
-                  : "Lab v4"
-                : "Lab"
+              paper ? (isRefereeLabMethod(method) ? "Lab v4" : "Lab v3") : "Lab"
             }
             paper={paper}
             combined={paper}
@@ -454,7 +343,9 @@ export default function Lab({ recordOnly = false }: { recordOnly?: boolean }) {
                       ? "League baseline MAE"
                       : recordOnly
                         ? "Staked plays"
-                        : "Qualified / control forecasts"}
+                        : trial
+                          ? "1u paper trial entries"
+                          : "Qualified / control forecasts"}
                   </span>
                   <strong>
                     {bonus
@@ -485,8 +376,8 @@ export default function Lab({ recordOnly = false }: { recordOnly?: boolean }) {
                 <p className="inline-note">
                   Matched baseline on the same saved lines:{" "}
                   {summary.baselineWins}–{summary.baselineLosses}. Point MAE on
-                  settled qualified/control games: Lab{" "}
-                  {show(summary.matchedMae)} · baseline{" "}
+                  settled {trial ? "paper trial" : "qualified/control"} games:
+                  Lab {show(summary.matchedMae)} · baseline{" "}
                   {show(summary.matchedBaselineMae)}. Watch-only forecasts do
                   not enter this win rate; pushes are excluded. All projected
                   games MAE: {show(summary.mae)}.
@@ -497,7 +388,9 @@ export default function Lab({ recordOnly = false }: { recordOnly?: boolean }) {
                 record.{" "}
                 {recordOnly
                   ? "Only completed first halves with a recorded or replayed stake appear below."
-                  : "The table shows the latest saved pregame observations. Future records freeze the last pre-tip decision; earlier games keep their original entry. Watch-only decisions remain research and receive no stake."}
+                  : trial
+                    ? "Every usable pregame forecast receives 1u paper, including estimates below break-even. The latest usable pre-tip snapshot counts once; the earlier return filter is not used. Missing inputs receive no stake."
+                    : "The table shows the latest saved pregame observations. Future records freeze the last pre-tip decision; earlier games keep their original entry. Watch-only decisions remain research and receive no stake."}
               </p>
             </section>
           </details>
@@ -506,7 +399,7 @@ export default function Lab({ recordOnly = false }: { recordOnly?: boolean }) {
       {store && (!recordOnly || unitLedger) ? (
         <>
           {method === "enhanced-baseline-v2" && (
-            <LabComponents forecasts={summaryRows} store={store} date={date} />
+            <LabComponents forecasts={summaryRows} store={store} />
           )}
           {method === "enhanced-baseline-v2" && summary && (
             <details className="lab-calibration">
@@ -529,18 +422,20 @@ export default function Lab({ recordOnly = false }: { recordOnly?: boolean }) {
           <h3>
             {recordOnly
               ? "Finished Lab staked plays"
-              : "Upcoming research forecasts"}
+              : trial
+                ? "Today’s paper plays"
+                : "Upcoming research plays"}
           </h3>
           <LabTable
-            rows={rows.slice(safePage * 25, (safePage + 1) * 25)}
+            rows={displayRows.slice(safePage * 25, (safePage + 1) * 25)}
             store={store}
             bonus={bonus}
             unitPlays={recordOnly ? unitMap : undefined}
           />
           <div className="prediction-pagination">
             <span>
-              {rows.length} {recordOnly ? "finished" : "upcoming"} research
-              forecasts
+              {displayRows.length} {recordOnly ? "finished" : "upcoming"}{" "}
+              research plays
             </span>
             <div className="button-group">
               <button
@@ -561,6 +456,23 @@ export default function Lab({ recordOnly = false }: { recordOnly?: boolean }) {
               </button>
             </div>
           </div>
+          {blockedRows.length > 0 && (
+            <details className="lab-blocked">
+              <summary>
+                {blockedRows.length} games waiting for inputs or on watch
+              </summary>
+              <ul>
+                {blockedRows.map((row) => (
+                  <li key={row.id}>
+                    <strong>
+                      {row.awayTeam} at {row.homeTeam}
+                    </strong>
+                    <span>{row.reason}</span>
+                  </li>
+                ))}
+              </ul>
+            </details>
+          )}
           {recordOnly && !rows.length && (
             <p className="inline-note">
               No finished staked plays have been recorded for this Lab method
@@ -596,7 +508,9 @@ export default function Lab({ recordOnly = false }: { recordOnly?: boolean }) {
                           (low === 75
                             ? row.signalStrength <= 100
                             : row.signalStrength < low + 25) &&
-                          ["qualified", "control"].includes(row.status),
+                          ["qualified", "control", "paper_test"].includes(
+                            row.status,
+                          ),
                       );
                       const grades = band.map((row) => gradeLab(row, store));
                       const w = grades.filter(
@@ -629,6 +543,52 @@ export default function Lab({ recordOnly = false }: { recordOnly?: boolean }) {
       ) : index && !error ? (
         <p className="empty-state">Loading the selected Lab history…</p>
       ) : null}
+      <details
+        className="lab-method-card"
+        aria-label="Research method description"
+      >
+        <summary className="lab-method-heading">
+          <h3>{definition.name}</h3>
+          <span>
+            {index
+              ? enabled
+                ? "Collecting"
+                : "Collection paused"
+              : "Loading status…"}
+          </span>
+          <small>Method details ▾</small>
+        </summary>
+        <p>{definition.description}</p>
+        <p>
+          <strong>Method:</strong> {definition.formula}
+        </p>
+        <p>{definition.limits}</p>
+      </details>
+      <details className="lab-version-control">
+        <summary>Earlier trials</summary>
+        <label>
+          Lab version
+          <select
+            value={method}
+            onChange={(event) => {
+              setMethod(labMethodIdSchema.parse(event.target.value));
+              setPage(0);
+            }}
+          >
+            {labMethods
+              .filter((entry) => !recordOnly || entry.kind !== "bonus")
+              .map((entry) => (
+                <option key={entry.id} value={entry.id}>
+                  {entry.name}
+                  {isAllForecastPaperMethod(entry.id) ||
+                  entry.id === "enhanced-baseline-v2"
+                    ? ""
+                    : " (previous experiment)"}
+                </option>
+              ))}
+          </select>
+        </label>
+      </details>
     </section>
   );
 }

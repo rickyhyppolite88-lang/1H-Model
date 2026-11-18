@@ -7,7 +7,11 @@ import GameCardRow from "./GameCardRow";
 import GameTime from "./GameTime";
 import { usesTipoffEntry, verifiedTipoffQuote } from "./model/entryPolicy";
 import { gradeLab, type LabForecast, type LabStore } from "./model/lab";
-import { isPaperLabMethod } from "./model/labVersions";
+import {
+  isPaperLabMethod,
+  isRefereeLabMethod,
+  isStakedLabStatus,
+} from "./model/labVersions";
 import { sportsbookNames } from "./model/marketCoverage";
 import { labRating } from "./model/ratingDisplay";
 import { scheduleMessages } from "./model/scheduleReview";
@@ -70,6 +74,7 @@ export default function LabTable({
                 store.entryPolicy,
               );
             const status = {
+              paper_test: "Paper trial",
               control: "Control",
               qualified: "Qualified research",
               watch_only: "Watch only",
@@ -141,9 +146,9 @@ export default function LabTable({
                   data-label="Research decision"
                 >
                   <span
-                    className={`lean-badge lean-${row.status === "qualified" || row.status === "control" ? row.side?.toLowerCase() : "missing"}`}
+                    className={`lean-badge lean-${isStakedLabStatus(row.status) || row.status === "control" ? row.side?.toLowerCase() : "missing"}`}
                   >
-                    {row.status === "qualified" || row.status === "control"
+                    {isStakedLabStatus(row.status) || row.status === "control"
                       ? (row.side ?? status)
                       : row.status === "watch_only" && row.side
                         ? `${row.side} · watch`
@@ -166,7 +171,9 @@ export default function LabTable({
                   )}
                   {!bonus && isPaperLabMethod(row.methodId) && (
                     <small className="unit-suggestion">
-                      {row.status === "qualified" ? "1u paper" : "0u · Watch"}
+                      {isStakedLabStatus(row.status)
+                        ? "1u paper"
+                        : "0u · Watch"}
                     </small>
                   )}
                   {!bonus && !isPaperLabMethod(row.methodId) && (
@@ -179,11 +186,11 @@ export default function LabTable({
                           : "0u · Watch"}
                     </small>
                   )}
-                  {row.research && row.status !== "qualified" && (
+                  {row.research && !isStakedLabStatus(row.status) && (
                     <small className="unit-check-note card-detail">
                       {row.reason.includes("15 minutes")
                         ? "Awaiting pre-tip check"
-                        : row.methodId === "referee-core-v4" &&
+                        : isRefereeLabMethod(row.methodId) &&
                             row.research.probability === null
                           ? "Referee inputs pending"
                           : row.status === "data_gap"
@@ -252,7 +259,7 @@ export default function LabTable({
                         Confidence is an unvalidated probability estimate,
                         distinct from the earlier Lab signal score.
                       </p>
-                      {row.methodId === "referee-core-v4" && (
+                      {isRefereeLabMethod(row.methodId) && (
                         <>
                           <p>
                             Crew:{" "}

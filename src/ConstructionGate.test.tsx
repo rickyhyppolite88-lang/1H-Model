@@ -5,6 +5,7 @@ import {
   fireEvent,
   render,
   screen,
+  waitFor,
 } from "@testing-library/react";
 import { useEffect } from "react";
 import { afterEach, beforeEach, expect, it, vi } from "vitest";
@@ -78,7 +79,7 @@ it("opens the private entry and unmounts it when returning to the regular link",
     </ConstructionGate>,
   );
   expect(await screen.findByLabelText("Admin password")).toBeTruthy();
-  expect(mount).toHaveBeenCalledTimes(1);
+  await waitFor(() => expect(mount).toHaveBeenCalledTimes(1));
   history.replaceState(null, "", "/");
   fireEvent(window, new HashChangeEvent("hashchange"));
   await act(async () => {});

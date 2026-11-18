@@ -134,7 +134,7 @@ function labResponse(url: string, index: LabIndex, store: LabStore) {
 beforeEach(() => {
   localStorage.clear();
   localStorage.setItem(
-    "1h-model-view-v1:lab.method.v4",
+    "1h-model-view-v1:lab.method.v5",
     JSON.stringify({
       value: "enhanced-baseline-v2",
       savedAt: Date.parse("2026-11-02T22:00:00Z"),
@@ -164,12 +164,11 @@ it("shows upcoming research and explicit method descriptions without probability
   expect(within(table).getByText("Team A")).toBeTruthy();
   expect(within(table).queryByText("Finished team")).toBeNull();
   expect(screen.getByText(/1.5 ≤ absolute edge < 8/)).toBeTruthy();
-  expect(screen.getByText(/earlier versions is a model score/)).toBeTruthy();
+  expect(screen.getByText(/research trials, not qualified bets/)).toBeTruthy();
   expect(
-    screen
-      .getByRole("link", { name: /Pause \/ resume shared collection/ })
-      .getAttribute("href"),
-  ).toContain("actions/workflows/pages.yml");
+    screen.queryByRole("link", { name: /Pause \/ resume shared collection/ }),
+  ).toBeNull();
+  expect(screen.queryByRole("button", { name: /CSV|Download/ })).toBeNull();
   expect(within(table).getByText("Confidence")).toBeTruthy();
   expect(table.querySelector(".signal-badge strong")?.textContent).toMatch(
     /\d+%/,
@@ -186,8 +185,8 @@ it("shows upcoming research and explicit method descriptions without probability
     }),
   ).toBeTruthy();
   expect(
-    screen.getByRole("button", { name: "Download component comparison CSV" }),
-  ).toBeTruthy();
+    screen.queryByRole("button", { name: "Download component comparison CSV" }),
+  ).toBeNull();
   fireEvent.click(document.body);
   expect(
     (screen.getByLabelText("Lab game date (ET)") as HTMLSelectElement).value,
@@ -263,15 +262,18 @@ it("lists qualified Lab research before watch-only forecasts and earlier data ga
   const names = [...table.querySelectorAll(".card-matchup")].map(
     (cell) => cell.textContent,
   );
-  expect(names).toHaveLength(3);
+  expect(names).toHaveLength(1);
   expect(names[0]).toContain("Team A");
-  expect(names[1]).toContain("Upcoming watch");
-  expect(names[2]).toContain("Gap team");
+  const blocked = screen
+    .getByText("2 games waiting for inputs or on watch")
+    .closest("details");
+  expect(blocked?.textContent).toContain("Upcoming watch");
+  expect(blocked?.textContent).toContain("Gap team");
 });
 
 it("shows completed staked Lab plays while excluding watch-only and upcoming games", async () => {
   localStorage.setItem(
-    "1h-model-view-v1:lab.method.v4",
+    "1h-model-view-v1:lab.method.v5",
     JSON.stringify({ savedAt: Date.now(), value: "bonus-exposure-v1" }),
   );
   const { store, index } = uiFixture();
@@ -367,7 +369,7 @@ it("does not display a partial Lab record if an archive fails", async () => {
 it("switches separate visible Lab versions and shows confidence with paper units", async () => {
   const { store, index } = uiFixture();
   const f = researchFixture();
-  for (const method of ["market-core-v3", "referee-core-v4"] as const) {
+  for (const method of ["market-paper-v3", "referee-paper-v4"] as const) {
     store.forecasts.push({
       ...captureResearchForecast(
         method,
@@ -382,7 +384,7 @@ it("switches separate visible Lab versions and shows confidence with paper units
       ),
       id: method,
       awayTeam:
-        method === "market-core-v3" ? "V3 research team" : "V4 research team",
+        method === "market-paper-v3" ? "V3 research team" : "V4 research team",
     });
     const configuration = index.config.methods.find(
       (entry) => entry.id === method,

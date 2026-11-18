@@ -3056,7 +3056,7 @@ h1 em {
 }
 .lab-controls {
   display: grid;
-  grid-template-columns: 1.3fr 1fr 1fr auto;
+  grid-template-columns: 1fr 1fr;
   gap: 14px;
   align-items: end;
   margin: 20px 0;
@@ -3977,6 +3977,29 @@ h1 em {
 }
 .research-forecast-details {
   padding: 8px 0;
+}
+.lab-blocked {
+  margin-block: 20px;
+  border-top: 1px solid var(--border);
+  padding-top: 14px;
+}
+.lab-blocked summary {
+  cursor: pointer;
+  color: var(--text-secondary);
+}
+.lab-blocked ul {
+  list-style: none;
+  padding: 0;
+}
+.lab-blocked ul > li {
+  display: grid;
+  gap: 5px;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--border);
+}
+.lab-blocked li span {
+  color: var(--text-secondary);
+  font-size: 0.85rem;
 }
 .lab-performance {
   min-width: 0;

@@ -1,33 +1,16 @@
 import type { LabForecast, LabStore } from "./model/lab";
-import {
-  labComponentComparison,
-  labComponentsToCsv,
-} from "./model/labComponents";
+import { labComponentComparison } from "./model/labComponents";
 
 const points = (n: number | null) => (n === null ? "—" : n.toFixed(2));
 export default function LabComponents({
   forecasts,
   store,
-  date,
 }: {
   forecasts: LabForecast[];
   store: LabStore;
-  date: string;
 }) {
   const rows = labComponentComparison(forecasts, store);
   const measured = rows[0].games;
-  function download() {
-    const url = URL.createObjectURL(
-      new Blob(["\uFEFF", labComponentsToCsv(forecasts, store)], {
-        type: "text/csv;charset=utf-8",
-      }),
-    );
-    const link = document.createElement("a");
-    link.href = url;
-    link.download = `1h-lab-components-${date}.csv`;
-    link.click();
-    URL.revokeObjectURL(url);
-  }
   return (
     <details className="lab-calibration">
       <summary>Lab component comparison · {measured} completed games</summary>
@@ -84,9 +67,6 @@ export default function LabComponents({
           Waiting for completed first halves with all saved Lab v2 components.
         </p>
       )}
-      <button type="button" className="secondary-button" onClick={download}>
-        Download component comparison CSV
-      </button>
     </details>
   );
 }

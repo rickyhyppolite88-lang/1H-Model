@@ -429,57 +429,6 @@ export default function PredictionRecord() {
             and receive no backdated recorded stake.
           </p>
         </details>
-        <details>
-          <summary>Source data and downloads</summary>
-          <p>
-            The permanent archives retain every forecast, including upcoming
-            games and pending picks. Downloads below include those complete
-            archives.
-          </p>
-          <div className="prediction-actions">
-            <a
-              className="secondary-button"
-              href={`${import.meta.env.BASE_URL}data/actual-units-draftkings.csv`}
-              download="1h-draftkings-unit-plays.csv"
-            >
-              All DraftKings unit plays CSV ↓
-            </a>
-            <a
-              className="secondary-button"
-              href={`${import.meta.env.BASE_URL}data/prediction-record.xlsx`}
-              download="1h-prediction-record.xlsx"
-            >
-              Complete forecast archive Excel ↓
-            </a>
-            <a
-              className="secondary-button"
-              href={`${import.meta.env.BASE_URL}data/prediction-record.csv`}
-              download="1h-prediction-record.csv"
-            >
-              All versions CSV ↓
-            </a>
-            {archive && (
-              <>
-                <a
-                  className="text-button"
-                  href={`${import.meta.env.BASE_URL}${archive.jsonPath}`}
-                  download
-                >
-                  Full dated inputs JSON ↓
-                </a>
-                {archive.gamesCsvPath && (
-                  <a
-                    className="text-button"
-                    href={`${import.meta.env.BASE_URL}${archive.gamesCsvPath}`}
-                    download={`1h-all-games-${archive.date}.csv`}
-                  >
-                    Selected day: all games CSV ↓
-                  </a>
-                )}
-              </>
-            )}
-          </div>
-        </details>
       </div>
       <p className="record-updated">
         Updated <GameTime startsAt={index.updatedAt} />
