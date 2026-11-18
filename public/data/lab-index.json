@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "startedAt": "2026-11-05T16:08:14.757Z",
-  "updatedAt": "2026-11-18T19:28:16.098Z",
+  "updatedAt": "2026-11-18T20:02:45.169Z",
   "entryPolicy": {
     "method": "last-pretip-v1",
     "startedAt": "2026-11-10T21:33:29.039Z",
@@ -533,6 +533,8 @@
     ]
   },
   "methodStartedAt": {
+    "market-paper-v3": "2026-11-18T20:02:45.169Z",
+    "referee-paper-v4": "2026-11-18T20:02:45.169Z",
     "market-core-v3": "2026-11-17T01:31:32.748Z",
     "referee-core-v4": "2026-11-17T01:31:32.748Z",
     "enhanced-baseline-v2": "2026-11-06T21:31:23.265Z",
@@ -546,12 +548,20 @@
     "schemaVersion": 1,
     "methods": [
       {
-        "id": "market-core-v3",
+        "id": "market-paper-v3",
         "enabled": true
       },
       {
-        "id": "referee-core-v4",
+        "id": "referee-paper-v4",
         "enabled": true
+      },
+      {
+        "id": "market-core-v3",
+        "enabled": false
+      },
+      {
+        "id": "referee-core-v4",
+        "enabled": false
       },
       {
         "id": "enhanced-baseline-v2",
