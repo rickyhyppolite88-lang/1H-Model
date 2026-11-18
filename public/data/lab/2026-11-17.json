@@ -531,7 +531,7 @@
     ]
   },
   "startedAt": "2026-11-05T16:08:14.757Z",
-  "updatedAt": "2026-11-18T04:34:18.852Z",
+  "updatedAt": "2026-11-18T06:36:41.518Z",
   "forecasts": [
     {
       "id": "2026-27_market-core-v3_401920904_v1",
@@ -249611,6 +249611,74 @@
         "city": "Seattle",
         "state": "WA"
       }
+    },
+    {
+      "id": "2026-27:401925879_result1",
+      "season": "2026-27",
+      "gameId": "401925879",
+      "observedAt": "2026-11-18T06:36:39.599Z",
+      "sourceCapturedAt": "2026-11-18T06:36:29.297786Z",
+      "startsAt": "2026-11-18T04:00:00Z",
+      "awayPoints": 28,
+      "homePoints": 41,
+      "source": "https://site.api.espn.com/apis/site/v2/sports/basketball/mens-college-basketball/scoreboard?dates=20261117&groups=50&limit=1000",
+      "participants": {
+        "away": {
+          "espnId": "147",
+          "modelId": "montana-st-bobcats",
+          "name": "Montana State Bobcats"
+        },
+        "home": {
+          "espnId": "2250",
+          "modelId": "gonzaga-bulldogs",
+          "name": "Gonzaga Bulldogs"
+        }
+      },
+      "context": {
+        "neutralSite": false,
+        "conferenceGame": false,
+        "matchupType": "nonconference_regular",
+        "eventLabel": null,
+        "venueId": "1979",
+        "venueKey": "id:1979",
+        "venueName": "McCarthey Athletic Center",
+        "city": "Spokane",
+        "state": "WA"
+      }
+    },
+    {
+      "id": "2026-27:401920512_result1",
+      "season": "2026-27",
+      "gameId": "401920512",
+      "observedAt": "2026-11-18T06:36:39.599Z",
+      "sourceCapturedAt": "2026-11-18T06:36:29.297786Z",
+      "startsAt": "2026-11-18T04:59:00Z",
+      "awayPoints": 36,
+      "homePoints": 31,
+      "source": "https://site.api.espn.com/apis/site/v2/sports/basketball/mens-college-basketball/scoreboard?dates=20261117&groups=50&limit=1000",
+      "participants": {
+        "away": {
+          "espnId": "277",
+          "modelId": "west-virginia-mountaineers",
+          "name": "West Virginia Mountaineers"
+        },
+        "home": {
+          "espnId": "2",
+          "modelId": "auburn-tigers",
+          "name": "Auburn Tigers"
+        }
+      },
+      "context": {
+        "neutralSite": true,
+        "conferenceGame": false,
+        "matchupType": "nonconference_regular",
+        "eventLabel": "Players Era 8",
+        "venueId": "4005",
+        "venueKey": "id:4005",
+        "venueName": "Michelob ULTRA Arena",
+        "city": "Las Vegas",
+        "state": "NV"
+      }
     }
   ],
   "halves": [
@@ -252117,6 +252185,82 @@
           "freeThrowsMade": 0,
           "threeMade": 5,
           "threeAttempted": 14,
+          "turnovers": 8,
+          "offensiveRebounds": 4
+        }
+      ]
+    },
+    {
+      "id": "401920512_f0521f217f78b78970c24a40ae11909d77e2a2eed98158cbc8b0a88189ba655b",
+      "gameId": "401920512",
+      "season": "2026-27",
+      "startsAt": "2026-11-18T04:59:00Z",
+      "observedAt": "2026-11-18T06:36:33.753090Z",
+      "source": "https://site.api.espn.com/apis/site/v2/sports/basketball/mens-college-basketball/summary?event=401920512",
+      "sourceSha256": "1475756f1a7c05c58e89fba7f4cb34edf24ba0213684a3a4407e76f2c36589f2",
+      "bothD1": true,
+      "teams": [
+        {
+          "espnId": "2",
+          "points": 31,
+          "fouls": 5,
+          "bonusMinutes": 4.05,
+          "fga": 24,
+          "fta": 9,
+          "freeThrowsMade": 4,
+          "threeMade": 3,
+          "threeAttempted": 12,
+          "turnovers": 11,
+          "offensiveRebounds": 3
+        },
+        {
+          "espnId": "277",
+          "points": 36,
+          "fouls": 9,
+          "bonusMinutes": 0,
+          "fga": 35,
+          "fta": 6,
+          "freeThrowsMade": 5,
+          "threeMade": 5,
+          "threeAttempted": 16,
+          "turnovers": 5,
+          "offensiveRebounds": 7
+        }
+      ]
+    },
+    {
+      "id": "401925879_6a14ec44ccfb2c7bbba78694a47b393dfea8eeff311de924f22a0d9b7b230d26",
+      "gameId": "401925879",
+      "season": "2026-27",
+      "startsAt": "2026-11-18T04:00:00Z",
+      "observedAt": "2026-11-18T06:36:33.753090Z",
+      "source": "https://site.api.espn.com/apis/site/v2/sports/basketball/mens-college-basketball/summary?event=401925879",
+      "sourceSha256": "b0f0e41f5c197f08e83d2aafe393efe53dae57b4ef2c53590a252924180fc9f0",
+      "bothD1": true,
+      "teams": [
+        {
+          "espnId": "147",
+          "points": 28,
+          "fouls": 6,
+          "bonusMinutes": 0,
+          "fga": 30,
+          "fta": 0,
+          "freeThrowsMade": 0,
+          "threeMade": 6,
+          "threeAttempted": 17,
+          "turnovers": 7,
+          "offensiveRebounds": 3
+        },
+        {
+          "espnId": "2250",
+          "points": 41,
+          "fouls": 2,
+          "bonusMinutes": 0,
+          "fga": 28,
+          "fta": 7,
+          "freeThrowsMade": 4,
+          "threeMade": 3,
+          "threeAttempted": 8,
           "turnovers": 8,
           "offensiveRebounds": 4
         }
