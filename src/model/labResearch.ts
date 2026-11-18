@@ -1,6 +1,12 @@
 import { z } from "zod";
 import type { SeasonGame, SeasonLedger } from "./audit";
 import type { LabForecast, LabHalf } from "./lab";
+import {
+  isAllForecastPaperMethod,
+  isRefereeLabMethod,
+  isStakedLabStatus,
+  type PaperLabMethod,
+} from "./labVersions";
 import { marketStatus } from "./marketCoverage";
 import { type RecordStore, recordGrade } from "./predictionRecord";
 import type { PredictionFeed, PredictionRow } from "./predictions";
@@ -13,6 +19,7 @@ import {
 import { easternTipoff } from "./time";
 
 export const researchForecastSchema = z.object({
+  selectionPolicy: z.enum(["all-usable-paper-v1"]).optional(),
   modelPath: z.string().nullable(),
   fittedAt: z.iso.datetime().nullable(),
   trainingGames: z.number().int(),
@@ -385,7 +392,7 @@ export function fitResearchModel(
 }
 
 export function captureResearchForecast(
-  method: "market-core-v3" | "referee-core-v4",
+  method: PaperLabMethod,
   row: PredictionRow,
   game: SeasonGame,
   feed: PredictionFeed,
@@ -395,6 +402,8 @@ export function captureResearchForecast(
   referees: RefereeStore | undefined,
   at: string,
 ): LabForecast {
+  const trial = isAllForecastPaperMethod(method);
+  const referee = isRefereeLabMethod(method);
   const quote = game.quotes.find((q) => q.sportsbook === "draftkings");
   const line =
     marketStatus(row, "draftkings") === "available"
@@ -479,8 +488,8 @@ export function captureResearchForecast(
           );
         const initial = sigmoid(score);
         baselineProbability = side === "OVER" ? initial : 1 - initial;
-        let refereeReady = method !== "referee-core-v4";
-        if (method === "referee-core-v4") {
+        let refereeReady = !referee;
+        if (referee) {
           assignment = referees ? pregameCrew(referees, game, at) : null;
           if (assignment) {
             for (const official of assignment.officials) {
@@ -495,7 +504,7 @@ export function captureResearchForecast(
             }
             refereeReady =
               model.refereeTrainingGames >= 20 &&
-              crew.every((p) => p.pricedGames >= 3);
+              (trial || crew.every((p) => p.pricedGames >= 3));
             if (refereeReady) {
               refereePoints = clamp(
                 average(crew.map((p) => p.pointsAssociation)),
@@ -523,7 +532,20 @@ export function captureResearchForecast(
           const age =
             (Date.parse(row.startsAt) - Date.parse(quote.latestCapturedAt)) /
             60_000;
-          if (Number.isInteger(line))
+          if (trial && Date.parse(at) >= Date.parse(row.startsAt)) {
+            reason = "A paper trial must be captured before tipoff.";
+          } else if (trial) {
+            status = "paper_test";
+            if (Number.isInteger(line)) expectedReturn = null;
+            reason =
+              "1u paper trial on every usable pregame forecast; latest usable pre-tip snapshot counts once. No estimated-return or final-15-minute selection gate. Research only, not a qualified bet.";
+            if (referee && crew.some((p) => p.pricedGames < 3))
+              reason +=
+                " Limited official history is shrunk toward zero; an unobserved official has a neutral prior effect.";
+            if (Number.isInteger(line))
+              reason +=
+                " Integer line: pushes are graded; expected return is not estimated without a push model.";
+          } else if (Number.isInteger(line))
             reason =
               "Integer total: push-probability support is not yet validated; watch only.";
           else if (!(age > 0 && age <= 15))
@@ -548,7 +570,8 @@ export function captureResearchForecast(
     probability,
     marketProbability,
     expectedReturn,
-    paperUnits: status === "qualified" ? 1 : 0,
+    paperUnits: isStakedLabStatus(status) ? 1 : 0,
+    ...(trial ? { selectionPolicy: "all-usable-paper-v1" } : {}),
     crewAssignmentId: assignment?.id ?? null,
     crewObservedAt: assignment?.observedAt ?? null,
     crew,
@@ -590,6 +613,12 @@ export function captureResearchForecast(
       paperPolicy: "lab-flat-paper-v1",
       sourceBoard: quote?.source ?? null,
       minimumExpectedReturn: 0.05,
+      ...(trial
+        ? {
+            selectionPolicy: "all-usable-paper-v1",
+            minimumExpectedReturn: null,
+          }
+        : {}),
       refereeAttribution:
         "Crew and games-worked associations; individual caller unavailable.",
     },

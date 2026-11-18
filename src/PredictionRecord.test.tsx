@@ -267,7 +267,7 @@ it("excludes upcoming games and clears search when selecting an unfinished day",
   expect(within(table()).getAllByRole("row")).toHaveLength(1);
 });
 
-it("preserves saved versions and full archive downloads without inflating the official record", async () => {
+it("preserves saved versions without inflating the record or showing raw download controls", async () => {
   mockArchives();
   render(<PredictionRecord />);
   await screen.findByRole("table", { name: "Recorded predictions" });
@@ -277,17 +277,10 @@ it("preserves saved versions and full archive downloads without inflating the of
   expect(within(table()).getByText("Win")).toBeTruthy();
   expect(within(table()).queryByText("Loss")).toBeNull();
   expect(within(summary()).getByText("1 / 0 / 0")).toBeTruthy();
-  fireEvent.click(screen.getByText("Source data and downloads"));
+  expect(screen.queryByText("Source data and downloads")).toBeNull();
   expect(
-    screen
-      .getByRole("link", { name: "Full dated inputs JSON ↓" })
-      .getAttribute("href"),
-  ).toContain("prediction-record/2026-11-02.json");
-  expect(
-    screen
-      .getByRole("link", { name: "Complete forecast archive Excel ↓" })
-      .getAttribute("href"),
-  ).toContain("prediction-record.xlsx");
+    screen.queryByRole("link", { name: /CSV|JSON|archive Excel/ }),
+  ).toBeNull();
 });
 
 it("never shows partial totals when an archive fails and can retry", async () => {

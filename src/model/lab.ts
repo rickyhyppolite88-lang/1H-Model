@@ -8,7 +8,12 @@ import {
 import { foulExposureSchema } from "./foulExposure";
 import { contextForecastSchema } from "./gameContext";
 import { researchForecastSchema } from "./labResearch";
-import { isPaperLabMethod } from "./labVersions";
+import {
+  isAllForecastPaperMethod,
+  isPaperLabMethod,
+  isRefereeLabMethod,
+  isStakedLabStatus,
+} from "./labVersions";
 import { resultEventSchema } from "./predictionRecord";
 import { csvCell } from "./predictions";
 import { labRating, ratingFallback } from "./ratingDisplay";
@@ -16,6 +21,28 @@ import { participantsSchema, reviewSchedule } from "./scheduleReview";
 import { easternTipoff } from "./time";
 
 export const labMethods = [
+  {
+    id: "market-paper-v3",
+    name: "Lab v3 · all-forecast paper trial",
+    kind: "total",
+    description:
+      "Test every usable pregame Actual-direction forecast with the V3 market/shot-opportunity estimate and a flat 1u paper stake.",
+    formula:
+      "Latest usable pre-tip DraftKings snapshot; 1u paper per game. No minimum estimated-return filter or final-15-minute entry gate. A fresh quote and both valid side prices are required at capture.",
+    limits:
+      "Paper research, not qualified bets. Confidence is unvalidated. Integer lines can push; expected return is withheld without a push model. Missing inputs remain gaps. Earlier filtered trials and Actual are preserved.",
+  },
+  {
+    id: "referee-paper-v4",
+    name: "Lab v4 · referee paper trial",
+    kind: "total",
+    description:
+      "The V3 paper trial plus a bounded crew scoring association, using a crew verified before tipoff.",
+    formula:
+      "1u paper per usable verified-crew forecast, without the 5% return or final-15-minute gates. Official effects use 20 pseudo-games; an official without prior priced games gets a neutral effect. Unknown crews never receive a substitute.",
+    limits:
+      "Prospective research only. Small official samples remain labeled. Crew/game associations are observational; individual callers are unavailable. No retroactive paper stakes are created.",
+  },
   {
     id: "market-core-v3",
     name: "Lab v3 · market benchmark",
@@ -105,6 +132,8 @@ export const labMethods = [
   },
 ] as const;
 export const labMethodIds = [
+  "market-paper-v3",
+  "referee-paper-v4",
   "market-core-v3",
   "referee-core-v4",
   "enhanced-baseline-v2",
@@ -197,6 +226,7 @@ export const labForecastSchema = z
     side: z.enum(["OVER", "UNDER", "PUSH"]).nullable(),
     signalStrength: z.number().min(0).max(100).nullable(),
     status: z.enum([
+      "paper_test",
       "control",
       "qualified",
       "watch_only",
@@ -216,16 +246,42 @@ export const labForecastSchema = z
     participants: participantsSchema.optional(),
   })
   .superRefine((row, ctx) => {
+    if (row.status === "paper_test" && !isAllForecastPaperMethod(row.methodId))
+      ctx.addIssue({
+        code: "custom",
+        message: "Paper trial status requires a separate trial method",
+      });
     if (!isPaperLabMethod(row.methodId)) return;
     const research = row.research;
     if (
       !research ||
-      research.paperUnits !== (row.status === "qualified" ? 1 : 0)
+      research.paperUnits !== (isStakedLabStatus(row.status) ? 1 : 0)
     )
       ctx.addIssue({
         code: "custom",
         message:
           "Paper methods require frozen research metadata and matching units",
+      });
+    if (
+      row.status === "paper_test" &&
+      (!isAllForecastPaperMethod(row.methodId) ||
+        !research ||
+        research.selectionPolicy !== "all-usable-paper-v1" ||
+        research.probability === null ||
+        !research.modelPath ||
+        row.sportsbook !== "draftkings" ||
+        row.line === null ||
+        (row.side !== "OVER" && row.side !== "UNDER") ||
+        Date.parse(row.recordedAt) >= Date.parse(row.startsAt))
+    )
+      ctx.addIssue({
+        code: "custom",
+        message: "Paper trials require a usable prospective frozen forecast",
+      });
+    if (isAllForecastPaperMethod(row.methodId) && row.status === "qualified")
+      ctx.addIssue({
+        code: "custom",
+        message: "Unfiltered trials must be labeled paper_test, not qualified",
       });
     if (
       row.status === "qualified" &&
@@ -245,8 +301,8 @@ export const labForecastSchema = z
           "Qualified paper forecasts require a priced eligible research estimate",
       });
     if (
-      row.status === "qualified" &&
-      row.methodId === "referee-core-v4" &&
+      isStakedLabStatus(row.status) &&
+      isRefereeLabMethod(row.methodId) &&
       (!research ||
         research.crew.length !== 3 ||
         !research.crewAssignmentId ||
@@ -366,6 +422,16 @@ export function canonicalLabForecasts(
       (a, b) =>
         a.recordedAt.localeCompare(b.recordedAt) || a.version - b.version,
     );
+    if (isAllForecastPaperMethod(rows[0].methodId))
+      return (
+        rows
+          .filter(
+            (row) =>
+              row.status === "paper_test" &&
+              Date.parse(row.recordedAt) < Date.parse(row.startsAt),
+          )
+          .at(-1) ?? rows[0]
+      );
     if (
       futureGames.has(`${rows[0].season}:${rows[0].methodId}:${rows[0].gameId}`)
     )
@@ -543,7 +609,7 @@ export function labSummary(
     ...gradeLab(row, store),
   }));
   const qualified = graded.filter((entry) =>
-    ["control", "qualified"].includes(entry.row.status),
+    ["control", "qualified", "paper_test"].includes(entry.row.status),
   );
   const settled = qualified.filter((entry) =>
     ["Win", "Loss", "Push"].includes(entry.grade),

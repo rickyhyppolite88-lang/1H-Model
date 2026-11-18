@@ -6,7 +6,6 @@ import {
   summarizeUnits,
   type UnitMode,
   type UnitPlay,
-  unitPlaysCsv,
   unitPolicy,
 } from "./model/units";
 import { usePreference } from "./usePreference";
@@ -77,18 +76,6 @@ export default function UnitCalendar({
     const next = new Date(Date.UTC(year, monthNumber - 1 + offset, 1));
     setMonth(next.toISOString().slice(0, 7));
     onSelectDate("all");
-  }
-  function download() {
-    const url = URL.createObjectURL(
-      new Blob(["\uFEFF", unitPlaysCsv(selected)], {
-        type: "text/csv;charset=utf-8",
-      }),
-    );
-    const link = document.createElement("a");
-    link.href = url;
-    link.download = `1h-${label.toLowerCase()}-units-${date === "all" ? month : date}-${combined ? "draftkings" : mode}.csv`;
-    link.click();
-    URL.revokeObjectURL(url);
   }
   return (
     <section className="unit-calendar" aria-label={`${label} units calendar`}>
@@ -286,7 +273,7 @@ export default function UnitCalendar({
           <summary>Unit rules & accounting</summary>
           <p className="inline-note">
             {paper
-              ? "Prospective flat 1u paper research. Only qualified entries with a saved pre-tip paper stake count. No historical stakes are invented. Estimates remain unvalidated."
+              ? "Prospective flat 1u paper research. Only entries with a saved pre-tip paper stake count. Paper-trial entries are not qualified bets. No historical stakes are invented. Estimates remain unvalidated."
               : combined
                 ? `DraftKings only. Recorded entries keep their pre-tip stakes. Older dates replay the original frozen model against the last available archived DraftKings quote observed before tipoff, using the same confidence tiers. Replay confidence and stakes are calculated later and labeled; original records remain unchanged. ${unitPolicy.description}`
                 : mode === "historical"
@@ -306,14 +293,6 @@ export default function UnitCalendar({
             {error}
           </p>
         )}
-        <button
-          type="button"
-          className="secondary-button"
-          onClick={download}
-          disabled={!available || !selected.length}
-        >
-          Download {date === "all" ? "month" : "day"} units CSV ↓
-        </button>
       </div>
     </section>
   );

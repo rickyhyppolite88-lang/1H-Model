@@ -160,8 +160,9 @@ def collect(ledger, output, cache_dir, workers=6):
             if changed or (recent and (not last or now - last >= timedelta(hours=6))):
                 if not last or now - last >= timedelta(minutes=15):
                     due.append(game)
-        elif -timedelta(hours=4) <= until <= timedelta(minutes=90) and not re.search(r"cancel|postpon", game["status"], re.I):
-            if not last or now - last >= timedelta(minutes=5):
+        elif -timedelta(hours=4) <= until <= timedelta(hours=18) and not re.search(r"cancel|postpon", game["status"], re.I):
+            cadence = timedelta(minutes=5) if until <= timedelta(minutes=90) else timedelta(hours=1)
+            if not last or now - last >= cadence:
                 due.append(game)
     cache_dir.mkdir(exist_ok=True, parents=True)
     def fetch(game):

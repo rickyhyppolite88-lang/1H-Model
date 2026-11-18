@@ -83,7 +83,10 @@ export default function RefereeResearch() {
               {show(report.forecastTest.v3Brier ?? undefined)} · V4{" "}
               {show(report.forecastTest.v4Brier ?? undefined)} · market{" "}
               {show(report.forecastTest.marketBrier ?? undefined)}. Older games
-              are not reconstructed as pregame forecasts.
+              are not reconstructed as pregame forecasts. V3 and V4 keep
+              Actual’s direction, so their win/loss results match on identical
+              games and lines. Compare probability scores to test whether
+              referee information improves confidence estimates.
             </p>
           )}
           <div className="referee-toolbar">
@@ -98,13 +101,6 @@ export default function RefereeResearch() {
                 }}
               />
             </label>
-            <a
-              className="secondary-button"
-              href={`${import.meta.env.BASE_URL}data/referee-research.csv`}
-              download="first-half-referee-research.csv"
-            >
-              Download all referee measurements CSV ↓
-            </a>
           </div>
           {profile && (
             <section
@@ -124,8 +120,8 @@ export default function RefereeResearch() {
                   {profile.forecastTest.games} prospective V4 games worked ·
                   matched V3 Brier{" "}
                   {show(profile.forecastTest.v3Brier ?? undefined)} · V4 Brier{" "}
-                  {show(profile.forecastTest.v4Brier ?? undefined)} · qualified
-                  W–L {profile.forecastTest.qualifiedWins}–
+                  {show(profile.forecastTest.v4Brier ?? undefined)} · staked
+                  paper W–L {profile.forecastTest.qualifiedWins}–
                   {profile.forecastTest.qualifiedLosses}. Samples overlap across
                   officials on the same crew.
                 </p>

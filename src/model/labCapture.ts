@@ -21,6 +21,7 @@ import {
   latestHalves,
 } from "./lab";
 import { captureResearchForecast, type ResearchModel } from "./labResearch";
+import { isPaperLabMethod } from "./labVersions";
 import { sportsbookNames } from "./marketCoverage";
 import type { PredictionFeed, PredictionRow } from "./predictions";
 import { predictionComparison } from "./predictions";
@@ -277,7 +278,7 @@ export function captureLab(
       (entry) => entry.sportsbook === sportsbook,
     )?.latest;
     for (const method of config.methods.filter((entry) => entry.enabled)) {
-      if (method.id === "market-core-v3" || method.id === "referee-core-v4") {
+      if (isPaperLabMethod(method.id)) {
         const candidate = captureResearchForecast(
           method.id,
           row,

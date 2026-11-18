@@ -24,7 +24,6 @@ import {
   type PredictionRow,
   predictionComparison,
   predictionFeedSchema,
-  predictionsToCsv,
   topEdgePredictions,
 } from "./model/predictions";
 import { predictionRating } from "./model/ratingDisplay";
@@ -160,7 +159,7 @@ export default function Predictions() {
         .catch(() => {
           if (!controller.signal.aborted)
             setArchiveError(
-              "Daily archive could not be refreshed. The full CSV export is still available.",
+              "The daily archive could not be refreshed. Showing the available projections.",
             );
         });
     const refresh = () => {
@@ -296,34 +295,7 @@ export default function Predictions() {
     setDateChoice(value);
     setPage(0);
   }
-  function exportCsv(scope: "date" | "filtered" | "all" = "date") {
-    if (!feed) return;
-    const url = URL.createObjectURL(
-      new Blob(
-        [
-          "\uFEFF",
-          predictionsToCsv(
-            scope === "filtered"
-              ? rows
-              : scope === "all"
-                ? feed.predictions
-                : dateRows,
-            book,
-            basis,
-            new Date(clock).toISOString(),
-          ),
-        ],
-        {
-          type: "text/csv;charset=utf-8",
-        },
-      ),
-    );
-    const link = document.createElement("a");
-    link.href = url;
-    link.download = `1h-predictions-${scope === "all" ? "all-dates" : selectedDate}-${scope === "filtered" ? `${timing}-${group}-${conference.replace(/\W+/g, "-")}` : "all"}-${book}-${basis}.csv`;
-    link.click();
-    URL.revokeObjectURL(url);
-  }
+
   return (
     <section className="panel predictions-panel">
       <div className="section-heading">
@@ -448,179 +420,23 @@ export default function Predictions() {
             onEvidence={setRecordEvidence}
           />
         </ResponsiveDetails>
-        <ResponsiveDetails summary="Downloads, coverage & confidence guide">
-          <div className="prediction-actions">
-            <button
-              className="secondary-button"
-              type="button"
-              onClick={() => exportCsv()}
-            >
-              Download {dateRows.length} games for {selectedDate} · CSV ↓
-            </button>
-            <button
-              className="secondary-button"
-              type="button"
-              onClick={() => exportCsv("filtered")}
-            >
-              Download filtered {rows.length} rows · CSV ↓
-            </button>
-            {selectedArchive?.xlsxPath && (
-              <a
-                className="secondary-button"
-                href={`${import.meta.env.BASE_URL}${selectedArchive.xlsxPath}`}
-                download={`1h-predictions-${selectedDate}.xlsx`}
-              >
-                Excel workbook ↓
-              </a>
-            )}
+        <AvailabilityHelp />
+        <div className="prediction-workbook">
+          {selectedArchive?.xlsxPath ? (
             <a
               className="secondary-button"
-              href={`${import.meta.env.BASE_URL}data/predictions.json`}
-              target="_blank"
-              rel="noreferrer"
+              href={`${import.meta.env.BASE_URL}${selectedArchive.xlsxPath}`}
+              download={`1h-predictions-${selectedDate}.xlsx`}
             >
-              All dates JSON feed ↗
+              Excel workbook ↓
             </a>
-            <button
-              className="text-button"
-              type="button"
-              onClick={() => exportCsv("all")}
-            >
-              All dates CSV ↓
-            </button>
-            <a
-              className="text-button"
-              href={feed.source.projectionCode}
-              target="_blank"
-              rel="noreferrer"
-            >
-              Projection formula ↗
-            </a>
-            <a
-              className="text-button"
-              href={feed.source.batchCode}
-              target="_blank"
-              rel="noreferrer"
-            >
-              Batch code ↗
-            </a>
-          </div>
-          <div className="audit-metrics">
-            <div>
-              <span>Games in this view</span>
-              <strong>{rows.length}</strong>
-            </div>
-            <div>
-              <span>Predicted first-half totals</span>
-              <strong>
-                {
-                  rows.filter((row) => row.projectedFirstHalfTotal !== null)
-                    .length
-                }
-              </strong>
-            </div>
-            <div>
-              <span>Projection data gaps</span>
-              <strong>
-                {
-                  rows.filter((row) => row.projectedFirstHalfTotal === null)
-                    .length
-                }
-              </strong>
-            </div>
-            <div>
-              <span>Posted {books[book] ?? book} 1H lines</span>
-              <strong>
-                {
-                  rows.filter(
-                    (row) =>
-                      predictionComparison(row, book, basis).line !== null,
-                  ).length
-                }{" "}
-                / {rows.length}
-              </strong>
-            </div>
-          </div>
-          <AvailabilityHelp />
-          <p className="tipoff-explanation">
-            Tipoff filters use the scheduled start and latest reported status,
-            and update every minute. Delayed games stay under Not tipped off;
-            postponed and canceled games appear under All games.
-          </p>
-          <p className="line-movement-legend">
-            Current lines are shown.{" "}
-            <span className="movement-up-text">Green +</span> means the total
-            rose from the opener;{" "}
-            <span className="movement-down-text">red −</span> means it fell.
-            Hover, focus, or tap the small movement badge for the model and
-            recorded-pick impact.
-          </p>
-          <div className="signal-legend">
-            <strong>Confidence score (%)</strong>
-            <p>
-              Confidence expresses the existing 0–100 model-strength score as a
-              percentage. It is not a win probability. Scoring/pace agreement
-              strengthens the score; 8+ point gaps are held for outlier review.
-              Extreme gaps show Review. After tipoff, the shown-line score uses
-              the displayed projection and line; it is labeled separately from a
-              saved pregame score. Older record scores calculated from frozen
-              inputs are labeled Calculated later. Missing inputs are identified
-              explicitly.
+          ) : (
+            <p className="inline-note">
+              No dated downloads are available for {selectedDate} yet.
             </p>
-          </div>
-          <div className="daily-downloads">
-            <div>
-              <h3>Downloads for {dateLabel(selectedDate)}</h3>
-              <p>
-                Line checks target about one hour before tipoff, with follow-up
-                checks closer to the game. The movement tooltip shows the actual
-                source capture time. Dated copies update after successful checks
-                and remain available afterward. Use the filtered CSV for the
-                current tipoff and conference filters.
-              </p>
-            </div>
-            {selectedArchive && (
-              <div className="button-group">
-                <a
-                  className="secondary-button"
-                  href={`${import.meta.env.BASE_URL}${selectedArchive.csvPath}`}
-                  download={`1h-predictions-${selectedArchive.date}.csv`}
-                >
-                  Daily CSV ↓
-                </a>
-                <a
-                  className="secondary-button"
-                  href={`${import.meta.env.BASE_URL}${selectedArchive.jsonPath}`}
-                  download={`1h-predictions-${selectedArchive.date}.json`}
-                >
-                  Daily JSON ↓
-                </a>
-                {selectedArchive.xlsxPath && (
-                  <a
-                    className="secondary-button"
-                    href={`${import.meta.env.BASE_URL}${selectedArchive.xlsxPath}`}
-                    download={`1h-predictions-${selectedArchive.date}.xlsx`}
-                  >
-                    Daily Excel ↓
-                  </a>
-                )}
-                {selectedArchive.teamXlsxPath && (
-                  <a
-                    className="secondary-button"
-                    href={`${import.meta.env.BASE_URL}${selectedArchive.teamXlsxPath}`}
-                    download={`1h-team-comparison-${selectedArchive.date}.xlsx`}
-                  >
-                    Daily team review Excel ↓
-                  </a>
-                )}
-              </div>
-            )}
-            {!selectedArchive && (
-              <p>No dated downloads are available for {selectedDate} yet.</p>
-            )}
-            {archiveError && <p className="inline-note">{archiveError}</p>}
-          </div>
-        </ResponsiveDetails>
+          )}
+          {archiveError && <p className="inline-note">{archiveError}</p>}
+        </div>
       </aside>
       <ResponsiveDetails summary="Filters & search" initiallyCollapsed>
         <p className="group-description">
@@ -984,18 +800,6 @@ export default function Predictions() {
         </div>
       </div>
       <div className="data-notes">
-        <p>
-          The date CSV includes every matchup on the selected Eastern date,
-          including rows with unavailable projections. The selected sportsbook
-          and current line apply to the export. Opening and current lines remain
-          in the CSV. Model totals do not require an available sportsbook line.
-          Positive model-minus-line means OVER; negative means UNDER. These are
-          regular-season research leans. The filtered CSV includes every
-          matching row across all pages. Excel workbooks use{" "}
-          {books[feed.defaultSportsbook] ?? feed.defaultSportsbook}/latest, with
-          All Games, Top 25 and conference sheets. Cross-conference games appear
-          in both relevant sheets.
-        </p>
         <p>
           Generated{" "}
           {new Date(feed.generatedAt).toLocaleString("en-US", {

@@ -10,7 +10,12 @@ import {
   type LabForecast,
   type LabStore,
 } from "./lab";
-import { isPaperLabMethod, paperLabPolicy } from "./labVersions";
+import {
+  isAllForecastPaperMethod,
+  isPaperLabMethod,
+  isStakedLabStatus,
+  paperLabPolicy,
+} from "./labVersions";
 import {
   canonicalRecords,
   type ForecastRecord,
@@ -95,6 +100,7 @@ export const unitLedgerSchema = z
     for (const row of ledger.assignments) {
       const selection = stakeSelection(row);
       if (
+        !isAllForecastPaperMethod(row.method) &&
         !usesTipoffEntry(
           row.startsAt,
           ledger.entryPolicy,
@@ -152,7 +158,12 @@ export const unitPlaySchema = z.object({
   net: z.number().nullable(),
   mode: z.enum(["tracked", "historical"]).nullable(),
   entryPolicy: z
-    .enum(["first-entry-v1", "last-pretip-v1", "draftkings-replay-v1"])
+    .enum([
+      "first-entry-v1",
+      "last-pretip-v1",
+      "draftkings-replay-v1",
+      "last-usable-paper-v1",
+    ])
     .optional(),
   lineCapturedAt: z.iso.datetime().nullable().optional(),
   replaySourceRecordId: z.string().optional(),
@@ -278,18 +289,19 @@ export function updateUnitLedger(
   }
   for (const row of canonicalLabForecasts(lab.forecasts, lab.entryPolicy)) {
     if (
-      row.status !== "qualified" ||
+      !isStakedLabStatus(row.status) ||
       (row.side !== "OVER" && row.side !== "UNDER") ||
       row.line === null ||
       row.signalStrength === null ||
-      !verifiedTipoffQuote(
-        row.startsAt,
-        typeof row.inputs.entryQuoteCapturedAt === "string"
-          ? row.inputs.entryQuoteCapturedAt
-          : null,
-        lab.entryPolicy,
-        `${row.season}:${row.gameId}`,
-      ) ||
+      (!isAllForecastPaperMethod(row.methodId) &&
+        !verifiedTipoffQuote(
+          row.startsAt,
+          typeof row.inputs.entryQuoteCapturedAt === "string"
+            ? row.inputs.entryQuoteCapturedAt
+            : null,
+          lab.entryPolicy,
+          `${row.season}:${row.gameId}`,
+        )) ||
       Date.parse(row.recordedAt) > Date.parse(at) ||
       lab.results.some(
         (r) => r.season === row.season && r.gameId === row.gameId,
@@ -297,6 +309,7 @@ export function updateUnitLedger(
     )
       continue;
     if (
+      !isAllForecastPaperMethod(row.methodId) &&
       !usesTipoffEntry(
         row.startsAt,
         lab.entryPolicy,
@@ -438,16 +451,15 @@ export function labUnitPlay(
   const recordedPaper = ledger?.assignments.find(
     (entry) => entry.id === `lab:${row.id}`,
   );
-  const stake =
-    row.status === "qualified"
-      ? paper
-        ? {
-            units: recordedPaper?.units ?? null,
-            mode: recordedPaper ? ("tracked" as const) : null,
-            saved: recordedPaper ?? null,
-          }
-        : accounting(ledger, "lab", row.id, row.startsAt, rating.signal.score)
-      : { units: null, mode: null, saved: null };
+  const stake = isStakedLabStatus(row.status)
+    ? paper
+      ? {
+          units: recordedPaper?.units ?? null,
+          mode: recordedPaper ? ("tracked" as const) : null,
+          saved: recordedPaper ?? null,
+        }
+      : accounting(ledger, "lab", row.id, row.startsAt, rating.signal.score)
+    : { units: null, mode: null, saved: null };
   const replay = stake.mode === "historical";
   const score =
     stake.saved?.score ?? (replay ? rating.signal.score : row.signalStrength);
@@ -460,13 +472,15 @@ export function labUnitPlay(
         : null);
   return {
     id: row.id,
-    entryPolicy: usesTipoffEntry(
-      row.startsAt,
-      ledger?.entryPolicy,
-      `${row.season}:${row.gameId}`,
-    )
-      ? "last-pretip-v1"
-      : "first-entry-v1",
+    entryPolicy: isAllForecastPaperMethod(row.methodId)
+      ? "last-usable-paper-v1"
+      : usesTipoffEntry(
+            row.startsAt,
+            ledger?.entryPolicy,
+            `${row.season}:${row.gameId}`,
+          )
+        ? "last-pretip-v1"
+        : "first-entry-v1",
     lineCapturedAt:
       typeof row.inputs.entryQuoteCapturedAt === "string"
         ? row.inputs.entryQuoteCapturedAt

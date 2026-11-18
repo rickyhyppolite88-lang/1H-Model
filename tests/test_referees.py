@@ -6,6 +6,30 @@ import pytest
 import import_referees as refs
 
 
+def test_discovers_crews_early_hourly_and_checks_near_tip_every_five_minutes(tmp_path, monkeypatch):
+    data, game = fixture()
+    game.update(firstHalfComplete=False, status="Scheduled", startsAt="2026-11-03T04:00:00Z")
+    clock = [datetime(2026, 11, 2, 23, 30, tzinfo=timezone.utc)]
+    calls = []
+    class Clock(datetime):
+        @classmethod
+        def now(cls, tz=None): return clock[0]
+    class Response:
+        def __enter__(self): return self
+        def __exit__(self, *_): return None
+        def read(self): return json.dumps(data).encode()
+    def request(*_args, **_kwargs):
+        calls.append(clock[0]); return Response()
+    monkeypatch.setattr(refs, "datetime", Clock)
+    monkeypatch.setattr(refs, "urlopen", request)
+    ledger = {"season":"2026-27", "games":[game]}
+    output = tmp_path/"referees.json"
+    for minutes in [0, 30, 60, 181, 185, 186]:
+        clock[0] = datetime(2026, 11, 2, 23, 30, tzinfo=timezone.utc) + timedelta(minutes=minutes)
+        refs.collect(ledger, output, tmp_path/"cache")
+    assert len(calls) == 4  # early, an hour later, inside 90 min, then five minutes later
+
+
 def fixture():
     game = {"id": "game", "startsAt": "2026-11-03T00:00:00Z", "firstHalfComplete": True,
             "away": {"espnId": "1", "modelId": "a", "firstHalfPoints": 3},

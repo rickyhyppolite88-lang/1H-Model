@@ -83,3 +83,54 @@ it("rejects qualified paper stakes without their saved research evidence", () =>
     }).success,
   ).toBe(false);
 });
+
+it("counts a new referee paper trial once instead of duplicating its earlier filtered forecast", () => {
+  const f = researchFixture();
+  const strict = captureResearchForecast(
+    "referee-core-v4",
+    f.row,
+    f.game,
+    f.feed,
+    f.model,
+    f.modelPath,
+    f.halves,
+    f.refs,
+    f.at,
+  );
+  const trial = captureResearchForecast(
+    "referee-paper-v4",
+    f.row,
+    f.game,
+    f.feed,
+    f.model,
+    f.modelPath,
+    f.halves,
+    f.refs,
+    f.at,
+  );
+  const store: LabStore = {
+    schemaVersion: 1,
+    startedAt: f.at,
+    updatedAt: f.at,
+    forecasts: [
+      { ...strict, id: "strict" },
+      { ...trial, id: "trial" },
+    ],
+    halves: [],
+    results: [
+      {
+        id: "result",
+        gameId: trial.gameId,
+        season: trial.season,
+        startsAt: trial.startsAt,
+        observedAt: "2026-11-03T01:00:00Z",
+        sourceCapturedAt: "2026-11-03T01:00:00Z",
+        source: "https://example.com/result",
+        awayPoints: 40,
+        homePoints: 40,
+      },
+    ],
+  };
+  expect(refereeForecastResults(store).overall.games).toBe(1);
+  expect(refereeForecastResults(store).overall.qualifiedWins).toBe(1);
+});

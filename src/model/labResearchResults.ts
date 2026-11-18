@@ -1,12 +1,25 @@
 import { canonicalLabForecasts, gradeLab, type LabStore } from "./lab";
+import {
+  isAllForecastPaperMethod,
+  isRefereeLabMethod,
+  isStakedLabStatus,
+} from "./labVersions";
 
 export function refereeForecastResults(store: LabStore) {
-  const rows = canonicalLabForecasts(
+  const canonical = canonicalLabForecasts(
     store.forecasts,
     store.entryPolicy,
-  ).flatMap((row) => {
+  ).filter((row) => isRefereeLabMethod(row.methodId));
+  const selected = new Map<string, (typeof canonical)[number]>();
+  for (const row of canonical) {
+    if (row.research?.probability == null) continue;
+    const key = `${row.season}:${row.gameId}`;
+    const old = selected.get(key);
+    if (!old || isAllForecastPaperMethod(row.methodId)) selected.set(key, row);
+  }
+  const rows = [...selected.values()].flatMap((row) => {
     if (
-      row.methodId !== "referee-core-v4" ||
+      !isRefereeLabMethod(row.methodId) ||
       !row.research ||
       row.line === null ||
       !row.side ||
@@ -33,7 +46,7 @@ export function refereeForecastResults(store: LabStore) {
         v3: (baseline - win) ** 2,
         v4: (probability - win) ** 2,
         market: ((row.side === "OVER" ? market : 1 - market) - win) ** 2,
-        qualified: row.status === "qualified",
+        qualified: isStakedLabStatus(row.status),
         win,
       },
     ];
