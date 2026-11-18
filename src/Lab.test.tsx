@@ -16,6 +16,7 @@ import {
 } from "./model/lab";
 import { currentLabFixture } from "./model/lab.test-fixture";
 import { captureLab } from "./model/labCapture";
+import { captureFeatureForecast, fitFeatureModel } from "./model/labFeatures";
 import { captureResearchForecast } from "./model/labResearch";
 import { researchFixture } from "./model/labResearch.test-fixture";
 import { labUnitPlay, type UnitLedger } from "./model/units";
@@ -417,4 +418,90 @@ it("switches separate visible Lab versions and shows confidence with paper units
   ).toBeTruthy();
   fireEvent.click(within(tabs).getByRole("button", { name: /Lab v2/ }));
   expect(await screen.findByText("Team A")).toBeTruthy();
+});
+it("shows both new component tabs, 1u paper cards and a separate matched historical comparison", async () => {
+  const { store, index } = uiFixture();
+  const f = researchFixture();
+  const halves = Array.from({ length: 40 }, (_, i) => ({
+    ...f.halves[0],
+    id: `h${i}`,
+    gameId: `history${i}`,
+  }));
+  const model = fitFeatureModel(halves, f.feed.season, f.at, "test");
+  for (const method of ["opponent-paper-v5", "shooting-paper-v6"] as const) {
+    const captured = captureFeatureForecast(
+      method,
+      f.row,
+      f.game,
+      f.feed,
+      model,
+      "data/lab-feature-models/test.json",
+      f.at,
+    );
+    store.forecasts.push({ ...captured, id: `${method}-game-v1` });
+    index.config.methods = index.config.methods.map((entry) =>
+      entry.id === method ? { ...entry, enabled: true } : entry,
+    );
+  }
+  const metric = {
+    games: 12,
+    wins: 7,
+    losses: 5,
+    pushes: 0,
+    net: 1.25,
+    mae: 8,
+    baselineWins: 6,
+    baselineLosses: 6,
+    baselinePushes: 0,
+    baselineNoLean: 0,
+    baselineNet: -0.5,
+    baselineMae: 8.1,
+    changedSides: 2,
+  };
+  vi.stubGlobal(
+    "fetch",
+    vi.fn(async (url: string) => ({
+      ok: true,
+      json: async () =>
+        url.includes("lab-feature-replay")
+          ? {
+              schemaVersion: 1,
+              policy: "isolated-half-features-v1",
+              updatedAt: f.at,
+              from: "2026-11-01",
+              through: "2026-11-02",
+              candidates: 15,
+              skipped: 3,
+              methods: {
+                "opponent-paper-v5": metric,
+                "shooting-paper-v6": metric,
+              },
+            }
+          : structuredClone(labResponse(url, index, store)),
+    })),
+  );
+  render(<Lab />);
+  fireEvent.click(
+    screen.getByRole("button", { name: "Lab v5 Opponent strength" }),
+  );
+  const table = await screen.findByRole("table", { name: "Lab forecasts" });
+  expect(within(table).getByText("1u paper")).toBeTruthy();
+  fireEvent.click(screen.getByText("Historical replay & test plan"));
+  const historical = await screen.findByRole("table", {
+    name: "Historical component replay",
+  });
+  expect(within(historical).getByText("+1.25u")).toBeTruthy();
+  expect(within(historical).getByText("Actual on the same lines")).toBeTruthy();
+  expect(
+    screen.getByText(/separate from the prospective paper record and calendar/),
+  ).toBeTruthy();
+  fireEvent.click(
+    screen.getByRole("button", { name: "Lab v6 Shooting regression" }),
+  );
+  expect(
+    screen
+      .getByRole("button", { name: "Lab v6 Shooting regression" })
+      .getAttribute("aria-pressed"),
+  ).toBe("true");
+  expect(within(table).getByText("1u paper")).toBeTruthy();
 });

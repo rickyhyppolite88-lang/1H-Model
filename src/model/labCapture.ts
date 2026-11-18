@@ -20,8 +20,10 @@ import {
   labForecastSchema,
   latestHalves,
 } from "./lab";
+import type { FeatureModel } from "./labFeatureSchema";
+import { captureFeatureForecast } from "./labFeatures";
 import { captureResearchForecast, type ResearchModel } from "./labResearch";
-import { isPaperLabMethod } from "./labVersions";
+import { isFeaturePaperMethod, isPaperLabMethod } from "./labVersions";
 import { sportsbookNames } from "./marketCoverage";
 import type { PredictionFeed, PredictionRow } from "./predictions";
 import { predictionComparison } from "./predictions";
@@ -39,6 +41,8 @@ export type LabInputs = {
   excludedHistoryGames?: string[];
   contextModel?: ContextModel;
   contextModelPath?: string;
+  featureModel?: FeatureModel;
+  featureModelPath?: string;
   researchModel?: ResearchModel;
   researchModelPath?: string;
   referees?: RefereeStore;
@@ -279,17 +283,27 @@ export function captureLab(
     )?.latest;
     for (const method of config.methods.filter((entry) => entry.enabled)) {
       if (isPaperLabMethod(method.id)) {
-        const candidate = captureResearchForecast(
-          method.id,
-          row,
-          game,
-          feed,
-          inputs.researchModel,
-          inputs.researchModelPath,
-          inputs.halves,
-          inputs.referees,
-          at,
-        );
+        const candidate = isFeaturePaperMethod(method.id)
+          ? captureFeatureForecast(
+              method.id,
+              row,
+              game,
+              feed,
+              inputs.featureModel,
+              inputs.featureModelPath,
+              at,
+            )
+          : captureResearchForecast(
+              method.id,
+              row,
+              game,
+              feed,
+              inputs.researchModel,
+              inputs.researchModelPath,
+              inputs.halves,
+              inputs.referees,
+              at,
+            );
         const previous = forecasts
           .filter(
             (entry) =>
@@ -300,7 +314,7 @@ export function captureLab(
           .at(-1);
         const signature = (entry: LabForecast) =>
           JSON.stringify({
-            ...entry,
+            ...labForecastSchema.parse(entry),
             id: undefined,
             version: undefined,
             recordedAt: undefined,

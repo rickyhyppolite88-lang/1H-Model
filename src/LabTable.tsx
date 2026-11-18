@@ -8,6 +8,7 @@ import GameTime from "./GameTime";
 import { usesTipoffEntry, verifiedTipoffQuote } from "./model/entryPolicy";
 import { gradeLab, type LabForecast, type LabStore } from "./model/lab";
 import {
+  isFeaturePaperMethod,
   isPaperLabMethod,
   isRefereeLabMethod,
   isStakedLabStatus,
@@ -112,7 +113,8 @@ export default function LabTable({
                   data-label={bonus ? "Bonus min" : "Lab 1H"}
                 >
                   {point(bonus ? row.bonusMinutes : row.total)}
-                  {row.methodId.startsWith("enhanced-baseline-") && (
+                  {(row.methodId.startsWith("enhanced-baseline-") ||
+                    isFeaturePaperMethod(row.methodId)) && (
                     <small className="card-detail">
                       Actual {point(row.baselineTotal)}
                     </small>
@@ -291,6 +293,32 @@ export default function LabTable({
                           )}
                         </>
                       )}
+                    </div>
+                  )}
+                  {row.feature && (
+                    <div className="lab-calculation">
+                      <p>
+                        Actual {point(row.baselineTotal)} →{" "}
+                        {row.methodId === "opponent-paper-v5"
+                          ? "opponent-strength"
+                          : "three-point regression"}{" "}
+                        {row.feature.adjustment >= 0 ? "+" : ""}
+                        {point(row.feature.adjustment)} → Lab {point(row.total)}
+                        .
+                      </p>
+                      <p>
+                        Earlier team halves: {row.feature.away.games} away /{" "}
+                        {row.feature.home.games} home. Current-season weights:{" "}
+                        {(row.feature.away.currentWeight * 100).toFixed(0)}% /{" "}
+                        {(row.feature.home.currentWeight * 100).toFixed(0)}%.
+                        Daily feature fit uses {row.feature.trainingGames}{" "}
+                        earlier D1 halves.
+                      </p>
+                      <p>
+                        Only the historical-scoring branch changes. Confidence
+                        is a model score, not a win probability. These component
+                        versions are tested separately and do not change Actual.
+                      </p>
                     </div>
                   )}
                   {row.methodId === "enhanced-baseline-v2" && (
