@@ -531,7 +531,7 @@
     ]
   },
   "startedAt": "2026-11-05T16:08:14.757Z",
-  "updatedAt": "2026-11-20T03:12:00.822Z",
+  "updatedAt": "2026-11-20T03:59:13.916Z",
   "forecasts": [
     {
       "id": "2026-27_opponent-paper-v5_401920517_v1",
@@ -210156,6 +210156,930 @@
           "name": "USC Trojans"
         }
       }
+    },
+    {
+      "id": "2026-27_enhanced-baseline-v2_401920518_v11",
+      "season": "2026-27",
+      "methodId": "enhanced-baseline-v2",
+      "gameId": "401920518",
+      "gameDate": "2026-11-19",
+      "startsAt": "2026-11-20T04:00:00Z",
+      "recordedAt": "2026-11-20T03:59:13.916Z",
+      "version": 11,
+      "revision": "964e0336b924844654ee90d7f32b2784805367cc",
+      "awayTeam": "Houston Cougars",
+      "homeTeam": "Kansas Jayhawks",
+      "sportsbook": "draftkings",
+      "line": 71.5,
+      "overPrice": -105,
+      "underPrice": -125,
+      "total": 70.31725656763327,
+      "baselineTotal": 76.92152512952669,
+      "simpleTotal": 69.07711900396538,
+      "paceTotal": 72.17746291313507,
+      "side": "UNDER",
+      "signalStrength": 7,
+      "status": "watch_only",
+      "reason": "Edge below 1.5 points. Scoring and pace do not both agree with the lean.",
+      "bonusMinutes": 11.393987267412442,
+      "bonusBaselineMinutes": 8.215074309978776,
+      "inputs": {
+        "baselineModelVersion": "season-bridge-v1",
+        "baselineFeatureCapturedAt": "2026-11-19T06:28:07.574Z",
+        "statsRetrievedAt": "2026-11-19T06:27:57.443371Z",
+        "priorSnapshot": "data/input-snapshots/5d7d1cdd590b01d65ca838308bd098bc8be58fdb5d96faf922f4c44677d6d7de.json",
+        "currentSnapshot": "data/input-snapshots/9b7ff9992f5d0261f96e012c0ac8f7e7b3d40c4f06db9ead82fc0980a740c134.json",
+        "sourceBoard": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-19",
+        "entryQuoteCapturedAt": "2026-11-20T03:59:04.693518Z",
+        "quoteCapturedAt": "2026-11-20T03:59:04.693518Z",
+        "marketCheckedAt": "2026-11-20T03:59:04.693518Z",
+        "lastSeenLine": 71.5,
+        "marketFreshness": "Source check within 45 minutes",
+        "awayCurrentWeight": 0.38461538461538464,
+        "homeCurrentWeight": 0.38461538461538464,
+        "away_firstHalfPoints": 39.17965015806112,
+        "away_pace": 69.45766491043203,
+        "away_offensiveEfficiency": 1.1630723709167545,
+        "away_defensiveEfficiency": 0.9431085353003161,
+        "home_firstHalfPoints": 39.42580400421497,
+        "home_pace": 72.62535721812435,
+        "home_offensiveEfficiency": 1.1203185247629084,
+        "home_defensiveEfficiency": 0.9623546891464698,
+        "baselineSimpleTotal": 78.60545416227609,
+        "baselinePaceTotal": 74.39563158040258,
+        "defenseSimpleTotal": 71.29528767123288,
+        "defenseAdjustedTotal": 72.53542523490077,
+        "defenseAdjustment": -4.386099894625914,
+        "awayFirstHalfAllowed": 30.818714436248683,
+        "homeFirstHalfAllowed": 33.166406743940996,
+        "priorAllowedMean": 35.07260273972603,
+        "priorLeagueRegression": 0.35,
+        "historyAsOf": "2026-11-20T03:59:13.916Z",
+        "excludedHistoryGames": "401917950;401918987;401920378;401920511;401920887;401924949;401925079",
+        "contextPointsAdjustment": -0.8184286736202082,
+        "contextModel": "data/context-models/369739826e1ae4a3ad2dad5184eae489b96aa94ba9e5fac0b94a21576b0045ec.json",
+        "freeThrowPointsAdjustment": -1.3997399936473,
+        "freeThrowPointsCap": 2,
+        "contextPointsCap": 4,
+        "pseudoGames": 4,
+        "bonusTreatment": "Timing tracked; no separate bonus-points adjustment stacked on FT/foul points.",
+        "minimumEdge": 1.5,
+        "outlierEdge": 8,
+        "componentAgreementRequired": "Both adjusted components must agree"
+      },
+      "context": {
+        "modelVersion": "lab-context-v1",
+        "capturedAt": "2026-11-20T03:59:13.916Z",
+        "modelFittedAt": "2026-11-20T03:59:09.004522Z",
+        "startsAt": "2026-11-20T04:00:00Z",
+        "baselineFeatureCapturedAt": "2026-11-19T06:28:07.574Z",
+        "modelPath": "data/context-models/369739826e1ae4a3ad2dad5184eae489b96aa94ba9e5fac0b94a21576b0045ec.json",
+        "historySha256": "a1b45c7077e84ff20637816dd8b7ea9837c4f6c5ff7390406ced4f317ec4ef0c",
+        "trainingGames": 6418,
+        "baselineTotal": 76.92152512952669,
+        "baselineSimple": 78.60545416227609,
+        "baselinePace": 74.39563158040258,
+        "total": 76.10309645590648,
+        "simple": 77.78702548865589,
+        "pace": 73.57720290678238,
+        "adjustment": -0.8184286736202082,
+        "unboundedAdjustment": -0.8184286736202082,
+        "homeAwayAdjustment": 0.3267240247031107,
+        "neutralAdjustment": -0.9566391753745174,
+        "matchupAdjustment": -0.763047650254129,
+        "crowdAdjustment": 0.5745341273053275,
+        "expectedAttendance": 3789.25,
+        "attendanceSamples": 8,
+        "crowdEligible": true,
+        "crowdReason": "Historical venue attendance proxy; crowd noise, sellout status and fan allegiance are unknown.",
+        "homeLocationGames": 17,
+        "awayLocationGames": 9,
+        "context": {
+          "neutralSite": true,
+          "conferenceGame": true,
+          "matchupType": "conference_regular",
+          "eventLabel": "Players Era 8 - Championship",
+          "venueId": "4005",
+          "venueKey": "id:4005",
+          "venueName": "Michelob ULTRA Arena",
+          "city": "Las Vegas",
+          "state": "NV"
+        },
+        "warnings": []
+      },
+      "foulExposure": {
+        "awayEspnId": "248",
+        "homeEspnId": "2305",
+        "expectedAwayFouls": 9.643810597777515,
+        "expectedHomeFouls": 8.966611105729159,
+        "awaySevenFoulProbability": 0.8457524046996101,
+        "homeSevenFoulProbability": 0.7901608095748425,
+        "awayFoulLow": 6,
+        "awayFoulHigh": 14,
+        "homeFoulLow": 5,
+        "homeFoulHigh": 13,
+        "expectedAwayFTA": 10.175593246617352,
+        "expectedHomeFTA": 10.194250412490977,
+        "awayFTALow": 4,
+        "awayFTAHigh": 17,
+        "homeFTALow": 4,
+        "homeFTAHigh": 17,
+        "baselineAwayFTA": 11.135844600096002,
+        "baselineHomeFTA": 11.213903696958775,
+        "awayFTPercent": 0.7967282717282718,
+        "homeFTPercent": 0.6224474554571642,
+        "pointsAdjustment": -1.3997399936473,
+        "unboundedPointsAdjustment": -1.3997399936473,
+        "expectedHalfPossessions": 35.52075553213909,
+        "leagueGames": 785,
+        "awayHistoryGames": 4,
+        "homeHistoryGames": 5,
+        "ftaDispersion": 2.760824304227746,
+        "pseudoGames": 4
+      },
+      "participants": {
+        "away": {
+          "espnId": "248",
+          "modelId": "houston-cougars",
+          "name": "Houston Cougars"
+        },
+        "home": {
+          "espnId": "2305",
+          "modelId": "kansas-jayhawks",
+          "name": "Kansas Jayhawks"
+        }
+      }
+    },
+    {
+      "id": "2026-27_enhanced-baseline-v2_401926773_v12",
+      "season": "2026-27",
+      "methodId": "enhanced-baseline-v2",
+      "gameId": "401926773",
+      "gameDate": "2026-11-19",
+      "startsAt": "2026-11-20T04:00:00Z",
+      "recordedAt": "2026-11-20T03:59:13.916Z",
+      "version": 12,
+      "revision": "964e0336b924844654ee90d7f32b2784805367cc",
+      "awayTeam": "Tarleton State Texans",
+      "homeTeam": "USC Trojans",
+      "sportsbook": "draftkings",
+      "line": 76.5,
+      "overPrice": -115,
+      "underPrice": -115,
+      "total": 75.93760284847342,
+      "baselineTotal": 76.02939064408328,
+      "simpleTotal": 73.5125037393392,
+      "paceTotal": 79.57525151217473,
+      "side": "UNDER",
+      "signalStrength": 4,
+      "status": "watch_only",
+      "reason": "Edge below 1.5 points. Scoring and pace do not both agree with the lean.",
+      "bonusMinutes": 12.344107364744314,
+      "bonusBaselineMinutes": 8.215074309978776,
+      "inputs": {
+        "baselineModelVersion": "season-bridge-v1",
+        "baselineFeatureCapturedAt": "2026-11-19T06:28:07.574Z",
+        "statsRetrievedAt": "2026-11-19T06:27:57.443371Z",
+        "priorSnapshot": "data/input-snapshots/5d7d1cdd590b01d65ca838308bd098bc8be58fdb5d96faf922f4c44677d6d7de.json",
+        "currentSnapshot": "data/input-snapshots/9b7ff9992f5d0261f96e012c0ac8f7e7b3d40c4f06db9ead82fc0980a740c134.json",
+        "sourceBoard": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-19",
+        "entryQuoteCapturedAt": "2026-11-20T03:59:04.693518Z",
+        "quoteCapturedAt": "2026-11-20T03:59:04.693518Z",
+        "marketCheckedAt": "2026-11-20T03:59:04.693518Z",
+        "lastSeenLine": 76.5,
+        "marketFreshness": "Source check within 45 minutes",
+        "awayCurrentWeight": 0.38461538461538464,
+        "homeCurrentWeight": 0.3333333333333333,
+        "away_firstHalfPoints": 35.27041938883035,
+        "away_pace": 74.0868956796628,
+        "away_offensiveEfficiency": 1.0330416016859854,
+        "away_defensiveEfficiency": 1.048631612223393,
+        "home_firstHalfPoints": 39.66128767123288,
+        "home_pace": 74.47080365296804,
+        "home_offensiveEfficiency": 1.1163284018264843,
+        "home_defensiveEfficiency": 0.9849342465753426,
+        "baselineSimpleTotal": 74.93170706006322,
+        "baselinePaceTotal": 77.67591602011338,
+        "defenseSimpleTotal": 71.61316824727784,
+        "defenseAdjustedTotal": 74.03826735641206,
+        "defenseAdjustment": -1.9911232876712148,
+        "awayFirstHalfAllowed": 34.33102212855638,
+        "homeFirstHalfAllowed": 33.96360730593607,
+        "priorAllowedMean": 35.07260273972603,
+        "priorLeagueRegression": 0.35,
+        "historyAsOf": "2026-11-20T03:59:13.916Z",
+        "excludedHistoryGames": "401917950;401918987;401920378;401920511;401920887;401924949;401925079",
+        "contextPointsAdjustment": 2.2198556675700916,
+        "contextModel": "data/context-models/369739826e1ae4a3ad2dad5184eae489b96aa94ba9e5fac0b94a21576b0045ec.json",
+        "freeThrowPointsAdjustment": -0.32052017550873513,
+        "freeThrowPointsCap": 2,
+        "contextPointsCap": 4,
+        "pseudoGames": 4,
+        "bonusTreatment": "Timing tracked; no separate bonus-points adjustment stacked on FT/foul points.",
+        "minimumEdge": 1.5,
+        "outlierEdge": 8,
+        "componentAgreementRequired": "Both adjusted components must agree"
+      },
+      "context": {
+        "modelVersion": "lab-context-v1",
+        "capturedAt": "2026-11-20T03:59:13.916Z",
+        "modelFittedAt": "2026-11-20T03:59:09.004522Z",
+        "startsAt": "2026-11-20T04:00:00Z",
+        "baselineFeatureCapturedAt": "2026-11-19T06:28:07.574Z",
+        "modelPath": "data/context-models/369739826e1ae4a3ad2dad5184eae489b96aa94ba9e5fac0b94a21576b0045ec.json",
+        "historySha256": "a1b45c7077e84ff20637816dd8b7ea9837c4f6c5ff7390406ced4f317ec4ef0c",
+        "trainingGames": 6418,
+        "baselineTotal": 76.02939064408328,
+        "baselineSimple": 74.93170706006322,
+        "baselinePace": 77.67591602011338,
+        "total": 78.24924631165337,
+        "simple": 77.1515627276333,
+        "pace": 79.89577168768346,
+        "adjustment": 2.2198556675700916,
+        "unboundedAdjustment": 2.2198556675700916,
+        "homeAwayAdjustment": 0.6125549152613108,
+        "neutralAdjustment": 0.16468920223923617,
+        "matchupAdjustment": 0.6167261116875653,
+        "crowdAdjustment": 0.8258854383819795,
+        "expectedAttendance": 5318.166666666667,
+        "attendanceSamples": 18,
+        "crowdEligible": true,
+        "crowdReason": "Historical venue attendance proxy; crowd noise, sellout status and fan allegiance are unknown.",
+        "homeLocationGames": 18,
+        "awayLocationGames": 17,
+        "context": {
+          "neutralSite": false,
+          "conferenceGame": false,
+          "matchupType": "nonconference_regular",
+          "eventLabel": null,
+          "venueId": "1918",
+          "venueKey": "id:1918",
+          "venueName": "Galen Center",
+          "city": "Los Angeles",
+          "state": "CA"
+        },
+        "warnings": []
+      },
+      "foulExposure": {
+        "awayEspnId": "2627",
+        "homeEspnId": "30",
+        "expectedAwayFouls": 10.610501682522285,
+        "expectedHomeFouls": 8.887357168109421,
+        "awaySevenFoulProbability": 0.9038983228093089,
+        "homeSevenFoulProbability": 0.7827650865013365,
+        "awayFoulLow": 7,
+        "awayFoulHigh": 15,
+        "homeFoulLow": 5,
+        "homeFoulHigh": 13,
+        "expectedAwayFTA": 9.714773441710363,
+        "expectedHomeFTA": 11.448541535127005,
+        "awayFTALow": 4,
+        "awayFTAHigh": 17,
+        "homeFTALow": 5,
+        "homeFTAHigh": 19,
+        "baselineAwayFTA": 10.523053081844054,
+        "baselineHomeFTA": 11.171766891822438,
+        "awayFTPercent": 0.6717282717282718,
+        "homeFTPercent": 0.8036289292103246,
+        "pointsAdjustment": -0.32052017550873513,
+        "unboundedPointsAdjustment": -0.32052017550873513,
+        "expectedHalfPossessions": 37.13942483315771,
+        "leagueGames": 785,
+        "awayHistoryGames": 5,
+        "homeHistoryGames": 4,
+        "ftaDispersion": 2.760824304227746,
+        "pseudoGames": 4
+      },
+      "participants": {
+        "away": {
+          "espnId": "2627",
+          "modelId": "tarleton-state-texans",
+          "name": "Tarleton State Texans"
+        },
+        "home": {
+          "espnId": "30",
+          "modelId": "southern-california-trojans",
+          "name": "USC Trojans"
+        }
+      }
+    },
+    {
+      "id": "2026-27_market-paper-v3_401920518_v20",
+      "season": "2026-27",
+      "methodId": "market-paper-v3",
+      "gameId": "401920518",
+      "gameDate": "2026-11-19",
+      "startsAt": "2026-11-20T04:00:00Z",
+      "recordedAt": "2026-11-20T03:59:13.916Z",
+      "version": 20,
+      "revision": "964e0336b924844654ee90d7f32b2784805367cc",
+      "awayTeam": "Houston Cougars",
+      "homeTeam": "Kansas Jayhawks",
+      "sportsbook": "draftkings",
+      "line": 71.5,
+      "overPrice": -105,
+      "underPrice": -125,
+      "total": 76.92152512952669,
+      "baselineTotal": 76.92152512952669,
+      "simpleTotal": 78.60545416227609,
+      "paceTotal": 74.39563158040258,
+      "side": "OVER",
+      "signalStrength": 48.5,
+      "status": "paper_test",
+      "reason": "1u paper trial on every usable pregame forecast; latest usable pre-tip snapshot counts once. No estimated-return or final-15-minute selection gate. Research only, not a qualified bet.",
+      "bonusMinutes": null,
+      "bonusBaselineMinutes": null,
+      "inputs": {
+        "quoteCapturedAt": "2026-11-20T03:59:04.693518Z",
+        "entryQuoteCapturedAt": "2026-11-20T03:59:04.693518Z",
+        "modelPolicy": "market-offset-ridge20-v1",
+        "paperPolicy": "lab-flat-paper-v1",
+        "sourceBoard": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-19",
+        "minimumExpectedReturn": null,
+        "selectionPolicy": "all-usable-paper-v1",
+        "refereeAttribution": "Crew and games-worked associations; individual caller unavailable."
+      },
+      "research": {
+        "selectionPolicy": "all-usable-paper-v1",
+        "modelPath": "data/lab-research-models/a64b21b8093000cbf152767a83963de7979b7f2538d0ff449088a6ac79b3f9b5.json",
+        "fittedAt": "2026-11-19T06:28:10.804Z",
+        "trainingGames": 470,
+        "probability": 0.48465033597953905,
+        "marketProbability": 0.4796954314720812,
+        "expectedReturn": -0.053777915468518955,
+        "paperUnits": 1,
+        "crewAssignmentId": null,
+        "crewObservedAt": null,
+        "crew": [],
+        "refereePointsEquivalent": null,
+        "refereeBaselineProbability": 0.48465033597953905
+      },
+      "participants": {
+        "away": {
+          "espnId": "248",
+          "modelId": "houston-cougars",
+          "name": "Houston Cougars"
+        },
+        "home": {
+          "espnId": "2305",
+          "modelId": "kansas-jayhawks",
+          "name": "Kansas Jayhawks"
+        }
+      }
+    },
+    {
+      "id": "2026-27_referee-paper-v4_401920518_v20",
+      "season": "2026-27",
+      "methodId": "referee-paper-v4",
+      "gameId": "401920518",
+      "gameDate": "2026-11-19",
+      "startsAt": "2026-11-20T04:00:00Z",
+      "recordedAt": "2026-11-20T03:59:13.916Z",
+      "version": 20,
+      "revision": "964e0336b924844654ee90d7f32b2784805367cc",
+      "awayTeam": "Houston Cougars",
+      "homeTeam": "Kansas Jayhawks",
+      "sportsbook": "draftkings",
+      "line": 71.5,
+      "overPrice": -105,
+      "underPrice": -125,
+      "total": 76.92152512952669,
+      "baselineTotal": 76.92152512952669,
+      "simpleTotal": 78.60545416227609,
+      "paceTotal": 74.39563158040258,
+      "side": "OVER",
+      "signalStrength": 49.4,
+      "status": "paper_test",
+      "reason": "1u paper trial on every usable pregame forecast; latest usable pre-tip snapshot counts once. No estimated-return or final-15-minute selection gate. Research only, not a qualified bet.",
+      "bonusMinutes": null,
+      "bonusBaselineMinutes": null,
+      "inputs": {
+        "quoteCapturedAt": "2026-11-20T03:59:04.693518Z",
+        "entryQuoteCapturedAt": "2026-11-20T03:59:04.693518Z",
+        "modelPolicy": "market-offset-ridge20-v1",
+        "paperPolicy": "lab-flat-paper-v1",
+        "sourceBoard": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-19",
+        "minimumExpectedReturn": null,
+        "selectionPolicy": "all-usable-paper-v1",
+        "refereeAttribution": "Crew and games-worked associations; individual caller unavailable."
+      },
+      "research": {
+        "selectionPolicy": "all-usable-paper-v1",
+        "modelPath": "data/lab-research-models/a64b21b8093000cbf152767a83963de7979b7f2538d0ff449088a6ac79b3f9b5.json",
+        "fittedAt": "2026-11-19T06:28:10.804Z",
+        "trainingGames": 470,
+        "probability": 0.49448300168743853,
+        "marketProbability": 0.4796954314720812,
+        "expectedReturn": -0.03458080622928672,
+        "paperUnits": 1,
+        "crewAssignmentId": "crew:060ddc871fd1dfb99f3478ddc003e0705c4a2ac5fa31edc55b4649de14c9a849",
+        "crewObservedAt": "2026-11-20T03:59:07.886664Z",
+        "crew": [
+          {
+            "id": "name:owen shortt",
+            "name": "Owen Shortt",
+            "pricedGames": 8,
+            "pointsAssociation": -0.024543738200125835
+          },
+          {
+            "id": "name:tony chiazza",
+            "name": "Tony Chiazza",
+            "pricedGames": 9,
+            "pointsAssociation": 0.31816800850675986
+          },
+          {
+            "id": "name:tony padilla",
+            "name": "Tony Padilla",
+            "pricedGames": 9,
+            "pointsAssociation": 0.49058180161020815
+          }
+        ],
+        "refereePointsEquivalent": 0.26140202397228074,
+        "refereeBaselineProbability": 0.48465033597953905
+      },
+      "participants": {
+        "away": {
+          "espnId": "248",
+          "modelId": "houston-cougars",
+          "name": "Houston Cougars"
+        },
+        "home": {
+          "espnId": "2305",
+          "modelId": "kansas-jayhawks",
+          "name": "Kansas Jayhawks"
+        }
+      }
+    },
+    {
+      "id": "2026-27_market-paper-v3_401926773_v20",
+      "season": "2026-27",
+      "methodId": "market-paper-v3",
+      "gameId": "401926773",
+      "gameDate": "2026-11-19",
+      "startsAt": "2026-11-20T04:00:00Z",
+      "recordedAt": "2026-11-20T03:59:13.916Z",
+      "version": 20,
+      "revision": "964e0336b924844654ee90d7f32b2784805367cc",
+      "awayTeam": "Tarleton State Texans",
+      "homeTeam": "USC Trojans",
+      "sportsbook": "draftkings",
+      "line": 76.5,
+      "overPrice": -115,
+      "underPrice": -115,
+      "total": 76.02939064408328,
+      "baselineTotal": 76.02939064408328,
+      "simpleTotal": 74.93170706006322,
+      "paceTotal": 77.67591602011338,
+      "side": "UNDER",
+      "signalStrength": 50.7,
+      "status": "paper_test",
+      "reason": "1u paper trial on every usable pregame forecast; latest usable pre-tip snapshot counts once. No estimated-return or final-15-minute selection gate. Research only, not a qualified bet.",
+      "bonusMinutes": null,
+      "bonusBaselineMinutes": null,
+      "inputs": {
+        "quoteCapturedAt": "2026-11-20T03:59:04.693518Z",
+        "entryQuoteCapturedAt": "2026-11-20T03:59:04.693518Z",
+        "modelPolicy": "market-offset-ridge20-v1",
+        "paperPolicy": "lab-flat-paper-v1",
+        "sourceBoard": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-19",
+        "minimumExpectedReturn": null,
+        "selectionPolicy": "all-usable-paper-v1",
+        "refereeAttribution": "Crew and games-worked associations; individual caller unavailable."
+      },
+      "research": {
+        "selectionPolicy": "all-usable-paper-v1",
+        "modelPath": "data/lab-research-models/a64b21b8093000cbf152767a83963de7979b7f2538d0ff449088a6ac79b3f9b5.json",
+        "fittedAt": "2026-11-19T06:28:10.804Z",
+        "trainingGames": 470,
+        "probability": 0.5073855381422417,
+        "marketProbability": 0.5,
+        "expectedReturn": -0.05140964608189591,
+        "paperUnits": 1,
+        "crewAssignmentId": null,
+        "crewObservedAt": null,
+        "crew": [],
+        "refereePointsEquivalent": null,
+        "refereeBaselineProbability": 0.5073855381422417
+      },
+      "participants": {
+        "away": {
+          "espnId": "2627",
+          "modelId": "tarleton-state-texans",
+          "name": "Tarleton State Texans"
+        },
+        "home": {
+          "espnId": "30",
+          "modelId": "southern-california-trojans",
+          "name": "USC Trojans"
+        }
+      }
+    },
+    {
+      "id": "2026-27_referee-paper-v4_401926773_v20",
+      "season": "2026-27",
+      "methodId": "referee-paper-v4",
+      "gameId": "401926773",
+      "gameDate": "2026-11-19",
+      "startsAt": "2026-11-20T04:00:00Z",
+      "recordedAt": "2026-11-20T03:59:13.916Z",
+      "version": 20,
+      "revision": "964e0336b924844654ee90d7f32b2784805367cc",
+      "awayTeam": "Tarleton State Texans",
+      "homeTeam": "USC Trojans",
+      "sportsbook": "draftkings",
+      "line": 76.5,
+      "overPrice": -115,
+      "underPrice": -115,
+      "total": 76.02939064408328,
+      "baselineTotal": 76.02939064408328,
+      "simpleTotal": 74.93170706006322,
+      "paceTotal": 77.67591602011338,
+      "side": "UNDER",
+      "signalStrength": 50.3,
+      "status": "paper_test",
+      "reason": "1u paper trial on every usable pregame forecast; latest usable pre-tip snapshot counts once. No estimated-return or final-15-minute selection gate. Research only, not a qualified bet.",
+      "bonusMinutes": null,
+      "bonusBaselineMinutes": null,
+      "inputs": {
+        "quoteCapturedAt": "2026-11-20T03:59:04.693518Z",
+        "entryQuoteCapturedAt": "2026-11-20T03:59:04.693518Z",
+        "modelPolicy": "market-offset-ridge20-v1",
+        "paperPolicy": "lab-flat-paper-v1",
+        "sourceBoard": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-19",
+        "minimumExpectedReturn": null,
+        "selectionPolicy": "all-usable-paper-v1",
+        "refereeAttribution": "Crew and games-worked associations; individual caller unavailable."
+      },
+      "research": {
+        "selectionPolicy": "all-usable-paper-v1",
+        "modelPath": "data/lab-research-models/a64b21b8093000cbf152767a83963de7979b7f2538d0ff449088a6ac79b3f9b5.json",
+        "fittedAt": "2026-11-19T06:28:10.804Z",
+        "trainingGames": 470,
+        "probability": 0.5029462971971141,
+        "marketProbability": 0.5,
+        "expectedReturn": -0.05970909654452572,
+        "paperUnits": 1,
+        "crewAssignmentId": "crew:d9e77dbbc5401ae636588f9545d1e825c51afc8d6ae32a02f0dd8ab3aaa8c497",
+        "crewObservedAt": "2026-11-20T03:59:07.843877Z",
+        "crew": [
+          {
+            "id": "name:amy bonner",
+            "name": "Amy Bonner",
+            "pricedGames": 5,
+            "pointsAssociation": 1.1428193832599118
+          },
+          {
+            "id": "name:kelly pfeifer",
+            "name": "Kelly Pfeifer",
+            "pricedGames": 8,
+            "pointsAssociation": -0.5602580239144116
+          },
+          {
+            "id": "name:michael irving",
+            "name": "Michael Irving",
+            "pricedGames": 10,
+            "pointsAssociation": -0.22863436123348013
+          }
+        ],
+        "refereePointsEquivalent": 0.11797566603734004,
+        "refereeBaselineProbability": 0.5073855381422417
+      },
+      "participants": {
+        "away": {
+          "espnId": "2627",
+          "modelId": "tarleton-state-texans",
+          "name": "Tarleton State Texans"
+        },
+        "home": {
+          "espnId": "30",
+          "modelId": "southern-california-trojans",
+          "name": "USC Trojans"
+        }
+      }
+    },
+    {
+      "id": "2026-27_opponent-paper-v5_401920518_v26",
+      "season": "2026-27",
+      "methodId": "opponent-paper-v5",
+      "gameId": "401920518",
+      "gameDate": "2026-11-19",
+      "startsAt": "2026-11-20T04:00:00Z",
+      "recordedAt": "2026-11-20T03:59:13.916Z",
+      "version": 26,
+      "revision": "964e0336b924844654ee90d7f32b2784805367cc",
+      "awayTeam": "Houston Cougars",
+      "homeTeam": "Kansas Jayhawks",
+      "sportsbook": "draftkings",
+      "line": 71.5,
+      "overPrice": -105,
+      "underPrice": -125,
+      "total": 76.97100600290543,
+      "baselineTotal": 76.92152512952669,
+      "simpleTotal": 78.68792228457399,
+      "paceTotal": 74.39563158040258,
+      "side": "OVER",
+      "signalStrength": 68,
+      "status": "paper_test",
+      "reason": "Isolated component test: 1u paper on the latest usable pre-tip forecast. Saved confidence is a model score, not a win probability. No numerical weights are promoted to Actual.",
+      "bonusMinutes": null,
+      "bonusBaselineMinutes": null,
+      "inputs": {
+        "modelPolicy": "isolated-half-features-v1",
+        "selectionPolicy": "component-paper-v1",
+        "modelPath": "data/lab-feature-models/fbb28eca4891ed1b4192d444c8e3247aa2288e3e0cc355932c6e41ece67597f1.json",
+        "baselineFeatureCapturedAt": "2026-11-19T06:28:07.574Z",
+        "statsRetrievedAt": "2026-11-19T06:27:57.443371Z",
+        "entryQuoteCapturedAt": "2026-11-20T03:59:04.693518Z",
+        "quoteCapturedAt": "2026-11-20T03:59:04.693518Z",
+        "marketCheckedAt": "2026-11-20T03:59:04.693518Z",
+        "sourceBoard": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-19",
+        "historyAsOf": "2026-11-19T06:28:10.804Z",
+        "opponentPriorHalves": 4,
+        "shootingPriorAttempts": 50,
+        "scoringWeight": 0.6,
+        "pointCap": 3,
+        "interpretation": "Opponent-strength correction against equally shrunk unadjusted offense; pace/efficiency branch unchanged."
+      },
+      "feature": {
+        "policy": "isolated-half-features-v1",
+        "selectionPolicy": "component-paper-v1",
+        "modelPath": "data/lab-feature-models/fbb28eca4891ed1b4192d444c8e3247aa2288e3e0cc355932c6e41ece67597f1.json",
+        "fittedAt": "2026-11-19T06:28:10.804Z",
+        "trainingGames": 759,
+        "expectedPossessions": 35.52075553213909,
+        "unboundedAdjustment": 0.04948087337874129,
+        "adjustment": 0.04948087337874129,
+        "paperUnits": 1,
+        "away": {
+          "espnId": "248",
+          "games": 4,
+          "currentWeight": 0.38461538461538464,
+          "deltaRate": 0.005284173988228114,
+          "weightedPoints": 0.04331488902118598
+        },
+        "home": {
+          "espnId": "2305",
+          "games": 5,
+          "currentWeight": 0.38461538461538464,
+          "deltaRate": 0.0007522155750665505,
+          "weightedPoints": 0.006165984357555314
+        }
+      },
+      "participants": {
+        "away": {
+          "espnId": "248",
+          "modelId": "houston-cougars",
+          "name": "Houston Cougars"
+        },
+        "home": {
+          "espnId": "2305",
+          "modelId": "kansas-jayhawks",
+          "name": "Kansas Jayhawks"
+        }
+      }
+    },
+    {
+      "id": "2026-27_shooting-paper-v6_401920518_v26",
+      "season": "2026-27",
+      "methodId": "shooting-paper-v6",
+      "gameId": "401920518",
+      "gameDate": "2026-11-19",
+      "startsAt": "2026-11-20T04:00:00Z",
+      "recordedAt": "2026-11-20T03:59:13.916Z",
+      "version": 26,
+      "revision": "964e0336b924844654ee90d7f32b2784805367cc",
+      "awayTeam": "Houston Cougars",
+      "homeTeam": "Kansas Jayhawks",
+      "sportsbook": "draftkings",
+      "line": 71.5,
+      "overPrice": -105,
+      "underPrice": -125,
+      "total": 76.85461765980443,
+      "baselineTotal": 76.92152512952669,
+      "simpleTotal": 78.49394171273902,
+      "paceTotal": 74.39563158040258,
+      "side": "OVER",
+      "signalStrength": 67,
+      "status": "paper_test",
+      "reason": "Isolated component test: 1u paper on the latest usable pre-tip forecast. Saved confidence is a model score, not a win probability. No numerical weights are promoted to Actual.",
+      "bonusMinutes": null,
+      "bonusBaselineMinutes": null,
+      "inputs": {
+        "modelPolicy": "isolated-half-features-v1",
+        "selectionPolicy": "component-paper-v1",
+        "modelPath": "data/lab-feature-models/fbb28eca4891ed1b4192d444c8e3247aa2288e3e0cc355932c6e41ece67597f1.json",
+        "baselineFeatureCapturedAt": "2026-11-19T06:28:07.574Z",
+        "statsRetrievedAt": "2026-11-19T06:27:57.443371Z",
+        "entryQuoteCapturedAt": "2026-11-20T03:59:04.693518Z",
+        "quoteCapturedAt": "2026-11-20T03:59:04.693518Z",
+        "marketCheckedAt": "2026-11-20T03:59:04.693518Z",
+        "sourceBoard": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-19",
+        "historyAsOf": "2026-11-19T06:28:10.804Z",
+        "opponentPriorHalves": 4,
+        "shootingPriorAttempts": 50,
+        "scoringWeight": 0.6,
+        "pointCap": 3,
+        "interpretation": "Regress observed three-point conversion toward the earlier league rate while retaining attempt volume; pace/efficiency branch unchanged."
+      },
+      "feature": {
+        "policy": "isolated-half-features-v1",
+        "selectionPolicy": "component-paper-v1",
+        "modelPath": "data/lab-feature-models/fbb28eca4891ed1b4192d444c8e3247aa2288e3e0cc355932c6e41ece67597f1.json",
+        "fittedAt": "2026-11-19T06:28:10.804Z",
+        "trainingGames": 759,
+        "expectedPossessions": 35.52075553213909,
+        "unboundedAdjustment": -0.06690746972224641,
+        "adjustment": -0.06690746972224641,
+        "paperUnits": 1,
+        "away": {
+          "espnId": "248",
+          "games": 4,
+          "currentWeight": 0.38461538461538464,
+          "deltaRate": -0.007859034387248538,
+          "weightedPoints": -0.06442127058187612
+        },
+        "home": {
+          "espnId": "2305",
+          "games": 5,
+          "currentWeight": 0.38461538461538464,
+          "deltaRate": -0.0003033023776344907,
+          "weightedPoints": -0.0024861991403702945
+        }
+      },
+      "participants": {
+        "away": {
+          "espnId": "248",
+          "modelId": "houston-cougars",
+          "name": "Houston Cougars"
+        },
+        "home": {
+          "espnId": "2305",
+          "modelId": "kansas-jayhawks",
+          "name": "Kansas Jayhawks"
+        }
+      }
+    },
+    {
+      "id": "2026-27_opponent-paper-v5_401926773_v26",
+      "season": "2026-27",
+      "methodId": "opponent-paper-v5",
+      "gameId": "401926773",
+      "gameDate": "2026-11-19",
+      "startsAt": "2026-11-20T04:00:00Z",
+      "recordedAt": "2026-11-20T03:59:13.916Z",
+      "version": 26,
+      "revision": "964e0336b924844654ee90d7f32b2784805367cc",
+      "awayTeam": "Tarleton State Texans",
+      "homeTeam": "USC Trojans",
+      "sportsbook": "draftkings",
+      "line": 76.5,
+      "overPrice": -115,
+      "underPrice": -115,
+      "total": 75.70641575711194,
+      "baselineTotal": 76.02939064408328,
+      "simpleTotal": 74.39341558177765,
+      "paceTotal": 77.67591602011338,
+      "side": "UNDER",
+      "signalStrength": 5,
+      "status": "paper_test",
+      "reason": "Isolated component test: 1u paper on the latest usable pre-tip forecast. Saved confidence is a model score, not a win probability. No numerical weights are promoted to Actual.",
+      "bonusMinutes": null,
+      "bonusBaselineMinutes": null,
+      "inputs": {
+        "modelPolicy": "isolated-half-features-v1",
+        "selectionPolicy": "component-paper-v1",
+        "modelPath": "data/lab-feature-models/fbb28eca4891ed1b4192d444c8e3247aa2288e3e0cc355932c6e41ece67597f1.json",
+        "baselineFeatureCapturedAt": "2026-11-19T06:28:07.574Z",
+        "statsRetrievedAt": "2026-11-19T06:27:57.443371Z",
+        "entryQuoteCapturedAt": "2026-11-20T03:59:04.693518Z",
+        "quoteCapturedAt": "2026-11-20T03:59:04.693518Z",
+        "marketCheckedAt": "2026-11-20T03:59:04.693518Z",
+        "sourceBoard": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-19",
+        "historyAsOf": "2026-11-19T06:28:10.804Z",
+        "opponentPriorHalves": 4,
+        "shootingPriorAttempts": 50,
+        "scoringWeight": 0.6,
+        "pointCap": 3,
+        "interpretation": "Opponent-strength correction against equally shrunk unadjusted offense; pace/efficiency branch unchanged."
+      },
+      "feature": {
+        "policy": "isolated-half-features-v1",
+        "selectionPolicy": "component-paper-v1",
+        "modelPath": "data/lab-feature-models/fbb28eca4891ed1b4192d444c8e3247aa2288e3e0cc355932c6e41ece67597f1.json",
+        "fittedAt": "2026-11-19T06:28:10.804Z",
+        "trainingGames": 759,
+        "expectedPossessions": 37.13942483315771,
+        "unboundedAdjustment": -0.3229748869713398,
+        "adjustment": -0.3229748869713398,
+        "paperUnits": 1,
+        "away": {
+          "espnId": "2627",
+          "games": 3,
+          "currentWeight": 0.38461538461538464,
+          "deltaRate": -0.01952568272204669,
+          "weightedPoints": -0.16734752902420136
+        },
+        "home": {
+          "espnId": "30",
+          "games": 4,
+          "currentWeight": 0.3333333333333333,
+          "deltaRate": -0.02095177276523086,
+          "weightedPoints": -0.15562735794713844
+        }
+      },
+      "participants": {
+        "away": {
+          "espnId": "2627",
+          "modelId": "tarleton-state-texans",
+          "name": "Tarleton State Texans"
+        },
+        "home": {
+          "espnId": "30",
+          "modelId": "southern-california-trojans",
+          "name": "USC Trojans"
+        }
+      }
+    },
+    {
+      "id": "2026-27_shooting-paper-v6_401926773_v26",
+      "season": "2026-27",
+      "methodId": "shooting-paper-v6",
+      "gameId": "401926773",
+      "gameDate": "2026-11-19",
+      "startsAt": "2026-11-20T04:00:00Z",
+      "recordedAt": "2026-11-20T03:59:13.916Z",
+      "version": 26,
+      "revision": "964e0336b924844654ee90d7f32b2784805367cc",
+      "awayTeam": "Tarleton State Texans",
+      "homeTeam": "USC Trojans",
+      "sportsbook": "draftkings",
+      "line": 76.5,
+      "overPrice": -115,
+      "underPrice": -115,
+      "total": 75.94670216433308,
+      "baselineTotal": 76.02939064408328,
+      "simpleTotal": 74.79389292714622,
+      "paceTotal": 77.67591602011338,
+      "side": "UNDER",
+      "signalStrength": 3,
+      "status": "paper_test",
+      "reason": "Isolated component test: 1u paper on the latest usable pre-tip forecast. Saved confidence is a model score, not a win probability. No numerical weights are promoted to Actual.",
+      "bonusMinutes": null,
+      "bonusBaselineMinutes": null,
+      "inputs": {
+        "modelPolicy": "isolated-half-features-v1",
+        "selectionPolicy": "component-paper-v1",
+        "modelPath": "data/lab-feature-models/fbb28eca4891ed1b4192d444c8e3247aa2288e3e0cc355932c6e41ece67597f1.json",
+        "baselineFeatureCapturedAt": "2026-11-19T06:28:07.574Z",
+        "statsRetrievedAt": "2026-11-19T06:27:57.443371Z",
+        "entryQuoteCapturedAt": "2026-11-20T03:59:04.693518Z",
+        "quoteCapturedAt": "2026-11-20T03:59:04.693518Z",
+        "marketCheckedAt": "2026-11-20T03:59:04.693518Z",
+        "sourceBoard": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-19",
+        "historyAsOf": "2026-11-19T06:28:10.804Z",
+        "opponentPriorHalves": 4,
+        "shootingPriorAttempts": 50,
+        "scoringWeight": 0.6,
+        "pointCap": 3,
+        "interpretation": "Regress observed three-point conversion toward the earlier league rate while retaining attempt volume; pace/efficiency branch unchanged."
+      },
+      "feature": {
+        "policy": "isolated-half-features-v1",
+        "selectionPolicy": "component-paper-v1",
+        "modelPath": "data/lab-feature-models/fbb28eca4891ed1b4192d444c8e3247aa2288e3e0cc355932c6e41ece67597f1.json",
+        "fittedAt": "2026-11-19T06:28:10.804Z",
+        "trainingGames": 759,
+        "expectedPossessions": 37.13942483315771,
+        "unboundedAdjustment": -0.08268847975020069,
+        "adjustment": -0.08268847975020069,
+        "paperUnits": 1,
+        "away": {
+          "espnId": "2627",
+          "games": 3,
+          "currentWeight": 0.38461538461538464,
+          "deltaRate": 0.006042560782166614,
+          "weightedPoints": 0.05178859199286084
+        },
+        "home": {
+          "espnId": "30",
+          "games": 4,
+          "currentWeight": 0.3333333333333333,
+          "deltaRate": -0.018104355728067408,
+          "weightedPoints": -0.13447707174306153
+        }
+      },
+      "participants": {
+        "away": {
+          "espnId": "2627",
+          "modelId": "tarleton-state-texans",
+          "name": "Tarleton State Texans"
+        },
+        "home": {
+          "espnId": "30",
+          "modelId": "southern-california-trojans",
+          "name": "USC Trojans"
+        }
+      }
     }
   ],
   "results": [
@@ -211141,6 +212065,142 @@
         "venueId": "3423",
         "venueKey": "id:3423",
         "venueName": "Moda Center",
+        "city": "Portland",
+        "state": "OR"
+      }
+    },
+    {
+      "id": "2026-27:401928388_result1",
+      "season": "2026-27",
+      "gameId": "401928388",
+      "observedAt": "2026-11-20T03:59:11.735Z",
+      "sourceCapturedAt": "2026-11-20T03:59:04.226421Z",
+      "startsAt": "2026-11-20T02:00:00Z",
+      "awayPoints": 32,
+      "homePoints": 44,
+      "source": "https://site.api.espn.com/apis/site/v2/sports/basketball/mens-college-basketball/scoreboard?dates=20261119&groups=50&limit=1000",
+      "participants": {
+        "away": {
+          "espnId": "2572",
+          "modelId": "southern-miss-golden-eagles",
+          "name": "Southern Miss Golden Eagles"
+        },
+        "home": {
+          "espnId": "2755",
+          "modelId": "grambling-state-tigers",
+          "name": "Grambling Tigers"
+        }
+      },
+      "context": {
+        "neutralSite": false,
+        "conferenceGame": false,
+        "matchupType": "nonconference_regular",
+        "eventLabel": null,
+        "venueId": "1928",
+        "venueKey": "id:1928",
+        "venueName": "Fredrick C. Hobdy Assembly Center",
+        "city": "Grambling",
+        "state": "LA"
+      }
+    },
+    {
+      "id": "2026-27:401918056_result1",
+      "season": "2026-27",
+      "gameId": "401918056",
+      "observedAt": "2026-11-20T03:59:11.735Z",
+      "sourceCapturedAt": "2026-11-20T03:59:04.226421Z",
+      "startsAt": "2026-11-20T03:00:00Z",
+      "awayPoints": 28,
+      "homePoints": 44,
+      "source": "https://site.api.espn.com/apis/site/v2/sports/basketball/mens-college-basketball/scoreboard?dates=20261119&groups=50&limit=1000",
+      "participants": {
+        "away": {
+          "espnId": "2837",
+          "modelId": "east-texas-am-lions",
+          "name": "East Texas A&M Lions"
+        },
+        "home": {
+          "espnId": "25",
+          "modelId": "california-golden-bears",
+          "name": "California Golden Bears"
+        }
+      },
+      "context": {
+        "neutralSite": false,
+        "conferenceGame": false,
+        "matchupType": "nonconference_regular",
+        "eventLabel": null,
+        "venueId": "496",
+        "venueKey": "id:496",
+        "venueName": "Haas Pavilion",
+        "city": "Berkeley",
+        "state": "CA"
+      }
+    },
+    {
+      "id": "2026-27:401920349_result1",
+      "season": "2026-27",
+      "gameId": "401920349",
+      "observedAt": "2026-11-20T03:59:11.735Z",
+      "sourceCapturedAt": "2026-11-20T03:59:04.226421Z",
+      "startsAt": "2026-11-20T03:00:00Z",
+      "awayPoints": 36,
+      "homePoints": 34,
+      "source": "https://site.api.espn.com/apis/site/v2/sports/basketball/mens-college-basketball/scoreboard?dates=20261119&groups=50&limit=1000",
+      "participants": {
+        "away": {
+          "espnId": "16",
+          "modelId": "sacramento-state-hornets",
+          "name": "Sacramento State Hornets"
+        },
+        "home": {
+          "espnId": "24",
+          "modelId": "stanford-cardinal",
+          "name": "Stanford Cardinal"
+        }
+      },
+      "context": {
+        "neutralSite": false,
+        "conferenceGame": false,
+        "matchupType": "nonconference_regular",
+        "eventLabel": null,
+        "venueId": "820",
+        "venueKey": "id:820",
+        "venueName": "Maples Pavilion",
+        "city": "Stanford",
+        "state": "CA"
+      }
+    },
+    {
+      "id": "2026-27:401925916_result1",
+      "season": "2026-27",
+      "gameId": "401925916",
+      "observedAt": "2026-11-20T03:59:11.735Z",
+      "sourceCapturedAt": "2026-11-20T03:59:04.226421Z",
+      "startsAt": "2026-11-20T03:00:00Z",
+      "awayPoints": 18,
+      "homePoints": 68,
+      "source": "https://site.api.espn.com/apis/site/v2/sports/basketball/mens-college-basketball/scoreboard?dates=20261119&groups=50&limit=1000",
+      "participants": {
+        "away": {
+          "espnId": "3218",
+          "modelId": null,
+          "name": "Northwest Indian RedHawks"
+        },
+        "home": {
+          "espnId": "2502",
+          "modelId": "portland-st-vikings",
+          "name": "Portland State Vikings"
+        }
+      },
+      "context": {
+        "neutralSite": false,
+        "conferenceGame": false,
+        "matchupType": "nonconference_regular",
+        "eventLabel": null,
+        "venueId": "6020",
+        "venueKey": "id:6020",
+        "venueName": "Viking Pavilion",
         "city": "Portland",
         "state": "OR"
       }
@@ -212246,6 +213306,158 @@
           "threeAttempted": 7,
           "turnovers": 7,
           "offensiveRebounds": 6
+        }
+      ]
+    },
+    {
+      "id": "401918056_c74acdc010261c49656d23aa562d707b3eae69bec13d663057c8e9457d95244a",
+      "gameId": "401918056",
+      "season": "2026-27",
+      "startsAt": "2026-11-20T03:00:00Z",
+      "observedAt": "2026-11-20T03:59:05.889967Z",
+      "source": "https://site.api.espn.com/apis/site/v2/sports/basketball/mens-college-basketball/summary?event=401918056",
+      "sourceSha256": "abe63b3cf15d4a65c3b866b04df93c789e5519159ffaf4a6f53df1e6109411c6",
+      "bothD1": true,
+      "teams": [
+        {
+          "espnId": "25",
+          "points": 44,
+          "fouls": 4,
+          "bonusMinutes": 8.166666666666666,
+          "fga": 31,
+          "fta": 8,
+          "freeThrowsMade": 4,
+          "threeMade": 6,
+          "threeAttempted": 12,
+          "turnovers": 3,
+          "offensiveRebounds": 6
+        },
+        {
+          "espnId": "2837",
+          "points": 28,
+          "fouls": 8,
+          "bonusMinutes": 0,
+          "fga": 27,
+          "fta": 5,
+          "freeThrowsMade": 4,
+          "threeMade": 4,
+          "threeAttempted": 11,
+          "turnovers": 10,
+          "offensiveRebounds": 7
+        }
+      ]
+    },
+    {
+      "id": "401920349_9455ecfa271ea670589e41cb3752178ed0a3050250403a3ec28fc78f1157470d",
+      "gameId": "401920349",
+      "season": "2026-27",
+      "startsAt": "2026-11-20T03:00:00Z",
+      "observedAt": "2026-11-20T03:59:05.889967Z",
+      "source": "https://site.api.espn.com/apis/site/v2/sports/basketball/mens-college-basketball/summary?event=401920349",
+      "sourceSha256": "03a757398036f941607a30c2e00b3589427faa1bb0f41fe364eeeb59bb85d534",
+      "bothD1": true,
+      "teams": [
+        {
+          "espnId": "16",
+          "points": 36,
+          "fouls": 5,
+          "bonusMinutes": 0,
+          "fga": 30,
+          "fta": 8,
+          "freeThrowsMade": 4,
+          "threeMade": 4,
+          "threeAttempted": 12,
+          "turnovers": 6,
+          "offensiveRebounds": 8
+        },
+        {
+          "espnId": "24",
+          "points": 34,
+          "fouls": 6,
+          "bonusMinutes": 0,
+          "fga": 24,
+          "fta": 10,
+          "freeThrowsMade": 8,
+          "threeMade": 2,
+          "threeAttempted": 11,
+          "turnovers": 7,
+          "offensiveRebounds": 3
+        }
+      ]
+    },
+    {
+      "id": "401925916_a63e1f38c8e92ae3c7d9a675925f1849cb82b5e7d488a7ac0d38777061bb6670",
+      "gameId": "401925916",
+      "season": "2026-27",
+      "startsAt": "2026-11-20T03:00:00Z",
+      "observedAt": "2026-11-20T03:59:05.889967Z",
+      "source": "https://site.api.espn.com/apis/site/v2/sports/basketball/mens-college-basketball/summary?event=401925916",
+      "sourceSha256": "e0ff83596059c9b6b9dad721d5793ec45d72326cf95430497529afd62ef56c2c",
+      "bothD1": false,
+      "teams": [
+        {
+          "espnId": "2502",
+          "points": 68,
+          "fouls": 4,
+          "bonusMinutes": 8.666666666666666,
+          "fga": 38,
+          "fta": 16,
+          "freeThrowsMade": 13,
+          "threeMade": 7,
+          "threeAttempted": 16,
+          "turnovers": 11,
+          "offensiveRebounds": 10
+        },
+        {
+          "espnId": "3218",
+          "points": 18,
+          "fouls": 11,
+          "bonusMinutes": 0,
+          "fga": 26,
+          "fta": 3,
+          "freeThrowsMade": 2,
+          "threeMade": 2,
+          "threeAttempted": 5,
+          "turnovers": 20,
+          "offensiveRebounds": 2
+        }
+      ]
+    },
+    {
+      "id": "401928388_dbb90b4f8b3c6c0b322b5487991dbea5ee23c8f8d370b0df1badffbcca98a3eb",
+      "gameId": "401928388",
+      "season": "2026-27",
+      "startsAt": "2026-11-20T02:00:00Z",
+      "observedAt": "2026-11-20T03:59:05.889967Z",
+      "source": "https://site.api.espn.com/apis/site/v2/sports/basketball/mens-college-basketball/summary?event=401928388",
+      "sourceSha256": "769a282f2093ee3fea25d979da1a6b59110fd31e3c73100939717d41e319b746",
+      "bothD1": true,
+      "teams": [
+        {
+          "espnId": "2572",
+          "points": 32,
+          "fouls": 11,
+          "bonusMinutes": 9.933333333333334,
+          "fga": 22,
+          "fta": 18,
+          "freeThrowsMade": 15,
+          "threeMade": 3,
+          "threeAttempted": 7,
+          "turnovers": 8,
+          "offensiveRebounds": 2
+        },
+        {
+          "espnId": "2755",
+          "points": 44,
+          "fouls": 13,
+          "bonusMinutes": 13.35,
+          "fga": 31,
+          "fta": 15,
+          "freeThrowsMade": 11,
+          "threeMade": 5,
+          "threeAttempted": 11,
+          "turnovers": 6,
+          "offensiveRebounds": 8
         }
       ]
     }
