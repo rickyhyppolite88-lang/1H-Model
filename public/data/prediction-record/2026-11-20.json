@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-11-20T08:57:04.798Z",
+  "updatedAt": "2026-11-20T09:51:03.090Z",
   "entryPolicy": {
     "method": "last-pretip-v1",
     "startedAt": "2026-11-10T21:33:29.039Z",
@@ -22530,6 +22530,316 @@
           "espnId": "2608",
           "modelId": "saint-marys-gaels",
           "name": "Saint Mary's Gaels"
+        }
+      }
+    },
+    {
+      "id": "2026-27_401909698_v4",
+      "season": "2026-27",
+      "gameId": "401909698",
+      "gameDate": "2026-11-20",
+      "version": 4,
+      "recordedAt": "2026-11-20T09:51:03.090Z",
+      "signalCalculatedAt": "2026-11-20T09:51:03.090Z",
+      "origin": "batch_capture",
+      "evidence": null,
+      "inputSnapshots": {
+        "prior": "data/input-snapshots/5d7d1cdd590b01d65ca838308bd098bc8be58fdb5d96faf922f4c44677d6d7de.json",
+        "current": "data/input-snapshots/bb40d3ef7d49a872d7c51683bfb1e8d9eaa610f2f3799d98704645b663a3b3e0.json",
+        "currentMatchesFrozenInputs": true
+      },
+      "modelVersion": "season-bridge-v1",
+      "source": {
+        "repository": "https://github.com/rickyhyppolite88-lang/1H-Model",
+        "projectionCode": "https://github.com/rickyhyppolite88-lang/1H-Model/blob/93a53bc5d2210b0c6f846c2f917696f4c814b29f/src/model/predictor.ts",
+        "batchCode": "https://github.com/rickyhyppolite88-lang/1H-Model/blob/93a53bc5d2210b0c6f846c2f917696f4c814b29f/src/model/predictions.ts",
+        "revision": "93a53bc5d2210b0c6f846c2f917696f4c814b29f"
+      },
+      "state": "pregame",
+      "sportsbook": "draftkings",
+      "basis": "latest",
+      "comparison": {
+        "line": null,
+        "signedEdge": null,
+        "lean": null
+      },
+      "signal": {
+        "method": "model-signal-v1",
+        "score": null,
+        "label": "Unavailable",
+        "reason": "A pregame projection, both components, and the selected line are required.",
+        "fill": null
+      },
+      "prediction": {
+        "gameId": "401909698",
+        "startsAt": "2026-11-20T17:00:00Z",
+        "awayTeam": "Green Bay Phoenix",
+        "homeTeam": "Florida State Seminoles",
+        "awayConference": "Horizon",
+        "homeConference": "ACC",
+        "awayRank": null,
+        "homeRank": null,
+        "rankingsKnown": true,
+        "status": "Scheduled",
+        "projectedFirstHalfTotal": 74.28774434999576,
+        "actualFirstHalfTotal": null,
+        "simpleTotal": 72.58514948065633,
+        "paceAdjustedTotal": 76.8416366540049,
+        "featureKind": "captured_pregame",
+        "featureCapturedAt": "2026-11-20T05:49:41.655Z",
+        "unavailableReason": null,
+        "marketCoverage": {
+          "checkedAt": "2026-11-20T09:50:52.954148Z",
+          "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-20",
+          "status": "matched",
+          "books": [
+            {
+              "sportsbook": "fanatics",
+              "status": "available"
+            }
+          ]
+        },
+        "markets": [
+          {
+            "sportsbook": "fanatics",
+            "openingLine": 74.5,
+            "latestLine": 73.5,
+            "capturedAt": "2026-11-20T09:50:52.954148Z",
+            "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-20",
+            "closingVerified": false
+          }
+        ],
+        "signal": {
+          "method": "model-signal-v1",
+          "score": null,
+          "label": "Unavailable",
+          "reason": "A pregame projection, both components, and the selected line are required.",
+          "fill": null
+        }
+      },
+      "features": {
+        "kind": "captured_pregame",
+        "capturedAt": "2026-11-20T05:49:41.655Z",
+        "priorAsOf": "2026-04-07",
+        "currentAsOf": "2026-11-20",
+        "modelVersion": "season-bridge-v1",
+        "statsRetrievedAt": "2026-11-20T05:49:30.253877Z",
+        "away": {
+          "id": "green-bay-phoenix",
+          "name": "Green Bay",
+          "firstHalfPoints": 33.663960861056744,
+          "pace": 69.09211741682975,
+          "offensiveEfficiency": 1.055652915851272,
+          "defensiveEfficiency": 1.1265436399217217,
+          "currentWeight": 0.42857142857142855,
+          "currentGames": 6,
+          "priorAvailable": true,
+          "strengthOfSchedule": -4.3,
+          "notes": [
+            "Roster continuity is not measured; league regression reduces reliance on last year's roster."
+          ]
+        },
+        "home": {
+          "id": "florida-state-seminoles",
+          "name": "Florida St",
+          "firstHalfPoints": 38.921188619599576,
+          "pace": 73.05304952581666,
+          "offensiveEfficiency": 1.126933909378293,
+          "defensiveEfficiency": 1.01555468914647,
+          "currentWeight": 0.38461538461538464,
+          "currentGames": 5,
+          "priorAvailable": true,
+          "strengthOfSchedule": 2.7,
+          "notes": [
+            "Roster continuity is not measured; league regression reduces reliance on last year's roster."
+          ]
+        }
+      },
+      "quotes": [
+        {
+          "sportsbook": "fanatics",
+          "opening": {
+            "total": 74.5,
+            "overPrice": 105,
+            "underPrice": -130
+          },
+          "latest": {
+            "total": 73.5,
+            "overPrice": -110,
+            "underPrice": -110
+          },
+          "openingCapturedAt": "2026-11-20T05:49:32.854011Z",
+          "latestCapturedAt": "2026-11-20T09:50:52.954148Z",
+          "closingVerified": false,
+          "quoteTimestamp": null,
+          "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-20"
+        }
+      ],
+      "participants": {
+        "away": {
+          "espnId": "2739",
+          "modelId": "green-bay-phoenix",
+          "name": "Green Bay Phoenix"
+        },
+        "home": {
+          "espnId": "52",
+          "modelId": "florida-state-seminoles",
+          "name": "Florida State Seminoles"
+        }
+      }
+    },
+    {
+      "id": "2026-27_401921723_v4",
+      "season": "2026-27",
+      "gameId": "401921723",
+      "gameDate": "2026-11-20",
+      "version": 4,
+      "recordedAt": "2026-11-20T09:51:03.090Z",
+      "signalCalculatedAt": "2026-11-20T09:51:03.090Z",
+      "origin": "batch_capture",
+      "evidence": null,
+      "inputSnapshots": {
+        "prior": "data/input-snapshots/5d7d1cdd590b01d65ca838308bd098bc8be58fdb5d96faf922f4c44677d6d7de.json",
+        "current": "data/input-snapshots/bb40d3ef7d49a872d7c51683bfb1e8d9eaa610f2f3799d98704645b663a3b3e0.json",
+        "currentMatchesFrozenInputs": true
+      },
+      "modelVersion": "season-bridge-v1",
+      "source": {
+        "repository": "https://github.com/rickyhyppolite88-lang/1H-Model",
+        "projectionCode": "https://github.com/rickyhyppolite88-lang/1H-Model/blob/93a53bc5d2210b0c6f846c2f917696f4c814b29f/src/model/predictor.ts",
+        "batchCode": "https://github.com/rickyhyppolite88-lang/1H-Model/blob/93a53bc5d2210b0c6f846c2f917696f4c814b29f/src/model/predictions.ts",
+        "revision": "93a53bc5d2210b0c6f846c2f917696f4c814b29f"
+      },
+      "state": "pregame",
+      "sportsbook": "draftkings",
+      "basis": "latest",
+      "comparison": {
+        "line": null,
+        "signedEdge": null,
+        "lean": null
+      },
+      "signal": {
+        "method": "model-signal-v1",
+        "score": null,
+        "label": "Unavailable",
+        "reason": "A pregame projection, both components, and the selected line are required.",
+        "fill": null
+      },
+      "prediction": {
+        "gameId": "401921723",
+        "startsAt": "2026-11-20T22:00:00Z",
+        "awayTeam": "Manhattan Jaspers",
+        "homeTeam": "Miami Hurricanes",
+        "awayConference": "Metro",
+        "homeConference": "ACC",
+        "awayRank": null,
+        "homeRank": 17,
+        "rankingsKnown": true,
+        "status": "Scheduled",
+        "projectedFirstHalfTotal": 71.7243906763144,
+        "actualFirstHalfTotal": null,
+        "simpleTotal": 70.44237723919915,
+        "paceAdjustedTotal": 73.64741083198727,
+        "featureKind": "captured_pregame",
+        "featureCapturedAt": "2026-11-20T05:49:41.655Z",
+        "unavailableReason": null,
+        "marketCoverage": {
+          "checkedAt": "2026-11-20T09:50:52.954148Z",
+          "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-20",
+          "status": "matched",
+          "books": [
+            {
+              "sportsbook": "fanatics",
+              "status": "available"
+            }
+          ]
+        },
+        "markets": [
+          {
+            "sportsbook": "fanatics",
+            "openingLine": 71.5,
+            "latestLine": 71.5,
+            "capturedAt": "2026-11-20T09:50:52.954148Z",
+            "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-20",
+            "closingVerified": false
+          }
+        ],
+        "signal": {
+          "method": "model-signal-v1",
+          "score": null,
+          "label": "Unavailable",
+          "reason": "A pregame projection, both components, and the selected line are required.",
+          "fill": null
+        }
+      },
+      "features": {
+        "kind": "captured_pregame",
+        "capturedAt": "2026-11-20T05:49:41.655Z",
+        "priorAsOf": "2026-04-07",
+        "currentAsOf": "2026-11-20",
+        "modelVersion": "season-bridge-v1",
+        "statsRetrievedAt": "2026-11-20T05:49:30.253877Z",
+        "away": {
+          "id": "manhattan-jaspers",
+          "name": "Manhattan",
+          "firstHalfPoints": 30.939650158061113,
+          "pace": 70.58381875658588,
+          "offensiveEfficiency": 0.9820723709167546,
+          "defensiveEfficiency": 1.08815468914647,
+          "currentWeight": 0.38461538461538464,
+          "currentGames": 5,
+          "priorAvailable": true,
+          "strengthOfSchedule": -6.1,
+          "notes": [
+            "Roster continuity is not measured; league regression reduces reliance on last year's roster."
+          ]
+        },
+        "home": {
+          "id": "miami-hurricanes",
+          "name": "Miami",
+          "firstHalfPoints": 39.50272708113804,
+          "pace": 72.82381875658588,
+          "offensiveEfficiency": 1.1196877555321392,
+          "defensiveEfficiency": 0.9185085353003161,
+          "currentWeight": 0.38461538461538464,
+          "currentGames": 5,
+          "priorAvailable": true,
+          "strengthOfSchedule": 7.9,
+          "notes": [
+            "Roster continuity is not measured; league regression reduces reliance on last year's roster."
+          ]
+        }
+      },
+      "quotes": [
+        {
+          "sportsbook": "fanatics",
+          "opening": {
+            "total": 71.5,
+            "overPrice": 100,
+            "underPrice": -120
+          },
+          "latest": {
+            "total": 71.5,
+            "overPrice": -105,
+            "underPrice": -115
+          },
+          "openingCapturedAt": "2026-11-20T05:49:32.854011Z",
+          "latestCapturedAt": "2026-11-20T09:50:52.954148Z",
+          "closingVerified": false,
+          "quoteTimestamp": null,
+          "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-20"
+        }
+      ],
+      "participants": {
+        "away": {
+          "espnId": "2363",
+          "modelId": "manhattan-jaspers",
+          "name": "Manhattan Jaspers"
+        },
+        "home": {
+          "espnId": "2390",
+          "modelId": "miami-hurricanes",
+          "name": "Miami Hurricanes"
         }
       }
     }
