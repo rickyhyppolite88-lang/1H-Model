@@ -531,7 +531,7 @@
     ]
   },
   "startedAt": "2026-11-05T16:08:14.757Z",
-  "updatedAt": "2026-11-20T04:53:51.568Z",
+  "updatedAt": "2026-11-20T05:49:45.434Z",
   "forecasts": [
     {
       "id": "2026-27_opponent-paper-v5_401920517_v1",
@@ -212238,6 +212238,74 @@
         "city": "Santa Clara",
         "state": "CA"
       }
+    },
+    {
+      "id": "2026-27:401920518_result1",
+      "season": "2026-27",
+      "gameId": "401920518",
+      "observedAt": "2026-11-20T05:49:42.518Z",
+      "sourceCapturedAt": "2026-11-20T05:49:30.794780Z",
+      "startsAt": "2026-11-20T04:00:00Z",
+      "awayPoints": 54,
+      "homePoints": 34,
+      "source": "https://site.api.espn.com/apis/site/v2/sports/basketball/mens-college-basketball/scoreboard?dates=20261119&groups=50&limit=1000",
+      "participants": {
+        "away": {
+          "espnId": "248",
+          "modelId": "houston-cougars",
+          "name": "Houston Cougars"
+        },
+        "home": {
+          "espnId": "2305",
+          "modelId": "kansas-jayhawks",
+          "name": "Kansas Jayhawks"
+        }
+      },
+      "context": {
+        "neutralSite": true,
+        "conferenceGame": true,
+        "matchupType": "conference_regular",
+        "eventLabel": "Players Era 8 - Championship",
+        "venueId": "4005",
+        "venueKey": "id:4005",
+        "venueName": "Michelob ULTRA Arena",
+        "city": "Las Vegas",
+        "state": "NV"
+      }
+    },
+    {
+      "id": "2026-27:401926773_result1",
+      "season": "2026-27",
+      "gameId": "401926773",
+      "observedAt": "2026-11-20T05:49:42.518Z",
+      "sourceCapturedAt": "2026-11-20T05:49:30.794780Z",
+      "startsAt": "2026-11-20T04:00:00Z",
+      "awayPoints": 21,
+      "homePoints": 55,
+      "source": "https://site.api.espn.com/apis/site/v2/sports/basketball/mens-college-basketball/scoreboard?dates=20261119&groups=50&limit=1000",
+      "participants": {
+        "away": {
+          "espnId": "2627",
+          "modelId": "tarleton-state-texans",
+          "name": "Tarleton State Texans"
+        },
+        "home": {
+          "espnId": "30",
+          "modelId": "southern-california-trojans",
+          "name": "USC Trojans"
+        }
+      },
+      "context": {
+        "neutralSite": false,
+        "conferenceGame": false,
+        "matchupType": "nonconference_regular",
+        "eventLabel": null,
+        "venueId": "1918",
+        "venueKey": "id:1918",
+        "venueName": "Galen Center",
+        "city": "Los Angeles",
+        "state": "CA"
+      }
     }
   ],
   "halves": [
@@ -213530,6 +213598,82 @@
           "threeAttempted": 10,
           "turnovers": 7,
           "offensiveRebounds": 3
+        }
+      ]
+    },
+    {
+      "id": "401920518_25769ee54e82613ccaf8ef0c83458a85e6a3c31e2ba5d011fd1ec27f35675299",
+      "gameId": "401920518",
+      "season": "2026-27",
+      "startsAt": "2026-11-20T04:00:00Z",
+      "observedAt": "2026-11-20T05:49:34.690510Z",
+      "source": "https://site.api.espn.com/apis/site/v2/sports/basketball/mens-college-basketball/summary?event=401920518",
+      "sourceSha256": "9d40455f9aeeb2da5d53a47d89999cf4beb787889d54020dc41ef1a20b9f45fe",
+      "bothD1": true,
+      "teams": [
+        {
+          "espnId": "2305",
+          "points": 34,
+          "fouls": 9,
+          "bonusMinutes": 5.833333333333333,
+          "fga": 31,
+          "fta": 11,
+          "freeThrowsMade": 8,
+          "threeMade": 4,
+          "threeAttempted": 14,
+          "turnovers": 8,
+          "offensiveRebounds": 7
+        },
+        {
+          "espnId": "248",
+          "points": 54,
+          "fouls": 9,
+          "bonusMinutes": 6.533333333333333,
+          "fga": 39,
+          "fta": 9,
+          "freeThrowsMade": 9,
+          "threeMade": 5,
+          "threeAttempted": 14,
+          "turnovers": 6,
+          "offensiveRebounds": 11
+        }
+      ]
+    },
+    {
+      "id": "401926773_842d1eb2f9549b8df126daf4552a7987907f5d285e5c9ef1707e0f1274856be3",
+      "gameId": "401926773",
+      "season": "2026-27",
+      "startsAt": "2026-11-20T04:00:00Z",
+      "observedAt": "2026-11-20T05:49:34.690510Z",
+      "source": "https://site.api.espn.com/apis/site/v2/sports/basketball/mens-college-basketball/summary?event=401926773",
+      "sourceSha256": "ad01b03c4b133592d9355642d74568a339617b17d547e4a42c78208c5dcfe738",
+      "bothD1": true,
+      "teams": [
+        {
+          "espnId": "2627",
+          "points": 21,
+          "fouls": 13,
+          "bonusMinutes": 0,
+          "fga": 28,
+          "fta": 6,
+          "freeThrowsMade": 6,
+          "threeMade": 1,
+          "threeAttempted": 11,
+          "turnovers": 8,
+          "offensiveRebounds": 5
+        },
+        {
+          "espnId": "30",
+          "points": 55,
+          "fouls": 6,
+          "bonusMinutes": 7.883333333333334,
+          "fga": 28,
+          "fta": 16,
+          "freeThrowsMade": 12,
+          "threeMade": 7,
+          "threeAttempted": 14,
+          "turnovers": 3,
+          "offensiveRebounds": 1
         }
       ]
     }
