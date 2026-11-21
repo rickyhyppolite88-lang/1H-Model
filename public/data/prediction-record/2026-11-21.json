@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-11-21T05:38:21.603Z",
+  "updatedAt": "2026-11-21T06:35:20.832Z",
   "entryPolicy": {
     "method": "last-pretip-v1",
     "startedAt": "2026-11-10T21:33:29.039Z",
@@ -8743,6 +8743,316 @@
           "espnId": "150",
           "modelId": "duke-blue-devils",
           "name": "Duke Blue Devils"
+        }
+      }
+    },
+    {
+      "id": "2026-27_401924722_v2",
+      "season": "2026-27",
+      "gameId": "401924722",
+      "gameDate": "2026-11-21",
+      "version": 2,
+      "recordedAt": "2026-11-21T06:35:20.832Z",
+      "signalCalculatedAt": "2026-11-21T06:35:20.832Z",
+      "origin": "batch_capture",
+      "evidence": null,
+      "inputSnapshots": {
+        "prior": "data/input-snapshots/5d7d1cdd590b01d65ca838308bd098bc8be58fdb5d96faf922f4c44677d6d7de.json",
+        "current": "data/input-snapshots/08a5d66a8bc3cbfdabf9f40ee122a8adc5ec669045fd9e75a00678f104200b87.json",
+        "currentMatchesFrozenInputs": true
+      },
+      "modelVersion": "season-bridge-v1",
+      "source": {
+        "repository": "https://github.com/rickyhyppolite88-lang/1H-Model",
+        "projectionCode": "https://github.com/rickyhyppolite88-lang/1H-Model/blob/7f474f62004db3a24ce564b06823fae0a52a370d/src/model/predictor.ts",
+        "batchCode": "https://github.com/rickyhyppolite88-lang/1H-Model/blob/7f474f62004db3a24ce564b06823fae0a52a370d/src/model/predictions.ts",
+        "revision": "7f474f62004db3a24ce564b06823fae0a52a370d"
+      },
+      "state": "pregame",
+      "sportsbook": "draftkings",
+      "basis": "latest",
+      "comparison": {
+        "line": null,
+        "signedEdge": null,
+        "lean": null
+      },
+      "signal": {
+        "method": "model-signal-v1",
+        "score": null,
+        "label": "Unavailable",
+        "reason": "A pregame projection, both components, and the selected line are required.",
+        "fill": null
+      },
+      "prediction": {
+        "gameId": "401924722",
+        "startsAt": "2026-11-21T19:00:00Z",
+        "awayTeam": "Cornell Big Red",
+        "homeTeam": "Morgan State Bears",
+        "awayConference": "Ivy",
+        "homeConference": "MEAC",
+        "awayRank": null,
+        "homeRank": null,
+        "rankingsKnown": true,
+        "status": "Scheduled",
+        "projectedFirstHalfTotal": 74.73306595392177,
+        "actualFirstHalfTotal": null,
+        "simpleTotal": 73.1220725575794,
+        "paceAdjustedTotal": 77.1495560484353,
+        "featureKind": "captured_pregame",
+        "featureCapturedAt": "2026-11-21T05:38:21.016Z",
+        "unavailableReason": null,
+        "marketCoverage": {
+          "checkedAt": "2026-11-21T06:35:12.867893Z",
+          "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-21",
+          "status": "matched",
+          "books": [
+            {
+              "sportsbook": "fanatics",
+              "status": "available"
+            }
+          ]
+        },
+        "markets": [
+          {
+            "sportsbook": "fanatics",
+            "openingLine": 77.5,
+            "latestLine": 77.5,
+            "capturedAt": "2026-11-21T06:35:12.867893Z",
+            "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-21",
+            "closingVerified": false
+          }
+        ],
+        "signal": {
+          "method": "model-signal-v1",
+          "score": null,
+          "label": "Unavailable",
+          "reason": "A pregame projection, both components, and the selected line are required.",
+          "fill": null
+        }
+      },
+      "features": {
+        "kind": "captured_pregame",
+        "capturedAt": "2026-11-21T05:38:21.016Z",
+        "priorAsOf": "2026-04-07",
+        "currentAsOf": "2026-11-21",
+        "modelVersion": "season-bridge-v1",
+        "statsRetrievedAt": "2026-11-21T05:38:13.990198Z",
+        "away": {
+          "id": "cornell-big-red",
+          "name": "Cornell",
+          "firstHalfPoints": 38.73811169652265,
+          "pace": 73.36535721812434,
+          "offensiveEfficiency": 1.074933909378293,
+          "defensiveEfficiency": 1.1199700737618543,
+          "currentWeight": 0.38461538461538464,
+          "currentGames": 5,
+          "priorAvailable": true,
+          "strengthOfSchedule": -1.7,
+          "notes": [
+            "Roster continuity is not measured; league regression reduces reliance on last year's roster."
+          ]
+        },
+        "home": {
+          "id": "morgan-st-bears",
+          "name": "Morgan St",
+          "firstHalfPoints": 34.38396086105674,
+          "pace": 73.68068884540116,
+          "offensiveEfficiency": 0.9662243444227007,
+          "defensiveEfficiency": 1.0361722113502934,
+          "currentWeight": 0.42857142857142855,
+          "currentGames": 6,
+          "priorAvailable": true,
+          "strengthOfSchedule": -14.4,
+          "notes": [
+            "Roster continuity is not measured; league regression reduces reliance on last year's roster."
+          ]
+        }
+      },
+      "quotes": [
+        {
+          "sportsbook": "fanatics",
+          "opening": {
+            "total": 77.5,
+            "overPrice": 105,
+            "underPrice": -130
+          },
+          "latest": {
+            "total": 77.5,
+            "overPrice": -105,
+            "underPrice": -115
+          },
+          "openingCapturedAt": "2026-11-21T05:38:15.580681Z",
+          "latestCapturedAt": "2026-11-21T06:35:12.867893Z",
+          "closingVerified": false,
+          "quoteTimestamp": null,
+          "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-21"
+        }
+      ],
+      "participants": {
+        "away": {
+          "espnId": "172",
+          "modelId": "cornell-big-red",
+          "name": "Cornell Big Red"
+        },
+        "home": {
+          "espnId": "2415",
+          "modelId": "morgan-st-bears",
+          "name": "Morgan State Bears"
+        }
+      }
+    },
+    {
+      "id": "2026-27_401909517_v2",
+      "season": "2026-27",
+      "gameId": "401909517",
+      "gameDate": "2026-11-21",
+      "version": 2,
+      "recordedAt": "2026-11-21T06:35:20.832Z",
+      "signalCalculatedAt": "2026-11-21T06:35:20.832Z",
+      "origin": "batch_capture",
+      "evidence": null,
+      "inputSnapshots": {
+        "prior": "data/input-snapshots/5d7d1cdd590b01d65ca838308bd098bc8be58fdb5d96faf922f4c44677d6d7de.json",
+        "current": "data/input-snapshots/08a5d66a8bc3cbfdabf9f40ee122a8adc5ec669045fd9e75a00678f104200b87.json",
+        "currentMatchesFrozenInputs": true
+      },
+      "modelVersion": "season-bridge-v1",
+      "source": {
+        "repository": "https://github.com/rickyhyppolite88-lang/1H-Model",
+        "projectionCode": "https://github.com/rickyhyppolite88-lang/1H-Model/blob/7f474f62004db3a24ce564b06823fae0a52a370d/src/model/predictor.ts",
+        "batchCode": "https://github.com/rickyhyppolite88-lang/1H-Model/blob/7f474f62004db3a24ce564b06823fae0a52a370d/src/model/predictions.ts",
+        "revision": "7f474f62004db3a24ce564b06823fae0a52a370d"
+      },
+      "state": "pregame",
+      "sportsbook": "draftkings",
+      "basis": "latest",
+      "comparison": {
+        "line": null,
+        "signedEdge": null,
+        "lean": null
+      },
+      "signal": {
+        "method": "model-signal-v1",
+        "score": null,
+        "label": "Unavailable",
+        "reason": "A pregame projection, both components, and the selected line are required.",
+        "fill": null
+      },
+      "prediction": {
+        "gameId": "401909517",
+        "startsAt": "2026-11-21T23:00:00Z",
+        "awayTeam": "Coppin State Eagles",
+        "homeTeam": "Georgetown Hoyas",
+        "awayConference": "MEAC",
+        "homeConference": "Big East",
+        "awayRank": null,
+        "homeRank": null,
+        "rankingsKnown": true,
+        "status": "Scheduled",
+        "projectedFirstHalfTotal": 68.9418566072763,
+        "actualFirstHalfTotal": null,
+        "simpleTotal": 66.67328134878818,
+        "paceAdjustedTotal": 72.34471949500849,
+        "featureKind": "captured_pregame",
+        "featureCapturedAt": "2026-11-21T05:38:21.016Z",
+        "unavailableReason": null,
+        "marketCoverage": {
+          "checkedAt": "2026-11-21T06:35:12.867893Z",
+          "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-21",
+          "status": "matched",
+          "books": [
+            {
+              "sportsbook": "fanatics",
+              "status": "available"
+            }
+          ]
+        },
+        "markets": [
+          {
+            "sportsbook": "fanatics",
+            "openingLine": 68.5,
+            "latestLine": 68.5,
+            "capturedAt": "2026-11-21T06:35:12.867893Z",
+            "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-21",
+            "closingVerified": false
+          }
+        ],
+        "signal": {
+          "method": "model-signal-v1",
+          "score": null,
+          "label": "Unavailable",
+          "reason": "A pregame projection, both components, and the selected line are required.",
+          "fill": null
+        }
+      },
+      "features": {
+        "kind": "captured_pregame",
+        "capturedAt": "2026-11-21T05:38:21.016Z",
+        "priorAsOf": "2026-04-07",
+        "currentAsOf": "2026-11-21",
+        "modelVersion": "season-bridge-v1",
+        "statsRetrievedAt": "2026-11-21T05:38:13.990198Z",
+        "away": {
+          "id": "coppin-st-eagles",
+          "name": "Coppin St",
+          "firstHalfPoints": 29.19824657534246,
+          "pace": 70.65211741682975,
+          "offensiveEfficiency": 0.891852915851272,
+          "defensiveEfficiency": 1.090200782778865,
+          "currentWeight": 0.42857142857142855,
+          "currentGames": 6,
+          "priorAvailable": true,
+          "strengthOfSchedule": -6,
+          "notes": [
+            "Roster continuity is not measured; league regression reduces reliance on last year's roster."
+          ]
+        },
+        "home": {
+          "id": "georgetown-hoyas",
+          "name": "Georgetown",
+          "firstHalfPoints": 37.47503477344573,
+          "pace": 69.22228029504743,
+          "offensiveEfficiency": 1.1225646786090622,
+          "defensiveEfficiency": 1.0330777660695467,
+          "currentWeight": 0.38461538461538464,
+          "currentGames": 5,
+          "priorAvailable": true,
+          "strengthOfSchedule": 3.3,
+          "notes": [
+            "Roster continuity is not measured; league regression reduces reliance on last year's roster."
+          ]
+        }
+      },
+      "quotes": [
+        {
+          "sportsbook": "fanatics",
+          "opening": {
+            "total": 68.5,
+            "overPrice": -110,
+            "underPrice": -110
+          },
+          "latest": {
+            "total": 68.5,
+            "overPrice": 100,
+            "underPrice": -120
+          },
+          "openingCapturedAt": "2026-11-21T05:38:15.580681Z",
+          "latestCapturedAt": "2026-11-21T06:35:12.867893Z",
+          "closingVerified": false,
+          "quoteTimestamp": null,
+          "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-21"
+        }
+      ],
+      "participants": {
+        "away": {
+          "espnId": "2154",
+          "modelId": "coppin-st-eagles",
+          "name": "Coppin State Eagles"
+        },
+        "home": {
+          "espnId": "46",
+          "modelId": "georgetown-hoyas",
+          "name": "Georgetown Hoyas"
         }
       }
     }
