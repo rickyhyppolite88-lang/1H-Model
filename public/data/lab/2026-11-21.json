@@ -531,7 +531,7 @@
     ]
   },
   "startedAt": "2026-11-05T16:08:14.757Z",
-  "updatedAt": "2026-11-22T02:27:14.252Z",
+  "updatedAt": "2026-11-22T03:16:03.899Z",
   "forecasts": [
     {
       "id": "2026-27_opponent-paper-v5_401922284_v1",
@@ -377288,6 +377288,448 @@
           "name": "Duke Blue Devils"
         }
       }
+    },
+    {
+      "id": "2026-27_enhanced-baseline-v2_401909567_v22",
+      "season": "2026-27",
+      "methodId": "enhanced-baseline-v2",
+      "gameId": "401909567",
+      "gameDate": "2026-11-21",
+      "startsAt": "2026-11-22T04:00:00Z",
+      "recordedAt": "2026-11-22T03:16:03.899Z",
+      "version": 22,
+      "revision": "52c203d51f23347209d3840d394f42afaa5bac52",
+      "awayTeam": "Washington State Cougars",
+      "homeTeam": "Duke Blue Devils",
+      "sportsbook": "draftkings",
+      "line": 69.5,
+      "overPrice": -120,
+      "underPrice": -110,
+      "total": 68.98042966507441,
+      "baselineTotal": 73.18828737147206,
+      "simpleTotal": 66.42706832099961,
+      "paceTotal": 72.81047168118661,
+      "side": "UNDER",
+      "signalStrength": 3,
+      "status": "watch_only",
+      "reason": "Edge below 1.5 points. Scoring and pace do not both agree with the lean.",
+      "bonusMinutes": 9.596461078075771,
+      "bonusBaselineMinutes": 7.996519939804367,
+      "inputs": {
+        "baselineModelVersion": "season-bridge-v1",
+        "baselineFeatureCapturedAt": "2026-11-21T05:38:21.016Z",
+        "statsRetrievedAt": "2026-11-21T05:38:13.990198Z",
+        "priorSnapshot": "data/input-snapshots/5d7d1cdd590b01d65ca838308bd098bc8be58fdb5d96faf922f4c44677d6d7de.json",
+        "currentSnapshot": "data/input-snapshots/08a5d66a8bc3cbfdabf9f40ee122a8adc5ec669045fd9e75a00678f104200b87.json",
+        "sourceBoard": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-21",
+        "quoteCapturedAt": "2026-11-22T03:15:54.174273Z",
+        "marketCheckedAt": "2026-11-22T03:15:54.174273Z",
+        "lastSeenLine": 69.5,
+        "marketFreshness": "Source check within 45 minutes",
+        "awayCurrentWeight": 0.38461538461538464,
+        "homeCurrentWeight": 0.38461538461538464,
+        "away_firstHalfPoints": 34.04580400421496,
+        "away_pace": 68.85612644889358,
+        "away_offensiveEfficiency": 1.0654108324552163,
+        "away_defensiveEfficiency": 1.0933546891464698,
+        "home_firstHalfPoints": 38.219650158061114,
+        "home_pace": 72.55458798735512,
+        "home_offensiveEfficiency": 1.1368877555321393,
+        "home_defensiveEfficiency": 0.9231239199157006,
+        "baselineSimpleTotal": 72.26545416227607,
+        "baselinePaceTotal": 74.57253718526603,
+        "defenseSimpleTotal": 68.18913382507903,
+        "defenseAdjustedTotal": 70.74249516915383,
+        "defenseAdjustment": -2.4457922023182306,
+        "awayFirstHalfAllowed": 33.84486828240253,
+        "homeFirstHalfAllowed": 30.26794520547945,
+        "priorAllowedMean": 35.07260273972603,
+        "priorLeagueRegression": 0.35,
+        "historyAsOf": "2026-11-22T03:16:03.899Z",
+        "excludedHistoryGames": "401917950;401918987;401920378;401920511;401920887;401924949;401925079;401925941;401929353",
+        "contextPointsAdjustment": -0.6586529357415952,
+        "contextModel": "data/context-models/fbf036c48168406c22d56d8f6a74c1bdde794cd604fe07cf33755adb909479cc.json",
+        "freeThrowPointsAdjustment": -1.1034125683378175,
+        "freeThrowPointsCap": 2,
+        "contextPointsCap": 4,
+        "pseudoGames": 4,
+        "bonusTreatment": "Timing tracked; no separate bonus-points adjustment stacked on FT/foul points.",
+        "minimumEdge": 1.5,
+        "outlierEdge": 8,
+        "componentAgreementRequired": "Both adjusted components must agree"
+      },
+      "context": {
+        "modelVersion": "lab-context-v1",
+        "capturedAt": "2026-11-22T03:16:03.899Z",
+        "modelFittedAt": "2026-11-22T03:16:00.172492Z",
+        "startsAt": "2026-11-22T04:00:00Z",
+        "baselineFeatureCapturedAt": "2026-11-21T05:38:21.016Z",
+        "modelPath": "data/context-models/fbf036c48168406c22d56d8f6a74c1bdde794cd604fe07cf33755adb909479cc.json",
+        "historySha256": "3b0466d2f1fa097d9c74830dcd2f90fe6c0209b61065c50ab531a7c491531d2e",
+        "trainingGames": 6520,
+        "baselineTotal": 73.18828737147206,
+        "baselineSimple": 72.26545416227607,
+        "baselinePace": 74.57253718526603,
+        "total": 72.52963443573046,
+        "simple": 71.60680122653447,
+        "pace": 73.91388424952443,
+        "adjustment": -0.6586529357415952,
+        "unboundedAdjustment": -0.6586529357415952,
+        "homeAwayAdjustment": -0.007509451826339275,
+        "neutralAdjustment": -1.179641829433727,
+        "matchupAdjustment": 0.528498345518471,
+        "crowdAdjustment": 0,
+        "expectedAttendance": null,
+        "attendanceSamples": 0,
+        "crowdEligible": false,
+        "crowdReason": "Insufficient earlier venue attendance; no crowd adjustment.",
+        "homeLocationGames": 19,
+        "awayLocationGames": 15,
+        "context": {
+          "neutralSite": true,
+          "conferenceGame": false,
+          "matchupType": "nonconference_regular",
+          "eventLabel": "Acrisure Series",
+          "venueId": "7524",
+          "venueKey": "id:7524",
+          "venueName": "Acrisure Arena",
+          "city": "Palm Springs",
+          "state": "CA"
+        },
+        "warnings": []
+      },
+      "foulExposure": {
+        "awayEspnId": "265",
+        "homeEspnId": "150",
+        "expectedAwayFouls": 9.416675175121554,
+        "expectedHomeFouls": 7.672108049967694,
+        "awaySevenFoulProbability": 0.8285847612772704,
+        "homeSevenFoulProbability": 0.6449633137749806,
+        "awayFoulLow": 6,
+        "awayFoulHigh": 13,
+        "homeFoulLow": 4,
+        "homeFoulHigh": 11,
+        "expectedAwayFTA": 7.8315666450281665,
+        "expectedHomeFTA": 10.463039517599704,
+        "awayFTALow": 3,
+        "awayFTAHigh": 14,
+        "homeFTALow": 4,
+        "homeFTAHigh": 18,
+        "baselineAwayFTA": 9.036546034621765,
+        "baselineHomeFTA": 10.708966540446015,
+        "awayFTPercent": 0.7679339399952688,
+        "homeFTPercent": 0.7240684493033238,
+        "pointsAdjustment": -1.1034125683378175,
+        "unboundedPointsAdjustment": -1.1034125683378175,
+        "expectedHalfPossessions": 35.352678609062174,
+        "leagueGames": 886,
+        "awayHistoryGames": 5,
+        "homeHistoryGames": 5,
+        "ftaDispersion": 2.8071421948912474,
+        "pseudoGames": 4
+      },
+      "participants": {
+        "away": {
+          "espnId": "265",
+          "modelId": "washington-st-cougars",
+          "name": "Washington State Cougars"
+        },
+        "home": {
+          "espnId": "150",
+          "modelId": "duke-blue-devils",
+          "name": "Duke Blue Devils"
+        }
+      }
+    },
+    {
+      "id": "2026-27_market-paper-v3_401909567_v25",
+      "season": "2026-27",
+      "methodId": "market-paper-v3",
+      "gameId": "401909567",
+      "gameDate": "2026-11-21",
+      "startsAt": "2026-11-22T04:00:00Z",
+      "recordedAt": "2026-11-22T03:16:03.899Z",
+      "version": 25,
+      "revision": "52c203d51f23347209d3840d394f42afaa5bac52",
+      "awayTeam": "Washington State Cougars",
+      "homeTeam": "Duke Blue Devils",
+      "sportsbook": "draftkings",
+      "line": 69.5,
+      "overPrice": -120,
+      "underPrice": -110,
+      "total": 73.18828737147206,
+      "baselineTotal": 73.18828737147206,
+      "simpleTotal": 72.26545416227607,
+      "paceTotal": 74.57253718526603,
+      "side": "OVER",
+      "signalStrength": 48.2,
+      "status": "paper_test",
+      "reason": "1u paper trial on every usable pregame forecast; latest usable pre-tip snapshot counts once. No estimated-return or final-15-minute selection gate. Research only, not a qualified bet.",
+      "bonusMinutes": null,
+      "bonusBaselineMinutes": null,
+      "inputs": {
+        "quoteCapturedAt": "2026-11-22T03:15:54.174273Z",
+        "entryQuoteCapturedAt": "2026-11-22T03:15:54.174273Z",
+        "modelPolicy": "market-offset-ridge20-v1",
+        "paperPolicy": "lab-flat-paper-v1",
+        "sourceBoard": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-21",
+        "minimumExpectedReturn": null,
+        "selectionPolicy": "all-usable-paper-v1",
+        "refereeAttribution": "Crew and games-worked associations; individual caller unavailable."
+      },
+      "research": {
+        "selectionPolicy": "all-usable-paper-v1",
+        "modelPath": "data/lab-research-models/57c3254c1b9cb85efc6257c4015064065c1423a3d37a349c98abdc68f5f20a95.json",
+        "fittedAt": "2026-11-21T05:38:23.594Z",
+        "trainingGames": 548,
+        "probability": 0.48190018464344486,
+        "marketProbability": 0.5101214574898786,
+        "expectedReturn": -0.1165163281536844,
+        "paperUnits": 1,
+        "crewAssignmentId": null,
+        "crewObservedAt": null,
+        "crew": [],
+        "refereePointsEquivalent": null,
+        "refereeBaselineProbability": 0.48190018464344486
+      },
+      "participants": {
+        "away": {
+          "espnId": "265",
+          "modelId": "washington-st-cougars",
+          "name": "Washington State Cougars"
+        },
+        "home": {
+          "espnId": "150",
+          "modelId": "duke-blue-devils",
+          "name": "Duke Blue Devils"
+        }
+      }
+    },
+    {
+      "id": "2026-27_referee-paper-v4_401909567_v25",
+      "season": "2026-27",
+      "methodId": "referee-paper-v4",
+      "gameId": "401909567",
+      "gameDate": "2026-11-21",
+      "startsAt": "2026-11-22T04:00:00Z",
+      "recordedAt": "2026-11-22T03:16:03.899Z",
+      "version": 25,
+      "revision": "52c203d51f23347209d3840d394f42afaa5bac52",
+      "awayTeam": "Washington State Cougars",
+      "homeTeam": "Duke Blue Devils",
+      "sportsbook": "draftkings",
+      "line": 69.5,
+      "overPrice": -120,
+      "underPrice": -110,
+      "total": 73.18828737147206,
+      "baselineTotal": 73.18828737147206,
+      "simpleTotal": 72.26545416227607,
+      "paceTotal": 74.57253718526603,
+      "side": "OVER",
+      "signalStrength": null,
+      "status": "data_gap",
+      "reason": "The referee crew has not been verified before tipoff in the latest successful source check.",
+      "bonusMinutes": null,
+      "bonusBaselineMinutes": null,
+      "inputs": {
+        "quoteCapturedAt": "2026-11-22T03:15:54.174273Z",
+        "entryQuoteCapturedAt": "2026-11-22T03:15:54.174273Z",
+        "modelPolicy": "market-offset-ridge20-v1",
+        "paperPolicy": "lab-flat-paper-v1",
+        "sourceBoard": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-21",
+        "minimumExpectedReturn": null,
+        "selectionPolicy": "all-usable-paper-v1",
+        "refereeAttribution": "Crew and games-worked associations; individual caller unavailable."
+      },
+      "research": {
+        "selectionPolicy": "all-usable-paper-v1",
+        "modelPath": "data/lab-research-models/57c3254c1b9cb85efc6257c4015064065c1423a3d37a349c98abdc68f5f20a95.json",
+        "fittedAt": "2026-11-21T05:38:23.594Z",
+        "trainingGames": 548,
+        "probability": null,
+        "marketProbability": 0.5101214574898786,
+        "expectedReturn": null,
+        "paperUnits": 0,
+        "crewAssignmentId": null,
+        "crewObservedAt": null,
+        "crew": [],
+        "refereePointsEquivalent": null,
+        "refereeBaselineProbability": 0.48190018464344486
+      },
+      "participants": {
+        "away": {
+          "espnId": "265",
+          "modelId": "washington-st-cougars",
+          "name": "Washington State Cougars"
+        },
+        "home": {
+          "espnId": "150",
+          "modelId": "duke-blue-devils",
+          "name": "Duke Blue Devils"
+        }
+      }
+    },
+    {
+      "id": "2026-27_opponent-paper-v5_401909567_v30",
+      "season": "2026-27",
+      "methodId": "opponent-paper-v5",
+      "gameId": "401909567",
+      "gameDate": "2026-11-21",
+      "startsAt": "2026-11-22T04:00:00Z",
+      "recordedAt": "2026-11-22T03:16:03.899Z",
+      "version": 30,
+      "revision": "52c203d51f23347209d3840d394f42afaa5bac52",
+      "awayTeam": "Washington State Cougars",
+      "homeTeam": "Duke Blue Devils",
+      "sportsbook": "draftkings",
+      "line": 69.5,
+      "overPrice": -120,
+      "underPrice": -110,
+      "total": 73.4090118561605,
+      "baselineTotal": 73.18828737147206,
+      "simpleTotal": 72.63332830342348,
+      "paceTotal": 74.57253718526603,
+      "side": "OVER",
+      "signalStrength": 49,
+      "status": "paper_test",
+      "reason": "Isolated component test: 1u paper on the latest usable pre-tip forecast. Saved confidence is a model score, not a win probability. No numerical weights are promoted to Actual.",
+      "bonusMinutes": null,
+      "bonusBaselineMinutes": null,
+      "inputs": {
+        "modelPolicy": "isolated-half-features-v1",
+        "selectionPolicy": "component-paper-v1",
+        "modelPath": "data/lab-feature-models/11b68ac01e86d9e4cc72f535beb74861fc8352fca708cae453483b078ebb85be.json",
+        "baselineFeatureCapturedAt": "2026-11-21T05:38:21.016Z",
+        "statsRetrievedAt": "2026-11-21T05:38:13.990198Z",
+        "entryQuoteCapturedAt": "2026-11-22T03:15:54.174273Z",
+        "quoteCapturedAt": "2026-11-22T03:15:54.174273Z",
+        "marketCheckedAt": "2026-11-22T03:15:54.174273Z",
+        "sourceBoard": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-21",
+        "historyAsOf": "2026-11-21T05:38:23.594Z",
+        "opponentPriorHalves": 4,
+        "shootingPriorAttempts": 50,
+        "scoringWeight": 0.6,
+        "pointCap": 3,
+        "interpretation": "Opponent-strength correction against equally shrunk unadjusted offense; pace/efficiency branch unchanged."
+      },
+      "feature": {
+        "policy": "isolated-half-features-v1",
+        "selectionPolicy": "component-paper-v1",
+        "modelPath": "data/lab-feature-models/11b68ac01e86d9e4cc72f535beb74861fc8352fca708cae453483b078ebb85be.json",
+        "fittedAt": "2026-11-21T05:38:23.594Z",
+        "trainingGames": 837,
+        "expectedPossessions": 35.352678609062174,
+        "unboundedAdjustment": 0.22072448468844708,
+        "adjustment": 0.22072448468844708,
+        "paperUnits": 1,
+        "away": {
+          "espnId": "265",
+          "games": 4,
+          "currentWeight": 0.38461538461538464,
+          "deltaRate": 0.019764024802344404,
+          "weightedPoints": 0.161241050044342
+        },
+        "home": {
+          "espnId": "150",
+          "games": 5,
+          "currentWeight": 0.38461538461538464,
+          "deltaRate": 0.007291146251599212,
+          "weightedPoints": 0.059483434644105077
+        }
+      },
+      "participants": {
+        "away": {
+          "espnId": "265",
+          "modelId": "washington-st-cougars",
+          "name": "Washington State Cougars"
+        },
+        "home": {
+          "espnId": "150",
+          "modelId": "duke-blue-devils",
+          "name": "Duke Blue Devils"
+        }
+      }
+    },
+    {
+      "id": "2026-27_shooting-paper-v6_401909567_v30",
+      "season": "2026-27",
+      "methodId": "shooting-paper-v6",
+      "gameId": "401909567",
+      "gameDate": "2026-11-21",
+      "startsAt": "2026-11-22T04:00:00Z",
+      "recordedAt": "2026-11-22T03:16:03.899Z",
+      "version": 30,
+      "revision": "52c203d51f23347209d3840d394f42afaa5bac52",
+      "awayTeam": "Washington State Cougars",
+      "homeTeam": "Duke Blue Devils",
+      "sportsbook": "draftkings",
+      "line": 69.5,
+      "overPrice": -120,
+      "underPrice": -110,
+      "total": 73.57996571922246,
+      "baselineTotal": 73.18828737147206,
+      "simpleTotal": 72.91825140852673,
+      "paceTotal": 74.57253718526603,
+      "side": "OVER",
+      "signalStrength": 51,
+      "status": "paper_test",
+      "reason": "Isolated component test: 1u paper on the latest usable pre-tip forecast. Saved confidence is a model score, not a win probability. No numerical weights are promoted to Actual.",
+      "bonusMinutes": null,
+      "bonusBaselineMinutes": null,
+      "inputs": {
+        "modelPolicy": "isolated-half-features-v1",
+        "selectionPolicy": "component-paper-v1",
+        "modelPath": "data/lab-feature-models/11b68ac01e86d9e4cc72f535beb74861fc8352fca708cae453483b078ebb85be.json",
+        "baselineFeatureCapturedAt": "2026-11-21T05:38:21.016Z",
+        "statsRetrievedAt": "2026-11-21T05:38:13.990198Z",
+        "entryQuoteCapturedAt": "2026-11-22T03:15:54.174273Z",
+        "quoteCapturedAt": "2026-11-22T03:15:54.174273Z",
+        "marketCheckedAt": "2026-11-22T03:15:54.174273Z",
+        "sourceBoard": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-21",
+        "historyAsOf": "2026-11-21T05:38:23.594Z",
+        "opponentPriorHalves": 4,
+        "shootingPriorAttempts": 50,
+        "scoringWeight": 0.6,
+        "pointCap": 3,
+        "interpretation": "Regress observed three-point conversion toward the earlier league rate while retaining attempt volume; pace/efficiency branch unchanged."
+      },
+      "feature": {
+        "policy": "isolated-half-features-v1",
+        "selectionPolicy": "component-paper-v1",
+        "modelPath": "data/lab-feature-models/11b68ac01e86d9e4cc72f535beb74861fc8352fca708cae453483b078ebb85be.json",
+        "fittedAt": "2026-11-21T05:38:23.594Z",
+        "trainingGames": 837,
+        "expectedPossessions": 35.352678609062174,
+        "unboundedAdjustment": 0.3916783477503972,
+        "adjustment": 0.3916783477503972,
+        "paperUnits": 1,
+        "away": {
+          "espnId": "265",
+          "games": 4,
+          "currentWeight": 0.38461538461538464,
+          "deltaRate": 0.005630403903756458,
+          "weightedPoints": 0.045934582995856406
+        },
+        "home": {
+          "espnId": "150",
+          "games": 5,
+          "currentWeight": 0.38461538461538464,
+          "deltaRate": 0.04237933417070584,
+          "weightedPoints": 0.3457437647545408
+        }
+      },
+      "participants": {
+        "away": {
+          "espnId": "265",
+          "modelId": "washington-st-cougars",
+          "name": "Washington State Cougars"
+        },
+        "home": {
+          "espnId": "150",
+          "modelId": "duke-blue-devils",
+          "name": "Duke Blue Devils"
+        }
+      }
     }
   ],
   "results": [
@@ -379125,6 +379567,40 @@
         "venueName": "Pensacola Bay Center",
         "city": "Pensacola",
         "state": "FL"
+      }
+    },
+    {
+      "id": "2026-27:401925049_result1",
+      "season": "2026-27",
+      "gameId": "401925049",
+      "observedAt": "2026-11-22T03:16:02.026Z",
+      "sourceCapturedAt": "2026-11-22T03:15:53.100553Z",
+      "startsAt": "2026-11-22T01:30:00Z",
+      "awayPoints": 34,
+      "homePoints": 21,
+      "source": "https://site.api.espn.com/apis/site/v2/sports/basketball/mens-college-basketball/scoreboard?dates=20261121&groups=50&limit=1000",
+      "participants": {
+        "away": {
+          "espnId": "2443",
+          "modelId": "new-orleans-privateers",
+          "name": "LSU New Orleans Privateers"
+        },
+        "home": {
+          "espnId": "2640",
+          "modelId": "texas-southern-tigers",
+          "name": "Texas Southern Tigers"
+        }
+      },
+      "context": {
+        "neutralSite": false,
+        "conferenceGame": false,
+        "matchupType": "nonconference_regular",
+        "eventLabel": null,
+        "venueId": "2165",
+        "venueKey": "id:2165",
+        "venueName": "H&PE Arena",
+        "city": "Houston",
+        "state": "TX"
       }
     }
   ],
@@ -381178,6 +381654,82 @@
           "threeAttempted": 11,
           "turnovers": 5,
           "offensiveRebounds": 7
+        }
+      ]
+    },
+    {
+      "id": "401909730_eb14f12191aa5f49f42f37f73b47935a71b8395f7e900f29f78619be3135a970",
+      "gameId": "401909730",
+      "season": "2026-27",
+      "startsAt": "2026-11-21T19:00:00Z",
+      "observedAt": "2026-11-22T03:15:55.316625Z",
+      "source": "https://site.api.espn.com/apis/site/v2/sports/basketball/mens-college-basketball/summary?event=401909730",
+      "sourceSha256": "da1e112e342d999cbefc1be7e286710a948ca24a58b29b200c1901959210ca01",
+      "bothD1": true,
+      "teams": [
+        {
+          "espnId": "154",
+          "points": 47,
+          "fouls": 6,
+          "bonusMinutes": 11.233333333333333,
+          "fga": 33,
+          "fta": 25,
+          "freeThrowsMade": 19,
+          "threeMade": 2,
+          "threeAttempted": 14,
+          "turnovers": 4,
+          "offensiveRebounds": 9
+        },
+        {
+          "espnId": "2717",
+          "points": 19,
+          "fouls": 18,
+          "bonusMinutes": 0,
+          "fga": 34,
+          "fta": 4,
+          "freeThrowsMade": 2,
+          "threeMade": 3,
+          "threeAttempted": 18,
+          "turnovers": 9,
+          "offensiveRebounds": 8
+        }
+      ]
+    },
+    {
+      "id": "401925049_78236d112d6e4c877cdff9c3d4198e1540a74f1797e94fa3be041f898254b92a",
+      "gameId": "401925049",
+      "season": "2026-27",
+      "startsAt": "2026-11-22T01:30:00Z",
+      "observedAt": "2026-11-22T03:15:55.316625Z",
+      "source": "https://site.api.espn.com/apis/site/v2/sports/basketball/mens-college-basketball/summary?event=401925049",
+      "sourceSha256": "6d1ea718f67166479e97cafab1739055d54126b07f76aa1b09388e9be06f9baa",
+      "bothD1": true,
+      "teams": [
+        {
+          "espnId": "2443",
+          "points": 34,
+          "fouls": 4,
+          "bonusMinutes": 0,
+          "fga": 31,
+          "fta": 1,
+          "freeThrowsMade": 0,
+          "threeMade": 6,
+          "threeAttempted": 17,
+          "turnovers": 6,
+          "offensiveRebounds": 2
+        },
+        {
+          "espnId": "2640",
+          "points": 21,
+          "fouls": 4,
+          "bonusMinutes": 0,
+          "fga": 33,
+          "fta": 3,
+          "freeThrowsMade": 2,
+          "threeMade": 1,
+          "threeAttempted": 12,
+          "turnovers": 6,
+          "offensiveRebounds": 5
         }
       ]
     }
