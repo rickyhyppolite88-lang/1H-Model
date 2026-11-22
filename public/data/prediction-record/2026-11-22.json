@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-11-22T06:49:57.484Z",
+  "updatedAt": "2026-11-22T07:58:21.599Z",
   "entryPolicy": {
     "method": "last-pretip-v1",
     "startedAt": "2026-11-10T21:33:29.039Z",
@@ -6520,6 +6520,161 @@
           "espnId": "2350",
           "modelId": "loyola-chicago-ramblers",
           "name": "Loyola Chicago Ramblers"
+        }
+      }
+    },
+    {
+      "id": "2026-27_401909527_v2",
+      "season": "2026-27",
+      "gameId": "401909527",
+      "gameDate": "2026-11-22",
+      "version": 2,
+      "recordedAt": "2026-11-22T07:58:21.599Z",
+      "signalCalculatedAt": "2026-11-22T07:58:21.599Z",
+      "origin": "batch_capture",
+      "evidence": null,
+      "inputSnapshots": {
+        "prior": "data/input-snapshots/5d7d1cdd590b01d65ca838308bd098bc8be58fdb5d96faf922f4c44677d6d7de.json",
+        "current": "data/input-snapshots/bf504ae0c7513b4a301dcaac0becd975503f311341775bda89adfb9157d92718.json",
+        "currentMatchesFrozenInputs": true
+      },
+      "modelVersion": "season-bridge-v1",
+      "source": {
+        "repository": "https://github.com/rickyhyppolite88-lang/1H-Model",
+        "projectionCode": "https://github.com/rickyhyppolite88-lang/1H-Model/blob/98679beba6758eb423f4cdcfdce028c83f764157/src/model/predictor.ts",
+        "batchCode": "https://github.com/rickyhyppolite88-lang/1H-Model/blob/98679beba6758eb423f4cdcfdce028c83f764157/src/model/predictions.ts",
+        "revision": "98679beba6758eb423f4cdcfdce028c83f764157"
+      },
+      "state": "pregame",
+      "sportsbook": "draftkings",
+      "basis": "latest",
+      "comparison": {
+        "line": 65.5,
+        "signedEdge": 3.7135676610955812,
+        "lean": "OVER"
+      },
+      "signal": {
+        "method": "model-signal-v1",
+        "score": 46,
+        "label": "Aligned",
+        "reason": "3.71-point gap; scoring and pace components agree. Research score, not a hit percentage.",
+        "fill": "#d3e9c7"
+      },
+      "prediction": {
+        "gameId": "401909527",
+        "startsAt": "2026-11-22T18:00:00Z",
+        "awayTeam": "Chicago State Cougars",
+        "homeTeam": "Marquette Golden Eagles",
+        "awayConference": "Northeast",
+        "homeConference": "Big East",
+        "awayRank": null,
+        "homeRank": null,
+        "rankingsKnown": true,
+        "status": "Scheduled",
+        "projectedFirstHalfTotal": 69.21356766109558,
+        "actualFirstHalfTotal": null,
+        "simpleTotal": 67.50068029504742,
+        "paceAdjustedTotal": 71.78289871016784,
+        "featureKind": "captured_pregame",
+        "featureCapturedAt": "2026-11-22T06:49:56.585Z",
+        "unavailableReason": null,
+        "marketCoverage": {
+          "checkedAt": "2026-11-22T07:58:12.298808Z",
+          "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-22",
+          "status": "matched",
+          "books": [
+            {
+              "sportsbook": "draftkings",
+              "status": "available"
+            }
+          ]
+        },
+        "markets": [
+          {
+            "sportsbook": "draftkings",
+            "openingLine": 66.5,
+            "latestLine": 65.5,
+            "capturedAt": "2026-11-22T07:58:12.298808Z",
+            "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-22",
+            "closingVerified": false
+          }
+        ],
+        "signal": {
+          "method": "model-signal-v1",
+          "score": 46,
+          "label": "Aligned",
+          "reason": "3.71-point gap; scoring and pace components agree. Research score, not a hit percentage.",
+          "fill": "#d3e9c7"
+        }
+      },
+      "features": {
+        "kind": "captured_pregame",
+        "capturedAt": "2026-11-22T06:49:56.585Z",
+        "priorAsOf": "2026-04-07",
+        "currentAsOf": "2026-11-22",
+        "modelVersion": "season-bridge-v1",
+        "statsRetrievedAt": "2026-11-22T06:49:46.710882Z",
+        "away": {
+          "id": "chicago-st-cougars",
+          "name": "Chicago St",
+          "firstHalfPoints": 31.241030136986303,
+          "pace": 68.26464292237443,
+          "offensiveEfficiency": 0.9644627214611873,
+          "defensiveEfficiency": 1.1212673972602738,
+          "currentWeight": 0.4666666666666667,
+          "currentGames": 7,
+          "priorAvailable": true,
+          "strengthOfSchedule": -4.5,
+          "notes": [
+            "Roster continuity is not measured; league regression reduces reliance on last year's roster."
+          ]
+        },
+        "home": {
+          "id": "marquette-golden-eagles",
+          "name": "Marquette",
+          "firstHalfPoints": 36.25965015806111,
+          "pace": 71.89304952581665,
+          "offensiveEfficiency": 1.0524877555321392,
+          "defensiveEfficiency": 0.9590469968387775,
+          "currentWeight": 0.38461538461538464,
+          "currentGames": 5,
+          "priorAvailable": true,
+          "strengthOfSchedule": 10,
+          "notes": [
+            "Roster continuity is not measured; league regression reduces reliance on last year's roster."
+          ]
+        }
+      },
+      "quotes": [
+        {
+          "sportsbook": "draftkings",
+          "opening": {
+            "total": 66.5,
+            "overPrice": -110,
+            "underPrice": -120
+          },
+          "latest": {
+            "total": 65.5,
+            "overPrice": -120,
+            "underPrice": -110
+          },
+          "openingCapturedAt": "2026-11-22T07:58:12.298808Z",
+          "latestCapturedAt": "2026-11-22T07:58:12.298808Z",
+          "closingVerified": false,
+          "quoteTimestamp": null,
+          "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-22"
+        }
+      ],
+      "participants": {
+        "away": {
+          "espnId": "2130",
+          "modelId": "chicago-st-cougars",
+          "name": "Chicago State Cougars"
+        },
+        "home": {
+          "espnId": "269",
+          "modelId": "marquette-golden-eagles",
+          "name": "Marquette Golden Eagles"
         }
       }
     }
