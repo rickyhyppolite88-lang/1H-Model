@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-11-23T09:41:24.942Z",
+  "updatedAt": "2026-11-23T10:43:38.999Z",
   "entryPolicy": {
     "method": "last-pretip-v1",
     "startedAt": "2026-11-10T21:33:29.039Z",
@@ -7017,6 +7017,221 @@
           },
           "openingCapturedAt": "2026-11-23T06:53:38.842893Z",
           "latestCapturedAt": "2026-11-23T09:41:15.069599Z",
+          "closingVerified": false,
+          "quoteTimestamp": null,
+          "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-23"
+        }
+      ],
+      "participants": {
+        "away": {
+          "espnId": "2110",
+          "modelId": "central-arkansas-bears",
+          "name": "Central Arkansas Bears"
+        },
+        "home": {
+          "espnId": "2454",
+          "modelId": "north-florida-ospreys",
+          "name": "North Florida Ospreys"
+        }
+      }
+    },
+    {
+      "id": "2026-27_401917919_v4",
+      "season": "2026-27",
+      "gameId": "401917919",
+      "gameDate": "2026-11-23",
+      "version": 4,
+      "recordedAt": "2026-11-23T10:43:38.999Z",
+      "signalCalculatedAt": "2026-11-23T10:43:38.999Z",
+      "origin": "batch_capture",
+      "evidence": null,
+      "inputSnapshots": {
+        "prior": "data/input-snapshots/5d7d1cdd590b01d65ca838308bd098bc8be58fdb5d96faf922f4c44677d6d7de.json",
+        "current": "data/input-snapshots/c6413e678b78b157ff387865261d4c25baff1915cec252898b167ba7cc47bae1.json",
+        "currentMatchesFrozenInputs": true
+      },
+      "modelVersion": "season-bridge-v1",
+      "source": {
+        "repository": "https://github.com/rickyhyppolite88-lang/1H-Model",
+        "projectionCode": "https://github.com/rickyhyppolite88-lang/1H-Model/blob/cef7e065e8f4df757375fca1ab69bd66e49efb99/src/model/predictor.ts",
+        "batchCode": "https://github.com/rickyhyppolite88-lang/1H-Model/blob/cef7e065e8f4df757375fca1ab69bd66e49efb99/src/model/predictions.ts",
+        "revision": "cef7e065e8f4df757375fca1ab69bd66e49efb99"
+      },
+      "state": "pregame",
+      "sportsbook": "draftkings",
+      "basis": "latest",
+      "comparison": {
+        "line": 78.5,
+        "signedEdge": -4.968932988565101,
+        "lean": "UNDER"
+      },
+      "signal": {
+        "method": "model-signal-v1",
+        "score": 62,
+        "label": "Aligned",
+        "reason": "4.97-point gap; scoring and pace components agree. Research score, not a hit percentage.",
+        "fill": "#c8e2b8"
+      },
+      "prediction": {
+        "gameId": "401917919",
+        "startsAt": "2026-11-24T00:00:00Z",
+        "awayTeam": "Central Arkansas Bears",
+        "homeTeam": "North Florida Ospreys",
+        "awayConference": "UAC",
+        "homeConference": "Atlantic Sun",
+        "awayRank": null,
+        "homeRank": null,
+        "rankingsKnown": true,
+        "status": "Scheduled",
+        "projectedFirstHalfTotal": 73.5310670114349,
+        "actualFirstHalfTotal": null,
+        "simpleTotal": 70.61077886497064,
+        "paceAdjustedTotal": 77.9114992311313,
+        "featureKind": "captured_pregame",
+        "featureCapturedAt": "2026-11-23T06:53:44.515Z",
+        "unavailableReason": null,
+        "marketCoverage": {
+          "checkedAt": "2026-11-23T10:43:31.881688Z",
+          "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-23",
+          "status": "matched",
+          "books": [
+            {
+              "sportsbook": "bet365",
+              "status": "available"
+            },
+            {
+              "sportsbook": "draftkings",
+              "status": "available"
+            },
+            {
+              "sportsbook": "fanatics",
+              "status": "available"
+            }
+          ]
+        },
+        "markets": [
+          {
+            "sportsbook": "bet365",
+            "openingLine": 78.5,
+            "latestLine": 78.5,
+            "capturedAt": "2026-11-23T10:43:31.881688Z",
+            "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-23",
+            "closingVerified": false
+          },
+          {
+            "sportsbook": "draftkings",
+            "openingLine": 78.5,
+            "latestLine": 78.5,
+            "capturedAt": "2026-11-23T10:43:31.881688Z",
+            "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-23",
+            "closingVerified": false
+          },
+          {
+            "sportsbook": "fanatics",
+            "openingLine": 79.5,
+            "latestLine": 78.5,
+            "capturedAt": "2026-11-23T10:43:31.881688Z",
+            "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-23",
+            "closingVerified": false
+          }
+        ],
+        "signal": {
+          "method": "model-signal-v1",
+          "score": 62,
+          "label": "Aligned",
+          "reason": "4.97-point gap; scoring and pace components agree. Research score, not a hit percentage.",
+          "fill": "#c8e2b8"
+        }
+      },
+      "features": {
+        "kind": "captured_pregame",
+        "capturedAt": "2026-11-23T06:53:44.515Z",
+        "priorAsOf": "2026-04-07",
+        "currentAsOf": "2026-11-23",
+        "modelVersion": "season-bridge-v1",
+        "statsRetrievedAt": "2026-11-23T06:53:37.338402Z",
+        "away": {
+          "id": "central-arkansas-bears",
+          "name": "C Arkansas",
+          "firstHalfPoints": 35.99538943248532,
+          "pace": 72.18640313111547,
+          "offensiveEfficiency": 1.0408814872798433,
+          "defensiveEfficiency": 1.063343639921722,
+          "currentWeight": 0.42857142857142855,
+          "currentGames": 6,
+          "priorAvailable": true,
+          "strengthOfSchedule": 2.3,
+          "notes": [
+            "Roster continuity is not measured; league regression reduces reliance on last year's roster."
+          ]
+        },
+        "home": {
+          "id": "north-florida-ospreys",
+          "name": "N Florida",
+          "firstHalfPoints": 34.61538943248532,
+          "pace": 76.10068884540118,
+          "offensiveEfficiency": 0.9794814872798435,
+          "defensiveEfficiency": 1.1195722113502933,
+          "currentWeight": 0.42857142857142855,
+          "currentGames": 6,
+          "priorAvailable": true,
+          "strengthOfSchedule": -7.2,
+          "notes": [
+            "Roster continuity is not measured; league regression reduces reliance on last year's roster."
+          ]
+        }
+      },
+      "quotes": [
+        {
+          "sportsbook": "bet365",
+          "opening": {
+            "total": 78.5,
+            "overPrice": -105,
+            "underPrice": -125
+          },
+          "latest": {
+            "total": 78.5,
+            "overPrice": -105,
+            "underPrice": -125
+          },
+          "openingCapturedAt": "2026-11-23T10:43:31.881688Z",
+          "latestCapturedAt": "2026-11-23T10:43:31.881688Z",
+          "closingVerified": false,
+          "quoteTimestamp": null,
+          "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-23"
+        },
+        {
+          "sportsbook": "draftkings",
+          "opening": {
+            "total": 78.5,
+            "overPrice": -110,
+            "underPrice": -120
+          },
+          "latest": {
+            "total": 78.5,
+            "overPrice": -110,
+            "underPrice": -120
+          },
+          "openingCapturedAt": "2026-11-23T09:41:15.069599Z",
+          "latestCapturedAt": "2026-11-23T10:43:31.881688Z",
+          "closingVerified": false,
+          "quoteTimestamp": null,
+          "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-23"
+        },
+        {
+          "sportsbook": "fanatics",
+          "opening": {
+            "total": 79.5,
+            "overPrice": 105,
+            "underPrice": -130
+          },
+          "latest": {
+            "total": 78.5,
+            "overPrice": -105,
+            "underPrice": -115
+          },
+          "openingCapturedAt": "2026-11-23T06:53:38.842893Z",
+          "latestCapturedAt": "2026-11-23T10:43:31.881688Z",
           "closingVerified": false,
           "quoteTimestamp": null,
           "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-23"
