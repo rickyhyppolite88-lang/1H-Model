@@ -531,7 +531,7 @@
     ]
   },
   "startedAt": "2026-11-05T16:08:14.757Z",
-  "updatedAt": "2026-11-23T03:32:26.130Z",
+  "updatedAt": "2026-11-23T04:44:36.326Z",
   "forecasts": [
     {
       "id": "2026-27_opponent-paper-v5_401902281_v1",
@@ -239666,6 +239666,118 @@
           "name": "San José State Spartans"
         }
       }
+    },
+    {
+      "id": "2026-27_opponent-paper-v5_401911233_v30",
+      "season": "2026-27",
+      "methodId": "opponent-paper-v5",
+      "gameId": "401911233",
+      "gameDate": "2026-11-22",
+      "startsAt": "2026-11-23T04:59:00Z",
+      "recordedAt": "2026-11-23T04:44:36.326Z",
+      "version": 30,
+      "revision": "4c654a891e457dd7a6aa885c0f149f394d29d05b",
+      "awayTeam": "Loyola Chicago Ramblers",
+      "homeTeam": "San José State Spartans",
+      "sportsbook": "draftkings",
+      "line": null,
+      "overPrice": null,
+      "underPrice": null,
+      "total": null,
+      "baselineTotal": null,
+      "simpleTotal": null,
+      "paceTotal": null,
+      "side": null,
+      "signalStrength": null,
+      "status": "data_gap",
+      "reason": "A frozen pregame core projection is required.",
+      "bonusMinutes": null,
+      "bonusBaselineMinutes": null,
+      "inputs": {
+        "modelPolicy": "isolated-half-features-v1",
+        "selectionPolicy": "component-paper-v1",
+        "modelPath": "data/lab-feature-models/5f60029b9b861ebfb18d02707e78bd4e73d2679a6ea01c7aa6be04fdf515e908.json",
+        "baselineFeatureCapturedAt": "2026-11-22T06:49:56.585Z",
+        "statsRetrievedAt": "2026-11-22T06:49:46.710882Z",
+        "entryQuoteCapturedAt": null,
+        "quoteCapturedAt": null,
+        "marketCheckedAt": "2026-11-23T04:44:24.548454Z",
+        "sourceBoard": null,
+        "historyAsOf": "2026-11-22T06:50:00.873Z",
+        "opponentPriorHalves": 4,
+        "shootingPriorAttempts": 50,
+        "scoringWeight": 0.6,
+        "pointCap": 3,
+        "interpretation": "Opponent-strength correction against equally shrunk unadjusted offense; pace/efficiency branch unchanged."
+      },
+      "participants": {
+        "away": {
+          "espnId": "2350",
+          "modelId": "loyola-chicago-ramblers",
+          "name": "Loyola Chicago Ramblers"
+        },
+        "home": {
+          "espnId": "23",
+          "modelId": "san-jose-st-spartans",
+          "name": "San José State Spartans"
+        }
+      }
+    },
+    {
+      "id": "2026-27_shooting-paper-v6_401911233_v30",
+      "season": "2026-27",
+      "methodId": "shooting-paper-v6",
+      "gameId": "401911233",
+      "gameDate": "2026-11-22",
+      "startsAt": "2026-11-23T04:59:00Z",
+      "recordedAt": "2026-11-23T04:44:36.326Z",
+      "version": 30,
+      "revision": "4c654a891e457dd7a6aa885c0f149f394d29d05b",
+      "awayTeam": "Loyola Chicago Ramblers",
+      "homeTeam": "San José State Spartans",
+      "sportsbook": "draftkings",
+      "line": null,
+      "overPrice": null,
+      "underPrice": null,
+      "total": null,
+      "baselineTotal": null,
+      "simpleTotal": null,
+      "paceTotal": null,
+      "side": null,
+      "signalStrength": null,
+      "status": "data_gap",
+      "reason": "A frozen pregame core projection is required.",
+      "bonusMinutes": null,
+      "bonusBaselineMinutes": null,
+      "inputs": {
+        "modelPolicy": "isolated-half-features-v1",
+        "selectionPolicy": "component-paper-v1",
+        "modelPath": "data/lab-feature-models/5f60029b9b861ebfb18d02707e78bd4e73d2679a6ea01c7aa6be04fdf515e908.json",
+        "baselineFeatureCapturedAt": "2026-11-22T06:49:56.585Z",
+        "statsRetrievedAt": "2026-11-22T06:49:46.710882Z",
+        "entryQuoteCapturedAt": null,
+        "quoteCapturedAt": null,
+        "marketCheckedAt": "2026-11-23T04:44:24.548454Z",
+        "sourceBoard": null,
+        "historyAsOf": "2026-11-22T06:50:00.873Z",
+        "opponentPriorHalves": 4,
+        "shootingPriorAttempts": 50,
+        "scoringWeight": 0.6,
+        "pointCap": 3,
+        "interpretation": "Regress observed three-point conversion toward the earlier league rate while retaining attempt volume; pace/efficiency branch unchanged."
+      },
+      "participants": {
+        "away": {
+          "espnId": "2350",
+          "modelId": "loyola-chicago-ramblers",
+          "name": "Loyola Chicago Ramblers"
+        },
+        "home": {
+          "espnId": "23",
+          "modelId": "san-jose-st-spartans",
+          "name": "San José State Spartans"
+        }
+      }
     }
   ],
   "results": [
@@ -242692,6 +242804,44 @@
           "threeAttempted": 11,
           "turnovers": 10,
           "offensiveRebounds": 2
+        }
+      ]
+    },
+    {
+      "id": "401929202_3bd2898ac66d9e95f473fe56c50961d8e76d05b67924dbd74b467c18c13d2ae5",
+      "gameId": "401929202",
+      "season": "2026-27",
+      "startsAt": "2026-11-22T20:30:00Z",
+      "observedAt": "2026-11-23T04:44:26.158039Z",
+      "source": "https://site.api.espn.com/apis/site/v2/sports/basketball/mens-college-basketball/summary?event=401929202",
+      "sourceSha256": "15fd6874dc8a306dee3211c6af3204f082bc5fb2372e402e0b28b72e6bb4f62e",
+      "bothD1": true,
+      "teams": [
+        {
+          "espnId": "2377",
+          "points": 27,
+          "fouls": 14,
+          "bonusMinutes": 0,
+          "fga": 30,
+          "fta": 6,
+          "freeThrowsMade": 3,
+          "threeMade": 2,
+          "threeAttempted": 10,
+          "turnovers": 7,
+          "offensiveRebounds": 6
+        },
+        {
+          "espnId": "326",
+          "points": 50,
+          "fouls": 6,
+          "bonusMinutes": 10,
+          "fga": 34,
+          "fta": 18,
+          "freeThrowsMade": 15,
+          "threeMade": 5,
+          "threeAttempted": 15,
+          "turnovers": 4,
+          "offensiveRebounds": 12
         }
       ]
     }
