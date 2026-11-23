@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-11-23T01:26:21.324Z",
+  "updatedAt": "2026-11-23T02:31:40.481Z",
   "entryPolicy": {
     "method": "last-pretip-v1",
     "startedAt": "2026-11-10T21:33:29.039Z",
@@ -77202,6 +77202,128 @@
       }
     },
     {
+      "id": "2026-27_401911233_v2",
+      "season": "2026-27",
+      "gameId": "401911233",
+      "gameDate": "2026-11-22",
+      "version": 2,
+      "recordedAt": "2026-11-23T01:26:21.324Z",
+      "signalCalculatedAt": "2026-11-23T01:26:21.324Z",
+      "origin": "batch_capture",
+      "evidence": null,
+      "inputSnapshots": {
+        "prior": "data/input-snapshots/5d7d1cdd590b01d65ca838308bd098bc8be58fdb5d96faf922f4c44677d6d7de.json",
+        "current": "data/input-snapshots/f02bfe5314096b19a666ad72e77929d8e072989e9bf955d84402ca4385e574c7.json",
+        "currentMatchesFrozenInputs": false
+      },
+      "modelVersion": "season-bridge-v1",
+      "source": {
+        "repository": "https://github.com/rickyhyppolite88-lang/1H-Model",
+        "projectionCode": "https://github.com/rickyhyppolite88-lang/1H-Model/blob/768a47105b639d472ac665cd791fbd8b0b325825/src/model/predictor.ts",
+        "batchCode": "https://github.com/rickyhyppolite88-lang/1H-Model/blob/768a47105b639d472ac665cd791fbd8b0b325825/src/model/predictions.ts",
+        "revision": "768a47105b639d472ac665cd791fbd8b0b325825"
+      },
+      "state": "unavailable",
+      "sportsbook": "draftkings",
+      "basis": "latest",
+      "comparison": {
+        "line": null,
+        "signedEdge": null,
+        "lean": null
+      },
+      "signal": {
+        "method": "model-signal-v1",
+        "score": null,
+        "label": "Unavailable",
+        "reason": "A pregame projection, both components, and the selected line are required.",
+        "fill": null
+      },
+      "prediction": {
+        "gameId": "401911233",
+        "startsAt": "2026-11-23T04:59:00Z",
+        "awayTeam": "Loyola Chicago Ramblers",
+        "homeTeam": "San José State Spartans",
+        "awayConference": "Atlantic 10",
+        "homeConference": "Mountain West",
+        "awayRank": null,
+        "homeRank": null,
+        "rankingsKnown": true,
+        "status": "Scheduled",
+        "projectedFirstHalfTotal": null,
+        "actualFirstHalfTotal": null,
+        "simpleTotal": null,
+        "paceAdjustedTotal": null,
+        "featureKind": null,
+        "featureCapturedAt": null,
+        "unavailableReason": "No valid pregame feature archive or eligible season-debut reconstruction.",
+        "marketCoverage": {
+          "checkedAt": "2026-11-23T01:26:11.620053Z",
+          "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-22",
+          "status": "not_matched",
+          "books": []
+        },
+        "markets": [],
+        "signal": {
+          "method": "model-signal-v1",
+          "score": null,
+          "label": "Unavailable",
+          "reason": "A pregame projection, both components, and the selected line are required.",
+          "fill": null
+        }
+      },
+      "features": {
+        "kind": "captured_pregame",
+        "capturedAt": "2026-11-22T06:49:56.585Z",
+        "priorAsOf": "2026-04-07",
+        "currentAsOf": "2026-11-22",
+        "modelVersion": "season-bridge-v1",
+        "statsRetrievedAt": "2026-11-22T06:49:46.710882Z",
+        "away": {
+          "id": "san-jose-st-spartans",
+          "name": "San Jose St",
+          "firstHalfPoints": 35.662727081138044,
+          "pace": 69.92381875658589,
+          "offensiveEfficiency": 1.0958416016859853,
+          "defensiveEfficiency": 1.123431612223393,
+          "currentWeight": 0.38461538461538464,
+          "currentGames": 5,
+          "priorAvailable": true,
+          "strengthOfSchedule": -4.8,
+          "notes": [
+            "Roster continuity is not measured; league regression reduces reliance on last year's roster."
+          ]
+        },
+        "home": {
+          "id": "loyola-chicago-ramblers",
+          "name": "Loyola Chi",
+          "firstHalfPoints": 35.585804004214964,
+          "pace": 70.23766491043204,
+          "offensiveEfficiency": 1.0394723709167546,
+          "defensiveEfficiency": 1.045631612223393,
+          "currentWeight": 0.38461538461538464,
+          "currentGames": 5,
+          "priorAvailable": true,
+          "strengthOfSchedule": -1.7,
+          "notes": [
+            "Roster continuity is not measured; league regression reduces reliance on last year's roster."
+          ]
+        }
+      },
+      "quotes": [],
+      "participants": {
+        "away": {
+          "espnId": "2350",
+          "modelId": "loyola-chicago-ramblers",
+          "name": "Loyola Chicago Ramblers"
+        },
+        "home": {
+          "espnId": "23",
+          "modelId": "san-jose-st-spartans",
+          "name": "San José State Spartans"
+        }
+      }
+    },
+    {
       "id": "2026-27_401919020_v8",
       "season": "2026-27",
       "gameId": "401919020",
@@ -78293,128 +78415,6 @@
           "espnId": "2547",
           "modelId": "seattle-redhawks",
           "name": "Seattle U Redhawks"
-        }
-      }
-    },
-    {
-      "id": "2026-27_401911233_v2",
-      "season": "2026-27",
-      "gameId": "401911233",
-      "gameDate": "2026-11-22",
-      "version": 2,
-      "recordedAt": "2026-11-23T01:26:21.324Z",
-      "signalCalculatedAt": "2026-11-23T01:26:21.324Z",
-      "origin": "batch_capture",
-      "evidence": null,
-      "inputSnapshots": {
-        "prior": "data/input-snapshots/5d7d1cdd590b01d65ca838308bd098bc8be58fdb5d96faf922f4c44677d6d7de.json",
-        "current": "data/input-snapshots/f02bfe5314096b19a666ad72e77929d8e072989e9bf955d84402ca4385e574c7.json",
-        "currentMatchesFrozenInputs": false
-      },
-      "modelVersion": "season-bridge-v1",
-      "source": {
-        "repository": "https://github.com/rickyhyppolite88-lang/1H-Model",
-        "projectionCode": "https://github.com/rickyhyppolite88-lang/1H-Model/blob/768a47105b639d472ac665cd791fbd8b0b325825/src/model/predictor.ts",
-        "batchCode": "https://github.com/rickyhyppolite88-lang/1H-Model/blob/768a47105b639d472ac665cd791fbd8b0b325825/src/model/predictions.ts",
-        "revision": "768a47105b639d472ac665cd791fbd8b0b325825"
-      },
-      "state": "unavailable",
-      "sportsbook": "draftkings",
-      "basis": "latest",
-      "comparison": {
-        "line": null,
-        "signedEdge": null,
-        "lean": null
-      },
-      "signal": {
-        "method": "model-signal-v1",
-        "score": null,
-        "label": "Unavailable",
-        "reason": "A pregame projection, both components, and the selected line are required.",
-        "fill": null
-      },
-      "prediction": {
-        "gameId": "401911233",
-        "startsAt": "2026-11-23T04:59:00Z",
-        "awayTeam": "Loyola Chicago Ramblers",
-        "homeTeam": "San José State Spartans",
-        "awayConference": "Atlantic 10",
-        "homeConference": "Mountain West",
-        "awayRank": null,
-        "homeRank": null,
-        "rankingsKnown": true,
-        "status": "Scheduled",
-        "projectedFirstHalfTotal": null,
-        "actualFirstHalfTotal": null,
-        "simpleTotal": null,
-        "paceAdjustedTotal": null,
-        "featureKind": null,
-        "featureCapturedAt": null,
-        "unavailableReason": "No valid pregame feature archive or eligible season-debut reconstruction.",
-        "marketCoverage": {
-          "checkedAt": "2026-11-23T01:26:11.620053Z",
-          "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-22",
-          "status": "not_matched",
-          "books": []
-        },
-        "markets": [],
-        "signal": {
-          "method": "model-signal-v1",
-          "score": null,
-          "label": "Unavailable",
-          "reason": "A pregame projection, both components, and the selected line are required.",
-          "fill": null
-        }
-      },
-      "features": {
-        "kind": "captured_pregame",
-        "capturedAt": "2026-11-22T06:49:56.585Z",
-        "priorAsOf": "2026-04-07",
-        "currentAsOf": "2026-11-22",
-        "modelVersion": "season-bridge-v1",
-        "statsRetrievedAt": "2026-11-22T06:49:46.710882Z",
-        "away": {
-          "id": "san-jose-st-spartans",
-          "name": "San Jose St",
-          "firstHalfPoints": 35.662727081138044,
-          "pace": 69.92381875658589,
-          "offensiveEfficiency": 1.0958416016859853,
-          "defensiveEfficiency": 1.123431612223393,
-          "currentWeight": 0.38461538461538464,
-          "currentGames": 5,
-          "priorAvailable": true,
-          "strengthOfSchedule": -4.8,
-          "notes": [
-            "Roster continuity is not measured; league regression reduces reliance on last year's roster."
-          ]
-        },
-        "home": {
-          "id": "loyola-chicago-ramblers",
-          "name": "Loyola Chi",
-          "firstHalfPoints": 35.585804004214964,
-          "pace": 70.23766491043204,
-          "offensiveEfficiency": 1.0394723709167546,
-          "defensiveEfficiency": 1.045631612223393,
-          "currentWeight": 0.38461538461538464,
-          "currentGames": 5,
-          "priorAvailable": true,
-          "strengthOfSchedule": -1.7,
-          "notes": [
-            "Roster continuity is not measured; league regression reduces reliance on last year's roster."
-          ]
-        }
-      },
-      "quotes": [],
-      "participants": {
-        "away": {
-          "espnId": "2350",
-          "modelId": "loyola-chicago-ramblers",
-          "name": "Loyola Chicago Ramblers"
-        },
-        "home": {
-          "espnId": "23",
-          "modelId": "san-jose-st-spartans",
-          "name": "San José State Spartans"
         }
       }
     }
@@ -79710,6 +79710,108 @@
         "venueName": "Colonial Hall",
         "city": "White Sulphur Springs",
         "state": "WV"
+      }
+    },
+    {
+      "id": "2026-27:401926774_result1",
+      "season": "2026-27",
+      "gameId": "401926774",
+      "observedAt": "2026-11-23T02:31:40.481Z",
+      "sourceCapturedAt": "2026-11-23T02:31:30.184037Z",
+      "startsAt": "2026-11-23T01:00:00Z",
+      "awayPoints": 27,
+      "homePoints": 42,
+      "source": "https://site.api.espn.com/apis/site/v2/sports/basketball/mens-college-basketball/scoreboard?dates=20261122&groups=50&limit=1000",
+      "participants": {
+        "away": {
+          "espnId": "309",
+          "modelId": "ul-lafayette-ragin-cajuns",
+          "name": "Louisiana Ragin' Cajuns"
+        },
+        "home": {
+          "espnId": "30",
+          "modelId": "southern-california-trojans",
+          "name": "USC Trojans"
+        }
+      },
+      "context": {
+        "neutralSite": false,
+        "conferenceGame": false,
+        "matchupType": "nonconference_regular",
+        "eventLabel": null,
+        "venueId": "1918",
+        "venueKey": "id:1918",
+        "venueName": "Galen Center",
+        "city": "Los Angeles",
+        "state": "CA"
+      }
+    },
+    {
+      "id": "2026-27:401929595_result1",
+      "season": "2026-27",
+      "gameId": "401929595",
+      "observedAt": "2026-11-23T02:31:40.481Z",
+      "sourceCapturedAt": "2026-11-23T02:31:30.184037Z",
+      "startsAt": "2026-11-23T01:00:00Z",
+      "awayPoints": 41,
+      "homePoints": 43,
+      "source": "https://site.api.espn.com/apis/site/v2/sports/basketball/mens-college-basketball/scoreboard?dates=20261122&groups=50&limit=1000",
+      "participants": {
+        "away": {
+          "espnId": "2381",
+          "modelId": null,
+          "name": "Menlo Oaks"
+        },
+        "home": {
+          "espnId": "2608",
+          "modelId": "saint-marys-gaels",
+          "name": "Saint Mary's Gaels"
+        }
+      },
+      "context": {
+        "neutralSite": false,
+        "conferenceGame": false,
+        "matchupType": "nonconference_regular",
+        "eventLabel": null,
+        "venueId": "488",
+        "venueKey": "id:488",
+        "venueName": "University Credit Union Pavilion",
+        "city": "Moraga",
+        "state": "CA"
+      }
+    },
+    {
+      "id": "2026-27:401921206_result1",
+      "season": "2026-27",
+      "gameId": "401921206",
+      "observedAt": "2026-11-23T02:31:40.481Z",
+      "sourceCapturedAt": "2026-11-23T02:31:30.184037Z",
+      "startsAt": "2026-11-23T01:10:00Z",
+      "awayPoints": 37,
+      "homePoints": 32,
+      "source": "https://site.api.espn.com/apis/site/v2/sports/basketball/mens-college-basketball/scoreboard?dates=20261122&groups=50&limit=1000",
+      "participants": {
+        "away": {
+          "espnId": "2630",
+          "modelId": "tenn-martin-skyhawks",
+          "name": "UT Martin Skyhawks"
+        },
+        "home": {
+          "espnId": "3084",
+          "modelId": "utah-valley-wolverines",
+          "name": "Utah Valley Wolverines"
+        }
+      },
+      "context": {
+        "neutralSite": true,
+        "conferenceGame": false,
+        "matchupType": "nonconference_regular",
+        "eventLabel": "U.S. Virgin Islands Paradise Jam",
+        "venueId": "10667",
+        "venueKey": "id:10667",
+        "venueName": "Elridge Blake Sports and Fitness Center",
+        "city": "Charlotte Amalie",
+        "state": "Virgin Islands"
       }
     }
   ]
