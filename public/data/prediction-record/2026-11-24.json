@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-11-24T07:58:04.234Z",
+  "updatedAt": "2026-11-24T08:55:49.720Z",
   "entryPolicy": {
     "method": "last-pretip-v1",
     "startedAt": "2026-11-10T21:33:29.039Z",
@@ -14404,6 +14404,128 @@
       }
     },
     {
+      "id": "2026-27_401921712_v2",
+      "season": "2026-27",
+      "gameId": "401921712",
+      "gameDate": "2026-11-24",
+      "version": 2,
+      "recordedAt": "2026-11-24T07:58:04.234Z",
+      "signalCalculatedAt": "2026-11-24T07:58:04.234Z",
+      "origin": "batch_capture",
+      "evidence": null,
+      "inputSnapshots": {
+        "prior": "data/input-snapshots/5d7d1cdd590b01d65ca838308bd098bc8be58fdb5d96faf922f4c44677d6d7de.json",
+        "current": "data/input-snapshots/ceec830b551dbb179315a4c6d6e2704db59b24712e4dbba8eec9ec5014a3c9ba.json",
+        "currentMatchesFrozenInputs": true
+      },
+      "modelVersion": "season-bridge-v1",
+      "source": {
+        "repository": "https://github.com/rickyhyppolite88-lang/1H-Model",
+        "projectionCode": "https://github.com/rickyhyppolite88-lang/1H-Model/blob/21bb1cbc7f4428d5424bead7609bbc480d1f33e9/src/model/predictor.ts",
+        "batchCode": "https://github.com/rickyhyppolite88-lang/1H-Model/blob/21bb1cbc7f4428d5424bead7609bbc480d1f33e9/src/model/predictions.ts",
+        "revision": "21bb1cbc7f4428d5424bead7609bbc480d1f33e9"
+      },
+      "state": "pregame",
+      "sportsbook": "draftkings",
+      "basis": "latest",
+      "comparison": {
+        "line": null,
+        "signedEdge": null,
+        "lean": null
+      },
+      "signal": {
+        "method": "model-signal-v1",
+        "score": null,
+        "label": "Unavailable",
+        "reason": "A pregame projection, both components, and the selected line are required.",
+        "fill": null
+      },
+      "prediction": {
+        "gameId": "401921712",
+        "startsAt": "2026-11-25T03:30:00Z",
+        "awayTeam": "VCU Rams",
+        "homeTeam": "Colorado State Rams",
+        "awayConference": "Atlantic 10",
+        "homeConference": "Pac-12",
+        "awayRank": null,
+        "homeRank": null,
+        "rankingsKnown": true,
+        "status": "Scheduled",
+        "projectedFirstHalfTotal": 73.99809733955507,
+        "actualFirstHalfTotal": null,
+        "simpleTotal": 73.488531085353,
+        "paceAdjustedTotal": 74.76244672085815,
+        "featureKind": "captured_pregame",
+        "featureCapturedAt": "2026-11-24T07:58:03.632Z",
+        "unavailableReason": null,
+        "marketCoverage": {
+          "checkedAt": "2026-11-24T07:57:54.769422Z",
+          "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-24",
+          "status": "matched",
+          "books": []
+        },
+        "markets": [],
+        "signal": {
+          "method": "model-signal-v1",
+          "score": null,
+          "label": "Unavailable",
+          "reason": "A pregame projection, both components, and the selected line are required.",
+          "fill": null
+        }
+      },
+      "features": {
+        "kind": "captured_pregame",
+        "capturedAt": "2026-11-24T07:58:03.632Z",
+        "priorAsOf": "2026-04-07",
+        "currentAsOf": "2026-11-24",
+        "modelVersion": "season-bridge-v1",
+        "statsRetrievedAt": "2026-11-24T05:39:26.105416Z",
+        "away": {
+          "id": "vcu-rams",
+          "name": "VCU",
+          "firstHalfPoints": 38.70888092729189,
+          "pace": 72.21458798735512,
+          "offensiveEfficiency": 1.1025185247629086,
+          "defensiveEfficiency": 1.004308535300316,
+          "currentWeight": 0.38461538461538464,
+          "currentGames": 5,
+          "priorAvailable": true,
+          "strengthOfSchedule": 7.3,
+          "notes": [
+            "Roster continuity is not measured; league regression reduces reliance on last year's roster."
+          ]
+        },
+        "home": {
+          "id": "colorado-st-rams",
+          "name": "Colorado St",
+          "firstHalfPoints": 34.779650158061116,
+          "pace": 69.1268956796628,
+          "offensiveEfficiency": 1.0872416016859854,
+          "defensiveEfficiency": 1.0375239199157007,
+          "currentWeight": 0.38461538461538464,
+          "currentGames": 5,
+          "priorAvailable": true,
+          "strengthOfSchedule": -3.4,
+          "notes": [
+            "Roster continuity is not measured; league regression reduces reliance on last year's roster."
+          ]
+        }
+      },
+      "quotes": [],
+      "participants": {
+        "away": {
+          "espnId": "2670",
+          "modelId": "vcu-rams",
+          "name": "VCU Rams"
+        },
+        "home": {
+          "espnId": "36",
+          "modelId": "colorado-st-rams",
+          "name": "Colorado State Rams"
+        }
+      }
+    },
+    {
       "id": "2026-27_401920889_v3",
       "season": "2026-27",
       "gameId": "401920889",
@@ -14589,13 +14711,13 @@
       }
     },
     {
-      "id": "2026-27_401921712_v2",
+      "id": "2026-27_401921709_v3",
       "season": "2026-27",
-      "gameId": "401921712",
+      "gameId": "401921709",
       "gameDate": "2026-11-24",
-      "version": 2,
-      "recordedAt": "2026-11-24T07:58:04.234Z",
-      "signalCalculatedAt": "2026-11-24T07:58:04.234Z",
+      "version": 3,
+      "recordedAt": "2026-11-24T08:55:49.720Z",
+      "signalCalculatedAt": "2026-11-24T08:55:49.720Z",
       "origin": "batch_capture",
       "evidence": null,
       "inputSnapshots": {
@@ -14606,9 +14728,9 @@
       "modelVersion": "season-bridge-v1",
       "source": {
         "repository": "https://github.com/rickyhyppolite88-lang/1H-Model",
-        "projectionCode": "https://github.com/rickyhyppolite88-lang/1H-Model/blob/21bb1cbc7f4428d5424bead7609bbc480d1f33e9/src/model/predictor.ts",
-        "batchCode": "https://github.com/rickyhyppolite88-lang/1H-Model/blob/21bb1cbc7f4428d5424bead7609bbc480d1f33e9/src/model/predictions.ts",
-        "revision": "21bb1cbc7f4428d5424bead7609bbc480d1f33e9"
+        "projectionCode": "https://github.com/rickyhyppolite88-lang/1H-Model/blob/c90d2304197829a137f1350fb216d4e27af81e53/src/model/predictor.ts",
+        "batchCode": "https://github.com/rickyhyppolite88-lang/1H-Model/blob/c90d2304197829a137f1350fb216d4e27af81e53/src/model/predictions.ts",
+        "revision": "c90d2304197829a137f1350fb216d4e27af81e53"
       },
       "state": "pregame",
       "sportsbook": "draftkings",
@@ -14626,30 +14748,44 @@
         "fill": null
       },
       "prediction": {
-        "gameId": "401921712",
-        "startsAt": "2026-11-25T03:30:00Z",
-        "awayTeam": "VCU Rams",
-        "homeTeam": "Colorado State Rams",
-        "awayConference": "Atlantic 10",
-        "homeConference": "Pac-12",
+        "gameId": "401921709",
+        "startsAt": "2026-11-24T19:30:00Z",
+        "awayTeam": "Ole Miss Rebels",
+        "homeTeam": "BYU Cougars",
+        "awayConference": "SEC",
+        "homeConference": "Big 12",
         "awayRank": null,
-        "homeRank": null,
+        "homeRank": 19,
         "rankingsKnown": true,
         "status": "Scheduled",
-        "projectedFirstHalfTotal": 73.99809733955507,
+        "projectedFirstHalfTotal": 78.0428805036942,
         "actualFirstHalfTotal": null,
-        "simpleTotal": 73.488531085353,
-        "paceAdjustedTotal": 74.76244672085815,
+        "simpleTotal": 78.70800662351346,
+        "paceAdjustedTotal": 77.04519132396534,
         "featureKind": "captured_pregame",
-        "featureCapturedAt": "2026-11-24T07:58:03.632Z",
+        "featureCapturedAt": "2026-11-24T05:39:36.123Z",
         "unavailableReason": null,
         "marketCoverage": {
-          "checkedAt": "2026-11-24T07:57:54.769422Z",
+          "checkedAt": "2026-11-24T08:55:41.049814Z",
           "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-24",
           "status": "matched",
-          "books": []
+          "books": [
+            {
+              "sportsbook": "fanatics",
+              "status": "available"
+            }
+          ]
         },
-        "markets": [],
+        "markets": [
+          {
+            "sportsbook": "fanatics",
+            "openingLine": 76.5,
+            "latestLine": 76.5,
+            "capturedAt": "2026-11-24T08:55:41.049814Z",
+            "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-24",
+            "closingVerified": false
+          }
+        ],
         "signal": {
           "method": "model-signal-v1",
           "score": null,
@@ -14660,53 +14796,72 @@
       },
       "features": {
         "kind": "captured_pregame",
-        "capturedAt": "2026-11-24T07:58:03.632Z",
+        "capturedAt": "2026-11-24T05:39:36.123Z",
         "priorAsOf": "2026-04-07",
         "currentAsOf": "2026-11-24",
         "modelVersion": "season-bridge-v1",
         "statsRetrievedAt": "2026-11-24T05:39:26.105416Z",
         "away": {
-          "id": "vcu-rams",
-          "name": "VCU",
-          "firstHalfPoints": 38.70888092729189,
-          "pace": 72.21458798735512,
-          "offensiveEfficiency": 1.1025185247629086,
-          "defensiveEfficiency": 1.004308535300316,
+          "id": "mississippi-rebels",
+          "name": "Mississippi",
+          "firstHalfPoints": 38.88118861959958,
+          "pace": 72.60228029504742,
+          "offensiveEfficiency": 1.103703140147524,
+          "defensiveEfficiency": 0.9336623814541622,
           "currentWeight": 0.38461538461538464,
           "currentGames": 5,
           "priorAvailable": true,
-          "strengthOfSchedule": 7.3,
+          "strengthOfSchedule": 1.3,
           "notes": [
             "Roster continuity is not measured; league regression reduces reliance on last year's roster."
           ]
         },
         "home": {
-          "id": "colorado-st-rams",
-          "name": "Colorado St",
-          "firstHalfPoints": 34.779650158061116,
-          "pace": 69.1268956796628,
-          "offensiveEfficiency": 1.0872416016859854,
-          "defensiveEfficiency": 1.0375239199157007,
-          "currentWeight": 0.38461538461538464,
-          "currentGames": 5,
+          "id": "brigham-young-cougars",
+          "name": "BYU",
+          "firstHalfPoints": 39.826818003913885,
+          "pace": 73.17497455968689,
+          "offensiveEfficiency": 1.1787100587084147,
+          "defensiveEfficiency": 1.0120293542074363,
+          "currentWeight": 0.42857142857142855,
+          "currentGames": 6,
           "priorAvailable": true,
-          "strengthOfSchedule": -3.4,
+          "strengthOfSchedule": 5,
           "notes": [
             "Roster continuity is not measured; league regression reduces reliance on last year's roster."
           ]
         }
       },
-      "quotes": [],
+      "quotes": [
+        {
+          "sportsbook": "fanatics",
+          "opening": {
+            "total": 76.5,
+            "overPrice": -110,
+            "underPrice": -110
+          },
+          "latest": {
+            "total": 76.5,
+            "overPrice": -105,
+            "underPrice": -115
+          },
+          "openingCapturedAt": "2026-11-24T07:57:54.769422Z",
+          "latestCapturedAt": "2026-11-24T08:55:41.049814Z",
+          "closingVerified": false,
+          "quoteTimestamp": null,
+          "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-24"
+        }
+      ],
       "participants": {
         "away": {
-          "espnId": "2670",
-          "modelId": "vcu-rams",
-          "name": "VCU Rams"
+          "espnId": "145",
+          "modelId": "mississippi-rebels",
+          "name": "Ole Miss Rebels"
         },
         "home": {
-          "espnId": "36",
-          "modelId": "colorado-st-rams",
-          "name": "Colorado State Rams"
+          "espnId": "252",
+          "modelId": "brigham-young-cougars",
+          "name": "BYU Cougars"
         }
       }
     }
