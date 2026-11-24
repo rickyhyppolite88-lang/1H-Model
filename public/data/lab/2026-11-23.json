@@ -531,7 +531,7 @@
     ]
   },
   "startedAt": "2026-11-05T16:08:14.757Z",
-  "updatedAt": "2026-11-24T05:39:41.083Z",
+  "updatedAt": "2026-11-24T06:34:17.185Z",
   "forecasts": [
     {
       "id": "2026-27_opponent-paper-v5_401921700_v1",
@@ -234903,6 +234903,74 @@
         "city": "Las Vegas",
         "state": "NV"
       }
+    },
+    {
+      "id": "2026-27:401909743_result1",
+      "season": "2026-27",
+      "gameId": "401909743",
+      "observedAt": "2026-11-24T06:34:14.672Z",
+      "sourceCapturedAt": "2026-11-24T06:34:04.673435Z",
+      "startsAt": "2026-11-24T04:55:00Z",
+      "awayPoints": 34,
+      "homePoints": 50,
+      "source": "https://site.api.espn.com/apis/site/v2/sports/basketball/mens-college-basketball/scoreboard?dates=20261123&groups=50&limit=1000",
+      "participants": {
+        "away": {
+          "espnId": "36",
+          "modelId": "colorado-st-rams",
+          "name": "Colorado State Rams"
+        },
+        "home": {
+          "espnId": "12",
+          "modelId": "arizona-wildcats",
+          "name": "Arizona Wildcats"
+        }
+      },
+      "context": {
+        "neutralSite": true,
+        "conferenceGame": false,
+        "matchupType": "other_tournament",
+        "eventLabel": "Southwest Maui Invitational",
+        "venueId": "1943",
+        "venueKey": "id:1943",
+        "venueName": "Lahaina Civic Center",
+        "city": "Maui",
+        "state": "HI"
+      }
+    },
+    {
+      "id": "2026-27:401921664_result1",
+      "season": "2026-27",
+      "gameId": "401921664",
+      "observedAt": "2026-11-24T06:34:14.672Z",
+      "sourceCapturedAt": "2026-11-24T06:34:04.673435Z",
+      "startsAt": "2026-11-24T04:59:00Z",
+      "awayPoints": 43,
+      "homePoints": 42,
+      "source": "https://site.api.espn.com/apis/site/v2/sports/basketball/mens-college-basketball/scoreboard?dates=20261123&groups=50&limit=1000",
+      "participants": {
+        "away": {
+          "espnId": "23",
+          "modelId": "san-jose-st-spartans",
+          "name": "San José State Spartans"
+        },
+        "home": {
+          "espnId": "28",
+          "modelId": "uc-san-diego-tritons",
+          "name": "UC San Diego Tritons"
+        }
+      },
+      "context": {
+        "neutralSite": true,
+        "conferenceGame": false,
+        "matchupType": "nonconference_regular",
+        "eventLabel": "Acrisure Series - Third Place Game",
+        "venueId": "7524",
+        "venueKey": "id:7524",
+        "venueName": "Acrisure Arena",
+        "city": "Palm Springs",
+        "state": "CA"
+      }
     }
   ],
   "halves": [
@@ -236575,6 +236643,82 @@
           "threeAttempted": 10,
           "turnovers": 12,
           "offensiveRebounds": 5
+        }
+      ]
+    },
+    {
+      "id": "401909743_e8e8dfb99888e3c6ce938363d0201cdc2b37cdc38c0e67c44ea6fbcbc28a303b",
+      "gameId": "401909743",
+      "season": "2026-27",
+      "startsAt": "2026-11-24T04:55:00Z",
+      "observedAt": "2026-11-24T06:34:08.223945Z",
+      "source": "https://site.api.espn.com/apis/site/v2/sports/basketball/mens-college-basketball/summary?event=401909743",
+      "sourceSha256": "20b29464cbd10c5a0dcfdbf44404e344021db711093cfae2c74d908900806626",
+      "bothD1": true,
+      "teams": [
+        {
+          "espnId": "12",
+          "points": 50,
+          "fouls": 6,
+          "bonusMinutes": 1.9,
+          "fga": 33,
+          "fta": 6,
+          "freeThrowsMade": 6,
+          "threeMade": 6,
+          "threeAttempted": 13,
+          "turnovers": 3,
+          "offensiveRebounds": 2
+        },
+        {
+          "espnId": "36",
+          "points": 34,
+          "fouls": 8,
+          "bonusMinutes": 0,
+          "fga": 32,
+          "fta": 4,
+          "freeThrowsMade": 3,
+          "threeMade": 5,
+          "threeAttempted": 18,
+          "turnovers": 7,
+          "offensiveRebounds": 4
+        }
+      ]
+    },
+    {
+      "id": "401921664_469cef1dfa57461e01fca8cdf8c8a80b565d80f5b169b5c0a3df624266bbb939",
+      "gameId": "401921664",
+      "season": "2026-27",
+      "startsAt": "2026-11-24T04:59:00Z",
+      "observedAt": "2026-11-24T06:34:08.223945Z",
+      "source": "https://site.api.espn.com/apis/site/v2/sports/basketball/mens-college-basketball/summary?event=401921664",
+      "sourceSha256": "eab96f451949d47e5c6606336bc48f82cc64949a81c0495721636d25d8a8fec6",
+      "bothD1": true,
+      "teams": [
+        {
+          "espnId": "23",
+          "points": 43,
+          "fouls": 3,
+          "bonusMinutes": 5.966666666666667,
+          "fga": 25,
+          "fta": 13,
+          "freeThrowsMade": 11,
+          "threeMade": 6,
+          "threeAttempted": 13,
+          "turnovers": 8,
+          "offensiveRebounds": 5
+        },
+        {
+          "espnId": "28",
+          "points": 42,
+          "fouls": 12,
+          "bonusMinutes": 0,
+          "fga": 31,
+          "fta": 2,
+          "freeThrowsMade": 0,
+          "threeMade": 8,
+          "threeAttempted": 12,
+          "turnovers": 4,
+          "offensiveRebounds": 4
         }
       ]
     }
