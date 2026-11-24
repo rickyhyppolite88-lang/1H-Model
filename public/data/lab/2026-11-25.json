@@ -531,7 +531,7 @@
     ]
   },
   "startedAt": "2026-11-05T16:08:14.757Z",
-  "updatedAt": "2026-11-24T09:57:08.609Z",
+  "updatedAt": "2026-11-24T10:48:18.087Z",
   "forecasts": [
     {
       "id": "2026-27_opponent-paper-v5_401909800_v1",
@@ -2033,6 +2033,168 @@
         "entryQuoteCapturedAt": null,
         "quoteCapturedAt": null,
         "marketCheckedAt": "2026-11-24T09:56:53.726494Z",
+        "sourceBoard": null,
+        "historyAsOf": "2026-11-24T05:39:41.083Z",
+        "opponentPriorHalves": 4,
+        "shootingPriorAttempts": 50,
+        "scoringWeight": 0.6,
+        "pointCap": 3,
+        "interpretation": "Regress observed three-point conversion toward the earlier league rate while retaining attempt volume; pace/efficiency branch unchanged."
+      },
+      "feature": {
+        "policy": "isolated-half-features-v1",
+        "selectionPolicy": "component-paper-v1",
+        "modelPath": "data/lab-feature-models/161b075eeb4e6c3aa0d27191b60b0389d296b4095b9524802c7c9c7ea8215593.json",
+        "fittedAt": "2026-11-24T05:39:41.083Z",
+        "trainingGames": 954,
+        "expectedPossessions": 36.205770987003866,
+        "unboundedAdjustment": -0.19385355535346477,
+        "adjustment": -0.19385355535346477,
+        "paperUnits": 0,
+        "away": {
+          "espnId": "2250",
+          "games": 4,
+          "currentWeight": 0.3333333333333333,
+          "deltaRate": -0.03461341096796566,
+          "weightedPoints": -0.2506410461170425
+        },
+        "home": {
+          "espnId": "2306",
+          "games": 4,
+          "currentWeight": 0.38461538461538464,
+          "deltaRate": 0.006796682405423735,
+          "weightedPoints": 0.056787490763577766
+        }
+      },
+      "participants": {
+        "away": {
+          "espnId": "2250",
+          "modelId": "gonzaga-bulldogs",
+          "name": "Gonzaga Bulldogs"
+        },
+        "home": {
+          "espnId": "2306",
+          "modelId": "kansas-state-wildcats",
+          "name": "Kansas State Wildcats"
+        }
+      }
+    },
+    {
+      "id": "2026-27_opponent-paper-v5_401909800_v6",
+      "season": "2026-27",
+      "methodId": "opponent-paper-v5",
+      "gameId": "401909800",
+      "gameDate": "2026-11-25",
+      "startsAt": "2026-11-25T05:30:00Z",
+      "recordedAt": "2026-11-24T10:48:18.087Z",
+      "version": 6,
+      "revision": "ae6c374d568c38c141e381515ef294c433e8574d",
+      "awayTeam": "Gonzaga Bulldogs",
+      "homeTeam": "Kansas State Wildcats",
+      "sportsbook": "draftkings",
+      "line": null,
+      "overPrice": null,
+      "underPrice": null,
+      "total": 77.25054870380559,
+      "baselineTotal": 76.96780890592075,
+      "simpleTotal": 77.54524774884565,
+      "paceTotal": 76.80850013624551,
+      "side": null,
+      "signalStrength": null,
+      "status": "data_gap",
+      "reason": "A fresh verified DraftKings line and both valid side prices are required.",
+      "bonusMinutes": null,
+      "bonusBaselineMinutes": null,
+      "inputs": {
+        "modelPolicy": "isolated-half-features-v1",
+        "selectionPolicy": "component-paper-v1",
+        "modelPath": "data/lab-feature-models/161b075eeb4e6c3aa0d27191b60b0389d296b4095b9524802c7c9c7ea8215593.json",
+        "baselineFeatureCapturedAt": "2026-11-24T05:39:36.123Z",
+        "statsRetrievedAt": "2026-11-24T05:39:26.105416Z",
+        "entryQuoteCapturedAt": null,
+        "quoteCapturedAt": null,
+        "marketCheckedAt": "2026-11-24T10:48:08.320377Z",
+        "sourceBoard": null,
+        "historyAsOf": "2026-11-24T05:39:41.083Z",
+        "opponentPriorHalves": 4,
+        "shootingPriorAttempts": 50,
+        "scoringWeight": 0.6,
+        "pointCap": 3,
+        "interpretation": "Opponent-strength correction against equally shrunk unadjusted offense; pace/efficiency branch unchanged."
+      },
+      "feature": {
+        "policy": "isolated-half-features-v1",
+        "selectionPolicy": "component-paper-v1",
+        "modelPath": "data/lab-feature-models/161b075eeb4e6c3aa0d27191b60b0389d296b4095b9524802c7c9c7ea8215593.json",
+        "fittedAt": "2026-11-24T05:39:41.083Z",
+        "trainingGames": 954,
+        "expectedPossessions": 36.205770987003866,
+        "unboundedAdjustment": 0.2827397978848479,
+        "adjustment": 0.2827397978848479,
+        "paperUnits": 0,
+        "away": {
+          "espnId": "2250",
+          "games": 4,
+          "currentWeight": 0.3333333333333333,
+          "deltaRate": 0.02605281925720182,
+          "weightedPoints": 0.18865248151841066
+        },
+        "home": {
+          "espnId": "2306",
+          "games": 4,
+          "currentWeight": 0.38461538461538464,
+          "deltaRate": 0.011260959044371965,
+          "weightedPoints": 0.09408731636643723
+        }
+      },
+      "participants": {
+        "away": {
+          "espnId": "2250",
+          "modelId": "gonzaga-bulldogs",
+          "name": "Gonzaga Bulldogs"
+        },
+        "home": {
+          "espnId": "2306",
+          "modelId": "kansas-state-wildcats",
+          "name": "Kansas State Wildcats"
+        }
+      }
+    },
+    {
+      "id": "2026-27_shooting-paper-v6_401909800_v6",
+      "season": "2026-27",
+      "methodId": "shooting-paper-v6",
+      "gameId": "401909800",
+      "gameDate": "2026-11-25",
+      "startsAt": "2026-11-25T05:30:00Z",
+      "recordedAt": "2026-11-24T10:48:18.087Z",
+      "version": 6,
+      "revision": "ae6c374d568c38c141e381515ef294c433e8574d",
+      "awayTeam": "Gonzaga Bulldogs",
+      "homeTeam": "Kansas State Wildcats",
+      "sportsbook": "draftkings",
+      "line": null,
+      "overPrice": null,
+      "underPrice": null,
+      "total": 76.77395535056728,
+      "baselineTotal": 76.96780890592075,
+      "simpleTotal": 76.75092549344848,
+      "paceTotal": 76.80850013624551,
+      "side": null,
+      "signalStrength": null,
+      "status": "data_gap",
+      "reason": "A fresh verified DraftKings line and both valid side prices are required.",
+      "bonusMinutes": null,
+      "bonusBaselineMinutes": null,
+      "inputs": {
+        "modelPolicy": "isolated-half-features-v1",
+        "selectionPolicy": "component-paper-v1",
+        "modelPath": "data/lab-feature-models/161b075eeb4e6c3aa0d27191b60b0389d296b4095b9524802c7c9c7ea8215593.json",
+        "baselineFeatureCapturedAt": "2026-11-24T05:39:36.123Z",
+        "statsRetrievedAt": "2026-11-24T05:39:26.105416Z",
+        "entryQuoteCapturedAt": null,
+        "quoteCapturedAt": null,
+        "marketCheckedAt": "2026-11-24T10:48:08.320377Z",
         "sourceBoard": null,
         "historyAsOf": "2026-11-24T05:39:41.083Z",
         "opponentPriorHalves": 4,
