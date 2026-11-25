@@ -531,7 +531,7 @@
     ]
   },
   "startedAt": "2026-11-05T16:08:14.757Z",
-  "updatedAt": "2026-11-25T11:41:29.142Z",
+  "updatedAt": "2026-11-25T12:24:49.147Z",
   "forecasts": [
     {
       "id": "2026-27_opponent-paper-v5_401921714_v1",
@@ -1881,6 +1881,168 @@
         "entryQuoteCapturedAt": null,
         "quoteCapturedAt": null,
         "marketCheckedAt": "2026-11-25T11:41:17.418544Z",
+        "sourceBoard": null,
+        "historyAsOf": "2026-11-25T07:12:00.833Z",
+        "opponentPriorHalves": 4,
+        "shootingPriorAttempts": 50,
+        "scoringWeight": 0.6,
+        "pointCap": 3,
+        "interpretation": "Regress observed three-point conversion toward the earlier league rate while retaining attempt volume; pace/efficiency branch unchanged."
+      },
+      "feature": {
+        "policy": "isolated-half-features-v1",
+        "selectionPolicy": "component-paper-v1",
+        "modelPath": "data/lab-feature-models/7a393ad039043d9d15092aef8fb62ca856dc63f52579c6eee8f5cb5124cc5c72.json",
+        "fittedAt": "2026-11-25T07:12:00.833Z",
+        "trainingGames": 1032,
+        "expectedPossessions": 34.371999608610565,
+        "unboundedAdjustment": -0.013244468530599532,
+        "adjustment": -0.013244468530599532,
+        "paperUnits": 0,
+        "away": {
+          "espnId": "228",
+          "games": 7,
+          "currentWeight": 0.4666666666666667,
+          "deltaRate": -0.0036384157426949007,
+          "weightedPoints": -0.03501669485548406
+        },
+        "home": {
+          "espnId": "36",
+          "games": 7,
+          "currentWeight": 0.42857142857142855,
+          "deltaRate": 0.002463335563986417,
+          "weightedPoints": 0.021772226324884528
+        }
+      },
+      "participants": {
+        "away": {
+          "espnId": "228",
+          "modelId": "clemson-tigers",
+          "name": "Clemson Tigers"
+        },
+        "home": {
+          "espnId": "36",
+          "modelId": "colorado-st-rams",
+          "name": "Colorado State Rams"
+        }
+      }
+    },
+    {
+      "id": "2026-27_opponent-paper-v5_401921714_v6",
+      "season": "2026-27",
+      "methodId": "opponent-paper-v5",
+      "gameId": "401921714",
+      "gameDate": "2026-11-26",
+      "startsAt": "2026-11-26T05:30:00Z",
+      "recordedAt": "2026-11-25T12:24:49.147Z",
+      "version": 6,
+      "revision": "ce200c6ed435f5d3abd76c0081e2a6ca0e141ebc",
+      "awayTeam": "Clemson Tigers",
+      "homeTeam": "Colorado State Rams",
+      "sportsbook": "draftkings",
+      "line": null,
+      "overPrice": null,
+      "underPrice": null,
+      "total": 71.77948621397572,
+      "baselineTotal": 71.74824176387386,
+      "simpleTotal": 70.17401746249853,
+      "paceTotal": 74.1876893411915,
+      "side": null,
+      "signalStrength": null,
+      "status": "data_gap",
+      "reason": "A fresh verified DraftKings line and both valid side prices are required.",
+      "bonusMinutes": null,
+      "bonusBaselineMinutes": null,
+      "inputs": {
+        "modelPolicy": "isolated-half-features-v1",
+        "selectionPolicy": "component-paper-v1",
+        "modelPath": "data/lab-feature-models/7a393ad039043d9d15092aef8fb62ca856dc63f52579c6eee8f5cb5124cc5c72.json",
+        "baselineFeatureCapturedAt": "2026-11-25T07:11:55.689Z",
+        "statsRetrievedAt": "2026-11-25T07:11:42.366516Z",
+        "entryQuoteCapturedAt": null,
+        "quoteCapturedAt": null,
+        "marketCheckedAt": "2026-11-25T12:24:39.891242Z",
+        "sourceBoard": null,
+        "historyAsOf": "2026-11-25T07:12:00.833Z",
+        "opponentPriorHalves": 4,
+        "shootingPriorAttempts": 50,
+        "scoringWeight": 0.6,
+        "pointCap": 3,
+        "interpretation": "Opponent-strength correction against equally shrunk unadjusted offense; pace/efficiency branch unchanged."
+      },
+      "feature": {
+        "policy": "isolated-half-features-v1",
+        "selectionPolicy": "component-paper-v1",
+        "modelPath": "data/lab-feature-models/7a393ad039043d9d15092aef8fb62ca856dc63f52579c6eee8f5cb5124cc5c72.json",
+        "fittedAt": "2026-11-25T07:12:00.833Z",
+        "trainingGames": 1032,
+        "expectedPossessions": 34.371999608610565,
+        "unboundedAdjustment": 0.03124445010185526,
+        "adjustment": 0.03124445010185526,
+        "paperUnits": 0,
+        "away": {
+          "espnId": "228",
+          "games": 7,
+          "currentWeight": 0.4666666666666667,
+          "deltaRate": 0.0019478658711726826,
+          "weightedPoints": 0.01874657258924053
+        },
+        "home": {
+          "espnId": "36",
+          "games": 7,
+          "currentWeight": 0.42857142857142855,
+          "deltaRate": 0.00141402471624974,
+          "weightedPoints": 0.01249787751261473
+        }
+      },
+      "participants": {
+        "away": {
+          "espnId": "228",
+          "modelId": "clemson-tigers",
+          "name": "Clemson Tigers"
+        },
+        "home": {
+          "espnId": "36",
+          "modelId": "colorado-st-rams",
+          "name": "Colorado State Rams"
+        }
+      }
+    },
+    {
+      "id": "2026-27_shooting-paper-v6_401921714_v6",
+      "season": "2026-27",
+      "methodId": "shooting-paper-v6",
+      "gameId": "401921714",
+      "gameDate": "2026-11-26",
+      "startsAt": "2026-11-26T05:30:00Z",
+      "recordedAt": "2026-11-25T12:24:49.147Z",
+      "version": 6,
+      "revision": "ce200c6ed435f5d3abd76c0081e2a6ca0e141ebc",
+      "awayTeam": "Clemson Tigers",
+      "homeTeam": "Colorado State Rams",
+      "sportsbook": "draftkings",
+      "line": null,
+      "overPrice": null,
+      "underPrice": null,
+      "total": 71.73499729534326,
+      "baselineTotal": 71.74824176387386,
+      "simpleTotal": 70.09986926477778,
+      "paceTotal": 74.1876893411915,
+      "side": null,
+      "signalStrength": null,
+      "status": "data_gap",
+      "reason": "A fresh verified DraftKings line and both valid side prices are required.",
+      "bonusMinutes": null,
+      "bonusBaselineMinutes": null,
+      "inputs": {
+        "modelPolicy": "isolated-half-features-v1",
+        "selectionPolicy": "component-paper-v1",
+        "modelPath": "data/lab-feature-models/7a393ad039043d9d15092aef8fb62ca856dc63f52579c6eee8f5cb5124cc5c72.json",
+        "baselineFeatureCapturedAt": "2026-11-25T07:11:55.689Z",
+        "statsRetrievedAt": "2026-11-25T07:11:42.366516Z",
+        "entryQuoteCapturedAt": null,
+        "quoteCapturedAt": null,
+        "marketCheckedAt": "2026-11-25T12:24:39.891242Z",
         "sourceBoard": null,
         "historyAsOf": "2026-11-25T07:12:00.833Z",
         "opponentPriorHalves": 4,
