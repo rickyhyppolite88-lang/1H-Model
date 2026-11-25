@@ -531,7 +531,7 @@
     ]
   },
   "startedAt": "2026-11-05T16:08:14.757Z",
-  "updatedAt": "2026-11-25T03:02:21.786Z",
+  "updatedAt": "2026-11-25T04:01:30.880Z",
   "forecasts": [
     {
       "id": "2026-27_opponent-paper-v5_401927398_v1",
@@ -553727,6 +553727,579 @@
           "name": "Stanford Cardinal"
         }
       }
+    },
+    {
+      "id": "2026-27_enhanced-baseline-v2_401915943_v19",
+      "season": "2026-27",
+      "methodId": "enhanced-baseline-v2",
+      "gameId": "401915943",
+      "gameDate": "2026-11-24",
+      "startsAt": "2026-11-25T04:18:00Z",
+      "recordedAt": "2026-11-25T04:01:30.880Z",
+      "version": 19,
+      "revision": "bcfb2127d14807ef1349a6f74eee2d74fd7e590d",
+      "awayTeam": "Oregon Ducks",
+      "homeTeam": "St. John's Red Storm",
+      "sportsbook": "draftkings",
+      "line": 73.5,
+      "overPrice": -120,
+      "underPrice": -110,
+      "total": 73.46012380856907,
+      "baselineTotal": 77.72109975929813,
+      "simpleTotal": 72.10054635345078,
+      "paceTotal": 75.4994899912465,
+      "side": "UNDER",
+      "signalStrength": 0,
+      "status": "watch_only",
+      "reason": "Edge below 1.5 points. Scoring and pace do not both agree with the lean.",
+      "bonusMinutes": 7.541958829102699,
+      "bonusBaselineMinutes": 7.855582524271848,
+      "inputs": {
+        "baselineModelVersion": "season-bridge-v1",
+        "baselineFeatureCapturedAt": "2026-11-24T05:39:36.123Z",
+        "statsRetrievedAt": "2026-11-24T05:39:26.105416Z",
+        "priorSnapshot": "data/input-snapshots/5d7d1cdd590b01d65ca838308bd098bc8be58fdb5d96faf922f4c44677d6d7de.json",
+        "currentSnapshot": "data/input-snapshots/ceec830b551dbb179315a4c6d6e2704db59b24712e4dbba8eec9ec5014a3c9ba.json",
+        "sourceBoard": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-24",
+        "quoteCapturedAt": "2026-11-25T04:01:17.116354Z",
+        "marketCheckedAt": "2026-11-25T04:01:17.116354Z",
+        "lastSeenLine": 73.5,
+        "marketFreshness": "Source check within 45 minutes",
+        "awayCurrentWeight": 0.3333333333333333,
+        "homeCurrentWeight": 0.38461538461538464,
+        "away_firstHalfPoints": 37.281287671232874,
+        "away_pace": 69.92413698630138,
+        "away_offensiveEfficiency": 1.1103617351598174,
+        "away_defensiveEfficiency": 1.0516675799086757,
+        "home_firstHalfPoints": 41.47195785036881,
+        "home_pace": 74.0868956796628,
+        "home_offensiveEfficiency": 1.1394416016859852,
+        "home_defensiveEfficiency": 0.9300316122233929,
+        "baselineSimpleTotal": 78.75324552160168,
+        "baselinePaceTotal": 76.17288111584278,
+        "defenseSimpleTotal": 72.77393747804706,
+        "defenseAdjustedTotal": 74.13351493316534,
+        "defenseAdjustment": -3.587584826132783,
+        "awayFirstHalfAllowed": 33.843607305936075,
+        "homeFirstHalfAllowed": 32.951022128556374,
+        "priorAllowedMean": 35.07260273972603,
+        "priorLeagueRegression": 0.35,
+        "historyAsOf": "2026-11-25T04:01:30.880Z",
+        "excludedHistoryGames": "401917950;401918987;401920378;401920511;401920887;401924949;401925079;401925941;401928791;401928998",
+        "contextPointsAdjustment": 0.17429912497429745,
+        "contextModel": "data/context-models/5f9ab49731ec62ecafde48ab36ebdab872f404c8a3961f1cfdf0ac57a1cd689d.json",
+        "freeThrowPointsAdjustment": -0.8476902495705824,
+        "freeThrowPointsCap": 2,
+        "contextPointsCap": 4,
+        "pseudoGames": 4,
+        "bonusTreatment": "Timing tracked; no separate bonus-points adjustment stacked on FT/foul points.",
+        "minimumEdge": 1.5,
+        "outlierEdge": 8,
+        "componentAgreementRequired": "Both adjusted components must agree"
+      },
+      "context": {
+        "modelVersion": "lab-context-v1",
+        "capturedAt": "2026-11-25T04:01:30.880Z",
+        "modelFittedAt": "2026-11-25T04:01:23.015191Z",
+        "startsAt": "2026-11-25T04:18:00Z",
+        "baselineFeatureCapturedAt": "2026-11-24T05:39:36.123Z",
+        "modelPath": "data/context-models/5f9ab49731ec62ecafde48ab36ebdab872f404c8a3961f1cfdf0ac57a1cd689d.json",
+        "historySha256": "f56388478c37fc65caa888b1c543a511e840bb1bc1ec42e94e25b729141b804a",
+        "trainingGames": 6666,
+        "baselineTotal": 77.72109975929813,
+        "baselineSimple": 78.75324552160168,
+        "baselinePace": 76.17288111584278,
+        "total": 77.89539888427242,
+        "simple": 78.92754464657598,
+        "pace": 76.34718024081708,
+        "adjustment": 0.17429912497429745,
+        "unboundedAdjustment": 0.17429912497429745,
+        "homeAwayAdjustment": 0.22373402864944877,
+        "neutralAdjustment": -1.2707078364174598,
+        "matchupAdjustment": 0.6771896113031611,
+        "crowdAdjustment": 0.5440833214391474,
+        "expectedAttendance": 3978.1,
+        "attendanceSamples": 10,
+        "crowdEligible": true,
+        "crowdReason": "Historical venue attendance proxy; crowd noise, sellout status and fan allegiance are unknown.",
+        "homeLocationGames": 25,
+        "awayLocationGames": 10,
+        "context": {
+          "neutralSite": true,
+          "conferenceGame": false,
+          "matchupType": "nonconference_regular",
+          "eventLabel": "Players Era 16",
+          "venueId": "4005",
+          "venueKey": "id:4005",
+          "venueName": "Michelob ULTRA Arena",
+          "city": "Las Vegas",
+          "state": "NV"
+        },
+        "warnings": []
+      },
+      "foulExposure": {
+        "awayEspnId": "2483",
+        "homeEspnId": "2599",
+        "expectedAwayFouls": 8.162218691746107,
+        "expectedHomeFouls": 7.180412966362865,
+        "awaySevenFoulProbability": 0.7060346225833403,
+        "homeSevenFoulProbability": 0.5768102326394088,
+        "awayFoulLow": 5,
+        "awayFoulHigh": 12,
+        "homeFoulLow": 4,
+        "homeFoulHigh": 11,
+        "expectedAwayFTA": 7.54290847360686,
+        "expectedHomeFTA": 8.531909782088283,
+        "awayFTALow": 2,
+        "awayFTAHigh": 14,
+        "homeFTALow": 3,
+        "homeFTAHigh": 15,
+        "baselineAwayFTA": 8.57719891606141,
+        "baselineHomeFTA": 8.699512937754163,
+        "awayFTPercent": 0.6909060478928261,
+        "homeFTPercent": 0.7940944015774336,
+        "pointsAdjustment": -0.8476902495705824,
+        "unboundedPointsAdjustment": -0.8476902495705824,
+        "expectedHalfPossessions": 36.00275816649105,
+        "leagueGames": 1030,
+        "awayHistoryGames": 4,
+        "homeHistoryGames": 5,
+        "ftaDispersion": 2.7592669697414003,
+        "pseudoGames": 4
+      },
+      "participants": {
+        "away": {
+          "espnId": "2483",
+          "modelId": "oregon-ducks",
+          "name": "Oregon Ducks"
+        },
+        "home": {
+          "espnId": "2599",
+          "modelId": "st-johns-red-storm",
+          "name": "St. John's Red Storm"
+        }
+      }
+    },
+    {
+      "id": "2026-27_market-paper-v3_401915943_v20",
+      "season": "2026-27",
+      "methodId": "market-paper-v3",
+      "gameId": "401915943",
+      "gameDate": "2026-11-24",
+      "startsAt": "2026-11-25T04:18:00Z",
+      "recordedAt": "2026-11-25T04:01:30.880Z",
+      "version": 20,
+      "revision": "bcfb2127d14807ef1349a6f74eee2d74fd7e590d",
+      "awayTeam": "Oregon Ducks",
+      "homeTeam": "St. John's Red Storm",
+      "sportsbook": "draftkings",
+      "line": 73.5,
+      "overPrice": -120,
+      "underPrice": -110,
+      "total": 77.72109975929813,
+      "baselineTotal": 77.72109975929813,
+      "simpleTotal": 78.75324552160168,
+      "paceTotal": 76.17288111584278,
+      "side": "OVER",
+      "signalStrength": 52.1,
+      "status": "paper_test",
+      "reason": "1u paper trial on every usable pregame forecast; latest usable pre-tip snapshot counts once. No estimated-return or final-15-minute selection gate. Research only, not a qualified bet.",
+      "bonusMinutes": null,
+      "bonusBaselineMinutes": null,
+      "inputs": {
+        "quoteCapturedAt": "2026-11-25T04:01:17.116354Z",
+        "entryQuoteCapturedAt": "2026-11-25T04:01:17.116354Z",
+        "modelPolicy": "market-offset-ridge20-v1",
+        "paperPolicy": "lab-flat-paper-v1",
+        "sourceBoard": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-24",
+        "minimumExpectedReturn": null,
+        "selectionPolicy": "all-usable-paper-v1",
+        "refereeAttribution": "Crew and games-worked associations; individual caller unavailable."
+      },
+      "research": {
+        "selectionPolicy": "all-usable-paper-v1",
+        "modelPath": "data/lab-research-models/a92382c94c3efe5e43c5fb839cdf93176829df2a47018ff9f4236441966358b9.json",
+        "fittedAt": "2026-11-24T05:39:41.083Z",
+        "trainingGames": 661,
+        "probability": 0.5212435259606785,
+        "marketProbability": 0.5101214574898786,
+        "expectedReturn": -0.04438686907208944,
+        "paperUnits": 1,
+        "crewAssignmentId": null,
+        "crewObservedAt": null,
+        "crew": [],
+        "refereePointsEquivalent": null,
+        "refereeBaselineProbability": 0.5212435259606785
+      },
+      "participants": {
+        "away": {
+          "espnId": "2483",
+          "modelId": "oregon-ducks",
+          "name": "Oregon Ducks"
+        },
+        "home": {
+          "espnId": "2599",
+          "modelId": "st-johns-red-storm",
+          "name": "St. John's Red Storm"
+        }
+      }
+    },
+    {
+      "id": "2026-27_referee-paper-v4_401915943_v20",
+      "season": "2026-27",
+      "methodId": "referee-paper-v4",
+      "gameId": "401915943",
+      "gameDate": "2026-11-24",
+      "startsAt": "2026-11-25T04:18:00Z",
+      "recordedAt": "2026-11-25T04:01:30.880Z",
+      "version": 20,
+      "revision": "bcfb2127d14807ef1349a6f74eee2d74fd7e590d",
+      "awayTeam": "Oregon Ducks",
+      "homeTeam": "St. John's Red Storm",
+      "sportsbook": "draftkings",
+      "line": 73.5,
+      "overPrice": -120,
+      "underPrice": -110,
+      "total": 77.72109975929813,
+      "baselineTotal": 77.72109975929813,
+      "simpleTotal": 78.75324552160168,
+      "paceTotal": 76.17288111584278,
+      "side": "OVER",
+      "signalStrength": 51.4,
+      "status": "paper_test",
+      "reason": "1u paper trial on every usable pregame forecast; latest usable pre-tip snapshot counts once. No estimated-return or final-15-minute selection gate. Research only, not a qualified bet.",
+      "bonusMinutes": null,
+      "bonusBaselineMinutes": null,
+      "inputs": {
+        "quoteCapturedAt": "2026-11-25T04:01:17.116354Z",
+        "entryQuoteCapturedAt": "2026-11-25T04:01:17.116354Z",
+        "modelPolicy": "market-offset-ridge20-v1",
+        "paperPolicy": "lab-flat-paper-v1",
+        "sourceBoard": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-24",
+        "minimumExpectedReturn": null,
+        "selectionPolicy": "all-usable-paper-v1",
+        "refereeAttribution": "Crew and games-worked associations; individual caller unavailable."
+      },
+      "research": {
+        "selectionPolicy": "all-usable-paper-v1",
+        "modelPath": "data/lab-research-models/a92382c94c3efe5e43c5fb839cdf93176829df2a47018ff9f4236441966358b9.json",
+        "fittedAt": "2026-11-24T05:39:41.083Z",
+        "trainingGames": 661,
+        "probability": 0.5137411237300118,
+        "marketProbability": 0.5101214574898786,
+        "expectedReturn": -0.058141273161645024,
+        "paperUnits": 1,
+        "crewAssignmentId": "crew:33eca6406edb3f86ba9913bec7832131588ad11bb4609dc93ca0fe9980ae6ee1",
+        "crewObservedAt": "2026-11-25T04:01:21.467723Z",
+        "crew": [
+          {
+            "id": "name:darron george",
+            "name": "Darron George",
+            "pricedGames": 7,
+            "pointsAssociation": 0.5188763642869922
+          },
+          {
+            "id": "name:edwin young",
+            "name": "Edwin  Young",
+            "pricedGames": 8,
+            "pointsAssociation": -0.6985852311939269
+          },
+          {
+            "id": "name:john gaffney",
+            "name": "John Gaffney",
+            "pricedGames": 14,
+            "pointsAssociation": -0.4111963626030124
+          }
+        ],
+        "refereePointsEquivalent": -0.196968409836649,
+        "refereeBaselineProbability": 0.5212435259606785
+      },
+      "participants": {
+        "away": {
+          "espnId": "2483",
+          "modelId": "oregon-ducks",
+          "name": "Oregon Ducks"
+        },
+        "home": {
+          "espnId": "2599",
+          "modelId": "st-johns-red-storm",
+          "name": "St. John's Red Storm"
+        }
+      }
+    },
+    {
+      "id": "2026-27_opponent-paper-v5_401915943_v26",
+      "season": "2026-27",
+      "methodId": "opponent-paper-v5",
+      "gameId": "401915943",
+      "gameDate": "2026-11-24",
+      "startsAt": "2026-11-25T04:18:00Z",
+      "recordedAt": "2026-11-25T04:01:30.880Z",
+      "version": 26,
+      "revision": "bcfb2127d14807ef1349a6f74eee2d74fd7e590d",
+      "awayTeam": "Oregon Ducks",
+      "homeTeam": "St. John's Red Storm",
+      "sportsbook": "draftkings",
+      "line": 73.5,
+      "overPrice": -120,
+      "underPrice": -110,
+      "total": 77.52191257310683,
+      "baselineTotal": 77.72109975929813,
+      "simpleTotal": 78.42126687794953,
+      "paceTotal": 76.17288111584278,
+      "side": "OVER",
+      "signalStrength": 50,
+      "status": "paper_test",
+      "reason": "Isolated component test: 1u paper on the latest usable pre-tip forecast. Saved confidence is a model score, not a win probability. No numerical weights are promoted to Actual.",
+      "bonusMinutes": null,
+      "bonusBaselineMinutes": null,
+      "inputs": {
+        "modelPolicy": "isolated-half-features-v1",
+        "selectionPolicy": "component-paper-v1",
+        "modelPath": "data/lab-feature-models/161b075eeb4e6c3aa0d27191b60b0389d296b4095b9524802c7c9c7ea8215593.json",
+        "baselineFeatureCapturedAt": "2026-11-24T05:39:36.123Z",
+        "statsRetrievedAt": "2026-11-24T05:39:26.105416Z",
+        "entryQuoteCapturedAt": "2026-11-25T04:01:17.116354Z",
+        "quoteCapturedAt": "2026-11-25T04:01:17.116354Z",
+        "marketCheckedAt": "2026-11-25T04:01:17.116354Z",
+        "sourceBoard": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-24",
+        "historyAsOf": "2026-11-24T05:39:41.083Z",
+        "opponentPriorHalves": 4,
+        "shootingPriorAttempts": 50,
+        "scoringWeight": 0.6,
+        "pointCap": 3,
+        "interpretation": "Opponent-strength correction against equally shrunk unadjusted offense; pace/efficiency branch unchanged."
+      },
+      "feature": {
+        "policy": "isolated-half-features-v1",
+        "selectionPolicy": "component-paper-v1",
+        "modelPath": "data/lab-feature-models/161b075eeb4e6c3aa0d27191b60b0389d296b4095b9524802c7c9c7ea8215593.json",
+        "fittedAt": "2026-11-24T05:39:41.083Z",
+        "trainingGames": 954,
+        "expectedPossessions": 36.00275816649105,
+        "unboundedAdjustment": -0.19918718619129072,
+        "adjustment": -0.19918718619129072,
+        "paperUnits": 1,
+        "away": {
+          "espnId": "2483",
+          "games": 4,
+          "currentWeight": 0.3333333333333333,
+          "deltaRate": -0.017710799583687153,
+          "weightedPoints": -0.12752752686933577
+        },
+        "home": {
+          "espnId": "2599",
+          "games": 5,
+          "currentWeight": 0.38461538461538464,
+          "deltaRate": -0.008625038919494621,
+          "weightedPoints": -0.07165965932195495
+        }
+      },
+      "participants": {
+        "away": {
+          "espnId": "2483",
+          "modelId": "oregon-ducks",
+          "name": "Oregon Ducks"
+        },
+        "home": {
+          "espnId": "2599",
+          "modelId": "st-johns-red-storm",
+          "name": "St. John's Red Storm"
+        }
+      }
+    },
+    {
+      "id": "2026-27_shooting-paper-v6_401915943_v26",
+      "season": "2026-27",
+      "methodId": "shooting-paper-v6",
+      "gameId": "401915943",
+      "gameDate": "2026-11-24",
+      "startsAt": "2026-11-25T04:18:00Z",
+      "recordedAt": "2026-11-25T04:01:30.880Z",
+      "version": 26,
+      "revision": "bcfb2127d14807ef1349a6f74eee2d74fd7e590d",
+      "awayTeam": "Oregon Ducks",
+      "homeTeam": "St. John's Red Storm",
+      "sportsbook": "draftkings",
+      "line": 73.5,
+      "overPrice": -120,
+      "underPrice": -110,
+      "total": 77.18640831588945,
+      "baselineTotal": 77.72109975929813,
+      "simpleTotal": 77.86209311592056,
+      "paceTotal": 76.17288111584278,
+      "side": "OVER",
+      "signalStrength": 46,
+      "status": "paper_test",
+      "reason": "Isolated component test: 1u paper on the latest usable pre-tip forecast. Saved confidence is a model score, not a win probability. No numerical weights are promoted to Actual.",
+      "bonusMinutes": null,
+      "bonusBaselineMinutes": null,
+      "inputs": {
+        "modelPolicy": "isolated-half-features-v1",
+        "selectionPolicy": "component-paper-v1",
+        "modelPath": "data/lab-feature-models/161b075eeb4e6c3aa0d27191b60b0389d296b4095b9524802c7c9c7ea8215593.json",
+        "baselineFeatureCapturedAt": "2026-11-24T05:39:36.123Z",
+        "statsRetrievedAt": "2026-11-24T05:39:26.105416Z",
+        "entryQuoteCapturedAt": "2026-11-25T04:01:17.116354Z",
+        "quoteCapturedAt": "2026-11-25T04:01:17.116354Z",
+        "marketCheckedAt": "2026-11-25T04:01:17.116354Z",
+        "sourceBoard": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-24",
+        "historyAsOf": "2026-11-24T05:39:41.083Z",
+        "opponentPriorHalves": 4,
+        "shootingPriorAttempts": 50,
+        "scoringWeight": 0.6,
+        "pointCap": 3,
+        "interpretation": "Regress observed three-point conversion toward the earlier league rate while retaining attempt volume; pace/efficiency branch unchanged."
+      },
+      "feature": {
+        "policy": "isolated-half-features-v1",
+        "selectionPolicy": "component-paper-v1",
+        "modelPath": "data/lab-feature-models/161b075eeb4e6c3aa0d27191b60b0389d296b4095b9524802c7c9c7ea8215593.json",
+        "fittedAt": "2026-11-24T05:39:41.083Z",
+        "trainingGames": 954,
+        "expectedPossessions": 36.00275816649105,
+        "unboundedAdjustment": -0.5346914434086764,
+        "adjustment": -0.5346914434086764,
+        "paperUnits": 1,
+        "away": {
+          "espnId": "2483",
+          "games": 4,
+          "currentWeight": 0.3333333333333333,
+          "deltaRate": -0.07146580657694646,
+          "weightedPoints": -0.5145932302726057
+        },
+        "home": {
+          "espnId": "2599",
+          "games": 5,
+          "currentWeight": 0.38461538461538464,
+          "deltaRate": -0.002419044022133627,
+          "weightedPoints": -0.020098213136070645
+        }
+      },
+      "participants": {
+        "away": {
+          "espnId": "2483",
+          "modelId": "oregon-ducks",
+          "name": "Oregon Ducks"
+        },
+        "home": {
+          "espnId": "2599",
+          "modelId": "st-johns-red-storm",
+          "name": "St. John's Red Storm"
+        }
+      }
+    },
+    {
+      "id": "2026-27_opponent-paper-v5_401909763_v26",
+      "season": "2026-27",
+      "methodId": "opponent-paper-v5",
+      "gameId": "401909763",
+      "gameDate": "2026-11-24",
+      "startsAt": "2026-11-25T04:59:00Z",
+      "recordedAt": "2026-11-25T04:01:30.880Z",
+      "version": 26,
+      "revision": "bcfb2127d14807ef1349a6f74eee2d74fd7e590d",
+      "awayTeam": "Colorado Buffaloes",
+      "homeTeam": "Stanford Cardinal",
+      "sportsbook": "draftkings",
+      "line": null,
+      "overPrice": null,
+      "underPrice": null,
+      "total": null,
+      "baselineTotal": null,
+      "simpleTotal": null,
+      "paceTotal": null,
+      "side": null,
+      "signalStrength": null,
+      "status": "data_gap",
+      "reason": "A frozen pregame core projection is required.",
+      "bonusMinutes": null,
+      "bonusBaselineMinutes": null,
+      "inputs": {
+        "modelPolicy": "isolated-half-features-v1",
+        "selectionPolicy": "component-paper-v1",
+        "modelPath": "data/lab-feature-models/161b075eeb4e6c3aa0d27191b60b0389d296b4095b9524802c7c9c7ea8215593.json",
+        "baselineFeatureCapturedAt": "2026-11-24T05:39:36.123Z",
+        "statsRetrievedAt": "2026-11-24T05:39:26.105416Z",
+        "entryQuoteCapturedAt": null,
+        "quoteCapturedAt": null,
+        "marketCheckedAt": "2026-11-25T04:01:17.116354Z",
+        "sourceBoard": null,
+        "historyAsOf": "2026-11-24T05:39:41.083Z",
+        "opponentPriorHalves": 4,
+        "shootingPriorAttempts": 50,
+        "scoringWeight": 0.6,
+        "pointCap": 3,
+        "interpretation": "Opponent-strength correction against equally shrunk unadjusted offense; pace/efficiency branch unchanged."
+      },
+      "participants": {
+        "away": {
+          "espnId": "38",
+          "modelId": "colorado-buffaloes",
+          "name": "Colorado Buffaloes"
+        },
+        "home": {
+          "espnId": "24",
+          "modelId": "stanford-cardinal",
+          "name": "Stanford Cardinal"
+        }
+      }
+    },
+    {
+      "id": "2026-27_shooting-paper-v6_401909763_v26",
+      "season": "2026-27",
+      "methodId": "shooting-paper-v6",
+      "gameId": "401909763",
+      "gameDate": "2026-11-24",
+      "startsAt": "2026-11-25T04:59:00Z",
+      "recordedAt": "2026-11-25T04:01:30.880Z",
+      "version": 26,
+      "revision": "bcfb2127d14807ef1349a6f74eee2d74fd7e590d",
+      "awayTeam": "Colorado Buffaloes",
+      "homeTeam": "Stanford Cardinal",
+      "sportsbook": "draftkings",
+      "line": null,
+      "overPrice": null,
+      "underPrice": null,
+      "total": null,
+      "baselineTotal": null,
+      "simpleTotal": null,
+      "paceTotal": null,
+      "side": null,
+      "signalStrength": null,
+      "status": "data_gap",
+      "reason": "A frozen pregame core projection is required.",
+      "bonusMinutes": null,
+      "bonusBaselineMinutes": null,
+      "inputs": {
+        "modelPolicy": "isolated-half-features-v1",
+        "selectionPolicy": "component-paper-v1",
+        "modelPath": "data/lab-feature-models/161b075eeb4e6c3aa0d27191b60b0389d296b4095b9524802c7c9c7ea8215593.json",
+        "baselineFeatureCapturedAt": "2026-11-24T05:39:36.123Z",
+        "statsRetrievedAt": "2026-11-24T05:39:26.105416Z",
+        "entryQuoteCapturedAt": null,
+        "quoteCapturedAt": null,
+        "marketCheckedAt": "2026-11-25T04:01:17.116354Z",
+        "sourceBoard": null,
+        "historyAsOf": "2026-11-24T05:39:41.083Z",
+        "opponentPriorHalves": 4,
+        "shootingPriorAttempts": 50,
+        "scoringWeight": 0.6,
+        "pointCap": 3,
+        "interpretation": "Regress observed three-point conversion toward the earlier league rate while retaining attempt volume; pace/efficiency branch unchanged."
+      },
+      "participants": {
+        "away": {
+          "espnId": "38",
+          "modelId": "colorado-buffaloes",
+          "name": "Colorado Buffaloes"
+        },
+        "home": {
+          "espnId": "24",
+          "modelId": "stanford-cardinal",
+          "name": "Stanford Cardinal"
+        }
+      }
     }
   ],
   "results": [
@@ -556448,6 +557021,142 @@
         "venueName": "The Thunderdome",
         "city": "Santa Barbara",
         "state": "CA"
+      }
+    },
+    {
+      "id": "2026-27:401921817_result1",
+      "season": "2026-27",
+      "gameId": "401921817",
+      "observedAt": "2026-11-25T04:01:26.573Z",
+      "sourceCapturedAt": "2026-11-25T04:01:16.426799Z",
+      "startsAt": "2026-11-25T02:00:00Z",
+      "awayPoints": 29,
+      "homePoints": 37,
+      "source": "https://site.api.espn.com/apis/site/v2/sports/basketball/mens-college-basketball/scoreboard?dates=20261124&groups=50&limit=1000",
+      "participants": {
+        "away": {
+          "espnId": "339",
+          "modelId": "evansville-purple-aces",
+          "name": "Evansville Purple Aces"
+        },
+        "home": {
+          "espnId": "142",
+          "modelId": "missouri-tigers",
+          "name": "Missouri Tigers"
+        }
+      },
+      "context": {
+        "neutralSite": false,
+        "conferenceGame": false,
+        "matchupType": "nonconference_regular",
+        "eventLabel": null,
+        "venueId": "2071",
+        "venueKey": "id:2071",
+        "venueName": "Mizzou Arena",
+        "city": "Columbia",
+        "state": "MO"
+      }
+    },
+    {
+      "id": "2026-27:401928796_result1",
+      "season": "2026-27",
+      "gameId": "401928796",
+      "observedAt": "2026-11-25T04:01:26.573Z",
+      "sourceCapturedAt": "2026-11-25T04:01:16.426799Z",
+      "startsAt": "2026-11-25T02:00:00Z",
+      "awayPoints": 33,
+      "homePoints": 35,
+      "source": "https://site.api.espn.com/apis/site/v2/sports/basketball/mens-college-basketball/scoreboard?dates=20261124&groups=50&limit=1000",
+      "participants": {
+        "away": {
+          "espnId": "2534",
+          "modelId": "sam-houston-st-bearkats",
+          "name": "Sam Houston Bearkats"
+        },
+        "home": {
+          "espnId": "265",
+          "modelId": "washington-st-cougars",
+          "name": "Washington State Cougars"
+        }
+      },
+      "context": {
+        "neutralSite": false,
+        "conferenceGame": false,
+        "matchupType": "nonconference_regular",
+        "eventLabel": null,
+        "venueId": "2052",
+        "venueKey": "id:2052",
+        "venueName": "Beasley Coliseum",
+        "city": "Pullman",
+        "state": "WA"
+      }
+    },
+    {
+      "id": "2026-27:401911253_result1",
+      "season": "2026-27",
+      "gameId": "401911253",
+      "observedAt": "2026-11-25T04:01:26.573Z",
+      "sourceCapturedAt": "2026-11-25T04:01:16.426799Z",
+      "startsAt": "2026-11-25T02:55:00Z",
+      "awayPoints": 41,
+      "homePoints": 36,
+      "source": "https://site.api.espn.com/apis/site/v2/sports/basketball/mens-college-basketball/scoreboard?dates=20261124&groups=50&limit=1000",
+      "participants": {
+        "away": {
+          "espnId": "139",
+          "modelId": "saint-louis-billikens",
+          "name": "Saint Louis Billikens"
+        },
+        "home": {
+          "espnId": "2253",
+          "modelId": "grand-canyon-lopes",
+          "name": "Grand Canyon Lopes"
+        }
+      },
+      "context": {
+        "neutralSite": true,
+        "conferenceGame": false,
+        "matchupType": "nonconference_regular",
+        "eventLabel": "Acrisure Series",
+        "venueId": "7524",
+        "venueKey": "id:7524",
+        "venueName": "Acrisure Arena",
+        "city": "Palm Springs",
+        "state": "CA"
+      }
+    },
+    {
+      "id": "2026-27:401906762_result1",
+      "season": "2026-27",
+      "gameId": "401906762",
+      "observedAt": "2026-11-25T04:01:26.573Z",
+      "sourceCapturedAt": "2026-11-25T04:01:16.426799Z",
+      "startsAt": "2026-11-25T03:05:00Z",
+      "awayPoints": 29,
+      "homePoints": 24,
+      "source": "https://site.api.espn.com/apis/site/v2/sports/basketball/mens-college-basketball/scoreboard?dates=20261124&groups=50&limit=1000",
+      "participants": {
+        "away": {
+          "espnId": "239",
+          "modelId": "baylor-bears",
+          "name": "Baylor Bears"
+        },
+        "home": {
+          "espnId": "333",
+          "modelId": "alabama-crimson-tide",
+          "name": "Alabama Crimson Tide"
+        }
+      },
+      "context": {
+        "neutralSite": true,
+        "conferenceGame": false,
+        "matchupType": "nonconference_regular",
+        "eventLabel": "Players Era 16",
+        "venueId": "5060",
+        "venueKey": "id:5060",
+        "venueName": "T-Mobile Arena",
+        "city": "Las Vegas",
+        "state": "NV"
       }
     }
   ],
@@ -559413,6 +560122,158 @@
           "threeAttempted": 10,
           "turnovers": 4,
           "offensiveRebounds": 7
+        }
+      ]
+    },
+    {
+      "id": "401906762_81e1922061ca0fc594969932f32805e6614a4a9486f506b5d0ff00168a4d0a12",
+      "gameId": "401906762",
+      "season": "2026-27",
+      "startsAt": "2026-11-25T03:05:00Z",
+      "observedAt": "2026-11-25T04:01:19.059347Z",
+      "source": "https://site.api.espn.com/apis/site/v2/sports/basketball/mens-college-basketball/summary?event=401906762",
+      "sourceSha256": "239a82e6c5ad23e701fbba54e9be4be258e8704af970e9bb9184592cf19ba7c9",
+      "bothD1": true,
+      "teams": [
+        {
+          "espnId": "239",
+          "points": 29,
+          "fouls": 8,
+          "bonusMinutes": 5.966666666666667,
+          "fga": 29,
+          "fta": 10,
+          "freeThrowsMade": 5,
+          "threeMade": 6,
+          "threeAttempted": 16,
+          "turnovers": 3,
+          "offensiveRebounds": 5
+        },
+        {
+          "espnId": "333",
+          "points": 24,
+          "fouls": 10,
+          "bonusMinutes": 4.016666666666667,
+          "fga": 31,
+          "fta": 4,
+          "freeThrowsMade": 4,
+          "threeMade": 2,
+          "threeAttempted": 14,
+          "turnovers": 7,
+          "offensiveRebounds": 8
+        }
+      ]
+    },
+    {
+      "id": "401911253_c8337fddc9d8a35bcbae6fb51be7153f9d461c9dd66fa3722c0da3d8d12b1d5d",
+      "gameId": "401911253",
+      "season": "2026-27",
+      "startsAt": "2026-11-25T02:55:00Z",
+      "observedAt": "2026-11-25T04:01:19.059347Z",
+      "source": "https://site.api.espn.com/apis/site/v2/sports/basketball/mens-college-basketball/summary?event=401911253",
+      "sourceSha256": "0a707d89919a0cd130117e39c5bd40ff6a738ff74f2cc23090ef7d5186fdcdeb",
+      "bothD1": true,
+      "teams": [
+        {
+          "espnId": "139",
+          "points": 41,
+          "fouls": 13,
+          "bonusMinutes": 6,
+          "fga": 32,
+          "fta": 11,
+          "freeThrowsMade": 2,
+          "threeMade": 5,
+          "threeAttempted": 13,
+          "turnovers": 7,
+          "offensiveRebounds": 4
+        },
+        {
+          "espnId": "2253",
+          "points": 36,
+          "fouls": 12,
+          "bonusMinutes": 7.816666666666666,
+          "fga": 35,
+          "fta": 13,
+          "freeThrowsMade": 9,
+          "threeMade": 1,
+          "threeAttempted": 14,
+          "turnovers": 9,
+          "offensiveRebounds": 8
+        }
+      ]
+    },
+    {
+      "id": "401921817_1b02b9f8ba3e97e4c7b50bdd86ddb32d9725c94d5302d685e1637f6944b36e0e",
+      "gameId": "401921817",
+      "season": "2026-27",
+      "startsAt": "2026-11-25T02:00:00Z",
+      "observedAt": "2026-11-25T04:01:19.059347Z",
+      "source": "https://site.api.espn.com/apis/site/v2/sports/basketball/mens-college-basketball/summary?event=401921817",
+      "sourceSha256": "bd247f0e70baf3601bf3dd6b6a8af9213857c0e7e5b5bbe65a73efe457623b46",
+      "bothD1": true,
+      "teams": [
+        {
+          "espnId": "142",
+          "points": 37,
+          "fouls": 8,
+          "bonusMinutes": 7.316666666666666,
+          "fga": 32,
+          "fta": 9,
+          "freeThrowsMade": 5,
+          "threeMade": 0,
+          "threeAttempted": 11,
+          "turnovers": 4,
+          "offensiveRebounds": 5
+        },
+        {
+          "espnId": "339",
+          "points": 29,
+          "fouls": 9,
+          "bonusMinutes": 2.6666666666666665,
+          "fga": 23,
+          "fta": 7,
+          "freeThrowsMade": 4,
+          "threeMade": 5,
+          "threeAttempted": 9,
+          "turnovers": 12,
+          "offensiveRebounds": 4
+        }
+      ]
+    },
+    {
+      "id": "401928796_06974ecf67a7b1310259893e63f9dbeb72496bfac1f9c1587a3de51bee0bc1e1",
+      "gameId": "401928796",
+      "season": "2026-27",
+      "startsAt": "2026-11-25T02:00:00Z",
+      "observedAt": "2026-11-25T04:01:19.059347Z",
+      "source": "https://site.api.espn.com/apis/site/v2/sports/basketball/mens-college-basketball/summary?event=401928796",
+      "sourceSha256": "08a2a08cc76bddd8881070da9e2f3d6a12673d3084c43004bee7cd3c23be1ae6",
+      "bothD1": true,
+      "teams": [
+        {
+          "espnId": "2534",
+          "points": 33,
+          "fouls": 5,
+          "bonusMinutes": 2.6666666666666665,
+          "fga": 27,
+          "fta": 8,
+          "freeThrowsMade": 6,
+          "threeMade": 5,
+          "threeAttempted": 16,
+          "turnovers": 10,
+          "offensiveRebounds": 4
+        },
+        {
+          "espnId": "265",
+          "points": 35,
+          "fouls": 8,
+          "bonusMinutes": 0,
+          "fga": 33,
+          "fta": 2,
+          "freeThrowsMade": 1,
+          "threeMade": 6,
+          "threeAttempted": 14,
+          "turnovers": 7,
+          "offensiveRebounds": 3
         }
       ]
     }
