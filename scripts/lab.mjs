@@ -7,6 +7,7 @@ export async function updateLabFiles(server, { feed, ledger, prior, priorPath, r
   const model = await server.ssrLoadModule("/src/model/lab.ts");
   const { labComponentsToCsv } = await server.ssrLoadModule("/src/model/labComponents.ts");
   const { captureLab } = await server.ssrLoadModule("/src/model/labCapture.ts");
+  const { labDisplayStore } = await server.ssrLoadModule("/src/model/labDisplay.ts");
   const { datasetSchema } = await server.ssrLoadModule("/src/model/schema.ts");
   const read = async (path) => JSON.parse(await readFile(`${directory}/${path}`, "utf8"));
   const save = async (path, value, json = true) => {
@@ -14,6 +15,8 @@ export async function updateLabFiles(server, { feed, ledger, prior, priorPath, r
     await rename(`${directory}/${path}.tmp`, `${directory}/${path}`);
   };
   const config = model.labConfigSchema.parse(await read("data/lab-config.json"));
+  if (config.methods.filter(method => method.enabled).length > 3)
+    throw new Error("At most three Lab methods may collect forecasts at once");
   const at = new Date().toISOString();
   let contextModel,contextModelPath;
   try {
@@ -59,6 +62,7 @@ export async function updateLabFiles(server, { feed, ledger, prior, priorPath, r
   store = model.mergeLabStores([store, merge], store.startedAt, at);
   await publishRefereeOutcomes(server, store, directory);
   await mkdir(`${directory}/data/lab`, { recursive: true });
+  await mkdir(`${directory}/data/lab-display`, { recursive: true });
   const archives = [];
   for (const date of [...new Set(store.forecasts.map((row) => row.gameDate))].sort().reverse()) {
     const forecasts = store.forecasts.filter((row) => row.gameDate === date);
@@ -66,10 +70,12 @@ export async function updateLabFiles(server, { feed, ledger, prior, priorPath, r
     const shard = { ...store, forecasts, results: store.results.filter((result) => games.has(result.gameId)), halves: store.halves.filter((half) => games.has(half.gameId)) };
     const jsonPath = `data/lab/${date}.json`;
     const csvPath = `data/lab/${date}.csv`;
+    const displayPath = `data/lab-display/${date}.json`;
     await save(jsonPath, shard);
+    await save(displayPath, `${JSON.stringify(labDisplayStore(shard))}\n`, false);
     await save(csvPath, `\uFEFF${model.labToCsv(shard)}`, false);
     await save(`data/lab/${date}-components.csv`, `\uFEFF${labComponentsToCsv(forecasts, shard)}`, false);
-    archives.push({ date, jsonPath, csvPath, games: games.size });
+    archives.push({ date, jsonPath, displayPath, csvPath, games: games.size });
   }
   const index = model.labIndexSchema.parse({ schemaVersion: 1, startedAt: store.startedAt, updatedAt: at, ...(store.entryPolicy?{entryPolicy:store.entryPolicy}:{}), config, archives,
     methodStartedAt: Object.fromEntries(model.labMethodIds.flatMap((method) => {

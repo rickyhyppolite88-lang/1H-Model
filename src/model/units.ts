@@ -34,6 +34,18 @@ export const unitPolicy = {
     "0.5u below 60; 1u at 60–74; 1.5u at 75–89; 2u at 90+. Review / missing scores: no stake.",
 } as const;
 
+export const flatUnitPolicy = {
+  id: "flat-units-v2",
+  description:
+    "New recorded plays use flat 1u. Previously saved stakes keep their original amounts. Review or missing inputs receive no stake.",
+} as const;
+
+export function flatUnitsForScore(score: number | null) {
+  return score !== null && Number.isFinite(score) && score >= 0 && score <= 100
+    ? 1
+    : null;
+}
+
 export function unitsForScore(score: number | null) {
   if (score === null || !Number.isFinite(score) || score < 0 || score > 100)
     return null;
@@ -57,7 +69,11 @@ export const unitAssignmentSchema = z
     gameDate: z.iso.date(),
     assignedAt: z.iso.datetime(),
     startsAt: z.iso.datetime(),
-    policy: z.enum(["confidence-units-v1", "lab-flat-paper-v1"]),
+    policy: z.enum([
+      "confidence-units-v1",
+      "lab-flat-paper-v1",
+      "flat-units-v2",
+    ]),
     score: z.number().min(0).max(100),
     units: z.union([
       z.literal(0.5),
@@ -80,6 +96,10 @@ export const unitAssignmentSchema = z
       row.policy !== paperLabPolicy ||
       (row.source === "lab" && isPaperLabMethod(row.method) && row.units === 1),
     "Paper Lab stakes must be one unit for a paper method",
+  )
+  .refine(
+    (row) => row.policy !== flatUnitPolicy.id || row.units === 1,
+    "Flat-policy stakes must be one unit",
   );
 export const unitLedgerSchema = z
   .object({
@@ -88,10 +108,21 @@ export const unitLedgerSchema = z
     updatedAt: z.iso.datetime(),
     assignments: z.array(unitAssignmentSchema),
     entryPolicy: entryPolicySchema.optional(),
+    flatPolicyStartedAt: z.iso.datetime().optional(),
   })
   .superRefine((ledger, context) => {
     const ids = new Set<string>();
     const legacySelections = new Set<string>();
+    if (
+      ledger.flatPolicyStartedAt &&
+      (Date.parse(ledger.flatPolicyStartedAt) < Date.parse(ledger.startedAt) ||
+        Date.parse(ledger.flatPolicyStartedAt) > Date.parse(ledger.updatedAt))
+    )
+      context.addIssue({
+        code: "custom",
+        message:
+          "Flat unit policy must begin within the recorded ledger timeline",
+      });
     if (Date.parse(ledger.startedAt) > Date.parse(ledger.updatedAt))
       context.addIssue({
         code: "custom",
@@ -226,7 +257,7 @@ export function updateUnitLedger(
     row: Omit<UnitAssignment, "assignedAt" | "policy" | "units">,
   ) => {
     const paper = row.source === "lab" && isPaperLabMethod(row.method);
-    const units = paper ? 1 : unitsForScore(row.score);
+    const units = paper ? 1 : flatUnitsForScore(row.score);
     if (
       known.has(row.id) ||
       units === null ||
@@ -237,7 +268,7 @@ export function updateUnitLedger(
       unitAssignmentSchema.parse({
         ...row,
         assignedAt: at,
-        policy: paper ? paperLabPolicy : unitPolicy.id,
+        policy: paper ? paperLabPolicy : flatUnitPolicy.id,
         units,
       }),
     );
@@ -344,6 +375,7 @@ export function updateUnitLedger(
     ...(actual.entryPolicy ? { entryPolicy: actual.entryPolicy } : {}),
     schemaVersion: 1,
     startedAt: previous?.startedAt ?? at,
+    flatPolicyStartedAt: previous?.flatPolicyStartedAt ?? at,
     updatedAt: at,
     assignments,
   });
@@ -375,9 +407,15 @@ export function actualUnitPlay(
 ): UnitPlay {
   const { grade, actual } = recordGrade(record, results);
   const rating = recordRating(record);
+  const flatReplay =
+    !!ledger?.flatPolicyStartedAt &&
+    Date.parse(record.prediction.startsAt) >=
+      Date.parse(ledger.flatPolicyStartedAt);
   const stake = record.replay
     ? {
-        units: unitsForScore(rating.signal.score),
+        units: flatReplay
+          ? flatUnitsForScore(rating.signal.score)
+          : unitsForScore(rating.signal.score),
         mode: "historical" as const,
         saved: null,
       }
@@ -419,7 +457,9 @@ export function actualUnitPlay(
     sportsbook: record.sportsbook,
     basis: record.basis,
     assignedAt: stake.saved?.assignedAt ?? null,
-    policy: stake.saved?.policy ?? (replay ? unitPolicy.id : null),
+    policy:
+      stake.saved?.policy ??
+      (replay ? (flatReplay ? flatUnitPolicy.id : unitPolicy.id) : null),
     date: record.gameDate,
     away: record.prediction.awayTeam,
     home: record.prediction.homeTeam,
@@ -568,7 +608,9 @@ export function unitPlaysCsv(plays: UnitPlay[]) {
       row.grade,
       row.net === null ? null : Number(row.net.toFixed(6)),
       row.mode === "historical"
-        ? "historical_confidence_tier_replay"
+        ? row.policy === flatUnitPolicy.id
+          ? "historical_flat_unit_replay"
+          : "historical_confidence_tier_replay"
         : row.mode === "tracked"
           ? "recorded_model_stake"
           : "no_stake",

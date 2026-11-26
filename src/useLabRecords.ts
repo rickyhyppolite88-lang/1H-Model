@@ -60,16 +60,17 @@ export function useLabRecords(date: string) {
       try {
         const stores = await Promise.all(
           archives.map(async (entry) => {
-            const cached = cache.current.get(entry.jsonPath);
+            const path = entry.displayPath ?? entry.jsonPath;
+            const cached = cache.current.get(path);
             if (cached?.revision === index.updatedAt) return cached.store;
-            const response = await fetch(
-              `${import.meta.env.BASE_URL}${entry.jsonPath}`,
-              { signal: controller.signal, cache: "no-store" },
-            );
+            const response = await fetch(`${import.meta.env.BASE_URL}${path}`, {
+              signal: controller.signal,
+              cache: "no-store",
+            });
             if (!response.ok) throw new Error("A Lab archive is unavailable");
             const store = labStoreSchema.parse(await response.json());
             if (!controller.signal.aborted)
-              cache.current.set(entry.jsonPath, {
+              cache.current.set(path, {
                 revision: index.updatedAt,
                 store,
               });

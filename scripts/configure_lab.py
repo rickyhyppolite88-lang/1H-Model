@@ -14,6 +14,8 @@ def configure(path: Path, method: str, action: str):
     if len(matches) != 1:
         raise ValueError("Method must have exactly one shared configuration")
     matches[0]["enabled"] = action == "enable"
+    if action == "enable" and sum(row["enabled"] for row in data["methods"]) > 3:
+        raise ValueError("Keep at most three active Lab methods; pause a method before enabling another")
     path.write_text(json.dumps(data, indent=2) + "\n", encoding="utf-8")
 
 

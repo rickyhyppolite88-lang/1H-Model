@@ -1,6 +1,7 @@
 /** biome-ignore-all lint/a11y/useSemanticElements: Mobile cards retain explicit native table roles. */
 /** biome-ignore-all lint/a11y/noRedundantRoles: CSS changes mobile table display. */
 
+import BetDecision from "./BetDecision";
 import ContextDetails from "./ContextDetails";
 import FoulDetails from "./FoulDetails";
 import GameCardRow from "./GameCardRow";
@@ -14,10 +15,9 @@ import {
   isStakedLabStatus,
 } from "./model/labVersions";
 import { sportsbookNames } from "./model/marketCoverage";
-import { labRating } from "./model/ratingDisplay";
+import { labDecision } from "./model/playDecision";
 import { scheduleMessages } from "./model/scheduleReview";
-import { type UnitPlay, unitsForScore } from "./model/units";
-import SignalBadge from "./SignalBadge";
+import { hasUnitStake, type UnitPlay } from "./model/units";
 import TeamIdentity from "./TeamIdentity";
 import UnitResult from "./UnitResult";
 
@@ -45,7 +45,7 @@ export default function LabTable({
               bonus ? "Expected bonus minutes" : "Lab total",
               bonus ? "League bonus baseline" : "Saved 1H line",
               "Research decision",
-              bonus ? "Bet forecast" : "Confidence & units",
+              bonus ? "Bet forecast" : "Play & units",
               bonus ? "Actual bonus / 1H total" : "Actual 1H",
               "Lab result",
               "Research details",
@@ -60,7 +60,15 @@ export default function LabTable({
         <tbody role="rowgroup">
           {rows.map((row) => {
             const result = gradeLab(row, store);
-            const rating = labRating(row);
+            const play = unitPlays?.get(row.id);
+            const decision = unitPlays
+              ? {
+                  yes: hasUnitStake(play),
+                  reason: hasUnitStake(play)
+                    ? "Saved research entry with its original stake."
+                    : "No stake was recorded.",
+                }
+              : labDecision(row, Date.now());
             const awaitingTipCheck =
               usesTipoffEntry(
                 row.startsAt,
@@ -158,53 +166,33 @@ export default function LabTable({
                   </span>
                   <small className="card-detail">{status}</small>
                 </td>
-                <td
-                  role="cell"
-                  className="card-confidence"
-                  data-label="Confidence"
-                >
+                <td role="cell" className="card-confidence" data-label="Play">
                   {bonus ? (
-                    <div className="signal-badge">
-                      <span className="confidence-label">Bet forecast</span>
-                      <strong>None</strong>
-                    </div>
+                    <BetDecision
+                      decision={{
+                        yes: false,
+                        reason: "Measurement only; no play.",
+                      }}
+                      units={null}
+                    />
                   ) : (
-                    <SignalBadge {...rating} />
-                  )}
-                  {!bonus && isPaperLabMethod(row.methodId) && (
-                    <small className="unit-suggestion">
-                      {isStakedLabStatus(row.status)
-                        ? "1u paper"
-                        : "0u · Watch"}
-                    </small>
-                  )}
-                  {!bonus && !isPaperLabMethod(row.methodId) && (
-                    <small className="unit-suggestion">
-                      {unitPlays?.get(row.id)?.units != null
-                        ? `${unitPlays.get(row.id)?.units}u recorded`
-                        : row.status === "qualified" &&
-                            unitsForScore(row.signalStrength) !== null
-                          ? `${unitsForScore(row.signalStrength)}u suggested`
-                          : "0u · Watch"}
-                    </small>
-                  )}
-                  {row.research && !isStakedLabStatus(row.status) && (
-                    <small className="unit-check-note card-detail">
-                      {row.reason.includes("15 minutes")
-                        ? "Awaiting pre-tip check"
-                        : isRefereeLabMethod(row.methodId) &&
-                            row.research.probability === null
-                          ? "Referee inputs pending"
-                          : row.status === "data_gap"
-                            ? "Inputs pending"
-                            : "Below qualification threshold"}
-                    </small>
+                    <BetDecision
+                      decision={decision}
+                      units={unitPlays ? (play?.units ?? null) : 1}
+                      paper={isPaperLabMethod(row.methodId)}
+                      provenance={
+                        unitPlays
+                          ? play?.mode === "historical"
+                            ? "replay"
+                            : "recorded"
+                          : undefined
+                      }
+                    />
                   )}
                   {!unitPlays &&
                     !isPaperLabMethod(row.methodId) &&
-                    awaitingTipCheck &&
-                    row.status === "qualified" &&
-                    unitsForScore(row.signalStrength) !== null && (
+                    decision.yes &&
+                    awaitingTipCheck && (
                       <small className="unit-check-note">
                         Awaiting pre-tip check
                       </small>
@@ -249,17 +237,12 @@ export default function LabTable({
                   {row.research && (
                     <div className="research-forecast-details">
                       <p>
-                        Estimated return:{" "}
-                        {row.research.expectedReturn === null
-                          ? "Pending"
-                          : `${(row.research.expectedReturn * 100).toFixed(1)}%`}{" "}
-                        · Training sample: {row.research.trainingGames} earlier
+                        Training sample: {row.research.trainingGames} earlier
                         games · Stake: {row.research.paperUnits}u paper.
                       </p>
                       <p>
                         The unchanged Actual total and direction are retained.
-                        Confidence is an unvalidated probability estimate,
-                        distinct from the earlier Lab signal score.
+                        These are separate paper research decisions.
                       </p>
                       {isRefereeLabMethod(row.methodId) && (
                         <>
@@ -282,15 +265,6 @@ export default function LabTable({
                             added three times. Individual caller attribution is
                             unavailable.
                           </p>
-                          {row.research.refereeBaselineProbability !== null && (
-                            <p>
-                              V3 reference confidence before referee inputs:{" "}
-                              {(
-                                row.research.refereeBaselineProbability * 100
-                              ).toFixed(1)}
-                              %.
-                            </p>
-                          )}
                         </>
                       )}
                     </div>
@@ -308,16 +282,14 @@ export default function LabTable({
                       </p>
                       <p>
                         Earlier team halves: {row.feature.away.games} away /{" "}
-                        {row.feature.home.games} home. Current-season weights:{" "}
-                        {(row.feature.away.currentWeight * 100).toFixed(0)}% /{" "}
-                        {(row.feature.home.currentWeight * 100).toFixed(0)}%.
-                        Daily feature fit uses {row.feature.trainingGames}{" "}
-                        earlier D1 halves.
+                        {row.feature.home.games} home. The original season blend
+                        is retained. Daily feature fit uses{" "}
+                        {row.feature.trainingGames} earlier D1 halves.
                       </p>
                       <p>
-                        Only the historical-scoring branch changes. Confidence
-                        is a model score, not a win probability. These component
-                        versions are tested separately and do not change Actual.
+                        Only the historical-scoring branch changes. These
+                        component versions are tested separately and do not
+                        change Actual.
                       </p>
                     </div>
                   )}

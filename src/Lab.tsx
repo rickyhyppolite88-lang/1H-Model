@@ -5,7 +5,6 @@ import LabComponents from "./LabComponents";
 import LabTable from "./LabTable";
 import {
   canonicalLabForecasts,
-  gradeLab,
   type LabForecast,
   labMethodIdSchema,
   labMethods,
@@ -41,9 +40,9 @@ export default function Lab({ recordOnly = false }: { recordOnly?: boolean }) {
     error: unitError,
   } = useUnitLedger();
   const [chosenMethod, setMethod] = usePreference(
-    "lab.method.v5",
+    "lab.method.v6",
     labMethodIdSchema,
-    "market-paper-v3",
+    "shooting-paper-v6",
   );
   const method =
     recordOnly && chosenMethod === "bonus-exposure-v1"
@@ -188,19 +187,16 @@ export default function Lab({ recordOnly = false }: { recordOnly?: boolean }) {
         <div>
           <h2>{recordOnly ? "Lab prediction record" : "The Lab"}</h2>
           <p>
-            Each paper version tests one approach at 1u per usable pregame
-            forecast. These are research trials, not qualified bets. Confidence
-            is unvalidated.
+            Three active paper models. YES BET = 1u. NO BET = no play. Each Lab
+            keeps its own record.
           </p>
         </div>
       </div>
       <fieldset className="lab-version-tabs" aria-label="Lab versions">
         {[
-          ["opponent-paper-v5", "Lab v5", "Opponent strength"],
           ["shooting-paper-v6", "Lab v6", "Shooting regression"],
-          ["market-paper-v3", "Lab v3", "1u paper trial"],
+          ["market-paper-v3", "Lab v3", "Market benchmark"],
           ["referee-paper-v4", "Lab v4", "Referee paper trial"],
-          ["enhanced-baseline-v2", "Lab v2", "Venue & fouls"],
         ].map(([id, title, description]) => (
           <button
             type="button"
@@ -331,15 +327,11 @@ export default function Lab({ recordOnly = false }: { recordOnly?: boolean }) {
                   </strong>
                 </div>
                 <div>
-                  <span>
-                    {bonus ? "Bonus timing MAE" : "Observed hit rate"}
-                  </span>
+                  <span>{bonus ? "Bonus timing MAE" : "Settled plays"}</span>
                   <strong>
                     {bonus
                       ? show(summary.bonusMae, " min")
-                      : summary.winRate === null
-                        ? "—"
-                        : `${(summary.winRate * 100).toFixed(1)}%`}
+                      : summary.wins + summary.losses + summary.pushes}
                   </strong>
                 </div>
                 <div>
@@ -418,9 +410,9 @@ export default function Lab({ recordOnly = false }: { recordOnly?: boolean }) {
               </p>
               <p>
                 These measure the original saved Lab observations, including
-                watch-only forecasts. Foul probabilities and 80% count ranges
-                remain uncalibrated research estimates, separate from betting
-                hit rates.
+                watch-only forecasts. Foul estimates and count ranges remain
+                uncalibrated research estimates, separate from betting hit
+                rates.
               </p>
             </details>
           )}
@@ -484,66 +476,6 @@ export default function Lab({ recordOnly = false }: { recordOnly?: boolean }) {
               and date yet. Upcoming forecasts are in The Lab.
             </p>
           )}
-          {!bonus && (
-            <details className="lab-calibration">
-              <summary>Confidence check</summary>
-              <p>
-                {paper
-                  ? "V3/V4 confidence is a fitted research estimate whose calibration has not been validated."
-                  : "Earlier-version confidence is an uncalibrated ranking, not a fitted probability."}{" "}
-                These observed outcomes cannot be read as the chance that the
-                next forecast wins.
-              </p>
-              <div className="table-wrap">
-                <table aria-label="Lab confidence results">
-                  <thead>
-                    <tr>
-                      <th scope="col">Confidence %</th>
-                      <th scope="col">Wins</th>
-                      <th scope="col">Losses</th>
-                      <th scope="col">Observed hit rate</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {[0, 25, 50, 75].map((low) => {
-                      const band = summaryRows.filter(
-                        (row) =>
-                          row.signalStrength !== null &&
-                          row.signalStrength >= low &&
-                          (low === 75
-                            ? row.signalStrength <= 100
-                            : row.signalStrength < low + 25) &&
-                          ["qualified", "control", "paper_test"].includes(
-                            row.status,
-                          ),
-                      );
-                      const grades = band.map((row) => gradeLab(row, store));
-                      const w = grades.filter(
-                        (grade) => grade.grade === "Win",
-                      ).length;
-                      const l = grades.filter(
-                        (grade) => grade.grade === "Loss",
-                      ).length;
-                      return (
-                        <tr key={low}>
-                          <th scope="row">
-                            {low}–{low === 75 ? "100" : `<${low + 25}`}
-                          </th>
-                          <td>{w}</td>
-                          <td>{l}</td>
-                          <td>
-                            {w + l
-                              ? `${((100 * w) / (w + l)).toFixed(1)}%`
-                              : "—"}
-                          </td>
-                        </tr>
-                      );
-                    })}
-                  </tbody>
-                </table>
-              </div>
-            </details>
-          )}
         </>
       ) : index && !error ? (
         <p className="empty-state">Loading the selected Lab history…</p>
@@ -570,7 +502,11 @@ export default function Lab({ recordOnly = false }: { recordOnly?: boolean }) {
         <p>{definition.limits}</p>
       </details>
       <details className="lab-version-control">
-        <summary>Earlier trials</summary>
+        <summary>Archived trials</summary>
+        <p>
+          Paused methods retain their saved forecasts and results. They are
+          outside the three active Labs.
+        </p>
         <label>
           Lab version
           <select

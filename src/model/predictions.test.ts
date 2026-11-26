@@ -22,17 +22,36 @@ const ledger = ledgerSchema.parse(
 const generatedAt = "2026-11-02T23:00:00Z";
 
 describe("all-matchup projection feed", () => {
-  it("takes the ten largest absolute edges, excluding missing inputs, unavailable lines and pushes", () => {
-    const base = recordFixture().feed.predictions[0];
+  it("takes the ten largest actionable edges, excluding no-bet games without padding the list", () => {
+    const f = recordFixture();
+    const base = {
+      ...f.feed.predictions[0],
+      markets: f.feed.predictions[0].markets.map((m) => ({
+        ...m,
+        capturedAt: f.at,
+      })),
+    };
     const rows: PredictionRow[] = Array.from({ length: 12 }, (_, index) => ({
       ...base,
       gameId: `edge-${index + 1}`,
-      projectedFirstHalfTotal: 70 + (index % 2 ? -1 : 1) * (index + 1),
+      projectedFirstHalfTotal: 70 + (index % 2 ? -1 : 1) * ((index + 1) / 2),
     }));
     rows.push(
       { ...base, gameId: "missing-inputs", projectedFirstHalfTotal: null },
       { ...base, gameId: "missing-line", markets: [] },
       { ...base, gameId: "push", projectedFirstHalfTotal: 70 },
+      { ...base, gameId: "outlier", projectedFirstHalfTotal: 100 },
+      { ...base, gameId: "tipped", startsAt: f.at },
+      { ...base, gameId: "cancelled", status: "Cancelled" },
+      { ...base, gameId: "postponed", status: "Postponed" },
+      {
+        ...base,
+        gameId: "stale",
+        markets: base.markets.map((m) => ({
+          ...m,
+          capturedAt: "2026-11-02T21:00:00Z",
+        })),
+      },
       {
         ...base,
         gameId: "withdrawn-line",
@@ -46,14 +65,31 @@ describe("all-matchup projection feed", () => {
       },
     );
     const originalOrder = rows.map((row) => row.gameId);
-    expect(topEdgePredictions(rows, "betmgm").map((row) => row.gameId)).toEqual(
-      Array.from({ length: 10 }, (_, index) => `edge-${12 - index}`),
-    );
+    expect(
+      topEdgePredictions(rows, "betmgm", "latest", Date.parse(f.at)).map(
+        (row) => row.gameId,
+      ),
+    ).toEqual(Array.from({ length: 10 }, (_, index) => `edge-${12 - index}`));
     expect(rows.map((row) => row.gameId)).toEqual(originalOrder);
+    expect(
+      topEdgePredictions(
+        rows,
+        "betmgm",
+        "latest",
+        Date.parse(f.at) + 46 * 60_000,
+      ),
+    ).toEqual([]);
   });
 
   it("re-ranks for each sportsbook and breaks equal edges by tipoff and game ID", () => {
-    const base = recordFixture().feed.predictions[0];
+    const f = recordFixture();
+    const base = {
+      ...f.feed.predictions[0],
+      markets: f.feed.predictions[0].markets.map((m) => ({
+        ...m,
+        capturedAt: f.at,
+      })),
+    };
     const rows = [
       {
         ...base,
@@ -70,12 +106,17 @@ describe("all-matchup projection feed", () => {
         projectedFirstHalfTotal: 68,
         markets: [
           ...base.markets,
-          { ...base.markets[0], sportsbook: "draftkings", latestLine: 60 },
+          { ...base.markets[0], sportsbook: "draftkings", latestLine: 61 },
         ],
       },
     ];
-    expect(topEdgePredictions(rows, "betmgm")[0].gameId).toBe("over");
-    expect(topEdgePredictions(rows, "draftkings")[0].gameId).toBe("under");
+    expect(
+      topEdgePredictions(rows, "betmgm", "latest", Date.parse(f.at))[0].gameId,
+    ).toBe("over");
+    expect(
+      topEdgePredictions(rows, "draftkings", "latest", Date.parse(f.at))[0]
+        .gameId,
+    ).toBe("under");
     expect(
       topEdgePredictions(
         [
@@ -84,6 +125,8 @@ describe("all-matchup projection feed", () => {
           { ...rows[0], gameId: "a" },
         ],
         "betmgm",
+        "latest",
+        Date.parse(f.at),
       ).map((row) => row.gameId),
     ).toEqual(["a", "b", "late"]);
   });

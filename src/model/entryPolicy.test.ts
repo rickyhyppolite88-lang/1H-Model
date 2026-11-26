@@ -81,7 +81,7 @@ it("updates one future game's selected book, line, direction and stake until tip
     comparison: { line: 80, lean: "UNDER" },
   });
   expect(actualUnitPlay(selected[0], [], ledger)).toMatchObject({
-    units: 1.5,
+    units: 1,
     entryPolicy: "last-pretip-v1",
     lineCapturedAt: last.feed.generatedAt,
   });
@@ -125,9 +125,7 @@ it("updates one future game's selected book, line, direction and stake until tip
   ).toEqual([selected[0].id]);
   expect(finalLedger.assignments).toEqual(ledger.assignments);
   expect(recordGrade(selected[0], store.results).grade).toBe("Loss");
-  expect(actualUnitPlay(selected[0], store.results, finalLedger).net).toBe(
-    -1.5,
-  );
+  expect(actualUnitPlay(selected[0], store.results, finalLedger).net).toBe(-1);
 });
 
 it("does not claim a tipoff entry from a stale quote or fall back to an earlier line after it disappears", () => {
@@ -320,7 +318,7 @@ it("can verify a legitimately delayed upcoming game's final line after its earli
   expect(selected.comparison.line).toBe(80);
   expect(actualUnitPlay(selected, [], ledger)).toMatchObject({
     mode: "tracked",
-    units: 1.5,
+    units: 1,
     assignedAt: feed.generatedAt,
   });
 });

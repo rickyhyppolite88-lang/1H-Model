@@ -7,6 +7,7 @@ import {
   marketStatus,
   marketStatusLabel,
 } from "./marketCoverage";
+import { predictionDecision } from "./playDecision";
 import { compareTotal, projectFirstHalf } from "./predictor";
 import { predictionRating, ratingFallback } from "./ratingDisplay";
 import { predictionSignal, signalSchema } from "./signals";
@@ -292,13 +293,15 @@ export function predictionComparison(
   };
 }
 
-/** Largest model-to-line gaps in either direction, using the selected book. */
+/** Up to ten YES BET plays, ordered by absolute edge at the selected book and time. */
 export function topEdgePredictions(
   rows: PredictionRow[],
   sportsbook: string,
   basis: LineBasis = "latest",
+  at = Date.now(),
 ) {
   return rows
+    .filter((row) => predictionDecision(row, sportsbook, basis, at).yes)
     .map((row) => ({
       row,
       edge: predictionComparison(row, sportsbook, basis).signedEdge,

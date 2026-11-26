@@ -11,7 +11,7 @@ afterEach(() => {
   vi.unstubAllGlobals();
 });
 
-it("shows both seasons' offense and defense, accuracy origins, filters and downloads", async () => {
+it("shows both seasons' offense and defense, accuracy origins and filters without download controls", async () => {
   const report = JSON.parse(
     readFileSync("public/data/team-evaluation.json", "utf8"),
   );
@@ -36,10 +36,8 @@ it("shows both seasons' offense and defense, accuracy origins, filters and downl
   ).toBeTruthy();
   expect(screen.getByText("Reconstructed season debuts")).toBeTruthy();
   expect(
-    screen
-      .getByRole("link", { name: "Team comparison Excel ↓" })
-      .getAttribute("href"),
-  ).toContain("team-comparison.xlsx");
+    screen.queryByRole("link", { name: /Excel|CSV|JSON|Download/ }),
+  ).toBeNull();
   fireEvent.change(screen.getByLabelText("Find a team"), {
     target: { value: "Alabama" },
   });

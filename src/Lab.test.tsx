@@ -135,7 +135,7 @@ function labResponse(url: string, index: LabIndex, store: LabStore) {
 beforeEach(() => {
   localStorage.clear();
   localStorage.setItem(
-    "1h-model-view-v1:lab.method.v5",
+    "1h-model-view-v1:lab.method.v6",
     JSON.stringify({
       value: "enhanced-baseline-v2",
       savedAt: Date.parse("2026-11-02T22:00:00Z"),
@@ -165,14 +165,17 @@ it("shows upcoming research and explicit method descriptions without probability
   expect(within(table).getByText("Team A")).toBeTruthy();
   expect(within(table).queryByText("Finished team")).toBeNull();
   expect(screen.getByText(/1.5 ≤ absolute edge < 8/)).toBeTruthy();
-  expect(screen.getByText(/research trials, not qualified bets/)).toBeTruthy();
+  expect(screen.getByText(/YES BET = 1u. NO BET = no play/)).toBeTruthy();
   expect(
     screen.queryByRole("link", { name: /Pause \/ resume shared collection/ }),
   ).toBeNull();
   expect(screen.queryByRole("button", { name: /CSV|Download/ })).toBeNull();
-  expect(within(table).getByText("Confidence")).toBeTruthy();
-  expect(table.querySelector(".signal-badge strong")?.textContent).toMatch(
-    /\d+%/,
+  expect(
+    within(table).getByRole("columnheader", { name: "Play & units" }),
+  ).toBeTruthy();
+  expect(table.querySelector(".signal-badge")).toBeNull();
+  expect(within(table).getAllByText(/YES BET|NO BET/).length).toBeGreaterThan(
+    0,
   );
   const comparison = screen.getByRole("table", {
     name: "Lab component comparison",
@@ -192,6 +195,27 @@ it("shows upcoming research and explicit method descriptions without probability
   expect(
     (screen.getByLabelText("Lab game date (ET)") as HTMLSelectElement).value,
   ).toBe("today");
+});
+
+it("loads the smaller display archive when published while keeping the same saved decisions", async () => {
+  const { store, index } = uiFixture();
+  index.archives[0].displayPath = "data/lab-display/2026-11-02.json";
+  const fetcher = vi.fn(async (url: string) => ({
+    ok: true,
+    json: async () => structuredClone(labResponse(url, index, store)),
+  }));
+  vi.stubGlobal("fetch", fetcher);
+  render(<Lab />);
+  const table = await screen.findByRole("table", { name: "Lab forecasts" });
+  expect(within(table).getByText("Team A")).toBeTruthy();
+  expect(within(table).getByText("YES BET")).toBeTruthy();
+  const urls = fetcher.mock.calls.map(([url]) => url);
+  expect(
+    urls.some((url) => url.endsWith("data/lab-display/2026-11-02.json")),
+  ).toBe(true);
+  expect(urls.some((url) => url.endsWith("data/lab/2026-11-02.json"))).toBe(
+    false,
+  );
 });
 
 it("returns the Lab record to all dates from empty space and keeps play clicks in the selected day", async () => {
@@ -274,7 +298,7 @@ it("lists qualified Lab research before watch-only forecasts and earlier data ga
 
 it("shows completed staked Lab plays while excluding watch-only and upcoming games", async () => {
   localStorage.setItem(
-    "1h-model-view-v1:lab.method.v5",
+    "1h-model-view-v1:lab.method.v6",
     JSON.stringify({ savedAt: Date.now(), value: "bonus-exposure-v1" }),
   );
   const { store, index } = uiFixture();
@@ -367,9 +391,10 @@ it("does not display a partial Lab record if an archive fails", async () => {
   expect(screen.queryByRole("table", { name: "Lab forecasts" })).toBeNull();
 });
 
-it("switches separate visible Lab versions and shows confidence with paper units", async () => {
+it("switches separate visible Lab versions and shows decisions with paper units", async () => {
   const { store, index } = uiFixture();
   const f = researchFixture();
+  vi.setSystemTime(new Date(f.at));
   for (const method of ["market-paper-v3", "referee-paper-v4"] as const) {
     store.forecasts.push({
       ...captureResearchForecast(
@@ -407,7 +432,9 @@ it("switches separate visible Lab versions and shows confidence with paper units
   expect(within(table).getByText("V3 research team")).toBeTruthy();
   expect(within(table).queryByText("V4 research team")).toBeNull();
   expect(within(table).getByText("1u paper")).toBeTruthy();
-  expect(within(table).getByText("Confidence")).toBeTruthy();
+  expect(
+    within(table).getByRole("columnheader", { name: "Play & units" }),
+  ).toBeTruthy();
   expect(within(table).queryByText(/Saved strength/)).toBeNull();
   fireEvent.click(within(tabs).getByRole("button", { name: /Lab v4/ }));
   table = await screen.findByRole("table", { name: "Lab forecasts" });
@@ -416,12 +443,16 @@ it("switches separate visible Lab versions and shows confidence with paper units
   expect(
     screen.getByText("Referee research & first-half measurements"),
   ).toBeTruthy();
-  fireEvent.click(within(tabs).getByRole("button", { name: /Lab v2/ }));
+  expect(within(tabs).getAllByRole("button")).toHaveLength(3);
+  fireEvent.change(screen.getByLabelText("Lab version"), {
+    target: { value: "enhanced-baseline-v2" },
+  });
   expect(await screen.findByText("Team A")).toBeTruthy();
 });
-it("shows both new component tabs, 1u paper cards and a separate matched historical comparison", async () => {
+it("retains paused component history beside three active Labs and a separate replay comparison", async () => {
   const { store, index } = uiFixture();
   const f = researchFixture();
+  vi.setSystemTime(new Date(f.at));
   const halves = Array.from({ length: 40 }, (_, i) => ({
     ...f.halves[0],
     id: `h${i}`,
@@ -481,9 +512,17 @@ it("shows both new component tabs, 1u paper cards and a separate matched histori
     })),
   );
   render(<Lab />);
-  fireEvent.click(
-    screen.getByRole("button", { name: "Lab v5 Opponent strength" }),
-  );
+  expect(
+    screen.queryByRole("button", { name: "Lab v5 Opponent strength" }),
+  ).toBeNull();
+  expect(
+    within(screen.getByRole("group", { name: "Lab versions" })).getAllByRole(
+      "button",
+    ),
+  ).toHaveLength(3);
+  fireEvent.change(screen.getByLabelText("Lab version"), {
+    target: { value: "opponent-paper-v5" },
+  });
   const table = await screen.findByRole("table", { name: "Lab forecasts" });
   expect(within(table).getByText("1u paper")).toBeTruthy();
   fireEvent.click(screen.getByText("Historical replay & test plan"));

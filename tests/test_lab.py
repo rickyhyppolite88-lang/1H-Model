@@ -91,13 +91,14 @@ def test_repeated_measurement_preserves_first_observed_time_and_corrections_appe
 
 def test_shared_pause_changes_only_the_selected_method_configuration(tmp_path):
     path = tmp_path / "config.json"
-    config = {"schemaVersion": 1, "methods": [{"id": name, "enabled": True} for name in settings.METHODS]}
+    enabled = {"first-half-defense-v1", "shooting-paper-v6", "market-paper-v3"}
+    config = {"schemaVersion": 1, "methods": [{"id": name, "enabled": name in enabled} for name in settings.METHODS]}
     path.write_text(json.dumps(config), encoding="utf-8")
     settings.configure(path, "first-half-defense-v1", "disable")
     rows = json.loads(path.read_text())["methods"]
-    assert all(row["enabled"] == (row["id"] != "first-half-defense-v1") for row in rows)
+    assert all(row["enabled"] == (row["id"] in enabled and row["id"] != "first-half-defense-v1") for row in rows)
     settings.configure(path, "first-half-defense-v1", "enable")
-    assert all(row["enabled"] for row in json.loads(path.read_text())["methods"])
+    assert {row["id"] for row in json.loads(path.read_text())["methods"] if row["enabled"]} == enabled
     with pytest.raises(ValueError):
         settings.configure(path, "unknown", "disable")
 
@@ -117,3 +118,17 @@ def test_free_throw_enrichment_appends_without_rewriting_older_raw_history(tmp_p
     enriched = next(half for half in result["halves"] if half["id"] != original["id"])
     assert enriched["teams"][0]["freeThrowsMade"] == 1
     assert enriched["observedAt"] > original["observedAt"]
+
+
+def test_shared_configuration_rejects_a_fourth_active_lab_without_writing(tmp_path):
+    path = tmp_path / "config.json"
+    enabled = {"shooting-paper-v6", "market-paper-v3", "referee-paper-v4"}
+    data = {"schemaVersion": 1, "methods": [{"id": name, "enabled": name in enabled} for name in settings.METHODS]}
+    path.write_text(json.dumps(data), encoding="utf-8")
+    original = path.read_bytes()
+    with pytest.raises(ValueError, match="three active"):
+        settings.configure(path, "opponent-paper-v5", "enable")
+    assert path.read_bytes() == original
+    settings.configure(path, "referee-paper-v4", "disable")
+    settings.configure(path, "opponent-paper-v5", "enable")
+    assert sum(row["enabled"] for row in json.loads(path.read_text())["methods"]) == 3
