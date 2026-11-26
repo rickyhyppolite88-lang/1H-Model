@@ -134,6 +134,10 @@ it.each(["signal", "time"])(
   async (sort) => {
     const feed = todayFixture();
     const base = feed.predictions[0];
+    base.markets = base.markets.map((m) => ({
+      ...m,
+      capturedAt: new Date().toISOString(),
+    }));
     const game = (id: string, startsAt: string) => ({
       ...structuredClone(base),
       gameId: id,
@@ -184,7 +188,7 @@ it.each(["signal", "time"])(
   },
 );
 
-it("orders confidence scores without presenting them as win probabilities", async () => {
+it("orders actionable plays by edge and presents binary decisions without percentages", async () => {
   vi.useFakeTimers({ toFake: ["Date"] });
   vi.setSystemTime(new Date("2026-11-02T22:00:00Z"));
   localStorage.setItem(
@@ -193,6 +197,10 @@ it("orders confidence scores without presenting them as win probabilities", asyn
   );
   const { feed } = recordFixture();
   const base = feed.predictions[0];
+  base.markets = base.markets.map((m) => ({
+    ...m,
+    capturedAt: new Date().toISOString(),
+  }));
   feed.predictions = [
     {
       ...base,
@@ -227,16 +235,11 @@ it("orders confidence scores without presenting them as win probabilities", asyn
   const rows = screen.getAllByRole("row");
   expect(rows[1].textContent).toContain("Strong signal");
   expect(rows[2].textContent).toContain("Weak signal");
-  expect(within(rows[1]).getByText("75%")).toBeTruthy();
-  expect(within(rows[2]).getByText("25%")).toBeTruthy();
-  expect(
-    screen.getByText(/Confidence % is a model score, not a win probability/),
-  ).toBeTruthy();
-  expect(
-    within(rows[1]).getByTitle(
-      /uncalibrated model score, not a win probability/,
-    ),
-  ).toBeTruthy();
+  expect(within(rows[1]).getByText("YES BET")).toBeTruthy();
+  expect(within(rows[2]).getByText("YES BET")).toBeTruthy();
+  expect(within(rows[1]).getByText("1u")).toBeTruthy();
+  expect(document.querySelector(".signal-badge")).toBeNull();
+  expect(rows[1].textContent).not.toContain("%");
 });
 
 it("starts with DraftKings even with an old default stored, then preserves the user's new book choice", async () => {
@@ -309,19 +312,19 @@ it.each([false, true])(
     const table = await screen.findByRole("table", {
       name: "Matchup predictions",
     });
-    expect(within(table).getByText("0.5u suggested")).toBeTruthy();
+    expect(within(table).getByText(fresh ? "YES BET" : "NO BET")).toBeTruthy();
     expect(within(table).queryByText("Awaiting pre-tip check") !== null).toBe(
-      !fresh,
+      false,
     );
   },
 );
 
 it.each([
-  [95, 2],
-  [88, 1.5],
+  [95, 1],
+  [88, 1],
   [65, 1],
 ])(
-  "shows units for confidence %s (%su) while a pre-tip check is pending",
+  "shows a binary 1u play regardless of the old score %s (%su)",
   async (score, units) => {
     vi.setSystemTime(new Date("2026-11-02T23:57:00Z"));
     localStorage.removeItem(
@@ -339,7 +342,7 @@ it.each([
     row.markets = row.markets.map((market) => ({
       ...market,
       sportsbook: "draftkings",
-      capturedAt: "2026-11-02T22:00:00Z",
+      capturedAt: "2026-11-02T23:30:00Z",
     }));
     const total = (row.markets[0].latestLine ?? 70) + (score * 8) / 100;
     row.projectedFirstHalfTotal = total;
@@ -356,12 +359,14 @@ it.each([
     const table = await screen.findByRole("table", {
       name: "Matchup predictions",
     });
-    expect(within(table).getByText(`${units}u suggested`)).toBeTruthy();
+    expect(within(table).getByText("YES BET")).toBeTruthy();
+    expect(within(table).getByText(`${units}u`)).toBeTruthy();
+    expect(within(table).queryByText(/\d+%/)).toBeNull();
     expect(within(table).getByText("Awaiting pre-tip check")).toBeTruthy();
   },
 );
 
-it("provides dated downloads and automatically checks for updated predictions", async () => {
+it("keeps downloads out of the page and automatically checks for updated predictions", async () => {
   vi.useFakeTimers({ toFake: ["Date", "setInterval", "clearInterval"] });
   vi.setSystemTime(new Date("2026-11-03T15:00:00Z"));
   const feed = todayFixture();
@@ -375,11 +380,8 @@ it("provides dated downloads and automatically checks for updated predictions", 
   await screen.findByRole("heading", {
     name: "First-half lines & predictions",
   });
-  const latest = archive.archives[0];
   expect(screen.queryByRole("link", { name: /CSV|JSON/ })).toBeNull();
-  expect(
-    screen.getByRole("link", { name: "Excel workbook ↓" }).getAttribute("href"),
-  ).toContain(latest.xlsxPath);
+  expect(screen.queryByRole("link", { name: /Excel|CSV|Download/ })).toBeNull();
   await waitFor(() => expect(fetcher).toHaveBeenCalledTimes(3));
   await act(async () => {
     vi.advanceTimersByTime(30 * 1000);
@@ -387,11 +389,17 @@ it("provides dated downloads and automatically checks for updated predictions", 
   await waitFor(() => expect(fetcher).toHaveBeenCalledTimes(6));
 });
 
-it("ranks Top 10 edges after date/tipoff filters, updates for the book and restores the view", async () => {
+it("ranks only YES BET Top 10 edges, updates for the book and restores the view", async () => {
   const feed = todayFixture();
-  const base = feed.predictions[0];
+  const base = {
+    ...feed.predictions[0],
+    markets: feed.predictions[0].markets.map((m) => ({
+      ...m,
+      capturedAt: new Date().toISOString(),
+    })),
+  };
   feed.predictions = Array.from({ length: 12 }, (_, index) => {
-    const total = 70 + (index % 2 ? -1 : 1) * (index + 1);
+    const total = 70 + (index % 2 ? -1 : 1) * ((index + 1) / 2);
     return {
       ...base,
       gameId: `edge-${index + 1}`,
@@ -404,7 +412,7 @@ it("ranks Top 10 edges after date/tipoff filters, updates for the book and resto
         {
           ...base.markets[0],
           sportsbook: "draftkings",
-          latestLine: total - (13 - index),
+          latestLine: total - (13 - index) / 2,
         },
       ],
     };
@@ -425,6 +433,21 @@ it("ranks Top 10 edges after date/tipoff filters, updates for the book and resto
       projectedFirstHalfTotal: 120,
     },
     { ...base, gameId: "no-line", awayTeam: "No line", markets: [] },
+    {
+      ...base,
+      gameId: "review",
+      awayTeam: "Review outlier",
+      projectedFirstHalfTotal: 100,
+    },
+    {
+      ...base,
+      gameId: "stale",
+      awayTeam: "Stale quote",
+      markets: base.markets.map((m) => ({
+        ...m,
+        capturedAt: "2026-11-03T14:00:00Z",
+      })),
+    },
   );
   vi.stubGlobal(
     "fetch",
@@ -441,7 +464,11 @@ it("ranks Top 10 edges after date/tipoff filters, updates for the book and resto
     );
   fireEvent.click(screen.getByRole("tab", { name: "Top 10 edges" }));
   expect(names()).toHaveLength(10);
-  expect(names()[0]).toContain("Started outlier");
+  expect(names()[0]).toContain("Edge 12");
+  expect(within(table).queryByText("Started outlier")).toBeNull();
+  expect(within(table).queryByText("Review outlier")).toBeNull();
+  expect(within(table).queryByText("Stale quote")).toBeNull();
+  expect(within(table).queryByText("NO BET")).toBeNull();
   expect(within(table).queryByText("Wrong day")).toBeNull();
   expect(within(table).queryByText("No line")).toBeNull();
   expect(
@@ -535,9 +562,7 @@ it("combines Top 25 with a conference and preserves the daily workbook", async (
     screen.getAllByTitle("Eastern Time (EST)")[0].getAttribute("datetime"),
   ).toBe("2026-11-04T00:00:00Z");
   expect(screen.queryByRole("button", { name: /CSV/ })).toBeNull();
-  expect(
-    screen.getByRole("link", { name: "Excel workbook ↓" }).getAttribute("href"),
-  ).toContain("data/daily/2026-11-03/predictions.xlsx");
+  expect(screen.queryByRole("link", { name: /Excel|CSV|Download/ })).toBeNull();
 });
 
 it("keeps projection filters available without raw feed and CSV controls", async () => {
@@ -569,7 +594,7 @@ it("keeps projection filters available without raw feed and CSV controls", async
   ).toBeTruthy();
 });
 
-it("defaults to today's Eastern slate and changes the table and downloads together", async () => {
+it("defaults to today's Eastern slate and changes the table with the selected date", async () => {
   const feed = todayFixture();
   const base = feed.predictions[0];
   feed.predictions.push(
@@ -602,9 +627,7 @@ it("defaults to today's Eastern slate and changes the table and downloads togeth
   expect(
     (screen.getByLabelText("Game date (ET)") as HTMLSelectElement).value,
   ).toBe("today");
-  expect(
-    screen.getByRole("link", { name: "Excel workbook ↓" }).getAttribute("href"),
-  ).toContain("/2026-11-03/");
+  expect(screen.queryByRole("link", { name: /Excel|CSV|Download/ })).toBeNull();
   fireEvent.change(screen.getByLabelText("Game date (ET)"), {
     target: { value: "2026-11-02" },
   });
@@ -613,12 +636,8 @@ it("defaults to today's Eastern slate and changes the table and downloads togeth
   ).toBeTruthy();
   expect(screen.getByText("Yesterday team")).toBeTruthy();
   expect(screen.queryByText("Early team")).toBeNull();
-  expect(
-    screen.getByRole("link", { name: "Excel workbook ↓" }).getAttribute("href"),
-  ).toContain("/2026-11-02/");
-  expect(
-    screen.getByRole("link", { name: "Excel workbook ↓" }).getAttribute("href"),
-  ).toContain("/2026-11-02/");
+  expect(screen.queryByRole("link", { name: /Excel|CSV|Download/ })).toBeNull();
+  expect(screen.queryByRole("link", { name: /Excel|CSV|Download/ })).toBeNull();
   fireEvent.click(screen.getByRole("button", { name: "Today" }));
   expect(screen.getByText("Early team")).toBeTruthy();
   expect(screen.queryByText("Yesterday team")).toBeNull();
@@ -701,9 +720,7 @@ it("follows Eastern midnight and never falls back to an earlier day's games or f
   });
   expect(screen.queryByText("Early team")).toBeNull();
   expect(screen.queryByRole("link", { name: "Excel workbook ↓" })).toBeNull();
-  expect(
-    screen.getByText(/No dated downloads are available for 2026-11-04/),
-  ).toBeTruthy();
+  expect(screen.queryByText(/No dated downloads/)).toBeNull();
   expect(screen.getByRole("status").textContent).toContain(
     "Today’s schedule has not been published yet",
   );
@@ -768,7 +785,7 @@ it("changes the displayed record with the game date and explains data gaps", asy
   expect(
     within(
       screen.getByRole("region", { name: "Record for 2026-11-03" }),
-    ).getByText("0.0%"),
+    ).getByText("0 / 1 / 0"),
   ).toBeTruthy();
   fireEvent.change(screen.getByLabelText("Game date (ET)"), {
     target: { value: "2026-11-02" },
@@ -777,7 +794,7 @@ it("changes the displayed record with the game date and explains data gaps", asy
   expect(
     within(
       screen.getByRole("region", { name: "Record for 2026-11-02" }),
-    ).getByText("100.0%"),
+    ).getByText("1 / 0 / 0"),
   ).toBeTruthy();
   expect(screen.queryByText("0 / 1 / 0")).toBeNull();
   fireEvent.click(screen.getByRole("button", { name: "Today" }));

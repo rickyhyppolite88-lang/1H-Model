@@ -92,17 +92,6 @@ function grade(row: SavedAnalysis) {
   return row.actualTotal > row.line === (row.pick === "OVER") ? "Win" : "Loss";
 }
 
-function download(name: string, data: unknown) {
-  const url = URL.createObjectURL(
-    new Blob([JSON.stringify(data, null, 2)], { type: "application/json" }),
-  );
-  const link = document.createElement("a");
-  link.href = url;
-  link.download = name;
-  link.click();
-  URL.revokeObjectURL(url);
-}
-
 export default function App() {
   const lockApp = useAppLock();
   const [datasets, setDatasets] = useState<{
@@ -161,7 +150,7 @@ export default function App() {
       return true;
     } catch {
       setNotice(
-        "This browser could not save the analysis. Export your records to keep a copy.",
+        "This browser could not save the analysis. Check that browser storage is enabled.",
       );
       return false;
     }
@@ -452,22 +441,6 @@ export default function App() {
                 comparison columns.
               </p>
               <div className="button-group">
-                <button
-                  className="text-button"
-                  type="button"
-                  onClick={() => download("prior-season.json", datasets.prior)}
-                >
-                  Export prior snapshot ↓
-                </button>
-                <button
-                  className="text-button"
-                  type="button"
-                  onClick={() =>
-                    download("current-season.json", datasets.current)
-                  }
-                >
-                  Export current snapshot ↓
-                </button>
                 <a
                   href={datasets.prior.source.urls.firstHalfPoints}
                   target="_blank"
@@ -491,14 +464,6 @@ export default function App() {
                   settings, and source dates.
                 </p>
               </div>
-              <button
-                className="secondary-button"
-                type="button"
-                disabled={!saved.length}
-                onClick={() => download("1h-model-analyses.json", saved)}
-              >
-                Export JSON ↓
-              </button>
             </div>
             {saved.length === 0 ? (
               <div className="empty-state">

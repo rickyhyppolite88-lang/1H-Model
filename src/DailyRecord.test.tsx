@@ -112,7 +112,7 @@ it("clears the previous day's numbers immediately and loads the new day's origin
   const { rerender } = render(<DailyRecord date="2026-11-02" {...scope} />);
   await screen.findByText("1 / 0 / 0");
   const first = screen.getByRole("region", { name: "Record for 2026-11-02" });
-  expect(within(first).getByText("100.0%")).toBeTruthy();
+  expect(within(first).getByText("Settled plays")).toBeTruthy();
   rerender(<DailyRecord date="2026-11-03" {...scope} />);
   const next = screen.getByRole("region", { name: "Record for 2026-11-03" });
   expect(within(next).queryByText("1 / 0 / 0")).toBeNull();
@@ -123,12 +123,10 @@ it("clears the previous day's numbers immediately and loads the new day's origin
   const completed = screen.getByRole("region", {
     name: "Record for 2026-11-03",
   });
-  expect(within(completed).getByText("0.0%")).toBeTruthy();
+  expect(within(completed).getByText("0 / 1 / 0")).toBeTruthy();
   expect(
-    within(completed)
-      .getByRole("link", { name: /Download this day’s record CSV/ })
-      .getAttribute("href"),
-  ).toContain("2026-11-03-games.csv");
+    within(completed).queryByRole("link", { name: /CSV|Download/ }),
+  ).toBeNull();
 });
 
 it("shows an absent archive and a failed request explicitly rather than displaying zero losses", async () => {

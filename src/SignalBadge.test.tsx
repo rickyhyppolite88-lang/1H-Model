@@ -2,7 +2,7 @@
 import { cleanup, render, screen, within } from "@testing-library/react";
 import { afterEach, expect, it } from "vitest";
 import { updatePredictionRecord } from "./model/predictionRecord";
-import { predictionRating, recordRating } from "./model/ratingDisplay";
+import { predictionRating } from "./model/ratingDisplay";
 import { recordFixture } from "./model/record.test-fixture";
 import RecordTable from "./RecordTable";
 import SignalBadge from "./SignalBadge";
@@ -17,7 +17,7 @@ it("renders Review rather than an empty confidence value for an outlier lean", (
   expect(screen.queryByText("100%")).toBeNull();
   expect(screen.getByTitle(/8\+ point model\/line gap/)).toBeTruthy();
 });
-it("shows an older record's derived percentage and visible provenance without changing its stored score", () => {
+it("shows a binary decision without changing an older record's stored score", () => {
   const f = recordFixture();
   const record = updatePredictionRecord(f.store, f.feed, f.ledger, f.at)
     .records[0];
@@ -27,7 +27,6 @@ it("shows an older record's derived percentage and visible provenance without ch
     score: null,
     fill: null,
   };
-  const score = recordRating(record).signal.score;
   render(
     <RecordTable
       records={[record]}
@@ -37,8 +36,7 @@ it("shows an older record's derived percentage and visible provenance without ch
     />,
   );
   const table = screen.getByRole("table", { name: "Recorded predictions" });
-  expect(within(table).getByText(`${score}%`)).toBeTruthy();
-  expect(within(table).getByText("Derived confidence")).toBeTruthy();
-  expect(within(table).getByText("Calculated later")).toBeTruthy();
+  expect(within(table).queryByText(/\d+%/)).toBeNull();
+  expect(within(table).getByText("NO BET")).toBeTruthy();
   expect(record.signal.score).toBeNull();
 });

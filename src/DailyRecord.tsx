@@ -30,14 +30,12 @@ export function DailyRecordSummary({
   canonicalIds,
   sportsbook,
   basis,
-  gamesCsvPath,
 }: {
   date: string;
   store: RecordStore;
   canonicalIds: string[];
   sportsbook: string;
   basis: string;
-  gamesCsvPath?: string;
 }) {
   const results = dailyRecordedResults(store, canonicalIds, date);
   const entryBooks = [
@@ -71,12 +69,8 @@ export function DailyRecordSummary({
           <strong>{results.pending}</strong>
         </div>
         <div>
-          <span>Observed win rate</span>
-          <strong>
-            {results.winRate === null
-              ? "—"
-              : `${(results.winRate * 100).toFixed(1)}%`}
-          </strong>
+          <span>Settled plays</span>
+          <strong>{results.wins + results.losses + results.pushes}</strong>
         </div>
         <div>
           <span>Counted pregame picks</span>
@@ -90,15 +84,6 @@ export function DailyRecordSummary({
         {results.winRate === null ? " No graded wins or losses yet." : ""}
       </p>
       <div className="daily-record-footer">
-        {gamesCsvPath && (
-          <a
-            className="text-button"
-            href={`${import.meta.env.BASE_URL}${gamesCsvPath}`}
-            download={`1h-record-${date}.csv`}
-          >
-            Download this day’s record CSV ↓
-          </a>
-        )}
         <span>
           Record updated <GameTime startsAt={store.updatedAt} />
         </span>
@@ -111,7 +96,6 @@ type LoadedRecord = {
   date: string;
   index: RecordIndex;
   store: RecordStore | null;
-  gamesCsvPath?: string;
 };
 
 export default function DailyRecord({
@@ -169,7 +153,6 @@ export default function DailyRecord({
                 ),
               }
             : null,
-          gamesCsvPath: archive?.gamesCsvPath,
         });
         setError(null);
         onEvidence?.({
@@ -229,7 +212,6 @@ export default function DailyRecord({
       canonicalIds={loaded.index.canonicalIds}
       sportsbook={sportsbook}
       basis={basis}
-      gamesCsvPath={loaded.gamesCsvPath}
     />
   );
 }

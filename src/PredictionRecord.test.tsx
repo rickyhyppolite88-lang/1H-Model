@@ -230,7 +230,7 @@ it("shows finished first halves and updates the same summary box from the daily 
   await screen.findByRole("table", { name: "Recorded predictions" });
   const box = summary();
   expect(within(box).getByText("1 / 1 / 0")).toBeTruthy();
-  expect(within(box).getByText("50.0%")).toBeTruthy();
+  expect(within(box).getByText("Settled plays")).toBeTruthy();
   expect(within(table()).getAllByRole("row")).toHaveLength(3);
   expect(within(table()).queryByText("Upcoming team")).toBeNull();
   expect(within(table()).getByText("UNDER").className).toContain("lean-under");
@@ -372,7 +372,9 @@ it("shows only staked original plays in both the record table and its summary, i
   ])
     expect(within(table()).queryByText(name)).toBeNull();
   expect(within(summary()).getByText("1 / 1 / 0")).toBeTruthy();
-  expect(within(summary()).getAllByText("2")).toHaveLength(2);
+  expect(
+    within(summary()).getByText("Settled plays").parentElement?.textContent,
+  ).toContain("2");
   expect(screen.queryByLabelText("Record view")).toBeNull();
 });
 

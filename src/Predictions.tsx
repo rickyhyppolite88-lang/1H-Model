@@ -2,6 +2,7 @@
 /** biome-ignore-all lint/a11y/noRedundantRoles: Explicit roles preserve table semantics when mobile CSS displays rows as cards. */
 import { useEffect, useMemo, useState } from "react";
 import AvailabilityHelp from "./AvailabilityHelp";
+import BetDecision from "./BetDecision";
 import DailyRecord, { type DailyRecordEvidence } from "./DailyRecord";
 import GameCardRow from "./GameCardRow";
 import GameTime from "./GameTime";
@@ -13,6 +14,7 @@ import {
   marketStatusLabel,
   sportsbookNames,
 } from "./model/marketCoverage";
+import { predictionDecision } from "./model/playDecision";
 import { recordGrade } from "./model/predictionRecord";
 import {
   conferenceNames,
@@ -26,13 +28,9 @@ import {
   predictionFeedSchema,
   topEdgePredictions,
 } from "./model/predictions";
-import { predictionRating } from "./model/ratingDisplay";
-import { predictionSignal } from "./model/signals";
 import { easternTipoff, tipoffState } from "./model/time";
-import { unitsForScore } from "./model/units";
 import { watchPublishedUpdates } from "./publishedUpdates";
 import ResponsiveDetails from "./ResponsiveDetails";
-import SignalBadge from "./SignalBadge";
 import TeamIdentity from "./TeamIdentity";
 import {
   preferenceCoverage,
@@ -51,13 +49,9 @@ const format = (value: number | null) =>
   value === null ? "—" : value.toFixed(2);
 const basis = "latest";
 function hasUpcomingPick(row: PredictionRow, book: string, now: number) {
-  const { lean } = predictionComparison(row, book, basis);
-  return (
-    tipoffState(row, now) === "upcoming" &&
-    row.featureKind === "captured_pregame" &&
-    (lean === "OVER" || lean === "UNDER")
-  );
+  return predictionDecision(row, book, basis, now).yes;
 }
+
 const dateLabel = (date: string) =>
   new Intl.DateTimeFormat("en-US", {
     timeZone: "America/New_York",
@@ -70,7 +64,6 @@ const dateLabel = (date: string) =>
 export default function Predictions() {
   const [feed, setFeed] = useState<PredictionFeed | null>(null);
   const [archive, setArchive] = useState<DailyArchive | null>(null);
-  const [archiveError, setArchiveError] = useState("");
   const [dateChoice, setDateChoice] = usePreference(
     "lines.date",
     preferenceLineDate,
@@ -148,20 +141,14 @@ export default function Predictions() {
         .then(async (response) => {
           if (!response.ok)
             throw new Error(
-              "The daily download archive is temporarily unavailable.",
+              "The game-date archive is temporarily unavailable.",
             );
           return dailyArchiveSchema.parse(await response.json());
         })
         .then((data) => {
           setArchive(data);
-          setArchiveError("");
         })
-        .catch(() => {
-          if (!controller.signal.aborted)
-            setArchiveError(
-              "The daily archive could not be refreshed. Showing the available projections.",
-            );
-        });
+        .catch(() => undefined);
     const refresh = () => {
       void loadFeed();
       void loadArchive();
@@ -211,10 +198,9 @@ export default function Predictions() {
             Number(hasUpcomingPick(a, book, clock));
           if (pickOrder) return pickOrder;
           if (sort === "signal") {
-            const at = new Date(clock).toISOString();
             const diff =
-              (predictionSignal(b, book, basis, at).score ?? -1) -
-              (predictionSignal(a, book, basis, at).score ?? -1);
+              Math.abs(predictionComparison(b, book, basis).signedEdge ?? 0) -
+              Math.abs(predictionComparison(a, book, basis).signedEdge ?? 0);
             if (diff) return diff;
           }
           return Date.parse(a.startsAt) - Date.parse(b.startsAt);
@@ -226,7 +212,7 @@ export default function Predictions() {
       (row) => value === "all" || tipoffState(row, clock) === value,
     );
     return group === "top10"
-      ? topEdgePredictions(filtered, book, basis)
+      ? topEdgePredictions(filtered, book, basis, clock)
       : filtered;
   }
   const rows = rowsForTiming(timing);
@@ -278,9 +264,6 @@ export default function Predictions() {
       });
     }
   }
-  const selectedArchive = archive?.archives.find(
-    (row) => row.date === selectedDate,
-  );
   const dates = [
     ...new Set([
       today,
@@ -406,10 +389,7 @@ export default function Predictions() {
           covers {feed.through}; earlier dates are available in Game date (ET).
         </output>
       )}
-      <aside
-        className="prediction-sidebar"
-        aria-label="Daily record and downloads"
-      >
+      <aside className="prediction-sidebar" aria-label="Daily record">
         <ResponsiveDetails summary="Daily record">
           <DailyRecord
             date={selectedDate}
@@ -420,25 +400,9 @@ export default function Predictions() {
             onEvidence={setRecordEvidence}
           />
         </ResponsiveDetails>
-        <AvailabilityHelp />
-        <div className="prediction-workbook">
-          {selectedArchive?.xlsxPath ? (
-            <a
-              className="secondary-button"
-              href={`${import.meta.env.BASE_URL}${selectedArchive.xlsxPath}`}
-              download={`1h-predictions-${selectedDate}.xlsx`}
-            >
-              Excel workbook ↓
-            </a>
-          ) : (
-            <p className="inline-note">
-              No dated downloads are available for {selectedDate} yet.
-            </p>
-          )}
-          {archiveError && <p className="inline-note">{archiveError}</p>}
-        </div>
       </aside>
       <ResponsiveDetails summary="Filters & search" initiallyCollapsed>
+        <AvailabilityHelp />
         <p className="group-description">
           Top 25 includes either team ranked 1–25 by ESPN at retrieval.
           Conference filters include games involving either team. Select a
@@ -458,7 +422,7 @@ export default function Predictions() {
               {group === "top10" && (
                 <option value="edge">Biggest absolute edge</option>
               )}
-              <option value="signal">Picks first, then confidence</option>
+              <option value="signal">Actionable picks first</option>
               <option value="time">Picks first, then tipoff (ET)</option>
             </select>
           </label>
@@ -540,13 +504,13 @@ export default function Predictions() {
         {books[book] ?? book}
         {group === "top10" && (
           <span className="card-expand-hint">
-            Largest absolute edges first, using your sportsbook and filters.
-            Large edges can still be flagged for review.
+            Up to 10 YES BET plays, ranked by absolute edge for your sportsbook
+            and filters. NO BET games are excluded.
           </span>
         )}
         <span className="card-expand-hint">
-          Confidence % is a model score, not a win probability. Select a matchup
-          for full details.
+          YES BET plays use 1u. Select a matchup for its line, decision and full
+          details.
         </span>
       </p>
       <div
@@ -581,7 +545,7 @@ export default function Predictions() {
                 Research lean
               </th>
               <th role="columnheader" scope="col">
-                Confidence score
+                Play
               </th>
               <th role="columnheader" scope="col">
                 Actual 1H
@@ -597,12 +561,7 @@ export default function Predictions() {
           <tbody role="rowgroup">
             {visible.map((row) => {
               const comparison = predictionComparison(row, book, basis);
-              const rating = predictionRating(
-                row,
-                book,
-                basis,
-                new Date(clock).toISOString(),
-              );
+              const decision = predictionDecision(row, book, basis, clock);
               const awaitingTipCheck =
                 usesTipoffEntry(
                   row.startsAt,
@@ -615,7 +574,6 @@ export default function Predictions() {
                     ?.capturedAt,
                   feed.entryPolicy,
                 );
-              const suggestedUnits = unitsForScore(rating.signal.score);
               return (
                 <GameCardRow
                   key={row.gameId}
@@ -697,25 +655,12 @@ export default function Predictions() {
                           : "Unrated · data gap")}
                     </span>
                   </td>
-                  <td
-                    role="cell"
-                    className="card-confidence"
-                    data-label="Confidence score"
-                  >
-                    <SignalBadge {...rating} />
-                    {rating.source === "live" && (
-                      <>
-                        <small className="unit-suggestion">
-                          {suggestedUnits === null
-                            ? "No automatic stake"
-                            : `${suggestedUnits}u suggested`}
-                        </small>
-                        {suggestedUnits !== null && awaitingTipCheck && (
-                          <small className="unit-check-note">
-                            Awaiting pre-tip check
-                          </small>
-                        )}
-                      </>
+                  <td role="cell" className="card-confidence" data-label="Play">
+                    <BetDecision decision={decision} />
+                    {decision.yes && awaitingTipCheck && (
+                      <small className="unit-check-note">
+                        Awaiting pre-tip check
+                      </small>
                     )}
                   </td>
                   <td

@@ -1,5 +1,6 @@
 /** biome-ignore-all lint/a11y/useSemanticElements: These native table elements need explicit roles because mobile CSS changes their display. */
 /** biome-ignore-all lint/a11y/noRedundantRoles: Explicit roles preserve table semantics when mobile CSS displays rows as cards. */
+import BetDecision from "./BetDecision";
 import GameCardRow from "./GameCardRow";
 import GameTime from "./GameTime";
 import { dailyRecordStatus } from "./model/dailyRecord";
@@ -9,10 +10,8 @@ import {
   type RecordStore,
   recordGrade,
 } from "./model/predictionRecord";
-import { recordRating } from "./model/ratingDisplay";
 import { scheduleMessages } from "./model/scheduleReview";
-import type { UnitPlay } from "./model/units";
-import SignalBadge from "./SignalBadge";
+import { hasUnitStake, type UnitPlay } from "./model/units";
 import TeamIdentity from "./TeamIdentity";
 import UnitResult from "./UnitResult";
 
@@ -61,7 +60,7 @@ export default function RecordTable({
               Lean
             </th>
             <th role="columnheader" scope="col">
-              Confidence rating
+              Play
             </th>
             <th role="columnheader" scope="col">
               Actual 1H
@@ -85,7 +84,7 @@ export default function RecordTable({
         <tbody role="rowgroup">
           {records.map((record) => {
             const grade = recordGrade(record, results);
-            const rating = recordRating(record);
+            const play = unitPlays?.get(record.id);
             const quote = record.quotes.find(
               (row) => row.sportsbook === record.sportsbook,
             );
@@ -163,12 +162,19 @@ export default function RecordTable({
                     {record.comparison.lean ?? "—"}
                   </span>
                 </td>
-                <td
-                  role="cell"
-                  className="card-confidence"
-                  data-label="Confidence rating"
-                >
-                  <SignalBadge {...rating} />
+                <td role="cell" className="card-confidence" data-label="Play">
+                  <BetDecision
+                    decision={{
+                      yes: hasUnitStake(play),
+                      reason: hasUnitStake(play)
+                        ? "Saved entry with a recorded or labeled replay stake."
+                        : "No stake was recorded.",
+                    }}
+                    units={play?.units ?? null}
+                    provenance={
+                      play?.mode === "historical" ? "replay" : "recorded"
+                    }
+                  />
                 </td>
                 <td role="cell" className="card-actual" data-label="Actual 1H">
                   {grade.actual ?? "—"}

@@ -1,0 +1,186 @@
+{
+  "asOf": "2026-11-26T16:43:17.901Z",
+  "window": {
+    "start": "2026-11-18",
+    "through": "2026-11-25"
+  },
+  "integrity": {
+    "sourceUpdatedAt": "2026-11-26T16:43:17.901Z",
+    "officialForecastVersions": 9338,
+    "labForecastVersions": 41544,
+    "canonicalLabRows": 3772,
+    "unitAssignments": 12478,
+    "unitMismatches": [],
+    "duplicateStakeIds": 0,
+    "schedule": {
+      "asOf": "2026-11-26T17:18:40.832Z",
+      "games": 23,
+      "upcoming": 18,
+      "completed": 2,
+      "noModel": 0,
+      "books": {
+        "draftkings": {
+          "available": 23
+        },
+        "betmgm": {
+          "available": 23
+        }
+      },
+      "nextTips": [
+        {
+          "away": "San Diego State Aztecs",
+          "home": "Maryland Terrapins",
+          "startsAt": "2026-11-26T18:00:00Z"
+        },
+        {
+          "away": "Boston College Eagles",
+          "home": "UCF Knights",
+          "startsAt": "2026-11-26T18:30:00Z"
+        },
+        {
+          "away": "South Carolina Gamecocks",
+          "home": "Arizona State Sun Devils",
+          "startsAt": "2026-11-26T19:00:00Z"
+        },
+        {
+          "away": "Georgetown Hoyas",
+          "home": "Texas Longhorns",
+          "startsAt": "2026-11-26T19:30:00Z"
+        }
+      ]
+    }
+  },
+  "display": {
+    "originalBytes": 151600624,
+    "displayBytes": 14194288,
+    "fullObservations": 41544,
+    "displayObservations": 4540,
+    "canonical": 3772,
+    "canonicalAfter": 3772,
+    "missing": [],
+    "gradeChanges": []
+  },
+  "flatLabs": [
+    {
+      "method": "shooting-paper-v6",
+      "games": 358,
+      "wins": 191,
+      "losses": 167,
+      "flatNet": -0.8858460380199493,
+      "flatRoi": -0.002474430273798741,
+      "mae": 8.632963931949474,
+      "baselineMae": 8.663021965373979,
+      "savedNet": -0.8858460380199493,
+      "savedBaselineNet": -8.292038396386221
+    },
+    {
+      "method": "market-paper-v3",
+      "games": 366,
+      "wins": 194,
+      "losses": 172,
+      "flatNet": -3.376284584980235,
+      "flatRoi": -0.0092248212704378,
+      "mae": 8.616702451521494,
+      "baselineMae": 8.616702451521494,
+      "savedNet": -3.376284584980235,
+      "savedBaselineNet": -3.376284584980235
+    },
+    {
+      "method": "referee-paper-v4",
+      "games": 226,
+      "wins": 118,
+      "losses": 108,
+      "flatNet": -4.551853943158289,
+      "flatRoi": -0.020140946651142872,
+      "mae": 8.354571607225997,
+      "baselineMae": 8.354571607225997,
+      "savedNet": -4.551853943158289,
+      "savedBaselineNet": -4.551853943158289
+    },
+    {
+      "method": "opponent-paper-v5",
+      "games": 358,
+      "wins": 186,
+      "losses": 172,
+      "flatNet": -10.309354413702238,
+      "flatRoi": -0.028797079367883345,
+      "mae": 8.684088766968625,
+      "baselineMae": 8.686093018673855,
+      "savedNet": -10.309354413702238,
+      "savedBaselineNet": -10.19736495388669
+    },
+    {
+      "method": "enhanced-baseline-v2",
+      "games": 60,
+      "wins": 31,
+      "losses": 29,
+      "flatNet": -2.3032185206098243,
+      "flatRoi": -0.038386975343497075,
+      "mae": 8.822509193313214,
+      "baselineMae": 8.697035620015496,
+      "savedNet": -0.6611613024656494,
+      "savedBaselineNet": -3.4261810653115004
+    }
+  ],
+  "commonGames": 42,
+  "commonLabs": [
+    {
+      "method": "enhanced-baseline-v2",
+      "games": 42,
+      "wins": 22,
+      "losses": 20,
+      "flatNet": -1.0271974402409185
+    },
+    {
+      "method": "market-paper-v3",
+      "games": 42,
+      "wins": 22,
+      "losses": 20,
+      "flatNet": -0.9485413137587045
+    },
+    {
+      "method": "opponent-paper-v5",
+      "games": 42,
+      "wins": 23,
+      "losses": 19,
+      "flatNet": 0.8452663278750239
+    },
+    {
+      "method": "referee-paper-v4",
+      "games": 42,
+      "wins": 22,
+      "losses": 20,
+      "flatNet": -0.9485413137587045
+    },
+    {
+      "method": "shooting-paper-v6",
+      "games": 42,
+      "wins": 22,
+      "losses": 20,
+      "flatNet": -0.948541313758705
+    }
+  ],
+  "recordedActual": {
+    "games": 98,
+    "wins": 40,
+    "losses": 58,
+    "net": -17.375079992471296,
+    "risk": 67.0,
+    "flatReplayNet": -23.03850931677018,
+    "modes": {
+      "tracked": 98
+    }
+  },
+  "draftkingsCalendar": {
+    "games": 352,
+    "wins": 181,
+    "losses": 171,
+    "net": -6.1777244494635735,
+    "risk": 236.0,
+    "flatReplayNet": -13.631300583474491,
+    "modes": {
+      "historical": 254,
+      "tracked": 98
+    }
+  }
+}

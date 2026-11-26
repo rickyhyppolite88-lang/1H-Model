@@ -97,7 +97,6 @@ export default function TeamEvaluation() {
         .filter((game) => game.awayId === team.id || game.homeId === team.id)
         .sort((a, b) => b.startsAt.localeCompare(a.startsAt))
     : [];
-  const base = import.meta.env.BASE_URL;
   return (
     <section className="panel team-evaluation">
       <div className="section-heading">
@@ -109,30 +108,6 @@ export default function TeamEvaluation() {
             {report.currentSeason} through {report.currentAsOf}
           </p>
         </div>
-      </div>
-      <div className="prediction-actions">
-        <a
-          className="secondary-button"
-          href={`${base}data/team-comparison.xlsx`}
-          download="1h-team-comparison.xlsx"
-        >
-          Team comparison Excel ↓
-        </a>
-        <a
-          className="secondary-button"
-          href={`${base}data/team-comparison.csv`}
-          download="1h-team-comparison.csv"
-        >
-          All team inputs CSV ↓
-        </a>
-        <a
-          className="text-button"
-          href={`${base}data/team-evaluation.json`}
-          target="_blank"
-          rel="noreferrer"
-        >
-          Comparison JSON ↗
-        </a>
       </div>
       <p className="group-description">
         Higher offensive efficiency means more scoring per possession. Lower

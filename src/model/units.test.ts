@@ -5,10 +5,12 @@ import { updatePredictionRecord } from "./predictionRecord";
 import { recordFixture } from "./record.test-fixture";
 import {
   actualUnitPlay,
+  flatUnitsForScore,
   labUnitPlay,
   savedRecordPrice,
   settleUnits,
   summarizeUnits,
+  unitAssignmentSchema,
   unitLedgerSchema,
   unitPlaysCsv,
   unitsForScore,
@@ -47,7 +49,8 @@ describe("confidence unit accounting", () => {
     const first = updateUnitLedger(null, f.actual, f.lab, f.at);
     const stake = first.assignments.find((row) => row.source === "actual");
     expect(stake).toMatchObject({
-      units: 1.5,
+      units: 1,
+      policy: "flat-units-v2",
       score: 80,
       price: -115,
       line: 70,
@@ -75,7 +78,7 @@ describe("confidence unit accounting", () => {
     const ledger = updateUnitLedger(null, f.actual, f.lab, f.at);
     expect(
       ledger.assignments.find((row) => row.recordId === canonical.id),
-    ).toMatchObject({ source: "lab", units: 2 });
+    ).toMatchObject({ source: "lab", units: 1 });
     expect(
       ledger.assignments.every(
         (row) =>
@@ -222,4 +225,68 @@ describe("confidence unit accounting", () => {
       unitLedgerSchema.parse({ ...ledger, startedAt: "2026-11-02T23:00:00Z" }),
     ).toThrow();
   });
+});
+
+it("uses one unit for every valid future score and rejects other flat stakes", () => {
+  expect([0, 50, 60, 75, 90, 100].map(flatUnitsForScore)).toEqual([
+    1, 1, 1, 1, 1, 1,
+  ]);
+  for (const score of [null, -1, 101, Number.NaN])
+    expect(flatUnitsForScore(score)).toBeNull();
+  const f = fixture();
+  const ledger = updateUnitLedger(null, f.actual, f.lab, f.at);
+  const stake = ledger.assignments[0];
+  expect(ledger.flatPolicyStartedAt).toBe(f.at);
+  expect(() =>
+    unitAssignmentSchema.parse({ ...stake, policy: "flat-units-v2", units: 2 }),
+  ).toThrow();
+});
+
+it("preserves old confidence-sized assignments and freezes the flat-policy start", () => {
+  const f = fixture();
+  const first = updateUnitLedger(null, f.actual, f.lab, f.at);
+  const legacy = {
+    ...first,
+    flatPolicyStartedAt: undefined,
+    assignments: first.assignments.map((row) => ({
+      ...row,
+      policy: "confidence-units-v1" as const,
+      units: 1.5 as const,
+    })),
+  };
+  const original = JSON.stringify(legacy.assignments);
+  const at = "2026-11-02T22:10:00Z";
+  const updated = updateUnitLedger(legacy, f.actual, f.lab, at);
+  expect(JSON.stringify(updated.assignments)).toBe(original);
+  expect(updated.flatPolicyStartedAt).toBe(at);
+  expect(actualUnitPlay(f.actual.records[0], [], updated).units).toBe(1.5);
+  expect(
+    updateUnitLedger(updated, f.actual, f.lab, "2026-11-02T22:20:00Z")
+      .flatPolicyStartedAt,
+  ).toBe(at);
+});
+
+it("keeps earlier archive replays on their original tiers and uses 1u after the transition", () => {
+  const f = fixture();
+  const ledger = updateUnitLedger(null, f.actual, f.lab, f.at);
+  const original = structuredClone(f.actual.records[0]);
+  original.replay = {
+    method: "draftkings-archive-v1",
+    sourceRecordId: original.id,
+    sourceQuoteRecordId: original.id,
+    originalSportsbook: "betmgm",
+    calculatedAt: f.at,
+  };
+  const future = actualUnitPlay(original, [], ledger);
+  expect(future).toMatchObject({
+    units: 1,
+    policy: "flat-units-v2",
+    mode: "historical",
+    assignedAt: null,
+  });
+  original.prediction.startsAt = "2026-11-02T21:00:00Z";
+  const past = actualUnitPlay(original, [], ledger);
+  expect(past.policy).toBe("confidence-units-v1");
+  expect(past.units).toBe(unitsForScore(past.score));
+  expect(unitPlaysCsv([future])).toContain("historical_flat_unit_replay");
 });

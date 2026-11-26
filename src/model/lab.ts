@@ -426,6 +426,10 @@ export const labIndexSchema = z.object({
     z.object({
       date: z.iso.date(),
       jsonPath: z.string().regex(/^data\/lab\/\d{4}-\d{2}-\d{2}\.json$/),
+      displayPath: z
+        .string()
+        .regex(/^data\/lab-display\/\d{4}-\d{2}-\d{2}\.json$/)
+        .optional(),
       csvPath: z.string().regex(/^data\/lab\/\d{4}-\d{2}-\d{2}\.csv$/),
       games: z.number().int(),
     }),

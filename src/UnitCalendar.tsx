@@ -2,6 +2,7 @@ import { useId } from "react";
 import { z } from "zod";
 import { easternTipoff } from "./model/time";
 import {
+  flatUnitPolicy,
   formatUnits,
   summarizeUnits,
   type UnitMode,
@@ -275,10 +276,10 @@ export default function UnitCalendar({
             {paper
               ? "Prospective flat 1u paper research. Only entries with a saved pre-tip paper stake count. Paper-trial entries are not qualified bets. No historical stakes are invented. Estimates remain unvalidated."
               : combined
-                ? `DraftKings only. Recorded entries keep their pre-tip stakes. Older dates replay the original frozen model against the last available archived DraftKings quote observed before tipoff, using the same confidence tiers. Replay confidence and stakes are calculated later and labeled; original records remain unchanged. ${unitPolicy.description}`
+                ? `DraftKings only. ${flatUnitPolicy.description} Replays use the policy that applied at tipoff: older dates retain confidence tiers; dates after the flat-policy launch use 1u. Replay stakes are calculated later and labeled; they are separate from recorded pre-tip stakes. Original records remain unchanged.`
                 : mode === "historical"
                   ? `Replay only: apply the same confidence tiers to the original picks before the unit plan began. ${unitPolicy.description} Older scores calculated later from frozen inputs stay labeled. No pregame stake assignment is created.`
-                  : unitPolicy.description}{" "}
+                  : `${flatUnitPolicy.description} Historical confidence-tier rule: ${unitPolicy.description}`}{" "}
             One unit is the amount risked.{" "}
             {paper
               ? "Probabilities remain unvalidated research estimates."

@@ -25,9 +25,6 @@ import {
 import { useRecordDateReset } from "./useRecordDateReset";
 import { useUnitLedger } from "./useUnitLedger";
 
-const rate = (n: number | null) =>
-  n === null ? "—" : `${(n * 100).toFixed(1)}%`;
-
 export default function PredictionRecord() {
   const {
     ledger: unitLedger,
@@ -264,8 +261,10 @@ export default function PredictionRecord() {
                   </strong>
                 </div>
                 <div>
-                  <span>Observed win rate</span>
-                  <strong>{rate(summary.winRate)}</strong>
+                  <span>Settled plays</span>
+                  <strong>
+                    {summary.wins + summary.losses + summary.pushes}
+                  </strong>
                 </div>
                 <div>
                   <span>Graded staked plays</span>
@@ -379,42 +378,6 @@ export default function PredictionRecord() {
         </>
       )}
       <div className="record-extras">
-        {summary && (
-          <details>
-            <summary>Results by saved confidence score</summary>
-            <p>
-              Official finished results for{" "}
-              {date === "all" ? "all dates" : date}; confidence scores are
-              research rankings, not win probabilities. These bands use only
-              original saved scores; ratings labeled Calculated later remain
-              separate.
-            </p>
-            <div className="table-wrap">
-              <table aria-label="Signal results">
-                <thead>
-                  <tr>
-                    <th>Confidence score band (%)</th>
-                    <th>Wins</th>
-                    <th>Losses</th>
-                    <th>Pushes</th>
-                    <th>Observed win rate</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {summary.bands.map((band) => (
-                    <tr key={band.label}>
-                      <th scope="row">{band.label}</th>
-                      <td>{band.wins}</td>
-                      <td>{band.losses}</td>
-                      <td>{band.pushes}</td>
-                      <td>{rate(band.winRate)}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          </details>
-        )}
         <details>
           <summary>How records and exclusions work</summary>
           <p>

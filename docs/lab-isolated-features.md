@@ -1,6 +1,8 @@
 # Isolated first-half component trials
 
-V5 (`opponent-paper-v5`) and V6 (`shooting-paper-v6`) are separate prospective 1u paper trials. Actual, earlier Lab methods and immutable saved results are unchanged. Historical replays do not create stake assignments or enter the live calendar.
+V5 (`opponent-paper-v5`) and V6 (`shooting-paper-v6`) are separate prospective 1u paper trials. As of the November 26 public-return release, V6 remains active alongside V3 and V4; V5 and V2 collection is paused, with all previous results retained. The collector allows at most three active methods. See the [November 26 audit](relaunch-audit-2026-11-26.md) for the selection sample and its limits.
+
+Actual's numerical algorithm stays unchanged; its new eligible entries now use flat 1u. Existing saved stakes remain intact. The app displays YES BET / NO BET and units instead of confidence percentages. Raw ranking scores stay in the audit data. Historical Lab replays do not create stake assignments or enter the prospective calendar.
 
 ## Common rules
 
