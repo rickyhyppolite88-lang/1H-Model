@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-11-27T10:50:15.512Z",
+  "updatedAt": "2026-11-27T11:41:22.469Z",
   "entryPolicy": {
     "method": "last-pretip-v1",
     "startedAt": "2026-11-10T21:33:29.039Z",
@@ -10137,6 +10137,316 @@
           },
           "openingCapturedAt": "2026-11-27T05:39:46.938999Z",
           "latestCapturedAt": "2026-11-27T09:58:44.088449Z",
+          "closingVerified": false,
+          "quoteTimestamp": null,
+          "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-27"
+        }
+      ],
+      "participants": {
+        "away": {
+          "espnId": "2473",
+          "modelId": "oakland-golden-grizzlies",
+          "name": "Oakland Golden Grizzlies"
+        },
+        "home": {
+          "espnId": "248",
+          "modelId": "houston-cougars",
+          "name": "Houston Cougars"
+        }
+      }
+    },
+    {
+      "id": "2026-27_401929181_v2",
+      "season": "2026-27",
+      "gameId": "401929181",
+      "gameDate": "2026-11-27",
+      "version": 2,
+      "recordedAt": "2026-11-27T11:41:22.469Z",
+      "signalCalculatedAt": "2026-11-27T11:41:22.469Z",
+      "origin": "batch_capture",
+      "evidence": null,
+      "inputSnapshots": {
+        "prior": "data/input-snapshots/5d7d1cdd590b01d65ca838308bd098bc8be58fdb5d96faf922f4c44677d6d7de.json",
+        "current": "data/input-snapshots/9b20d7f2591c463a36e3e72a655c705806e81f2362864eb5a0d8789dd0dc9529.json",
+        "currentMatchesFrozenInputs": true
+      },
+      "modelVersion": "season-bridge-v1",
+      "source": {
+        "repository": "https://github.com/rickyhyppolite88-lang/1H-Model",
+        "projectionCode": "https://github.com/rickyhyppolite88-lang/1H-Model/blob/1e396551817eecc145c51f47ad5563b5d366bf1f/src/model/predictor.ts",
+        "batchCode": "https://github.com/rickyhyppolite88-lang/1H-Model/blob/1e396551817eecc145c51f47ad5563b5d366bf1f/src/model/predictions.ts",
+        "revision": "1e396551817eecc145c51f47ad5563b5d366bf1f"
+      },
+      "state": "pregame",
+      "sportsbook": "draftkings",
+      "basis": "latest",
+      "comparison": {
+        "line": null,
+        "signedEdge": null,
+        "lean": null
+      },
+      "signal": {
+        "method": "model-signal-v1",
+        "score": null,
+        "label": "Unavailable",
+        "reason": "A pregame projection, both components, and the selected line are required.",
+        "fill": null
+      },
+      "prediction": {
+        "gameId": "401929181",
+        "startsAt": "2026-11-27T19:00:00Z",
+        "awayTeam": "South Alabama Jaguars",
+        "homeTeam": "Fresno State Bulldogs",
+        "awayConference": "Sun Belt",
+        "homeConference": "Pac-12",
+        "awayRank": null,
+        "homeRank": null,
+        "rankingsKnown": true,
+        "status": "Scheduled",
+        "projectedFirstHalfTotal": 72.6866189352134,
+        "actualFirstHalfTotal": null,
+        "simpleTotal": 70.85764291470012,
+        "paceAdjustedTotal": 75.43008296598332,
+        "featureKind": "captured_pregame",
+        "featureCapturedAt": "2026-11-27T05:39:54.447Z",
+        "unavailableReason": null,
+        "marketCoverage": {
+          "checkedAt": "2026-11-27T11:41:16.055808Z",
+          "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-27",
+          "status": "matched",
+          "books": [
+            {
+              "sportsbook": "fanatics",
+              "status": "available"
+            }
+          ]
+        },
+        "markets": [
+          {
+            "sportsbook": "fanatics",
+            "openingLine": 70.5,
+            "latestLine": 68.5,
+            "capturedAt": "2026-11-27T11:41:16.055808Z",
+            "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-27",
+            "closingVerified": false
+          }
+        ],
+        "signal": {
+          "method": "model-signal-v1",
+          "score": null,
+          "label": "Unavailable",
+          "reason": "A pregame projection, both components, and the selected line are required.",
+          "fill": null
+        }
+      },
+      "features": {
+        "kind": "captured_pregame",
+        "capturedAt": "2026-11-27T05:39:54.447Z",
+        "priorAsOf": "2026-04-07",
+        "currentAsOf": "2026-11-27",
+        "modelVersion": "season-bridge-v1",
+        "statsRetrievedAt": "2026-11-27T05:39:45.286328Z",
+        "away": {
+          "id": "south-alabama-jaguars",
+          "name": "S Alabama",
+          "firstHalfPoints": 33.22796776792909,
+          "pace": 68.05115551974214,
+          "offensiveEfficiency": 1.0748906365834006,
+          "defensiveEfficiency": 1.0819535858178888,
+          "currentWeight": 0.5294117647058824,
+          "currentGames": 9,
+          "priorAvailable": true,
+          "strengthOfSchedule": -3.4,
+          "notes": [
+            "Roster continuity is not measured; league regression reduces reliance on last year's roster."
+          ]
+        },
+        "home": {
+          "id": "fresno-st-bulldogs",
+          "name": "Fresno St",
+          "firstHalfPoints": 37.629675146771035,
+          "pace": 72.42068884540117,
+          "offensiveEfficiency": 1.067310058708415,
+          "defensiveEfficiency": 1.0716579256360077,
+          "currentWeight": 0.42857142857142855,
+          "currentGames": 6,
+          "priorAvailable": true,
+          "strengthOfSchedule": -6.5,
+          "notes": [
+            "Roster continuity is not measured; league regression reduces reliance on last year's roster."
+          ]
+        }
+      },
+      "quotes": [
+        {
+          "sportsbook": "fanatics",
+          "opening": {
+            "total": 70.5,
+            "overPrice": 100,
+            "underPrice": -120
+          },
+          "latest": {
+            "total": 68.5,
+            "overPrice": -115,
+            "underPrice": -105
+          },
+          "openingCapturedAt": "2026-11-27T05:39:46.938999Z",
+          "latestCapturedAt": "2026-11-27T11:41:16.055808Z",
+          "closingVerified": false,
+          "quoteTimestamp": null,
+          "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-27"
+        }
+      ],
+      "participants": {
+        "away": {
+          "espnId": "6",
+          "modelId": "south-alabama-jaguars",
+          "name": "South Alabama Jaguars"
+        },
+        "home": {
+          "espnId": "278",
+          "modelId": "fresno-st-bulldogs",
+          "name": "Fresno State Bulldogs"
+        }
+      }
+    },
+    {
+      "id": "2026-27_401925703_v3",
+      "season": "2026-27",
+      "gameId": "401925703",
+      "gameDate": "2026-11-27",
+      "version": 3,
+      "recordedAt": "2026-11-27T11:41:22.469Z",
+      "signalCalculatedAt": "2026-11-27T11:41:22.469Z",
+      "origin": "batch_capture",
+      "evidence": null,
+      "inputSnapshots": {
+        "prior": "data/input-snapshots/5d7d1cdd590b01d65ca838308bd098bc8be58fdb5d96faf922f4c44677d6d7de.json",
+        "current": "data/input-snapshots/9b20d7f2591c463a36e3e72a655c705806e81f2362864eb5a0d8789dd0dc9529.json",
+        "currentMatchesFrozenInputs": true
+      },
+      "modelVersion": "season-bridge-v1",
+      "source": {
+        "repository": "https://github.com/rickyhyppolite88-lang/1H-Model",
+        "projectionCode": "https://github.com/rickyhyppolite88-lang/1H-Model/blob/1e396551817eecc145c51f47ad5563b5d366bf1f/src/model/predictor.ts",
+        "batchCode": "https://github.com/rickyhyppolite88-lang/1H-Model/blob/1e396551817eecc145c51f47ad5563b5d366bf1f/src/model/predictions.ts",
+        "revision": "1e396551817eecc145c51f47ad5563b5d366bf1f"
+      },
+      "state": "pregame",
+      "sportsbook": "draftkings",
+      "basis": "latest",
+      "comparison": {
+        "line": null,
+        "signedEdge": null,
+        "lean": null
+      },
+      "signal": {
+        "method": "model-signal-v1",
+        "score": null,
+        "label": "Unavailable",
+        "reason": "A pregame projection, both components, and the selected line are required.",
+        "fill": null
+      },
+      "prediction": {
+        "gameId": "401925703",
+        "startsAt": "2026-11-28T00:30:00Z",
+        "awayTeam": "Oakland Golden Grizzlies",
+        "homeTeam": "Houston Cougars",
+        "awayConference": "Horizon",
+        "homeConference": "Big 12",
+        "awayRank": null,
+        "homeRank": 1,
+        "rankingsKnown": true,
+        "status": "Scheduled",
+        "projectedFirstHalfTotal": 75.65352551948178,
+        "actualFirstHalfTotal": null,
+        "simpleTotal": 75.07171232876712,
+        "paceAdjustedTotal": 76.52624530555376,
+        "featureKind": "captured_pregame",
+        "featureCapturedAt": "2026-11-27T05:39:54.447Z",
+        "unavailableReason": null,
+        "marketCoverage": {
+          "checkedAt": "2026-11-27T11:41:16.055808Z",
+          "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-27",
+          "status": "matched",
+          "books": [
+            {
+              "sportsbook": "fanatics",
+              "status": "available"
+            }
+          ]
+        },
+        "markets": [
+          {
+            "sportsbook": "fanatics",
+            "openingLine": 72.5,
+            "latestLine": 70.5,
+            "capturedAt": "2026-11-27T11:41:16.055808Z",
+            "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-27",
+            "closingVerified": false
+          }
+        ],
+        "signal": {
+          "method": "model-signal-v1",
+          "score": null,
+          "label": "Unavailable",
+          "reason": "A pregame projection, both components, and the selected line are required.",
+          "fill": null
+        }
+      },
+      "features": {
+        "kind": "captured_pregame",
+        "capturedAt": "2026-11-27T05:39:54.447Z",
+        "priorAsOf": "2026-04-07",
+        "currentAsOf": "2026-11-27",
+        "modelVersion": "season-bridge-v1",
+        "statsRetrievedAt": "2026-11-27T05:39:45.286328Z",
+        "away": {
+          "id": "oakland-golden-grizzlies",
+          "name": "Oakland",
+          "firstHalfPoints": 34.833465753424655,
+          "pace": 71.25310273972602,
+          "offensiveEfficiency": 1.0261213013698631,
+          "defensiveEfficiency": 1.1885006849315067,
+          "currentWeight": 0.5,
+          "currentGames": 8,
+          "priorAvailable": true,
+          "strengthOfSchedule": 6.9,
+          "notes": [
+            "Roster continuity is not measured; league regression reduces reliance on last year's roster."
+          ]
+        },
+        "home": {
+          "id": "houston-cougars",
+          "name": "Houston",
+          "firstHalfPoints": 40.23824657534246,
+          "pace": 70.14640313111545,
+          "offensiveEfficiency": 1.1631386301369862,
+          "defensiveEfficiency": 0.9518864970645791,
+          "currentWeight": 0.42857142857142855,
+          "currentGames": 6,
+          "priorAvailable": true,
+          "strengthOfSchedule": 15,
+          "notes": [
+            "Roster continuity is not measured; league regression reduces reliance on last year's roster."
+          ]
+        }
+      },
+      "quotes": [
+        {
+          "sportsbook": "fanatics",
+          "opening": {
+            "total": 72.5,
+            "overPrice": -115,
+            "underPrice": -105
+          },
+          "latest": {
+            "total": 70.5,
+            "overPrice": -105,
+            "underPrice": -115
+          },
+          "openingCapturedAt": "2026-11-27T05:39:46.938999Z",
+          "latestCapturedAt": "2026-11-27T11:41:16.055808Z",
           "closingVerified": false,
           "quoteTimestamp": null,
           "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-27"
