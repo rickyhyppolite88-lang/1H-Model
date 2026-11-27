@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-11-27T05:39:55.534Z",
+  "updatedAt": "2026-11-27T06:37:51.741Z",
   "entryPolicy": {
     "method": "last-pretip-v1",
     "startedAt": "2026-11-10T21:33:29.039Z",
@@ -8087,6 +8087,438 @@
           "espnId": "21",
           "modelId": "san-diego-st-aztecs",
           "name": "San Diego State Aztecs"
+        }
+      }
+    },
+    {
+      "id": "2026-27_401920533_v2",
+      "season": "2026-27",
+      "gameId": "401920533",
+      "gameDate": "2026-11-27",
+      "version": 2,
+      "recordedAt": "2026-11-27T06:37:51.741Z",
+      "signalCalculatedAt": "2026-11-27T06:37:51.741Z",
+      "origin": "batch_capture",
+      "evidence": null,
+      "inputSnapshots": {
+        "prior": "data/input-snapshots/5d7d1cdd590b01d65ca838308bd098bc8be58fdb5d96faf922f4c44677d6d7de.json",
+        "current": "data/input-snapshots/9b20d7f2591c463a36e3e72a655c705806e81f2362864eb5a0d8789dd0dc9529.json",
+        "currentMatchesFrozenInputs": true
+      },
+      "modelVersion": "season-bridge-v1",
+      "source": {
+        "repository": "https://github.com/rickyhyppolite88-lang/1H-Model",
+        "projectionCode": "https://github.com/rickyhyppolite88-lang/1H-Model/blob/837369f185d568d10a86cdc2e8be2558aaa01f04/src/model/predictor.ts",
+        "batchCode": "https://github.com/rickyhyppolite88-lang/1H-Model/blob/837369f185d568d10a86cdc2e8be2558aaa01f04/src/model/predictions.ts",
+        "revision": "837369f185d568d10a86cdc2e8be2558aaa01f04"
+      },
+      "state": "unavailable",
+      "sportsbook": "draftkings",
+      "basis": "latest",
+      "comparison": {
+        "line": null,
+        "signedEdge": null,
+        "lean": null
+      },
+      "signal": {
+        "method": "model-signal-v1",
+        "score": null,
+        "label": "Unavailable",
+        "reason": "A pregame projection, both components, and the selected line are required.",
+        "fill": null
+      },
+      "prediction": {
+        "gameId": "401920533",
+        "startsAt": "2026-11-27T18:00:00Z",
+        "awayTeam": "St. John's Red Storm",
+        "homeTeam": "Iowa State Cyclones",
+        "awayConference": "Big East",
+        "homeConference": "Big 12",
+        "awayRank": 13,
+        "homeRank": null,
+        "rankingsKnown": true,
+        "status": "Scheduled",
+        "projectedFirstHalfTotal": null,
+        "actualFirstHalfTotal": null,
+        "simpleTotal": null,
+        "paceAdjustedTotal": null,
+        "featureKind": null,
+        "featureCapturedAt": null,
+        "unavailableReason": "No valid pregame feature archive or eligible season-debut reconstruction.",
+        "marketCoverage": {
+          "checkedAt": "2026-11-27T06:37:42.977600Z",
+          "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-27",
+          "status": "matched",
+          "books": []
+        },
+        "markets": [],
+        "signal": {
+          "method": "model-signal-v1",
+          "score": null,
+          "label": "Unavailable",
+          "reason": "A pregame projection, both components, and the selected line are required.",
+          "fill": null
+        }
+      },
+      "features": {
+        "kind": "captured_pregame",
+        "capturedAt": "2026-11-27T05:39:54.447Z",
+        "priorAsOf": "2026-04-07",
+        "currentAsOf": "2026-11-27",
+        "modelVersion": "season-bridge-v1",
+        "statsRetrievedAt": "2026-11-27T05:39:45.286328Z",
+        "away": {
+          "id": "iowa-state-cyclones",
+          "name": "Iowa St",
+          "firstHalfPoints": 37.39253228962817,
+          "pace": 71.09497455968689,
+          "offensiveEfficiency": 1.0947957729941291,
+          "defensiveEfficiency": 0.9278579256360077,
+          "currentWeight": 0.42857142857142855,
+          "currentGames": 6,
+          "priorAvailable": true,
+          "strengthOfSchedule": 8.4,
+          "notes": [
+            "Roster continuity is not measured; league regression reduces reliance on last year's roster."
+          ]
+        },
+        "home": {
+          "id": "st-johns-red-storm",
+          "name": "St John's",
+          "firstHalfPoints": 41.555696803652964,
+          "pace": 74.17530958904109,
+          "offensiveEfficiency": 1.1480493881278537,
+          "defensiveEfficiency": 0.9584940639269406,
+          "currentWeight": 0.4666666666666667,
+          "currentGames": 7,
+          "priorAvailable": true,
+          "strengthOfSchedule": 7.6,
+          "notes": [
+            "Roster continuity is not measured; league regression reduces reliance on last year's roster."
+          ]
+        }
+      },
+      "quotes": [],
+      "participants": {
+        "away": {
+          "espnId": "2599",
+          "modelId": "st-johns-red-storm",
+          "name": "St. John's Red Storm"
+        },
+        "home": {
+          "espnId": "66",
+          "modelId": "iowa-state-cyclones",
+          "name": "Iowa State Cyclones"
+        }
+      }
+    },
+    {
+      "id": "2026-27_401928468_v2",
+      "season": "2026-27",
+      "gameId": "401928468",
+      "gameDate": "2026-11-27",
+      "version": 2,
+      "recordedAt": "2026-11-27T06:37:51.741Z",
+      "signalCalculatedAt": "2026-11-27T06:37:51.741Z",
+      "origin": "batch_capture",
+      "evidence": null,
+      "inputSnapshots": {
+        "prior": "data/input-snapshots/5d7d1cdd590b01d65ca838308bd098bc8be58fdb5d96faf922f4c44677d6d7de.json",
+        "current": "data/input-snapshots/9b20d7f2591c463a36e3e72a655c705806e81f2362864eb5a0d8789dd0dc9529.json",
+        "currentMatchesFrozenInputs": true
+      },
+      "modelVersion": "season-bridge-v1",
+      "source": {
+        "repository": "https://github.com/rickyhyppolite88-lang/1H-Model",
+        "projectionCode": "https://github.com/rickyhyppolite88-lang/1H-Model/blob/837369f185d568d10a86cdc2e8be2558aaa01f04/src/model/predictor.ts",
+        "batchCode": "https://github.com/rickyhyppolite88-lang/1H-Model/blob/837369f185d568d10a86cdc2e8be2558aaa01f04/src/model/predictions.ts",
+        "revision": "837369f185d568d10a86cdc2e8be2558aaa01f04"
+      },
+      "state": "pregame",
+      "sportsbook": "draftkings",
+      "basis": "latest",
+      "comparison": {
+        "line": null,
+        "signedEdge": null,
+        "lean": null
+      },
+      "signal": {
+        "method": "model-signal-v1",
+        "score": null,
+        "label": "Unavailable",
+        "reason": "A pregame projection, both components, and the selected line are required.",
+        "fill": null
+      },
+      "prediction": {
+        "gameId": "401928468",
+        "startsAt": "2026-11-27T20:00:00Z",
+        "awayTeam": "Texas State Bobcats",
+        "homeTeam": "Louisiana Tech Bulldogs",
+        "awayConference": "Pac-12",
+        "homeConference": "Sun Belt",
+        "awayRank": null,
+        "homeRank": null,
+        "rankingsKnown": true,
+        "status": "Scheduled",
+        "projectedFirstHalfTotal": 71.18581867018175,
+        "actualFirstHalfTotal": null,
+        "simpleTotal": 70.90549589041095,
+        "paceAdjustedTotal": 71.60630283983794,
+        "featureKind": "captured_pregame",
+        "featureCapturedAt": "2026-11-27T05:39:54.447Z",
+        "unavailableReason": null,
+        "marketCoverage": {
+          "checkedAt": "2026-11-27T06:37:42.977600Z",
+          "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-27",
+          "status": "matched",
+          "books": [
+            {
+              "sportsbook": "fanatics",
+              "status": "available"
+            }
+          ]
+        },
+        "markets": [
+          {
+            "sportsbook": "fanatics",
+            "openingLine": 66.5,
+            "latestLine": 66.5,
+            "capturedAt": "2026-11-27T06:37:42.977600Z",
+            "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-27",
+            "closingVerified": false
+          }
+        ],
+        "signal": {
+          "method": "model-signal-v1",
+          "score": null,
+          "label": "Unavailable",
+          "reason": "A pregame projection, both components, and the selected line are required.",
+          "fill": null
+        }
+      },
+      "features": {
+        "kind": "captured_pregame",
+        "capturedAt": "2026-11-27T05:39:54.447Z",
+        "priorAsOf": "2026-04-07",
+        "currentAsOf": "2026-11-27",
+        "modelVersion": "season-bridge-v1",
+        "statsRetrievedAt": "2026-11-27T05:39:45.286328Z",
+        "away": {
+          "id": "texas-state-bobcats",
+          "name": "Texas St",
+          "firstHalfPoints": 38.10846575342465,
+          "pace": 69.91310273972603,
+          "offensiveEfficiency": 1.120846301369863,
+          "defensiveEfficiency": 0.9761256849315068,
+          "currentWeight": 0.5,
+          "currentGames": 8,
+          "priorAvailable": true,
+          "strengthOfSchedule": -5.1,
+          "notes": [
+            "Roster continuity is not measured; league regression reduces reliance on last year's roster."
+          ]
+        },
+        "home": {
+          "id": "louisiana-tech-bulldogs",
+          "name": "Louisiana Tech",
+          "firstHalfPoints": 32.7970301369863,
+          "pace": 69.7953095890411,
+          "offensiveEfficiency": 1.0130627214611874,
+          "defensiveEfficiency": 0.9902940639269404,
+          "currentWeight": 0.4666666666666667,
+          "currentGames": 7,
+          "priorAvailable": true,
+          "strengthOfSchedule": -5.9,
+          "notes": [
+            "Roster continuity is not measured; league regression reduces reliance on last year's roster."
+          ]
+        }
+      },
+      "quotes": [
+        {
+          "sportsbook": "fanatics",
+          "opening": {
+            "total": 66.5,
+            "overPrice": 105,
+            "underPrice": -130
+          },
+          "latest": {
+            "total": 66.5,
+            "overPrice": 105,
+            "underPrice": -130
+          },
+          "openingCapturedAt": "2026-11-27T05:39:46.938999Z",
+          "latestCapturedAt": "2026-11-27T06:37:42.977600Z",
+          "closingVerified": false,
+          "quoteTimestamp": null,
+          "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-27"
+        }
+      ],
+      "participants": {
+        "away": {
+          "espnId": "326",
+          "modelId": "texas-state-bobcats",
+          "name": "Texas State Bobcats"
+        },
+        "home": {
+          "espnId": "2348",
+          "modelId": "louisiana-tech-bulldogs",
+          "name": "Louisiana Tech Bulldogs"
+        }
+      }
+    },
+    {
+      "id": "2026-27_401921185_v2",
+      "season": "2026-27",
+      "gameId": "401921185",
+      "gameDate": "2026-11-27",
+      "version": 2,
+      "recordedAt": "2026-11-27T06:37:51.741Z",
+      "signalCalculatedAt": "2026-11-27T06:37:51.741Z",
+      "origin": "batch_capture",
+      "evidence": null,
+      "inputSnapshots": {
+        "prior": "data/input-snapshots/5d7d1cdd590b01d65ca838308bd098bc8be58fdb5d96faf922f4c44677d6d7de.json",
+        "current": "data/input-snapshots/9b20d7f2591c463a36e3e72a655c705806e81f2362864eb5a0d8789dd0dc9529.json",
+        "currentMatchesFrozenInputs": true
+      },
+      "modelVersion": "season-bridge-v1",
+      "source": {
+        "repository": "https://github.com/rickyhyppolite88-lang/1H-Model",
+        "projectionCode": "https://github.com/rickyhyppolite88-lang/1H-Model/blob/837369f185d568d10a86cdc2e8be2558aaa01f04/src/model/predictor.ts",
+        "batchCode": "https://github.com/rickyhyppolite88-lang/1H-Model/blob/837369f185d568d10a86cdc2e8be2558aaa01f04/src/model/predictions.ts",
+        "revision": "837369f185d568d10a86cdc2e8be2558aaa01f04"
+      },
+      "state": "pregame",
+      "sportsbook": "draftkings",
+      "basis": "latest",
+      "comparison": {
+        "line": null,
+        "signedEdge": null,
+        "lean": null
+      },
+      "signal": {
+        "method": "model-signal-v1",
+        "score": null,
+        "label": "Unavailable",
+        "reason": "A pregame projection, both components, and the selected line are required.",
+        "fill": null
+      },
+      "prediction": {
+        "gameId": "401921185",
+        "startsAt": "2026-11-27T23:00:00Z",
+        "awayTeam": "Towson Tigers",
+        "homeTeam": "Pennsylvania Quakers",
+        "awayConference": "Coastal",
+        "homeConference": "Ivy",
+        "awayRank": null,
+        "homeRank": null,
+        "rankingsKnown": true,
+        "status": "Scheduled",
+        "projectedFirstHalfTotal": 70.15905981403779,
+        "actualFirstHalfTotal": null,
+        "simpleTotal": 68.47939360730592,
+        "paceAdjustedTotal": 72.67855912413557,
+        "featureKind": "captured_pregame",
+        "featureCapturedAt": "2026-11-27T05:39:54.447Z",
+        "unavailableReason": null,
+        "marketCoverage": {
+          "checkedAt": "2026-11-27T06:37:42.977600Z",
+          "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-27",
+          "status": "matched",
+          "books": [
+            {
+              "sportsbook": "fanatics",
+              "status": "available"
+            }
+          ]
+        },
+        "markets": [
+          {
+            "sportsbook": "fanatics",
+            "openingLine": 70.5,
+            "latestLine": 69.5,
+            "capturedAt": "2026-11-27T06:37:42.977600Z",
+            "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-27",
+            "closingVerified": false
+          }
+        ],
+        "signal": {
+          "method": "model-signal-v1",
+          "score": null,
+          "label": "Unavailable",
+          "reason": "A pregame projection, both components, and the selected line are required.",
+          "fill": null
+        }
+      },
+      "features": {
+        "kind": "captured_pregame",
+        "capturedAt": "2026-11-27T05:39:54.447Z",
+        "priorAsOf": "2026-04-07",
+        "currentAsOf": "2026-11-27",
+        "modelVersion": "season-bridge-v1",
+        "statsRetrievedAt": "2026-11-27T05:39:45.286328Z",
+        "away": {
+          "id": "towson-tigers",
+          "name": "Towson",
+          "firstHalfPoints": 32.01969680365296,
+          "pace": 68.54064292237445,
+          "offensiveEfficiency": 1.0068360547945205,
+          "defensiveEfficiency": 0.9874807305936071,
+          "currentWeight": 0.4666666666666667,
+          "currentGames": 7,
+          "priorAvailable": true,
+          "strengthOfSchedule": -2.5,
+          "notes": [
+            "Roster continuity is not measured; league regression reduces reliance on last year's roster."
+          ]
+        },
+        "home": {
+          "id": "pennsylvania-quakers",
+          "name": "Penn",
+          "firstHalfPoints": 36.45969680365296,
+          "pace": 73.4353095890411,
+          "offensiveEfficiency": 1.0423160547945205,
+          "defensiveEfficiency": 1.058627397260274,
+          "currentWeight": 0.4666666666666667,
+          "currentGames": 7,
+          "priorAvailable": true,
+          "strengthOfSchedule": -1,
+          "notes": [
+            "Roster continuity is not measured; league regression reduces reliance on last year's roster."
+          ]
+        }
+      },
+      "quotes": [
+        {
+          "sportsbook": "fanatics",
+          "opening": {
+            "total": 70.5,
+            "overPrice": -105,
+            "underPrice": -115
+          },
+          "latest": {
+            "total": 69.5,
+            "overPrice": -120,
+            "underPrice": 100
+          },
+          "openingCapturedAt": "2026-11-27T05:39:46.938999Z",
+          "latestCapturedAt": "2026-11-27T06:37:42.977600Z",
+          "closingVerified": false,
+          "quoteTimestamp": null,
+          "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-27"
+        }
+      ],
+      "participants": {
+        "away": {
+          "espnId": "119",
+          "modelId": "towson-tigers",
+          "name": "Towson Tigers"
+        },
+        "home": {
+          "espnId": "219",
+          "modelId": "pennsylvania-quakers",
+          "name": "Pennsylvania Quakers"
         }
       }
     }
