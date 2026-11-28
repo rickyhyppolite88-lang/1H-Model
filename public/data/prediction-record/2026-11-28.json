@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-11-28T05:55:05.776Z",
+  "updatedAt": "2026-11-28T06:50:20.218Z",
   "entryPolicy": {
     "method": "last-pretip-v1",
     "startedAt": "2026-11-10T21:33:29.039Z",
@@ -11211,6 +11211,623 @@
           "espnId": "-2",
           "modelId": null,
           "name": "TBD"
+        },
+        "home": {
+          "espnId": "97",
+          "modelId": "louisville-cardinals",
+          "name": "Louisville Cardinals"
+        }
+      }
+    },
+    {
+      "id": "2026-27_401917954_v2",
+      "season": "2026-27",
+      "gameId": "401917954",
+      "gameDate": "2026-11-28",
+      "version": 2,
+      "recordedAt": "2026-11-28T06:50:20.218Z",
+      "signalCalculatedAt": "2026-11-28T06:50:20.218Z",
+      "origin": "batch_capture",
+      "evidence": null,
+      "inputSnapshots": {
+        "prior": "data/input-snapshots/5d7d1cdd590b01d65ca838308bd098bc8be58fdb5d96faf922f4c44677d6d7de.json",
+        "current": "data/input-snapshots/8e9f023c6badb99475665468b8b244c7a6e717681b92a454ccd74c08c4aee21c.json",
+        "currentMatchesFrozenInputs": true
+      },
+      "modelVersion": "season-bridge-v1",
+      "source": {
+        "repository": "https://github.com/rickyhyppolite88-lang/1H-Model",
+        "projectionCode": "https://github.com/rickyhyppolite88-lang/1H-Model/blob/7645b2e6c7bfbceeada51d0e2173add172704e27/src/model/predictor.ts",
+        "batchCode": "https://github.com/rickyhyppolite88-lang/1H-Model/blob/7645b2e6c7bfbceeada51d0e2173add172704e27/src/model/predictions.ts",
+        "revision": "7645b2e6c7bfbceeada51d0e2173add172704e27"
+      },
+      "state": "pregame",
+      "sportsbook": "draftkings",
+      "basis": "latest",
+      "comparison": {
+        "line": null,
+        "signedEdge": null,
+        "lean": null
+      },
+      "signal": {
+        "method": "model-signal-v1",
+        "score": null,
+        "label": "Unavailable",
+        "reason": "A pregame projection, both components, and the selected line are required.",
+        "fill": null
+      },
+      "prediction": {
+        "gameId": "401917954",
+        "startsAt": "2026-11-28T21:00:00Z",
+        "awayTeam": "Austin Peay Governors",
+        "homeTeam": "Furman Paladins",
+        "awayConference": "UAC",
+        "homeConference": "Southern",
+        "awayRank": null,
+        "homeRank": null,
+        "rankingsKnown": true,
+        "status": "Scheduled",
+        "projectedFirstHalfTotal": 73.96041273678068,
+        "actualFirstHalfTotal": null,
+        "simpleTotal": 73.63456947162427,
+        "paceAdjustedTotal": 74.4491776345153,
+        "featureKind": "captured_pregame",
+        "featureCapturedAt": "2026-11-28T05:55:04.634Z",
+        "unavailableReason": null,
+        "marketCoverage": {
+          "checkedAt": "2026-11-28T06:50:11.583871Z",
+          "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-28",
+          "status": "matched",
+          "books": [
+            {
+              "sportsbook": "fanatics",
+              "status": "available"
+            }
+          ]
+        },
+        "markets": [
+          {
+            "sportsbook": "fanatics",
+            "openingLine": 72.5,
+            "latestLine": 71.5,
+            "capturedAt": "2026-11-28T06:50:11.583871Z",
+            "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-28",
+            "closingVerified": false
+          }
+        ],
+        "signal": {
+          "method": "model-signal-v1",
+          "score": null,
+          "label": "Unavailable",
+          "reason": "A pregame projection, both components, and the selected line are required.",
+          "fill": null
+        }
+      },
+      "features": {
+        "kind": "captured_pregame",
+        "capturedAt": "2026-11-28T05:55:04.634Z",
+        "priorAsOf": "2026-04-07",
+        "currentAsOf": "2026-11-28",
+        "modelVersion": "season-bridge-v1",
+        "statsRetrievedAt": "2026-11-28T05:54:53.079675Z",
+        "away": {
+          "id": "austin-peay-governors",
+          "name": "Austin Peay",
+          "firstHalfPoints": 35.38110371819961,
+          "pace": 73.58068884540117,
+          "offensiveEfficiency": 0.9969957729941292,
+          "defensiveEfficiency": 1.0199436399217219,
+          "currentWeight": 0.42857142857142855,
+          "currentGames": 6,
+          "priorAvailable": true,
+          "strengthOfSchedule": -8.5,
+          "notes": [
+            "Roster continuity is not measured; league regression reduces reliance on last year's roster."
+          ]
+        },
+        "home": {
+          "id": "furman-paladins",
+          "name": "Furman",
+          "firstHalfPoints": 38.253465753424656,
+          "pace": 70.52310273972603,
+          "offensiveEfficiency": 1.0959963013698633,
+          "defensiveEfficiency": 1.0201506849315067,
+          "currentWeight": 0.5,
+          "currentGames": 8,
+          "priorAvailable": true,
+          "strengthOfSchedule": -5.6,
+          "notes": [
+            "Roster continuity is not measured; league regression reduces reliance on last year's roster."
+          ]
+        }
+      },
+      "quotes": [
+        {
+          "sportsbook": "fanatics",
+          "opening": {
+            "total": 72.5,
+            "overPrice": 105,
+            "underPrice": -130
+          },
+          "latest": {
+            "total": 71.5,
+            "overPrice": -110,
+            "underPrice": -110
+          },
+          "openingCapturedAt": "2026-11-28T05:54:54.995443Z",
+          "latestCapturedAt": "2026-11-28T06:50:11.583871Z",
+          "closingVerified": false,
+          "quoteTimestamp": null,
+          "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-28"
+        }
+      ],
+      "participants": {
+        "away": {
+          "espnId": "2046",
+          "modelId": "austin-peay-governors",
+          "name": "Austin Peay Governors"
+        },
+        "home": {
+          "espnId": "231",
+          "modelId": "furman-paladins",
+          "name": "Furman Paladins"
+        }
+      }
+    },
+    {
+      "id": "2026-27_401925033_v2",
+      "season": "2026-27",
+      "gameId": "401925033",
+      "gameDate": "2026-11-28",
+      "version": 2,
+      "recordedAt": "2026-11-28T06:50:20.218Z",
+      "signalCalculatedAt": "2026-11-28T06:50:20.218Z",
+      "origin": "batch_capture",
+      "evidence": null,
+      "inputSnapshots": {
+        "prior": "data/input-snapshots/5d7d1cdd590b01d65ca838308bd098bc8be58fdb5d96faf922f4c44677d6d7de.json",
+        "current": "data/input-snapshots/8e9f023c6badb99475665468b8b244c7a6e717681b92a454ccd74c08c4aee21c.json",
+        "currentMatchesFrozenInputs": true
+      },
+      "modelVersion": "season-bridge-v1",
+      "source": {
+        "repository": "https://github.com/rickyhyppolite88-lang/1H-Model",
+        "projectionCode": "https://github.com/rickyhyppolite88-lang/1H-Model/blob/7645b2e6c7bfbceeada51d0e2173add172704e27/src/model/predictor.ts",
+        "batchCode": "https://github.com/rickyhyppolite88-lang/1H-Model/blob/7645b2e6c7bfbceeada51d0e2173add172704e27/src/model/predictions.ts",
+        "revision": "7645b2e6c7bfbceeada51d0e2173add172704e27"
+      },
+      "state": "pregame",
+      "sportsbook": "draftkings",
+      "basis": "latest",
+      "comparison": {
+        "line": null,
+        "signedEdge": null,
+        "lean": null
+      },
+      "signal": {
+        "method": "model-signal-v1",
+        "score": null,
+        "label": "Unavailable",
+        "reason": "A pregame projection, both components, and the selected line are required.",
+        "fill": null
+      },
+      "prediction": {
+        "gameId": "401925033",
+        "startsAt": "2026-11-28T21:00:00Z",
+        "awayTeam": "McNeese Cowboys",
+        "homeTeam": "Louisiana Ragin' Cajuns",
+        "awayConference": "Southland",
+        "homeConference": "Sun Belt",
+        "awayRank": null,
+        "homeRank": null,
+        "rankingsKnown": true,
+        "status": "Scheduled",
+        "projectedFirstHalfTotal": 67.43609607473371,
+        "actualFirstHalfTotal": null,
+        "simpleTotal": 64.42001043705153,
+        "paceAdjustedTotal": 71.96022453125697,
+        "featureKind": "captured_pregame",
+        "featureCapturedAt": "2026-11-28T05:55:04.634Z",
+        "unavailableReason": null,
+        "marketCoverage": {
+          "checkedAt": "2026-11-28T06:50:11.583871Z",
+          "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-28",
+          "status": "matched",
+          "books": [
+            {
+              "sportsbook": "bet365",
+              "status": "available"
+            },
+            {
+              "sportsbook": "fanatics",
+              "status": "available"
+            }
+          ]
+        },
+        "markets": [
+          {
+            "sportsbook": "bet365",
+            "openingLine": 64.5,
+            "latestLine": 64.5,
+            "capturedAt": "2026-11-28T06:50:11.583871Z",
+            "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-28",
+            "closingVerified": false
+          },
+          {
+            "sportsbook": "fanatics",
+            "openingLine": 65.5,
+            "latestLine": 65.5,
+            "capturedAt": "2026-11-28T06:50:11.583871Z",
+            "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-28",
+            "closingVerified": false
+          }
+        ],
+        "signal": {
+          "method": "model-signal-v1",
+          "score": null,
+          "label": "Unavailable",
+          "reason": "A pregame projection, both components, and the selected line are required.",
+          "fill": null
+        }
+      },
+      "features": {
+        "kind": "captured_pregame",
+        "capturedAt": "2026-11-28T05:55:04.634Z",
+        "priorAsOf": "2026-04-07",
+        "currentAsOf": "2026-11-28",
+        "modelVersion": "season-bridge-v1",
+        "statsRetrievedAt": "2026-11-28T05:54:53.079675Z",
+        "away": {
+          "id": "mcneese-st-cowboys",
+          "name": "McNeese",
+          "firstHalfPoints": 35.564621004566206,
+          "pace": 70.10413698630137,
+          "offensiveEfficiency": 1.094128401826484,
+          "defensiveEfficiency": 1.0609675799086757,
+          "currentWeight": 0.3333333333333333,
+          "currentGames": 4,
+          "priorAvailable": true,
+          "strengthOfSchedule": 2,
+          "notes": [
+            "Roster continuity is not measured; league regression reduces reliance on last year's roster."
+          ]
+        },
+        "home": {
+          "id": "ul-lafayette-ragin-cajuns",
+          "name": "Louisiana",
+          "firstHalfPoints": 28.855389432485318,
+          "pace": 67.88926027397261,
+          "offensiveEfficiency": 0.9348243444227006,
+          "defensiveEfficiency": 1.081886497064579,
+          "currentWeight": 0.42857142857142855,
+          "currentGames": 6,
+          "priorAvailable": true,
+          "strengthOfSchedule": -6.3,
+          "notes": [
+            "Roster continuity is not measured; league regression reduces reliance on last year's roster."
+          ]
+        }
+      },
+      "quotes": [
+        {
+          "sportsbook": "bet365",
+          "opening": {
+            "total": 64.5,
+            "overPrice": -120,
+            "underPrice": -110
+          },
+          "latest": {
+            "total": 64.5,
+            "overPrice": -120,
+            "underPrice": -110
+          },
+          "openingCapturedAt": "2026-11-28T05:54:54.995443Z",
+          "latestCapturedAt": "2026-11-28T06:50:11.583871Z",
+          "closingVerified": false,
+          "quoteTimestamp": null,
+          "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-28"
+        },
+        {
+          "sportsbook": "fanatics",
+          "opening": {
+            "total": 65.5,
+            "overPrice": -110,
+            "underPrice": -110
+          },
+          "latest": {
+            "total": 65.5,
+            "overPrice": 100,
+            "underPrice": -120
+          },
+          "openingCapturedAt": "2026-11-28T05:54:54.995443Z",
+          "latestCapturedAt": "2026-11-28T06:50:11.583871Z",
+          "closingVerified": false,
+          "quoteTimestamp": null,
+          "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-28"
+        }
+      ],
+      "participants": {
+        "away": {
+          "espnId": "2377",
+          "modelId": "mcneese-st-cowboys",
+          "name": "McNeese Cowboys"
+        },
+        "home": {
+          "espnId": "309",
+          "modelId": "ul-lafayette-ragin-cajuns",
+          "name": "Louisiana Ragin' Cajuns"
+        }
+      }
+    },
+    {
+      "id": "2026-27_401920197_v2",
+      "season": "2026-27",
+      "gameId": "401920197",
+      "gameDate": "2026-11-28",
+      "version": 2,
+      "recordedAt": "2026-11-28T06:50:20.218Z",
+      "signalCalculatedAt": "2026-11-28T06:50:20.218Z",
+      "origin": "batch_capture",
+      "evidence": null,
+      "inputSnapshots": {
+        "prior": "data/input-snapshots/5d7d1cdd590b01d65ca838308bd098bc8be58fdb5d96faf922f4c44677d6d7de.json",
+        "current": "data/input-snapshots/8e9f023c6badb99475665468b8b244c7a6e717681b92a454ccd74c08c4aee21c.json",
+        "currentMatchesFrozenInputs": true
+      },
+      "modelVersion": "season-bridge-v1",
+      "source": {
+        "repository": "https://github.com/rickyhyppolite88-lang/1H-Model",
+        "projectionCode": "https://github.com/rickyhyppolite88-lang/1H-Model/blob/7645b2e6c7bfbceeada51d0e2173add172704e27/src/model/predictor.ts",
+        "batchCode": "https://github.com/rickyhyppolite88-lang/1H-Model/blob/7645b2e6c7bfbceeada51d0e2173add172704e27/src/model/predictions.ts",
+        "revision": "7645b2e6c7bfbceeada51d0e2173add172704e27"
+      },
+      "state": "pregame",
+      "sportsbook": "draftkings",
+      "basis": "latest",
+      "comparison": {
+        "line": null,
+        "signedEdge": null,
+        "lean": null
+      },
+      "signal": {
+        "method": "model-signal-v1",
+        "score": null,
+        "label": "Unavailable",
+        "reason": "A pregame projection, both components, and the selected line are required.",
+        "fill": null
+      },
+      "prediction": {
+        "gameId": "401920197",
+        "startsAt": "2026-11-29T00:00:00Z",
+        "awayTeam": "Saint Joseph's Hawks",
+        "homeTeam": "Monmouth Hawks",
+        "awayConference": "Atlantic 10",
+        "homeConference": "Coastal",
+        "awayRank": null,
+        "homeRank": null,
+        "rankingsKnown": true,
+        "status": "Scheduled",
+        "projectedFirstHalfTotal": 69.82697701638902,
+        "actualFirstHalfTotal": null,
+        "simpleTotal": 67.83775290280495,
+        "paceAdjustedTotal": 72.81081318676513,
+        "featureKind": "captured_pregame",
+        "featureCapturedAt": "2026-11-28T05:55:04.634Z",
+        "unavailableReason": null,
+        "marketCoverage": {
+          "checkedAt": "2026-11-28T06:50:11.583871Z",
+          "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-28",
+          "status": "matched",
+          "books": [
+            {
+              "sportsbook": "fanatics",
+              "status": "available"
+            }
+          ]
+        },
+        "markets": [
+          {
+            "sportsbook": "fanatics",
+            "openingLine": 69.5,
+            "latestLine": 69.5,
+            "capturedAt": "2026-11-28T06:50:11.583871Z",
+            "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-28",
+            "closingVerified": false
+          }
+        ],
+        "signal": {
+          "method": "model-signal-v1",
+          "score": null,
+          "label": "Unavailable",
+          "reason": "A pregame projection, both components, and the selected line are required.",
+          "fill": null
+        }
+      },
+      "features": {
+        "kind": "captured_pregame",
+        "capturedAt": "2026-11-28T05:55:04.634Z",
+        "priorAsOf": "2026-04-07",
+        "currentAsOf": "2026-11-28",
+        "modelVersion": "season-bridge-v1",
+        "statsRetrievedAt": "2026-11-28T05:54:53.079675Z",
+        "away": {
+          "id": "saint-josephs-hawks",
+          "name": "Saint Joseph's",
+          "firstHalfPoints": 35.98236347031963,
+          "pace": 73.58997625570777,
+          "offensiveEfficiency": 1.018009388127854,
+          "defensiveEfficiency": 0.9762807305936072,
+          "currentWeight": 0.4666666666666667,
+          "currentGames": 7,
+          "priorAvailable": true,
+          "strengthOfSchedule": -4.6,
+          "notes": [
+            "Roster continuity is not measured; league regression reduces reliance on last year's roster."
+          ]
+        },
+        "home": {
+          "id": "monmouth-nj-hawks",
+          "name": "Monmouth",
+          "firstHalfPoints": 31.855389432485318,
+          "pace": 70.95783170254404,
+          "offensiveEfficiency": 0.9782243444227006,
+          "defensiveEfficiency": 1.0572007827788648,
+          "currentWeight": 0.42857142857142855,
+          "currentGames": 6,
+          "priorAvailable": true,
+          "strengthOfSchedule": 5.2,
+          "notes": [
+            "Roster continuity is not measured; league regression reduces reliance on last year's roster."
+          ]
+        }
+      },
+      "quotes": [
+        {
+          "sportsbook": "fanatics",
+          "opening": {
+            "total": 69.5,
+            "overPrice": -105,
+            "underPrice": -115
+          },
+          "latest": {
+            "total": 69.5,
+            "overPrice": -105,
+            "underPrice": -115
+          },
+          "openingCapturedAt": "2026-11-28T05:54:54.995443Z",
+          "latestCapturedAt": "2026-11-28T06:50:11.583871Z",
+          "closingVerified": false,
+          "quoteTimestamp": null,
+          "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-28"
+        }
+      ],
+      "participants": {
+        "away": {
+          "espnId": "2603",
+          "modelId": "saint-josephs-hawks",
+          "name": "Saint Joseph's Hawks"
+        },
+        "home": {
+          "espnId": "2405",
+          "modelId": "monmouth-nj-hawks",
+          "name": "Monmouth Hawks"
+        }
+      }
+    },
+    {
+      "id": "2026-27_401920536_v2",
+      "season": "2026-27",
+      "gameId": "401920536",
+      "gameDate": "2026-11-28",
+      "version": 2,
+      "recordedAt": "2026-11-28T06:50:20.218Z",
+      "signalCalculatedAt": "2026-11-28T06:50:20.218Z",
+      "origin": "batch_capture",
+      "evidence": null,
+      "inputSnapshots": {
+        "prior": "data/input-snapshots/5d7d1cdd590b01d65ca838308bd098bc8be58fdb5d96faf922f4c44677d6d7de.json",
+        "current": "data/input-snapshots/8e9f023c6badb99475665468b8b244c7a6e717681b92a454ccd74c08c4aee21c.json",
+        "currentMatchesFrozenInputs": true
+      },
+      "modelVersion": "season-bridge-v1",
+      "source": {
+        "repository": "https://github.com/rickyhyppolite88-lang/1H-Model",
+        "projectionCode": "https://github.com/rickyhyppolite88-lang/1H-Model/blob/7645b2e6c7bfbceeada51d0e2173add172704e27/src/model/predictor.ts",
+        "batchCode": "https://github.com/rickyhyppolite88-lang/1H-Model/blob/7645b2e6c7bfbceeada51d0e2173add172704e27/src/model/predictions.ts",
+        "revision": "7645b2e6c7bfbceeada51d0e2173add172704e27"
+      },
+      "state": "pregame",
+      "sportsbook": "draftkings",
+      "basis": "latest",
+      "comparison": {
+        "line": null,
+        "signedEdge": null,
+        "lean": null
+      },
+      "signal": {
+        "method": "model-signal-v1",
+        "score": null,
+        "label": "Unavailable",
+        "reason": "A pregame projection, both components, and the selected line are required.",
+        "fill": null
+      },
+      "prediction": {
+        "gameId": "401920536",
+        "startsAt": "2026-11-29T03:30:00Z",
+        "awayTeam": "Creighton Bluejays",
+        "homeTeam": "Louisville Cardinals",
+        "awayConference": "Big East",
+        "homeConference": "ACC",
+        "awayRank": null,
+        "homeRank": 25,
+        "rankingsKnown": true,
+        "status": "Scheduled",
+        "projectedFirstHalfTotal": 80.00143929753976,
+        "actualFirstHalfTotal": null,
+        "simpleTotal": 81.77672694063926,
+        "paceAdjustedTotal": 77.33850783289051,
+        "featureKind": "captured_pregame",
+        "featureCapturedAt": "2026-11-28T06:50:19.239Z",
+        "unavailableReason": null,
+        "marketCoverage": {
+          "checkedAt": "2026-11-28T06:50:11.583871Z",
+          "source": "https://www.sportsbookreview.com/betting-odds/ncaa-basketball/totals/1st-half/?date=2026-11-28",
+          "status": "not_matched",
+          "books": []
+        },
+        "markets": [],
+        "signal": {
+          "method": "model-signal-v1",
+          "score": null,
+          "label": "Unavailable",
+          "reason": "A pregame projection, both components, and the selected line are required.",
+          "fill": null
+        }
+      },
+      "features": {
+        "kind": "captured_pregame",
+        "capturedAt": "2026-11-28T06:50:19.239Z",
+        "priorAsOf": "2026-04-07",
+        "currentAsOf": "2026-11-28",
+        "modelVersion": "season-bridge-v1",
+        "statsRetrievedAt": "2026-11-28T05:54:53.079675Z",
+        "away": {
+          "id": "creighton-bluejays",
+          "name": "Creighton",
+          "firstHalfPoints": 39.77036347031963,
+          "pace": 72.17797625570776,
+          "offensiveEfficiency": 1.1003427214611872,
+          "defensiveEfficiency": 1.016787397260274,
+          "currentWeight": 0.4666666666666667,
+          "currentGames": 7,
+          "priorAvailable": true,
+          "strengthOfSchedule": 9,
+          "notes": [
+            "Roster continuity is not measured; league regression reduces reliance on last year's roster."
+          ]
+        },
+        "home": {
+          "id": "louisville-cardinals",
+          "name": "Louisville",
+          "firstHalfPoints": 42.006363470319634,
+          "pace": 71.40064292237443,
+          "offensiveEfficiency": 1.1655960547945208,
+          "defensiveEfficiency": 1.0264673972602738,
+          "currentWeight": 0.4666666666666667,
+          "currentGames": 7,
+          "priorAvailable": true,
+          "strengthOfSchedule": 13,
+          "notes": [
+            "Roster continuity is not measured; league regression reduces reliance on last year's roster."
+          ]
+        }
+      },
+      "quotes": [],
+      "participants": {
+        "away": {
+          "espnId": "156",
+          "modelId": "creighton-bluejays",
+          "name": "Creighton Bluejays"
         },
         "home": {
           "espnId": "97",
